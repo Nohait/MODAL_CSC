@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dwiv1dkuelgob"]
+
+[ext_resource type="Script" uid="uid://bctknvq5lsvt5" path="res://scenes/ennemi.gd" id="1_i8ure"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_htr4c"]
+radius = 0.3
+height = 1.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0wfyh"]
+albedo_color = Color(4.042983e-06, 0.58888495, 0.7554547, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gy6ao"]
+radius = 0.3
+height = 1.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ii04w"]
+radius = 5.0
+
+[node name="ennemi" type="CharacterBody3D" unique_id=696569544]
+script = ExtResource("1_i8ure")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1691695080]
+mesh = SubResource("CapsuleMesh_htr4c")
+surface_material_override/0 = SubResource("StandardMaterial3D_0wfyh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=308344845]
+shape = SubResource("CapsuleShape3D_gy6ao")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1118271271]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=546525673]
+shape = SubResource("SphereShape3D_ii04w")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
