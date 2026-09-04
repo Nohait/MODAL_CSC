@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://player3d_scene"]
+[gd_scene format=3 uid="uid://17varfqarqf8"]
 
-[ext_resource type="Script" path="res://scripts/player/Player3D.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b8vc0q5upg7wv" path="res://scripts/player/Player3D.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://82voba7eimfe" path="res://assets/models/characters/firefighter.glb" id="2_d2pg4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.4
@@ -10,21 +11,22 @@ height = 1.8
 radius = 2.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hurtbox"]
-radius = 0.5
 height = 1.6
 
-[node name="Player3D" type="CharacterBody3D"]
-collision_layer = 1
+[node name="Player3D" type="CharacterBody3D" unique_id=327649620]
 collision_mask = 7
 script = ExtResource("1_script")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=195102258]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_body")
 
-[node name="MeshPivot" type="Node3D" parent="."]
+[node name="MeshPivot" type="Node3D" parent="." unique_id=1468397290]
 
-[node name="IsometricCamera" type="Camera3D" parent="."]
+[node name="Pompier" parent="MeshPivot" unique_id=1723654550 instance=ExtResource("2_d2pg4")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+
+[node name="IsometricCamera" type="Camera3D" parent="." unique_id=1437118745]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 8, 10, 8)
 projection = 1
 current = true
@@ -33,21 +35,19 @@ size = 12.0
 near = 0.1
 far = 100.0
 
-[node name="InteractArea" type="Area3D" parent="."]
+[node name="InteractArea" type="Area3D" parent="." unique_id=20900248]
 collision_layer = 0
 collision_mask = 12
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea" unique_id=1927201190]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("SphereShape3D_interact")
 
-[node name="Hurtbox" type="Area3D" parent="." groups=["hurtbox_player"]]
+[node name="Hurtbox" type="Area3D" parent="." unique_id=783567164 groups=["hurtbox_player"]]
 collision_layer = 4
 collision_mask = 0
-monitorable = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox" unique_id=1002825187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_hurtbox")
