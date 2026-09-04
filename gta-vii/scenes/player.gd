@@ -2,8 +2,8 @@ extends CharacterBody3D
 
 
 @onready var camera: Camera3D = $Camera3D
-
 @onready var visual: Node3D = $visual
+@onready var Extincteur = $visual/weapon_holder/Extincteur
 
 const SPEED = 5.0
 const DASH_SPEED = 50.0
@@ -107,5 +107,10 @@ func _physics_process(delta: float) -> void:
 		
 		#On s'oriente vers ce point, en gardant y comme verticale
 		visual.look_at(target_position, Vector3.UP)
+	
+	if Input.is_action_pressed("primary_attack"):
+		Extincteur.start_primary_attack()
+	else:
+		Extincteur.stop_primary_attack()
 	
 	move_and_slide()
