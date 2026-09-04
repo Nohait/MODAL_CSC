@@ -1,7 +1,7 @@
 extends CharacterBody3D
 var cible = null
 var distance_attaque = 1
-var distance_lacher = 10
+var distance_lacher = 6
 var attaque_cooldown = 2
 var attaque_timer = 0.0
 # Called when the node enters the scene tree for the first time.
@@ -31,16 +31,8 @@ func _physics_process(delta):
 		else: #comportement dans la portée d'attaque
 			velocity = Vector3.ZERO 
 			
-			var direction = global_position.direction_to(cible.global_position)
-			velocity = direction * (-10.0)
-			move_and_slide()
-			
 			if attaque_timer <0:
 				attaque()
-				
-			direction = global_position.direction_to(cible.global_position)
-			velocity = direction * (10.0)
-			move_and_slide()
 			
 func attaque():
 	print("Le joueur est attaqué")
@@ -49,7 +41,3 @@ func attaque():
 	attaque_timer = attaque_cooldown
 	
 	
-
-
-func _on_area_3d_body_entered(body: Node3D) -> void:
-	pass # Replace with function body.
