@@ -6,6 +6,12 @@ extends CharacterBody3D
 @onready var visual: Node3D = $visual
 
 const SPEED = 5.0
+const DASH_SPEED = 50.0
+const DASH_DURATION = 0.2
+
+var last_direction := Vector3.FORWARD 
+var is_dashing := false
+var dash_time_left := 0.0
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -40,15 +46,39 @@ func _physics_process(delta: float) -> void:
 	#On récupère la direction du joueur, par rapport à la caméra
 	var direction := camera_right * input_dir.x + camera_forward * (-input_dir.y)
 
-	#On normalise pour ne pas aller plus vite en diagonale
-	if direction.length() > 0.0:
-		direction = direction.normalized()
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = 0.0
-		velocity.z = 0.0
 
+
+	
+	if Input.is_action_just_pressed("dash") and (not is_dashing):
+		#initialise le dash
+		is_dashing = true
+		dash_time_left = DASH_DURATION
+
+	
+	if is_dashing:
+		#applique le dash
+		velocity.x = last_direction.x * DASH_SPEED
+		velocity.z = last_direction.z * DASH_SPEED
+		
+		dash_time_left -= delta
+		
+		if dash_time_left <= 0.0:
+			is_dashing = false
+	else:
+		#On normalise pour ne pas aller plus vite en diagonale
+		if direction.length() > 0.0:
+			direction = direction.normalized()
+			#On update la dernière direction prise
+			last_direction = direction
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+		else:
+			velocity.x = 0.0
+			velocity.z = 0.0
+		
+	
+	#VISEE DU JOUEUR
+	
 	#Recuperation de la position de la souris
 	#Le viewport est la zone dans laquelle le jeu est rendu 
 	#On récupère donc le vecteur position de la souris en 2D, sur l'écran.
