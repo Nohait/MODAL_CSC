@@ -2,6 +2,8 @@ extends CharacterBody3D
 class_name Player3D
 ## Player Controller - Isometric WASD movement, dodge, attack
 
+@onready var animation_player = $MeshPivot/Pompier/AnimationPlayer
+
 signal damaged(amount: float, remaining: float)
 signal died()
 signal attack_hit(targets: Array)
@@ -223,6 +225,13 @@ func _physics_process(delta: float) -> void:
 		_process_dodge(delta)
 	else:
 		_process_movement(delta)
+		
+	#Animation de marche
+	if Vector2(velocity.x, velocity.z).length() > 0.1 :
+		if animation_player.current_animation != "Take 001":
+			animation_player.play("Take 001")
+	else:
+		animation_player.stop()
 	
 	move_and_slide()
 
@@ -302,6 +311,7 @@ func _end_dodge() -> void:
 	_is_dodging = false
 	_is_invincible = false
 	_dodge_velocity = Vector3.ZERO
+
 
 
 const INTERACT_RANGE := 2.0
