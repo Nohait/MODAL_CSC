@@ -1,0 +1,3 @@
+# Building Models
+This folder contains building 3D models (walls, floors, doors)
+Run the asset generation pipeline to populate this folder.

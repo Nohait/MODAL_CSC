@@ -1,0 +1,116 @@
+QMainWindow {
+    background-color: #06080d;
+}
+
+QFrame,
+QTextEdit,
+QListWidget {
+    background-color: #0f1c1f;
+    border: 1px solid #1f3b4a;
+    border-radius: 12px;
+}
+
+QLabel#sectionHeader,
+QLabel#HistoryTitle {
+    color: #8acaff;
+    font-size: 15px;
+    font-weight: 600;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1f3b4a;
+}
+
+QLabel#styleLabel {
+    color: #c8d7e5;
+    font-size: 13px;
+}
+
+QTextEdit,
+QListWidget {
+    color: #dfe8f2;
+    font-size: 13px;
+}
+
+QTextEdit {
+    padding: 12px;
+}
+
+QListWidget {
+    padding: 10px;
+}
+
+QTextEdit:focus,
+QListWidget:focus {
+    border: 1px solid #3684ff;
+}
+
+QToolButton {
+    background-color: #1e2b36;
+    border: 1px solid #243647;
+    border-radius: 10px;
+    padding: 6px;
+    color: #c8d7e5;
+}
+
+QToolButton:hover {
+    background-color: #243144;
+}
+
+QToolButton:pressed {
+    background-color: #1a2634;
+}
+
+QToolButton#toolbar {
+    background-color: transparent;
+    border: none;
+}
+
+#HelpOverlay {
+    background-color: rgba(0, 0, 0, 160);
+}
+
+#HelpOverlayContainer {
+    background-color: #0f181f;
+    border: 1px solid #1f3b4a;
+    border-radius: 14px;
+}
+
+#PreviewFrame {
+    background-color: #0f141a;
+    border: 1px solid #1f3b4a;
+    border-radius: 12px;
+}
+
+#previewFrame {
+    margin-top: 0px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #1f3b4a;
+    border-radius: 12px;
+    top: -1px;
+    background-color: #0f141a;
+}
+
+QTabBar::tab {
+    background-color: transparent;
+    padding: 8px 16px;
+    color: #c8d7e5;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    min-height: 32px;
+}
+
+QTabBar::tab:selected {
+    background-color: #1a222d;
+    color: #ffffff;
+}
+
+QTabBar::tab:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+QStatusBar {
+    background-color: #06080d;
+    border-top: 1px solid #1f3b4a;
+    color: #8acaff;
+}

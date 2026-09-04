@@ -1,0 +1,406 @@
+{
+  "version": "2.0",
+  "generator": "enhanced_asset_generator",
+  "models": {
+    "survivor_male": {
+      "path": "res://assets/models/characters/survivor_male.glb",
+      "category": "characters"
+    },
+    "survivor_female": {
+      "path": "res://assets/models/characters/survivor_female.glb",
+      "category": "characters"
+    },
+    "npc_trader": {
+      "path": "res://assets/models/characters/npc_trader.glb",
+      "category": "characters"
+    },
+    "npc_mechanic": {
+      "path": "res://assets/models/characters/npc_mechanic.glb",
+      "category": "characters"
+    },
+    "raider_scout": {
+      "path": "res://assets/models/characters/raider_scout.glb",
+      "category": "characters"
+    },
+    "raider_heavy": {
+      "path": "res://assets/models/characters/raider_heavy.glb",
+      "category": "characters"
+    },
+    "zombie_walker": {
+      "path": "res://assets/models/enemies/zombie_walker.glb",
+      "category": "enemies"
+    },
+    "zombie_runner": {
+      "path": "res://assets/models/enemies/zombie_runner.glb",
+      "category": "enemies"
+    },
+    "zombie_crawler": {
+      "path": "res://assets/models/enemies/zombie_crawler.glb",
+      "category": "enemies"
+    },
+    "zombie_bloater": {
+      "path": "res://assets/models/enemies/zombie_bloater.glb",
+      "category": "enemies"
+    },
+    "zombie_screamer": {
+      "path": "res://assets/models/enemies/zombie_screamer.glb",
+      "category": "enemies"
+    },
+    "zombie_spitter": {
+      "path": "res://assets/models/enemies/zombie_spitter.glb",
+      "category": "enemies"
+    },
+    "zombie_brute": {
+      "path": "res://assets/models/enemies/zombie_brute.glb",
+      "category": "enemies"
+    },
+    "zombie_ravager": {
+      "path": "res://assets/models/enemies/zombie_ravager.glb",
+      "category": "enemies"
+    },
+    "tree_pine_01": {
+      "path": "res://assets/models/environment/tree_pine_01.glb",
+      "category": "environment"
+    },
+    "tree_pine_02": {
+      "path": "res://assets/models/environment/tree_pine_02.glb",
+      "category": "environment"
+    },
+    "tree_pine_03": {
+      "path": "res://assets/models/environment/tree_pine_03.glb",
+      "category": "environment"
+    },
+    "tree_oak_01": {
+      "path": "res://assets/models/environment/tree_oak_01.glb",
+      "category": "environment"
+    },
+    "tree_oak_02": {
+      "path": "res://assets/models/environment/tree_oak_02.glb",
+      "category": "environment"
+    },
+    "tree_birch_01": {
+      "path": "res://assets/models/environment/tree_birch_01.glb",
+      "category": "environment"
+    },
+    "tree_dead_01": {
+      "path": "res://assets/models/environment/tree_dead_01.glb",
+      "category": "environment"
+    },
+    "tree_dead_02": {
+      "path": "res://assets/models/environment/tree_dead_02.glb",
+      "category": "environment"
+    },
+    "tree_palm_01": {
+      "path": "res://assets/models/environment/tree_palm_01.glb",
+      "category": "environment"
+    },
+    "tree_stump_01": {
+      "path": "res://assets/models/environment/tree_stump_01.glb",
+      "category": "environment"
+    },
+    "rock_boulder_01": {
+      "path": "res://assets/models/environment/rock_boulder_01.glb",
+      "category": "environment"
+    },
+    "rock_boulder_02": {
+      "path": "res://assets/models/environment/rock_boulder_02.glb",
+      "category": "environment"
+    },
+    "rock_medium_01": {
+      "path": "res://assets/models/environment/rock_medium_01.glb",
+      "category": "environment"
+    },
+    "rock_medium_02": {
+      "path": "res://assets/models/environment/rock_medium_02.glb",
+      "category": "environment"
+    },
+    "rock_small_01": {
+      "path": "res://assets/models/environment/rock_small_01.glb",
+      "category": "environment"
+    },
+    "rock_small_02": {
+      "path": "res://assets/models/environment/rock_small_02.glb",
+      "category": "environment"
+    },
+    "rock_slab_01": {
+      "path": "res://assets/models/environment/rock_slab_01.glb",
+      "category": "environment"
+    },
+    "rock_ore_iron": {
+      "path": "res://assets/models/environment/rock_ore_iron.glb",
+      "category": "environment"
+    },
+    "rock_ore_copper": {
+      "path": "res://assets/models/environment/rock_ore_copper.glb",
+      "category": "environment"
+    },
+    "bush_green_01": {
+      "path": "res://assets/models/environment/bush_green_01.glb",
+      "category": "environment"
+    },
+    "bush_green_02": {
+      "path": "res://assets/models/environment/bush_green_02.glb",
+      "category": "environment"
+    },
+    "bush_berry_01": {
+      "path": "res://assets/models/environment/bush_berry_01.glb",
+      "category": "environment"
+    },
+    "bush_dead_01": {
+      "path": "res://assets/models/environment/bush_dead_01.glb",
+      "category": "environment"
+    },
+    "bush_flowering_01": {
+      "path": "res://assets/models/environment/bush_flowering_01.glb",
+      "category": "environment"
+    },
+    "crate_wooden": {
+      "path": "res://assets/models/props/crate_wooden.glb",
+      "category": "props"
+    },
+    "crate_military": {
+      "path": "res://assets/models/props/crate_military.glb",
+      "category": "props"
+    },
+    "barrel_metal": {
+      "path": "res://assets/models/props/barrel_metal.glb",
+      "category": "props"
+    },
+    "barrel_plastic": {
+      "path": "res://assets/models/props/barrel_plastic.glb",
+      "category": "props"
+    },
+    "barrel_toxic": {
+      "path": "res://assets/models/props/barrel_toxic.glb",
+      "category": "props"
+    },
+    "locker_metal": {
+      "path": "res://assets/models/props/locker_metal.glb",
+      "category": "props"
+    },
+    "cardboard_box": {
+      "path": "res://assets/models/props/cardboard_box.glb",
+      "category": "props"
+    },
+    "toolbox": {
+      "path": "res://assets/models/props/toolbox.glb",
+      "category": "props"
+    },
+    "gas_can": {
+      "path": "res://assets/models/props/gas_can.glb",
+      "category": "props"
+    },
+    "medkit": {
+      "path": "res://assets/models/props/medkit.glb",
+      "category": "props"
+    },
+    "ammo_box": {
+      "path": "res://assets/models/props/ammo_box.glb",
+      "category": "props"
+    },
+    "table_wooden": {
+      "path": "res://assets/models/props/table_wooden.glb",
+      "category": "props"
+    },
+    "chair_wooden": {
+      "path": "res://assets/models/props/chair_wooden.glb",
+      "category": "props"
+    },
+    "chair_office": {
+      "path": "res://assets/models/props/chair_office.glb",
+      "category": "props"
+    },
+    "bed_single": {
+      "path": "res://assets/models/props/bed_single.glb",
+      "category": "props"
+    },
+    "shelf_wooden": {
+      "path": "res://assets/models/props/shelf_wooden.glb",
+      "category": "props"
+    },
+    "workbench": {
+      "path": "res://assets/models/props/workbench.glb",
+      "category": "props"
+    },
+    "concrete_barrier": {
+      "path": "res://assets/models/props/concrete_barrier.glb",
+      "category": "props"
+    },
+    "sandbag_wall": {
+      "path": "res://assets/models/props/sandbag_wall.glb",
+      "category": "props"
+    },
+    "generator": {
+      "path": "res://assets/models/props/generator.glb",
+      "category": "props"
+    },
+    "tire": {
+      "path": "res://assets/models/props/tire.glb",
+      "category": "props"
+    },
+    "tire_stack": {
+      "path": "res://assets/models/props/tire_stack.glb",
+      "category": "props"
+    },
+    "trash_bag": {
+      "path": "res://assets/models/props/trash_bag.glb",
+      "category": "props"
+    },
+    "trash_pile": {
+      "path": "res://assets/models/props/trash_pile.glb",
+      "category": "props"
+    },
+    "bat_wooden": {
+      "path": "res://assets/models/weapons/bat_wooden.glb",
+      "category": "weapons"
+    },
+    "bat_metal": {
+      "path": "res://assets/models/weapons/bat_metal.glb",
+      "category": "weapons"
+    },
+    "pipe_iron": {
+      "path": "res://assets/models/weapons/pipe_iron.glb",
+      "category": "weapons"
+    },
+    "hammer": {
+      "path": "res://assets/models/weapons/hammer.glb",
+      "category": "weapons"
+    },
+    "sledgehammer": {
+      "path": "res://assets/models/weapons/sledgehammer.glb",
+      "category": "weapons"
+    },
+    "crowbar": {
+      "path": "res://assets/models/weapons/crowbar.glb",
+      "category": "weapons"
+    },
+    "machete": {
+      "path": "res://assets/models/weapons/machete.glb",
+      "category": "weapons"
+    },
+    "knife_combat": {
+      "path": "res://assets/models/weapons/knife_combat.glb",
+      "category": "weapons"
+    },
+    "knife_survival": {
+      "path": "res://assets/models/weapons/knife_survival.glb",
+      "category": "weapons"
+    },
+    "axe_hatchet": {
+      "path": "res://assets/models/weapons/axe_hatchet.glb",
+      "category": "weapons"
+    },
+    "axe_fire": {
+      "path": "res://assets/models/weapons/axe_fire.glb",
+      "category": "weapons"
+    },
+    "katana": {
+      "path": "res://assets/models/weapons/katana.glb",
+      "category": "weapons"
+    },
+    "pistol_9mm": {
+      "path": "res://assets/models/weapons/pistol_9mm.glb",
+      "category": "weapons"
+    },
+    "pistol_45": {
+      "path": "res://assets/models/weapons/pistol_45.glb",
+      "category": "weapons"
+    },
+    "revolver": {
+      "path": "res://assets/models/weapons/revolver.glb",
+      "category": "weapons"
+    },
+    "rifle_assault": {
+      "path": "res://assets/models/weapons/rifle_assault.glb",
+      "category": "weapons"
+    },
+    "rifle_bolt": {
+      "path": "res://assets/models/weapons/rifle_bolt.glb",
+      "category": "weapons"
+    },
+    "shotgun_pump": {
+      "path": "res://assets/models/weapons/shotgun_pump.glb",
+      "category": "weapons"
+    },
+    "shotgun_auto": {
+      "path": "res://assets/models/weapons/shotgun_auto.glb",
+      "category": "weapons"
+    },
+    "smg": {
+      "path": "res://assets/models/weapons/smg.glb",
+      "category": "weapons"
+    },
+    "grenade_frag": {
+      "path": "res://assets/models/weapons/grenade_frag.glb",
+      "category": "weapons"
+    },
+    "molotov": {
+      "path": "res://assets/models/weapons/molotov.glb",
+      "category": "weapons"
+    },
+    "shovel": {
+      "path": "res://assets/models/weapons/shovel.glb",
+      "category": "weapons"
+    },
+    "pickaxe": {
+      "path": "res://assets/models/weapons/pickaxe.glb",
+      "category": "weapons"
+    },
+    "building_house_small": {
+      "path": "res://assets/models/buildings/building_house_small.glb",
+      "category": "buildings"
+    },
+    "building_house_medium": {
+      "path": "res://assets/models/buildings/building_house_medium.glb",
+      "category": "buildings"
+    },
+    "building_bunker": {
+      "path": "res://assets/models/buildings/building_bunker.glb",
+      "category": "buildings"
+    },
+    "building_watchtower": {
+      "path": "res://assets/models/buildings/building_watchtower.glb",
+      "category": "buildings"
+    },
+    "building_shed": {
+      "path": "res://assets/models/buildings/building_shed.glb",
+      "category": "buildings"
+    },
+    "building_garage": {
+      "path": "res://assets/models/buildings/building_garage.glb",
+      "category": "buildings"
+    },
+    "building_store": {
+      "path": "res://assets/models/buildings/building_store.glb",
+      "category": "buildings"
+    },
+    "building_warehouse": {
+      "path": "res://assets/models/buildings/building_warehouse.glb",
+      "category": "buildings"
+    },
+    "vehicle_car_sedan": {
+      "path": "res://assets/models/vehicles/vehicle_car_sedan.glb",
+      "category": "vehicles"
+    },
+    "vehicle_car_suv": {
+      "path": "res://assets/models/vehicles/vehicle_car_suv.glb",
+      "category": "vehicles"
+    },
+    "vehicle_truck_pickup": {
+      "path": "res://assets/models/vehicles/vehicle_truck_pickup.glb",
+      "category": "vehicles"
+    },
+    "vehicle_motorcycle": {
+      "path": "res://assets/models/vehicles/vehicle_motorcycle.glb",
+      "category": "vehicles"
+    },
+    "vehicle_atv": {
+      "path": "res://assets/models/vehicles/vehicle_atv.glb",
+      "category": "vehicles"
+    },
+    "vehicle_boat": {
+      "path": "res://assets/models/vehicles/vehicle_boat.glb",
+      "category": "vehicles"
+    }
+  }
+}

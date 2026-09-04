@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://bushnode3d_scene"]
+
+[ext_resource type="Script" path="res://scripts/resources/BushNode3D.gd" id="1_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_body"]
+radius = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interact"]
+radius = 0.8
+
+[node name="BushNode3D" type="StaticBody3D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("SphereShape3D_body")
+
+[node name="MeshPivot" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshPivot"]
+
+[node name="InteractArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 1
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("SphereShape3D_interact")

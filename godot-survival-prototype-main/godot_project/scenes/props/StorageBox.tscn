@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://storagebox_prop"]
+
+[ext_resource type="Script" path="res://scripts/props/StorageBox.gd" id="1_script"]
+
+[node name="StorageBox" type="StaticBody3D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_script")

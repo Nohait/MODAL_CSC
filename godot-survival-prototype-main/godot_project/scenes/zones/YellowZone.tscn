@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource path="res://scripts/world/YellowZone.gd" type="Script" id=1]
+[ext_resource path="res://scenes/World.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/placeholders/tree_icon.png" type="Texture2D" id=3]
+[ext_resource path="res://assets/placeholders/rock_icon.png" type="Texture2D" id=4]
+
+[node name="YellowZone" type="ZoneScene"]
+script = ExtResource( 1 )
+
+[node name="GroundMap" type="TileMap" parent="YellowZone"]
+cell_size = Vector2(32, 32)
+centered_textures = true
+position = Vector2.ZERO
+z_index = -10
+
+[node name="Props" type="Node2D" parent="YellowZone"]
+z_index = -5
+
+[node name="TreeProp" type="Sprite2D" parent="YellowZone/Props"]
+texture = ExtResource( 3 )
+position = Vector2(-150, 100)
+scale = Vector2(1.3, 1.3)
+centered = true
+
+[node name="TreePropB" type="Sprite2D" parent="YellowZone/Props"]
+texture = ExtResource( 3 )
+position = Vector2(-60, 140)
+scale = Vector2(1.0, 1.0)
+centered = true
+
+[node name="RockPropA" type="Sprite2D" parent="YellowZone/Props"]
+texture = ExtResource( 4 )
+position = Vector2(40, 50)
+scale = Vector2(1.2, 1.2)
+centered = true
+
+[node name="RockPropB" type="Sprite2D" parent="YellowZone/Props"]
+texture = ExtResource( 4 )
+position = Vector2(120, 30)
+scale = Vector2(1.0, 1.0)
+centered = true
+
+[node name="World" parent="YellowZone" instance=ExtResource( 2 )]

@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3 uid="uid://main3d_scene"]
+
+[ext_resource type="Script" path="res://scripts/inventory/Inventory.gd" id="1_inventory"]
+[ext_resource type="Script" path="res://scripts/crafting/CraftingManager.gd" id="2_crafting"]
+[ext_resource type="Script" path="res://scripts/world/ZoneManager3D.gd" id="3_zonemanager"]
+[ext_resource type="PackedScene" path="res://scenes/World3D.tscn" id="4_world"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InventoryUI.tscn" id="5_inventoryui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CraftingUI.tscn" id="6_craftingui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/MapUI.tscn" id="7_mapui"]
+[ext_resource type="Script" path="res://scripts/Main3D.gd" id="8_main"]
+
+[node name="Main3D" type="Node3D"]
+script = ExtResource("8_main")
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("1_inventory")
+
+[node name="CraftingManager" type="Node" parent="."]
+script = ExtResource("2_crafting")
+
+[node name="ZoneManager3D" type="Node" parent="."]
+script = ExtResource("3_zonemanager")
+
+[node name="ZoneContainer" type="Node3D" parent="ZoneManager3D"]
+
+[node name="World3D" parent="." instance=ExtResource("4_world")]
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="InventoryUI" parent="UILayer" instance=ExtResource("5_inventoryui")]
+
+[node name="CraftingUI" parent="UILayer" instance=ExtResource("6_craftingui")]
+
+[node name="MapUI" parent="UILayer" instance=ExtResource("7_mapui")]
+
+[node name="FadeRect" type="ColorRect" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0)
+mouse_filter = 2

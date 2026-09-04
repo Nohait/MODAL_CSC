@@ -1,0 +1,3 @@
+# Weapon Models
+This folder contains weapon 3D models (melee, ranged, throwables)
+Run the asset generation pipeline to populate this folder.

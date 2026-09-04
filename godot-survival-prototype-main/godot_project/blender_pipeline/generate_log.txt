@@ -1,0 +1,31 @@
+Blender version: 4.0.2
+============================================================
+GODOT SURVIVAL PROTOTYPE - MASTER ASSET GENERATION
+============================================================
+
+[1/6] Generating Environment Assets...
+  Created 35 environment objects
+
+[2/6] Generating Props...
+  Created 16 prop objects
+
+[3/6] Generating Characters...
+  Created 5 character objects
+
+[4/6] Generating Enemies...
+  Created enemies and animals
+
+[5/6] Generating Weapons...
+  Created weapons
+
+[6/6] Generating Buildings & Vehicles...
+Warning: No mesh data to join
+  Created 13 building and 6 vehicle objects
+
+============================================================
+GENERATION COMPLETE: 106 total assets
+============================================================
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 13:01:12)
+Read prefs: "C:\Users\Aidan\AppData\Roaming\Blender Foundation\Blender\4.0\config\userpref.blend"
+
+Blender quit
