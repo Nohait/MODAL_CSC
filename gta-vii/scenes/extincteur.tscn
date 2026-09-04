@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cj5mcflqq4lnc"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_afuq2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bqdvy"]
+albedo_color = Color(0.7176471, 0, 0, 1)
+metallic = 0.54
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bqdvy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3tmt"]
+albedo_color = Color(0.036556315, 0.03655632, 0.03655632, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
+emission_shape = 1
+emission_sphere_radius = 0.2
+direction = Vector3(0, 1, 0)
+spread = 25.0
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -1, 0)
+scale_min = 0.5
+scale_max = 1.5
+anim_speed_max = 11.059999
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_poajv"]
+radius = 0.1
+height = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_afuq2"]
+
+[node name="Extincteur" type="Node3D" unique_id=826892117]
+
+[node name="body" type="MeshInstance3D" parent="." unique_id=318434896]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+mesh = SubResource("CylinderMesh_afuq2")
+surface_material_override/0 = SubResource("StandardMaterial3D_bqdvy")
+
+[node name="Muzzle" type="MeshInstance3D" parent="." unique_id=139628240]
+transform = Transform3D(0.11, 0, 0, 0, -4.808253e-09, -0.11, 0, 0.11, -4.808253e-09, 0, 0.172, 0.12123349)
+mesh = SubResource("CylinderMesh_bqdvy")
+surface_material_override/0 = SubResource("StandardMaterial3D_q3tmt")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Muzzle" unique_id=2081315521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96934927, 0)
+amount = 200
+lifetime = 1.2
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_bqdvy")
+draw_pass_1 = SubResource("SphereMesh_poajv")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=984155214]
+transform = Transform3D(0.03534715, 0, 0, 0, 0.028197458, -0.062422916, 0, 0.009552285, 0.18426666, 0, 0.21990937, -0.061914608)
+mesh = SubResource("BoxMesh_afuq2")
+surface_material_override/0 = SubResource("StandardMaterial3D_q3tmt")
