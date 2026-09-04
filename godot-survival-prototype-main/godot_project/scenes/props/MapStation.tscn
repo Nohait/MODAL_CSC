@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://mapstation_prop"]
-
-[ext_resource type="Script" path="res://scripts/props/MapStation.gd" id="1_script"]
-
-[node name="MapStation" type="StaticBody3D"]
-collision_layer = 4
-collision_mask = 1
-script = ExtResource("1_script")
