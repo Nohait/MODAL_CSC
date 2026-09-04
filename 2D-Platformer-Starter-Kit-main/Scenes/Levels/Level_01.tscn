@@ -53,6 +53,9 @@ next_scene = ExtResource("2_0ac5u")
 [node name="Player" parent="." unique_id=382966345 instance=ExtResource("2_pay8t")]
 z_index = 1
 position = Vector2(150, 318)
+move_speed = 1000.0
+jump_force = 1000.0
+gravity = 1000.0
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=196397238]
 position = Vector2(16, 36)
