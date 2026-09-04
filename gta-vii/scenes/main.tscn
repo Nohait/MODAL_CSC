@@ -6,6 +6,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0wfyh"]
 albedo_texture = ExtResource("1_sugp2")
+uv1_scale = Vector3(10, 10, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_sysh0"]
 material = SubResource("StandardMaterial3D_0wfyh")
@@ -25,6 +26,6 @@ mesh = SubResource("BoxMesh_sysh0")
 shape = SubResource("BoxShape3D_sgp6g")
 
 [node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9516668, 0.93462706, -0.5206318)
 
 [node name="ennemi" parent="." unique_id=696569544 groups=["player"] instance=ExtResource("2_0wfyh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
