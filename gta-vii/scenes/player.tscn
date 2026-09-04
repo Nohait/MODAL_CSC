@@ -7,14 +7,27 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqnpg"]
 albedo_color = Color(0.7004786, 0, 0.11221447, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_sysh0"]
+size = Vector3(0.1, 0.1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qhqgy"]
+albedo_color = Color(0.17155394, 0.46661443, 1, 1)
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
 
 [node name="player" type="CharacterBody3D" unique_id=1836946001]
 script = ExtResource("1_3vyb7")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=53678333]
+[node name="visual" type="Node3D" parent="." unique_id=1533517147]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="visual" unique_id=53678333]
 mesh = SubResource("CapsuleMesh_sysh0")
 surface_material_override/0 = SubResource("StandardMaterial3D_fqnpg")
+
+[node name="look_debug" type="MeshInstance3D" parent="visual" unique_id=78907567]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = SubResource("BoxMesh_sysh0")
+surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=457942430]
 shape = SubResource("CapsuleShape3D_sge3q")
