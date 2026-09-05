@@ -16,7 +16,7 @@ height = 1.3
 [sub_resource type="SphereShape3D" id="SphereShape3D_ii04w"]
 radius = 5.0
 
-[node name="ennemi" type="CharacterBody3D" unique_id=696569544]
+[node name="ennemi" type="CharacterBody3D" unique_id=696569544 groups=["enemies"]]
 script = ExtResource("1_i8ure")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1691695080]
