@@ -4,6 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
 
+[sub_resource type="Environment" id="Environment_test"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.4
+reflected_light_source = 1
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0wfyh"]
 albedo_texture = ExtResource("1_sugp2")
 uv1_scale = Vector3(10, 10, 10)
@@ -16,6 +22,18 @@ size = Vector3(100, 0.2, 100)
 size = Vector3(100, 0.2, 100)
 
 [node name="main" type="Node3D" unique_id=2102349628]
+
+[node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
+editor_description = "Éclairage du niveau de test. Les deux nœuds ci-dessous permettent de voir le terrain et les personnages sans script."
+
+[node name="Soleil" type="DirectionalLight3D" parent="Eclairage" unique_id=286219491]
+editor_description = "Éclaire tout le niveau dans une même direction, comme un soleil. Inclinaison de -60 degrés sur X pour éclairer le sol. Les ombres aident à percevoir le relief. Régler Light > Energy pour modifier son intensité."
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 10, 0)
+shadow_enabled = true
+
+[node name="Ambiance" type="WorldEnvironment" parent="Eclairage" unique_id=2131836162]
+editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
+environment = SubResource("Environment_test")
 
 [node name="floor" type="StaticBody3D" parent="." unique_id=1045521397]
 
