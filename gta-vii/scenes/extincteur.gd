@@ -35,7 +35,6 @@ func _physics_process(delta: float) -> void:
 			is_overheated = true
 			is_attacking = false
 			particles.emitting = false
-			print("SURCHAUFFE")
 	else:
 		charge += RECHARGE_RATE * delta
 		if charge >= MAX_CHARGE:

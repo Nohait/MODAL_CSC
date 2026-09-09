@@ -7,7 +7,7 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const DASH_SPEED = 50.0
-const DASH_DURATION = 0.2
+const DASH_DURATION = 0.1 #Durée en secondes : v×t donne environ 5 unités de dash
 
 var last_direction := Vector3.FORWARD 
 var is_dashing := false

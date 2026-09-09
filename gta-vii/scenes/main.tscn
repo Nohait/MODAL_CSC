@@ -27,6 +27,12 @@ size = Vector3(10, 3, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jyhfs"]
 size = Vector3(10, 3, 0.5)
 
+[sub_resource type="BoxMesh" id="BoxMesh_jyhfs"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tbgi4"]
+size = Vector3(1.5, 1.5, 1.5)
+
 [node name="main" type="Node3D" unique_id=2102349628]
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
@@ -64,4 +70,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -5)
 mesh = SubResource("BoxMesh_sugp2")
 
 [node name="collisions" type="CollisionShape3D" parent="Decor/mur" unique_id=937195199]
+shape = SubResource("BoxShape3D_jyhfs")
+
+[node name="caisse" type="StaticBody3D" parent="Decor" unique_id=1975595329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+
+[node name="visuel" type="MeshInstance3D" parent="Decor/caisse" unique_id=1524150264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
+mesh = SubResource("BoxMesh_jyhfs")
+
+[node name="collisions" type="CollisionShape3D" parent="Decor/caisse" unique_id=428396030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
+shape = SubResource("BoxShape3D_tbgi4")
+
+[node name="mur_gauche" type="StaticBody3D" parent="Decor" unique_id=1374854748]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5, 1.6, 0)
+
+[node name="visuel" type="MeshInstance3D" parent="Decor/mur_gauche" unique_id=71899973]
+mesh = SubResource("BoxMesh_sugp2")
+
+[node name="collisions" type="CollisionShape3D" parent="Decor/mur_gauche" unique_id=1792740105]
 shape = SubResource("BoxShape3D_jyhfs")
