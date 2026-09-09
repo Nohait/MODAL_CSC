@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://6j050metnw7f" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/extincteur.tscn" id="2_g2els"]
 [ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/extincteur.gd" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interface_joueur.gd" id="4_interface"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sysh0"]
 
@@ -16,6 +17,12 @@ size = Vector3(0.1, 0.1, 2)
 albedo_color = Color(0.17155394, 0.46661443, 1, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_fond"]
+bg_color = Color(0.06, 0.07, 0.09, 0.95)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_charge"]
+bg_color = Color(1, 1, 1, 1)
 
 [node name="player" type="CharacterBody3D" unique_id=1836946001 groups=["player"]]
 script = ExtResource("1_3vyb7")
@@ -42,3 +49,40 @@ shape = SubResource("CapsuleShape3D_sge3q")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1946200496]
 transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 5, 6, 5)
+
+[node name="Interface" type="CanvasLayer" parent="." unique_id=1569438624]
+editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'affichage 2D des déplacements du monde 3D. Le script lit simplement la charge de l'extincteur."
+script = ExtResource("4_interface")
+
+[node name="Reserve" type="VBoxContainer" parent="Interface" unique_id=815601660]
+editor_description = "Range automatiquement le titre, la jauge et l'état verticalement, en haut à gauche. Mouse Filter est sur Ignore pour laisser les clics servir au tir."
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 364.0
+offset_bottom = 110.0
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Titre" type="Label" parent="Interface/Reserve" unique_id=1781822031]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "Mousse"
+
+[node name="Jauge" type="ProgressBar" parent="Interface/Reserve" unique_id=71629810]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBox_reserve_fond")
+theme_override_styles/fill = SubResource("StyleBox_reserve_charge")
+step = 0.0
+value = 100.0
+show_percentage = false
+
+[node name="Etat" type="Label" parent="Interface/Reserve" unique_id=450970133]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "Prêt"

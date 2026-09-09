@@ -21,6 +21,12 @@ size = Vector3(100, 0.2, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_sgp6g"]
 size = Vector3(100, 0.2, 100)
 
+[sub_resource type="BoxMesh" id="BoxMesh_sugp2"]
+size = Vector3(10, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jyhfs"]
+size = Vector3(10, 3, 0.5)
+
 [node name="main" type="Node3D" unique_id=2102349628]
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
@@ -35,16 +41,27 @@ shadow_enabled = true
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
 
-[node name="floor" type="StaticBody3D" parent="." unique_id=1045521397]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="floor" unique_id=1516817490]
-mesh = SubResource("BoxMesh_sysh0")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="floor" unique_id=39777274]
-shape = SubResource("BoxShape3D_sgp6g")
-
 [node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="ennemi" parent="." unique_id=696569544 groups=["player"] instance=ExtResource("2_0wfyh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 3)
+
+[node name="Decor" type="Node3D" parent="." unique_id=1801484677]
+
+[node name="sol" type="StaticBody3D" parent="Decor" unique_id=1045521397]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Decor/sol" unique_id=1516817490]
+mesh = SubResource("BoxMesh_sysh0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Decor/sol" unique_id=39777274]
+shape = SubResource("BoxShape3D_sgp6g")
+
+[node name="mur" type="StaticBody3D" parent="Decor" unique_id=404490295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -5)
+
+[node name="visuel" type="MeshInstance3D" parent="Decor/mur" unique_id=1666567145]
+mesh = SubResource("BoxMesh_sugp2")
+
+[node name="collisions" type="CollisionShape3D" parent="Decor/mur" unique_id=937195199]
+shape = SubResource("BoxShape3D_jyhfs")
