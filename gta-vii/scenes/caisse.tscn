@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[sub_resource type="BoxMesh" id="BoxMesh_caisse"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_caisse"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[node name="caisse" type="StaticBody3D"]
+editor_description = "Modèle de caisse réutilisable. Le visuel et la collision sont centrés sur ce parent. Dans un niveau, déplacer l'instance entière pour placer la caisse. Pour une hauteur de 1.5 et un sol à Y = 0.1, placer son centre à Y = 0.85."
+
+[node name="visuel" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_caisse")
+
+[node name="collisions" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_caisse")

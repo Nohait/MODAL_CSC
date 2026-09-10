@@ -3,6 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
+[ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -27,13 +29,8 @@ size = Vector3(10, 3, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jyhfs"]
 size = Vector3(10, 3, 0.5)
 
-[sub_resource type="BoxMesh" id="BoxMesh_jyhfs"]
-size = Vector3(1.5, 1.5, 1.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_tbgi4"]
-size = Vector3(1.5, 1.5, 1.5)
-
 [node name="main" type="Node3D" unique_id=2102349628]
+script = ExtResource("5_test")
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
 editor_description = "Éclairage du niveau de test. Les deux nœuds ci-dessous permettent de voir le terrain et les personnages sans script."
@@ -72,16 +69,11 @@ mesh = SubResource("BoxMesh_sugp2")
 [node name="collisions" type="CollisionShape3D" parent="Decor/mur" unique_id=937195199]
 shape = SubResource("BoxShape3D_jyhfs")
 
-[node name="caisse" type="StaticBody3D" parent="Decor" unique_id=1975595329]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+[node name="caisse" parent="Decor" unique_id=1975595329 instance=ExtResource("4_caisse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.85, 8)
 
-[node name="visuel" type="MeshInstance3D" parent="Decor/caisse" unique_id=1524150264]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
-mesh = SubResource("BoxMesh_jyhfs")
-
-[node name="collisions" type="CollisionShape3D" parent="Decor/caisse" unique_id=428396030]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
-shape = SubResource("BoxShape3D_tbgi4")
+[node name="caisse_2" parent="Decor" unique_id=1135792342 instance=ExtResource("4_caisse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.85, -2)
 
 [node name="mur_gauche" type="StaticBody3D" parent="Decor" unique_id=1374854748]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5, 1.6, 0)
