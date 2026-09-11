@@ -4,6 +4,9 @@ extends CanvasLayer
 @onready var extincteur = $"../visual/weapon_holder/Extincteur"
 @onready var jauge: ProgressBar = $Reserve/Jauge
 @onready var etat: Label = $Reserve/Etat
+# Le joueur calcule le cooldown effectif ; l'interface ne fait que l'afficher.
+@onready var joueur = get_parent()
+@onready var bonus_escorte: Label = $BonusEscorte
 
 @onready var BarreDeVie: ProgressBar = $Vie/BarreDeVie
 @export var vie_max := 100.0
@@ -32,6 +35,11 @@ func _process(_delta: float) -> void:
 
 
 func maj_affichage() -> void:
+	# Le bonus est un état continu, comme la jauge : on reflète sa valeur à chaque image.
+	if joueur.bonus_dash_actif:
+		bonus_escorte.text = "Escorte : dash -20 %% (%.2f s)" % joueur.get_dash_cooldown()
+	else:
+		bonus_escorte.text = "Escorte : aucun bonus"
 	jauge.value = extincteur.charge
 
 	# Feedback utilisateur sur la surchauffe :

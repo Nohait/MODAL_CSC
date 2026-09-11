@@ -3,6 +3,12 @@ extends CharacterBody3D
 signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
+@onready var navigation_agent: NavigationAgent3D = $NavigationAgent
+
+@export_group("Bonus d'escorte")
+## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
+## Plusieurs sportives ne cumulent pas leur bonus. L'évacuation retire leur contribution.
+@export var bonus_dash: bool = false
 
 @export_group("Suivi")
 
@@ -30,7 +36,22 @@ func _on_detection_body_exited(body: Node3D) -> void:
 		interaction_label.visible = false
 		
 func _ready() -> void:
-	update_interaction_label()	
+	# Chaque sportive possède sa propre copie du matériau : sa couleur orange
+	# ne doit pas recolorer les victimes ordinaires qui partagent la même ressource.
+	if bonus_dash:
+		var visuel: MeshInstance3D = $MeshInstance3D
+		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
+		materiau.albedo_color = Color(1.0, 0.65, 0.12, 1.0)
+		visuel.set_surface_override_material(0, materiau)
+		$BonusLabel.show()
+	update_interaction_label()
+
+
+func get_nom_affiche() -> String:
+	# Le nom du nœud distingue les individus ; le suffixe explique leur type au menu.
+	if bonus_dash:
+		return "%s (sportive : dash -20 %%)" % name
+	return str(name)
 
 func _physics_process(_delta: float) -> void:
 	if player_nearby and not is_freed:
@@ -49,20 +70,30 @@ func free_victim() -> void:
 	print("Victime libérée")
 	
 func follow_target_node() -> void:
-	var to_target: Vector3 = follow_target.global_position - global_position
-	
-	to_target.y = 0.0
-	
-	var distance: float = to_target.length()
+	# Le maillage de navigation doit avoir été synchronisé par Godot.
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()	) == 0:
+		return
 
-	if distance > stop_distance:
-		var direction: Vector3 = to_target.normalized()
-		
-		velocity.x = direction.x * follow_speed
-		velocity.z = direction.z * follow_speed
-	else:
-		velocity.x = 0.0
-		velocity.z = 0.0
+	# Mesurer la distance horizontale avec la cible pour garder l'espacement.
+	var to_target := follow_target.global_position - global_position
+	to_target.y = 0.0
+
+	velocity.x = 0.0
+	velocity.z = 0.0
+
+	if to_target.length() > stop_distance:
+		# Donner à l'agent la destination : le joueur ou la victime précédente.
+		navigation_agent.target_position = follow_target.global_position
+
+		# L'agent renvoie le prochain point du chemin, pas forcément la cible.
+		var next_position := navigation_agent.get_next_path_position()
+		var direction := next_position - global_position
+		direction.y = 0.0
+
+		if direction.length() > 0.01:
+			direction = direction.normalized()
+			velocity.x = direction.x * follow_speed
+			velocity.z = direction.z * follow_speed
 
 	move_and_slide()
 

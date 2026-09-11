@@ -72,6 +72,18 @@ transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70
 editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'affichage 2D des déplacements du monde 3D. Le script lit simplement la charge de l'extincteur."
 script = ExtResource("4_interface")
 
+[node name="BonusEscorte" type="Label" parent="Interface"]
+offset_left = 25.0
+offset_top = 210.0
+offset_right = 490.0
+offset_bottom = 240.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "Escorte : aucun bonus"
+
 [node name="Vie" type="VBoxContainer" parent="Interface" unique_id=1609755627]
 editor_description = "Barre de vie : fond opaque et remplissage bleu définis dans Theme Overrides > Styles de BarreDeVie. La couleur du remplissage est indépendante du texte."
 offset_left = 25.0
