@@ -48,7 +48,9 @@ environment = SubResource("Environment_test")
 [node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="ennemi" parent="." unique_id=696569544 instance=ExtResource("2_0wfyh")]
+[node name="Ennemis" type="Node3D" parent="." unique_id=2078139259 groups=["enemies"]]
+
+[node name="ennemi" parent="Ennemis" unique_id=696569544 instance=ExtResource("2_0wfyh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 3)
 
 [node name="victime" parent="." unique_id=1870513431 instance=ExtResource("4_tefeu")]
