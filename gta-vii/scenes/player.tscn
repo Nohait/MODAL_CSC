@@ -57,6 +57,7 @@ mesh = SubResource("BoxMesh_sysh0")
 surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="weapon_holder" type="Node3D" parent="visual" unique_id=1552559189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30966657, 0, 0)
 
 [node name="Extincteur" parent="visual/weapon_holder" unique_id=826892117 instance=ExtResource("2_g2els")]
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, -0.5)

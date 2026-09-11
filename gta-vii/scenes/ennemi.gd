@@ -1,4 +1,7 @@
 extends CharacterBody3D
+# L'agent calcule le chemin ; ce CharacterBody3D réalise le déplacement.
+@onready var navigation_agent: NavigationAgent3D = $NavigationAgent
+
 var cible = null
 @export var vie_max := 100.0
 var vie := vie_max
@@ -33,6 +36,11 @@ func _on_surface_detection_body_entered(body: Node3D) -> void:
 func _physics_process(delta):
 	
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
+	# Le joueur peut avoir été supprimé après sa mort : ne plus lire sa position.
+	if not is_instance_valid(cible):
+		cible = null
+		velocity = Vector3.ZERO
+		return
 	
 	if cible != null:	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
@@ -44,9 +52,8 @@ func _physics_process(delta):
 			move_and_slide()	
 			
 		elif distance > distance_attaque: # comportement dans la range
-			var direction = global_position.direction_to(cible.global_position)
-			velocity = direction * vitesse_ennemi
-			move_and_slide()	
+			# Suivre les étapes d'un chemin au lieu de foncer directement vers le joueur.
+			suivre_cible_navigation()
 			
 		else: #comportement dans la portée d'attaque
 			velocity = Vector3.ZERO 
@@ -54,6 +61,29 @@ func _physics_process(delta):
 			if attaque_timer < 0.0:
 				attaque()
 			
+func suivre_cible_navigation() -> void:
+	# Arrêt par défaut si la carte n'est pas prête ou si aucun chemin n'est trouvé.
+	velocity = Vector3.ZERO
+	# Au démarrage, Godot synchronise la carte de navigation avec le monde physique.
+	# Une itération à 0 indique qu'il faut attendre le prochain delta.
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
+		return
+
+	# La destination est actualisée car le joueur peut bouger pendant la poursuite.
+	navigation_agent.target_position = cible.global_position
+	var prochaine_position := navigation_agent.get_next_path_position()
+
+	# Ce point peut être intermédiaire.
+	var direction := prochaine_position - global_position
+	direction.y = 0.0 # Déplacement horizontal
+	if direction.length() > 0.01:
+		# Normaliser conserve uniquement la direction.
+		velocity = direction.normalized() * vitesse_ennemi
+
+	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
+	move_and_slide()
+
+
 func prendre_degats(degats: float) -> void:
 	vie -= degats
 	vie = max(vie, 0)

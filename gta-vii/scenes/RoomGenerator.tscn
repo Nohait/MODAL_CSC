@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://3l06fy2fiwuj"]
+
+[ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/room_generator.gd" id="1_ydscg"]
+
+[node name="RoomGenerator" type="Node3D" unique_id=1550870647]
+script = ExtResource("1_ydscg")
