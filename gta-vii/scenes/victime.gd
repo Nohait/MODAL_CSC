@@ -1,6 +1,18 @@
 extends CharacterBody3D
 
+signal freed(victim: CharacterBody3D)
+
 @onready var interaction_label: Label3D = $InteractionLabel
+
+@export_group("Suivi")
+
+## Vitesse de déplacement de la victime.
+@export_range(0.0, 20.0, 0.1, "or_greater") var follow_speed: float = 3.0
+
+# Distance à laquelle la victime s'arrête de suivre sa cible.
+@export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
+
+var follow_target: Node3D = null
 
 var player_nearby := false
 var is_freed := false
@@ -25,10 +37,34 @@ func _physics_process(_delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			free_victim()
 
+	if is_freed and follow_target != null:
+		follow_target_node()
+
 func free_victim() -> void:
 	is_freed = true
 	interaction_label.visible = false
+
+	freed.emit(self)
+
 	print("Victime libérée")
+	
+func follow_target_node() -> void:
+	var to_target: Vector3 = follow_target.global_position - global_position
+	
+	to_target.y = 0.0
+	
+	var distance: float = to_target.length()
+
+	if distance > stop_distance:
+		var direction: Vector3 = to_target.normalized()
+		
+		velocity.x = direction.x * follow_speed
+		velocity.z = direction.z * follow_speed
+	else:
+		velocity.x = 0.0
+		velocity.z = 0.0
+
+	move_and_slide()
 
 func update_interaction_label() -> void:
 	var events := InputMap.action_get_events("interact")

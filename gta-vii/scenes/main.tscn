@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
 [ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victime.tscn" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
+[ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -51,8 +52,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="ennemi" parent="." unique_id=696569544 instance=ExtResource("2_0wfyh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 3)
 
-[node name="victime" parent="." unique_id=1870513431 instance=ExtResource("4_tefeu")]
+[node name="victime1" parent="." unique_id=1870513431 instance=ExtResource("4_tefeu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, 10)
+
+[node name="victime2" parent="." unique_id=497796421 instance=ExtResource("4_tefeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, -10)
+
+[node name="victime3" parent="." unique_id=956654796 instance=ExtResource("4_tefeu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.75, -10)
 
 [node name="Decor" type="Node3D" parent="." unique_id=1801484677]
 
@@ -87,3 +94,6 @@ mesh = SubResource("BoxMesh_sugp2")
 
 [node name="collisions" type="CollisionShape3D" parent="Decor/mur_gauche" unique_id=1792740105]
 shape = SubResource("BoxShape3D_jyhfs")
+
+[node name="VictimManager" type="Node3D" parent="." unique_id=595087372]
+script = ExtResource("7_o6xl0")
