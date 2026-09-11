@@ -32,7 +32,7 @@ radius = 0.1
 height = 0.1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
-radius = 4.0
+radius = 2.8
 
 [sub_resource type="BoxMesh" id="BoxMesh_afuq2"]
 
