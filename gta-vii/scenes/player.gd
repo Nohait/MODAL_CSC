@@ -1,5 +1,8 @@
 extends CharacterBody3D
 
+# Mode de test : activé depuis main.gd avec la touche I.
+var invincible: bool = false
+
 
 @onready var camera: Camera3D = $Camera3D
 @onready var visual: Node3D = $visual
@@ -21,6 +24,19 @@ var last_direction := Vector3.FORWARD
 var is_dashing := false
 var dash_time_left := 0.0
 var dash_cooldown_left := 0.0
+
+# Le gestionnaire active ce booléen si une victime sportive est dans la file.
+# Un booléen ne peut pas s'additionner : deux sportives ne doublent pas le bonus.
+var bonus_dash_actif: bool = false
+const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
+
+
+func get_dash_cooldown() -> float:
+	# Conserver dash_cooldown comme valeur de base évite les erreurs de cumul.
+	# Exemple : 0.2 seconde × (1 - 0.2) = 0.16 seconde avec le bonus.
+	if bonus_dash_actif:
+		return dash_cooldown * (1.0 - REDUCTION_DASH_ESCORTE)
+	return dash_cooldown
 
 
 func _physics_process(delta: float) -> void:
@@ -61,7 +77,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
 		#initialise le dash
 		is_dashing = true
-		dash_cooldown_left = dash_cooldown
+		# Chaque nouveau dash utilise le délai effectif, avec ou sans escorte.
+		# Un délai déjà commencé n'est pas recalculé en cours de route.
+		dash_cooldown_left = get_dash_cooldown()
 		dash_time_left = dash_duration
 		
 	if dash_cooldown_left > 0.0:
@@ -131,6 +149,9 @@ func _physics_process(delta: float) -> void:
 
 
 func prendre_degats(degats: float) -> void:
+	# Quitter la fonction avant de retirer de la vie si le mode est actif.
+	if invincible:
+		return
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
 	BarreDeVie.value = BarreDeVie.value

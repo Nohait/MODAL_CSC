@@ -17,6 +17,25 @@ albedo_color = Color(0.17155394, 0.46661443, 1, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_vie_fond"]
+bg_color = Color(0.045, 0.06, 0.085, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.45, 0.55, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_vie_remplissage"]
+bg_color = Color(0.188, 0.541, 0.8, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_reserve_fond"]
 bg_color = Color(0.06, 0.07, 0.09, 0.95)
 
@@ -52,21 +71,46 @@ transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70
 editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'affichage 2D des déplacements du monde 3D. Le script lit simplement la charge de l'extincteur."
 script = ExtResource("4_interface")
 
+[node name="BonusEscorte" type="Label" parent="Interface"]
+offset_left = 25.0
+offset_top = 210.0
+offset_right = 490.0
+offset_bottom = 240.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "Escorte : aucun bonus"
+
 [node name="Vie" type="VBoxContainer" parent="Interface" unique_id=1609755627]
-offset_left = 26.0
-offset_right = 361.0
-offset_bottom = 71.0
+editor_description = "Barre de vie : fond opaque et remplissage bleu définis dans Theme Overrides > Styles de BarreDeVie. La couleur du remplissage est indépendante du texte."
+offset_left = 25.0
+offset_top = 12.0
+offset_right = 365.0
+offset_bottom = 65.0
+mouse_filter = 2
+theme_override_constants/separation = 4
 
 [node name="Titre" type="Label" parent="Interface/Vie" unique_id=540207653]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "VIE"
 
 [node name="BarreDeVie" type="ProgressBar" parent="Interface/Vie" unique_id=2044568990]
+custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.84705883, 1, 0.41568628, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+theme_override_styles/background = SubResource("StyleBox_vie_fond")
+theme_override_styles/fill = SubResource("StyleBox_vie_remplissage")
 step = 0.0
+value = 100.0
 
 [node name="Reserve" type="VBoxContainer" parent="Interface" unique_id=815601660]
 editor_description = "Range automatiquement le titre, la jauge et l'état verticalement, en haut à gauche. Mouse Filter est sur Ignore pour laisser les clics servir au tir."

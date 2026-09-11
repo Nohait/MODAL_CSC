@@ -1,0 +1,126 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/point_evacuation.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Vert"]
+albedo_color = Color(0.12, 0.7, 0.35, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="Borne"]
+material = SubResource("Vert")
+size = Vector3(1.2, 1.4, 0.8)
+
+[sub_resource type="SphereShape3D" id="Zone"]
+radius = 2.5
+
+[sub_resource type="BoxShape3D" id="Solide"]
+size = Vector3(1.2, 1.4, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="Fond"]
+bg_color = Color(0.05, 0.08, 0.1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[node name="PointEvacuation" type="Node3D"]
+process_mode = 3
+editor_description = "Borne d'évacuation. E ouvre la sélection à proximité. Le jeu reste en pause pendant le menu. Attribuer Victim Manager dans l'Inspecteur."
+script = ExtResource("1_script")
+
+[node name="Borne" type="StaticBody3D" parent="."]
+position = Vector3(0, 0.7, 0)
+
+[node name="Visuel" type="MeshInstance3D" parent="Borne"]
+mesh = SubResource("Borne")
+
+[node name="Collision" type="CollisionShape3D" parent="Borne"]
+shape = SubResource("Solide")
+
+[node name="Titre" type="Label3D" parent="."]
+position = Vector3(0, 2.1, 0)
+billboard = 1
+text = "ÉVACUATION"
+font_size = 48
+
+[node name="Indication" type="Label3D" parent="."]
+visible = false
+position = Vector3(0, 1.7, 0)
+billboard = 1
+text = "[E] Évacuer"
+font_size = 36
+
+[node name="Detection" type="Area3D" parent="."]
+
+[node name="Forme" type="CollisionShape3D" parent="Detection"]
+shape = SubResource("Zone")
+
+[node name="Interface" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Menu" type="Control" parent="Interface"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Voile" type="ColorRect" parent="Interface/Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.65)
+
+[node name="Centre" type="CenterContainer" parent="Interface/Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panneau" type="PanelContainer" parent="Interface/Menu/Centre"]
+custom_minimum_size = Vector2(520, 360)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Fond")
+
+[node name="Marge" type="MarginContainer" parent="Interface/Menu/Centre/Panneau"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Contenu" type="VBoxContainer" parent="Interface/Menu/Centre/Panneau/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Titre" type="Label" parent="Interface/Menu/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Évacuer une victime"
+
+[node name="Consigne" type="Label" parent="Interface/Menu/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+text = "Choisissez une victime à mettre en sécurité."
+
+[node name="Defilement" type="ScrollContainer" parent="Interface/Menu/Centre/Panneau/Marge/Contenu"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Liste" type="VBoxContainer" parent="Interface/Menu/Centre/Panneau/Marge/Contenu/Defilement"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Bilan" type="Label" parent="Interface/Menu/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+text = "Victimes évacuées : 0"
+
+[node name="Fermer" type="Button" parent="Interface/Menu/Centre/Panneau/Marge/Contenu"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Retour au jeu (Échap)"

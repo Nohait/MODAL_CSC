@@ -8,6 +8,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if event.pressed and (not event.echo) and (event.keycode == KEY_R):
 			# On recharge la scène
 			get_tree().reload_current_scene()
+		elif event.pressed and (not event.echo) and (event.keycode == KEY_I):
+			# Le joueur peut avoir été supprimé après sa mort.
+			var joueur = get_node_or_null("player")
+			if joueur == null:
+				return
+			# "not" inverse le booléen : un appui active, le suivant désactive.
+			joueur.invincible = not joueur.invincible
+			if joueur.invincible:
+				$InterfaceTest/EtatInvincibilite.text = "TEST : INVINCIBLE — I pour désactiver"
+			else:
+				$InterfaceTest/EtatInvincibilite.text = "I : activer l'invincibilité"
 
 
 #Génération aléatoire du nombre d'ennemis
