@@ -3,19 +3,25 @@ extends CharacterBody3D
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 
 var cible = null
+
 @export var vie_max := 100.0
+@export var vitesse_ennemi = 7
 var vie := vie_max
 var hitbox_radius = 0.9
 
+@export_group('Portée')
 @export var distance_attaque = 1.3
 @export var distance_detection = 10.0
 @export var distance_lacher = 20.0
 
+@export_group("Attaque")
 @export var attaque_cooldown = 1.0
-@export var attaque_timer = 0.0 #temps initialisé à 0
+var attaque_timer = 0.0 #temps initialisé à 0
 @export var degats_ennemi = 10.0
+@export var repos_apres_attaque := 0.3
+var timer_apres_attaque := 0.0
 
-@export var vitesse_ennemi = 7
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -35,8 +41,13 @@ func _on_surface_detection_body_entered(body: Node3D) -> void:
 		cible = body
 		
 func _physics_process(delta):
-	
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
+	timer_apres_attaque -= delta
+	
+	if timer_apres_attaque > 0.0:
+		velocity = Vector3.ZERO
+		move_and_slide()
+		return
 	# Le joueur peut avoir été supprimé après sa mort : ne plus lire sa position.
 	if not is_instance_valid(cible):
 		cible = null
@@ -45,7 +56,6 @@ func _physics_process(delta):
 	
 	if cible != null:	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
-		
 		
 		if distance > distance_lacher: #calcul de sortie de range
 			cible = null
@@ -103,8 +113,12 @@ func attaque() -> void:
 	if cible != null:
 		var multiplier = randf_range(0.9,1.1)
 		cible.prendre_degats(round(multiplier * degats_ennemi *100.0)/100.0)
-		
+
 	attaque_timer = attaque_cooldown
+	timer_apres_attaque = repos_apres_attaque
+
+	
+
 
 func couleur_degats(degats: float) -> Color:
 	
@@ -115,9 +129,6 @@ func couleur_degats(degats: float) -> Color:
 	
 	return blanc.lerp(orange, t)
 	
-
-
-
 #On affiche les dégats
 var popup_tween: Tween
 func afficher_degats(degats: float) -> void:
