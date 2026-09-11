@@ -16,7 +16,7 @@ extends Node3D
 @export_group("Attaque")
 ## Demi-angle en degrés : 30 donne une ouverture totale de 60 degrés.
 ## La portée se règle dans DamageArea/CollisionShape3D ; le jet visuel reste indépendant.
-@export_range(0.0, 180.0, 1.0) var cone_angle: float = 30.0
+@export_range(0.0, 180.0, 1.0) var cone_angle: float = 15.0
 
 # Attendre que Godot ait chargé les valeurs choisies dans l'Inspecteur.
 @onready var charge: float = max_charge #Charge actuelle au démarrage
