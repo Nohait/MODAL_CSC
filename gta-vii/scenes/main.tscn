@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 [ext_resource type="PackedScene" path="res://scenes/point_evacuation.tscn" id="8_evacuation"]
+[ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -128,3 +129,6 @@ script = ExtResource("7_o6xl0")
 [node name="PointEvacuation" parent="." unique_id=246125500 node_paths=PackedStringArray("victim_manager") instance=ExtResource("8_evacuation")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.1, 0)
 victim_manager = NodePath("../VictimManager")
+
+[node name="RoomManager" type="Node3D" parent="." unique_id=1555917378]
+script = ExtResource("9_85g3d")

@@ -40,13 +40,17 @@ func evacuate_victim(victim: CharacterBody3D) -> void:
 	# Seules les victimes présentes dans notre escorte peuvent être évacuées.
 	if not is_instance_valid(victim) or not freed_victims.has(victim):
 		return
+
 	freed_victims.erase(victim)
 	evacuated_count += 1
+
 	reorganiser_file()
 	actualiser_bonus()
-	# queue_free programme la destruction en fin d'image, sans interrompre le clic.
+
+	# queue_free programme la destruction en fin d'image.
 	victim.queue_free()
-	# Le menu écoute ce signal : il reconstruira ses boutons et le compteur.
+
+	# Le menu reconstruit sa liste et son compteur.
 	escort_changed.emit()
 
 
