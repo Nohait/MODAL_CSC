@@ -10,7 +10,7 @@ const COULEUR_SURCHAUFFE = Color(1.0, 0.35, 0.3)
 
 
 func _ready() -> void:
-	jauge.max_value = extincteur.MAX_CHARGE
+	jauge.max_value = extincteur.max_charge
 	maj_affichage()
 
 
@@ -30,7 +30,7 @@ func maj_affichage() -> void:
 	elif extincteur.is_attacking:
 		jauge.self_modulate = COULEUR_NORMALE
 		etat.text = "Jet en cours"
-	elif extincteur.charge < extincteur.MAX_CHARGE:
+	elif extincteur.charge < extincteur.max_charge:
 		jauge.self_modulate = COULEUR_NORMALE
 		etat.text = "Recharge en cours"
 	else:

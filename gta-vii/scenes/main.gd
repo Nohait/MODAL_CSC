@@ -1,6 +1,6 @@
 extends Node3D
 
-
+# A SUPPRIMER DANS LE JEU REEL 
 func _unhandled_key_input(event: InputEvent) -> void:
 	# Pour beta_test : R recommence le niveau. On ignore 
 	# les répétitions automatiques lorsqu'elle reste enfoncée.

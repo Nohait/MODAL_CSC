@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cj5mcflqq4lnc"]
 
+[ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/extincteur.gd" id="1_script"]
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_afuq2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bqdvy"]
@@ -34,6 +36,7 @@ radius = 4.0
 [sub_resource type="BoxMesh" id="BoxMesh_afuq2"]
 
 [node name="Extincteur" type="Node3D" unique_id=826892117]
+script = ExtResource("1_script")
 
 [node name="body" type="MeshInstance3D" parent="." unique_id=318434896]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)

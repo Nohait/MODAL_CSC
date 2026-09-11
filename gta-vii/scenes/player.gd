@@ -5,9 +5,15 @@ extends CharacterBody3D
 @onready var visual: Node3D = $visual
 @onready var Extincteur = $visual/weapon_holder/Extincteur
 
-const SPEED = 5.0
-const DASH_SPEED = 50.0
-const DASH_DURATION = 0.1 #Durée en secondes : v×t donne environ 5 unités de dash
+@export_group("Déplacement")
+## Vitesse de marche, en unités par seconde.
+@export_range(0.0, 100.0, 0.1, "or_greater") var speed: float = 5.0
+
+@export_group("Dash")
+## Vitesse du dash, en unités par seconde.
+@export_range(0.0, 100.0, 0.1, "or_greater") var dash_speed: float = 50.0
+## Durée en secondes. Vitesse × durée donne la distance approximative du dash.
+@export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
 
 var last_direction := Vector3.FORWARD 
 var is_dashing := false
@@ -52,13 +58,13 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and (not is_dashing):
 		#initialise le dash
 		is_dashing = true
-		dash_time_left = DASH_DURATION
+		dash_time_left = dash_duration
 
 	
 	if is_dashing:
 		#applique le dash
-		velocity.x = last_direction.x * DASH_SPEED
-		velocity.z = last_direction.z * DASH_SPEED
+		velocity.x = last_direction.x * dash_speed
+		velocity.z = last_direction.z * dash_speed
 		
 		dash_time_left -= delta
 		
@@ -70,8 +76,8 @@ func _physics_process(delta: float) -> void:
 			direction = direction.normalized()
 			#On update la dernière direction prise
 			last_direction = direction
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
 		else:
 			velocity.x = 0.0
 			velocity.z = 0.0

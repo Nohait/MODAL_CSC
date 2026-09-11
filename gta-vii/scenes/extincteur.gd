@@ -5,13 +5,21 @@ extends Node3D
 @onready var muzzle: Node3D = $Muzzle
 @onready var direction_marker: Marker3D = $Muzzle/DirectionMarker
 
-const MAX_CHARGE = 100.0 #Gère la charge maximale de l'extincteur
-const CONSUMPTION_RATE = 25.0 #Gère la consommation de l'extincteur
-const RECHARGE_RATE = CONSUMPTION_RATE * 2.0 #taux de rechare
-const RANGE = 4.0
-const CONE_ANGLE = 30.0 #Demi-angle du cône d'attaque, en degrés
+@export_group("Charge")
+## Réserve maximale de l'extincteur au début du niveau.
+@export_range(1.0, 1000.0, 1.0, "or_greater") var max_charge: float = 100.0
+## Quantité de charge consommée par seconde de tir.
+@export_range(0.0, 100.0, 0.1, "or_greater") var consumption_rate: float = 25.0
+## Quantité récupérée par seconde, réglable indépendamment de la consommation.
+@export_range(0.1, 100.0, 0.1, "or_greater") var reload_rate: float = 50.0
 
-var charge := MAX_CHARGE #Charge actuelle
+@export_group("Attaque")
+## Demi-angle en degrés : 30 donne une ouverture totale de 60 degrés.
+## La portée se règle dans DamageArea/CollisionShape3D ; le jet visuel reste indépendant.
+@export_range(0.0, 180.0, 1.0) var cone_angle: float = 30.0
+
+# Attendre que Godot ait chargé les valeurs choisies dans l'Inspecteur.
+@onready var charge: float = max_charge #Charge actuelle au démarrage
 var is_attacking := false 
 var is_overheated := false #Entre en cooldown forcé si l'extincteur tombe à 0
 
@@ -29,16 +37,16 @@ func stop_primary_attack() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_attacking:
-		charge -= CONSUMPTION_RATE * delta
+		charge -= consumption_rate * delta
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true
 			is_attacking = false
 			particles.emitting = false
 	else:
-		charge += RECHARGE_RATE * delta
-		if charge >= MAX_CHARGE:
-			charge = MAX_CHARGE
+		charge += reload_rate * delta
+		if charge >= max_charge:
+			charge = max_charge
 			is_overheated = false
 	
 	var bodies := damage_area.get_overlapping_bodies()
@@ -53,7 +61,7 @@ func _physics_process(delta: float) -> void:
 			var forward: Vector3 = (direction_marker.global_position - muzzle.global_position).normalized() #direction de visée du joueur
 
 			var alignment: float = forward.dot(target_direction) #produit scalaire entre les deux directions
-			var minimum_alignment: float = cos(deg_to_rad(CONE_ANGLE)) #calcul du cos minimal souhaité
+			var minimum_alignment: float = cos(deg_to_rad(cone_angle)) #calcul du cos minimal souhaité
 
 			if alignment >= minimum_alignment:
 				#si l'ennemi est dans le cône, on attaque

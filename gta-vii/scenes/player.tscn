@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://6j050metnw7f" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/extincteur.tscn" id="2_g2els"]
-[ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/extincteur.gd" id="3_qhqgy"]
 [ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interface_joueur.gd" id="4_interface"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sysh0"]
@@ -42,7 +41,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="Extincteur" parent="visual/weapon_holder" unique_id=826892117 instance=ExtResource("2_g2els")]
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, -0.5)
-script = ExtResource("3_qhqgy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=457942430]
 shape = SubResource("CapsuleShape3D_sge3q")
