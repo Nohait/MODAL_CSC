@@ -3,6 +3,7 @@ extends CharacterBody3D
 signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
+@onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 
 @export_group("Bonus d'escorte")
 ## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
@@ -69,20 +70,30 @@ func free_victim() -> void:
 	print("Victime libérée")
 	
 func follow_target_node() -> void:
-	var to_target: Vector3 = follow_target.global_position - global_position
-	
-	to_target.y = 0.0
-	
-	var distance: float = to_target.length()
+	# Le maillage de navigation doit avoir été synchronisé par Godot.
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()	) == 0:
+		return
 
-	if distance > stop_distance:
-		var direction: Vector3 = to_target.normalized()
-		
-		velocity.x = direction.x * follow_speed
-		velocity.z = direction.z * follow_speed
-	else:
-		velocity.x = 0.0
-		velocity.z = 0.0
+	# Mesurer la distance horizontale avec la cible pour garder l'espacement.
+	var to_target := follow_target.global_position - global_position
+	to_target.y = 0.0
+
+	velocity.x = 0.0
+	velocity.z = 0.0
+
+	if to_target.length() > stop_distance:
+		# Donner à l'agent la destination : le joueur ou la victime précédente.
+		navigation_agent.target_position = follow_target.global_position
+
+		# L'agent renvoie le prochain point du chemin, pas forcément la cible.
+		var next_position := navigation_agent.get_next_path_position()
+		var direction := next_position - global_position
+		direction.y = 0.0
+
+		if direction.length() > 0.01:
+			direction = direction.normalized()
+			velocity.x = direction.x * follow_speed
+			velocity.z = direction.z * follow_speed
 
 	move_and_slide()
 
