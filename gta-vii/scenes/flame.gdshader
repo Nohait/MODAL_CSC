@@ -11,14 +11,26 @@ uniform float distortion_strength = 0.2;
 uniform float pixelation = 32.0;
 uniform float emission_energy = 2.0;
 
+uniform vec3 object_scale = vec3(3.2,3.2,3.2);
 
 void vertex() {
+    vec3 scale = vec3(
+        length(MODEL_MATRIX[0].xyz),
+        length(MODEL_MATRIX[1].xyz),
+        length(MODEL_MATRIX[2].xyz)
+    );
+
+    VERTEX.x *= scale.x;
+    VERTEX.y *= scale.y;
+    VERTEX.z *= scale.z;
+
     MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
         vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0),
         vec4(0.0, 1.0, 0.0, 0.0),
         vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0),
         MODEL_MATRIX[3]
     );
+
     MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
 }
 
@@ -47,7 +59,7 @@ void fragment() {
     fire_color = mix(fire_color, color_mid.rgb, step(0.3, fire_intensity));
     fire_color = mix(fire_color, color_bottom.rgb, step(0.6, fire_intensity));
 
-    float alpha = 1.0;
+    float alpha = 0.8;
 
     ALBEDO = fire_color;
     EMISSION = fire_color * emission_energy;
