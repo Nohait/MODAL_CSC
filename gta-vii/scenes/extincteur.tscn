@@ -17,11 +17,12 @@ albedo_color = Color(0.036556315, 0.03655632, 0.03655632, 1)
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
 direction = Vector3(0, 1, 0)
 spread = 30.0
-initial_velocity_min = 8.0
-initial_velocity_max = 8.0
+flatness = 0.387
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
 gravity = Vector3(0, 0, 0)
-scale_min = 0.5
-scale_max = 1.5
+scale_min = 10.0
+scale_max = 10.0
 anim_speed_max = 11.71
 turbulence_noise_strength = 0.8
 turbulence_noise_scale = 4.0
@@ -50,10 +51,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_q3tmt")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Muzzle" unique_id=2081315521]
 editor_description = "Jet conique : Spread vaut 30 degrés (ouverture totale de 60 degrés). La vitesse de 8 et la durée de vie de 1 seconde allongent le jet. Pour changer uniquement sa longueur visuelle, ajuster Initial Velocity Min et Max dans Process Material. La zone d'attaque est indépendante de cet effet. Visibility AABB est élargie pour éviter que le jet disparaisse au bord de l'écran."
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96934927, 0)
-emitting = false
-amount = 200
+transform = Transform3D(0.011698604, 0, -0.9999315, 0, 1, 0, 0.9999315, 0, 0.011698604, 0, 0.96934927, 0)
+amount = 500
+lifetime = 0.5
 visibility_aabb = AABB(-9, -9, -9, 18, 18, 18)
+local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bqdvy")
 draw_pass_1 = SubResource("SphereMesh_poajv")
 
