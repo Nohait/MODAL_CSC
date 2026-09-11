@@ -1,5 +1,8 @@
 extends CharacterBody3D
 
+# Mode de test : activé depuis main.gd avec la touche I.
+var invincible: bool = false
+
 
 @onready var camera: Camera3D = $Camera3D
 @onready var visual: Node3D = $visual
@@ -131,6 +134,9 @@ func _physics_process(delta: float) -> void:
 
 
 func prendre_degats(degats: float) -> void:
+	# Quitter la fonction avant de retirer de la vie si le mode est actif.
+	if invincible:
+		return
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
 	BarreDeVie.value = BarreDeVie.value

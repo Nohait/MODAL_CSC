@@ -16,7 +16,7 @@ height = 1.3
 [sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
 radius = 2.0
 
-[node name="victime" type="CharacterBody3D" unique_id=1870513431]
+[node name="victime" type="CharacterBody3D" unique_id=1870513431 groups=["victims"]]
 script = ExtResource("1_gyep1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=489462347]

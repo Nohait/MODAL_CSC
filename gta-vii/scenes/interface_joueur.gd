@@ -9,7 +9,7 @@ extends CanvasLayer
 @export var vie_max := 100.0
 var vie := vie_max
 
-const COULEUR_VIE = Color(0.19, 0.54, 0.8, 1.0)
+const COULEUR_VIE = Color(0.188, 0.541, 0.8, 1.0)
 
 const COULEUR_NORMALE_EXTINCTEUR = Color(0.273, 0.562, 0.0, 1.0)
 const COULEUR_SURCHAUFFE_EXTINCTEUR = Color(1.0, 0.35, 0.3)
@@ -19,7 +19,7 @@ func _ready() -> void:
 	jauge.max_value = extincteur.max_charge
 	BarreDeVie.max_value = vie_max
 	BarreDeVie.value = vie
-	BarreDeVie.self_modulate = COULEUR_VIE
+
 	
 	maj_affichage()
 	

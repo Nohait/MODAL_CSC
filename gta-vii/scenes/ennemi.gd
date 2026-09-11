@@ -4,14 +4,14 @@ var cible = null
 var vie := vie_max
 
 @export var distance_attaque = 1.0
-@export var distance_detection = 5.0
-@export var distance_lacher = 10.0
+@export var distance_detection = 10.0
+@export var distance_lacher = 20.0
 
-@export var attaque_cooldown = 2.0
+@export var attaque_cooldown = 1.0
 @export var attaque_timer = 0.0 #temps initialisé à 0
 @export var degats = 10.0
 
-@export var vitesse_ennemi = 5.5
+@export var vitesse_ennemi = 6
 
 
 # Called when the node enters the scene tree for the first time.
@@ -19,7 +19,7 @@ func _ready() -> void:
 	var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 
-	position = Vector3(randi_range(-50,50),0.7,randi_range(-50,50)) #On place l'ennemi aléatoirment dans la map # /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
+	position = Vector3(randi_range(-20,20),0.7,randi_range(-20,20)) #On place l'ennemi aléatoirment dans la map # /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
 	
 	pass # Replace with function body.
 
@@ -61,8 +61,9 @@ func prendre_degats(degats: float) -> void:
 		mourir()
 		
 func mourir():
+	print("Bravo, vous avez tué l'ennemi")
+	
 	queue_free()
-	pass
 
 func attaque() -> void:
 	if cible != null:
