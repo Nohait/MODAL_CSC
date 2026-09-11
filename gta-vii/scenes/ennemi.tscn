@@ -110,4 +110,12 @@ shape = SubResource("CapsuleShape3D_gy6ao")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection" unique_id=546525673]
 shape = SubResource("SphereShape3D_ii04w")
 
+[node name="PopUpDegats" type="Label3D" parent="." unique_id=1533043065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+visible = false
+billboard = 1
+text = "-10"
+font_size = 50
+outline_size = 20
+
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]
