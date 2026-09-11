@@ -56,6 +56,7 @@ func _physics_process(delta):
 func prendre_degats(degats: float) -> void:
 	vie -= degats
 	vie = max(vie, 0)
+	#ajouter fonction qui montre les degats
 	if vie <= 0:
 		mourir()
 		

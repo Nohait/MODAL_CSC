@@ -123,6 +123,8 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 
+
+
 func prendre_degats(degats: float) -> void:
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
