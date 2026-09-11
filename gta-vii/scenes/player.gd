@@ -15,10 +15,12 @@ extends CharacterBody3D
 @export_range(0.0, 100.0, 0.1, "or_greater") var dash_speed: float = 50.0
 ## Durée en secondes. Vitesse × durée donne la distance approximative du dash.
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
+@export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.2
 
 var last_direction := Vector3.FORWARD 
 var is_dashing := false
 var dash_time_left := 0.0
+var dash_cooldown_left := 0.0
 
 
 func _physics_process(delta: float) -> void:
@@ -55,12 +57,15 @@ func _physics_process(delta: float) -> void:
 	var direction := camera_right * input_dir.x + camera_forward * (-input_dir.y)
 
 
-
 	
-	if Input.is_action_just_pressed("dash") and (not is_dashing):
+	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
 		#initialise le dash
 		is_dashing = true
+		dash_cooldown_left = dash_cooldown
 		dash_time_left = dash_duration
+		
+	if dash_cooldown_left > 0.0:
+		dash_cooldown_left -= delta
 
 	
 	if is_dashing:
