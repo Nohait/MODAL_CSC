@@ -144,3 +144,13 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 text = "Prêt"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=737152856]
+
+[node name="DamageFlash" type="ColorRect" parent="CanvasLayer" unique_id=564493702]
+visible = false
+offset_left = -92.0
+offset_top = -50.0
+offset_right = 1211.0
+offset_bottom = 704.0
+color = Color(0.81960785, 0.08235294, 0, 1)

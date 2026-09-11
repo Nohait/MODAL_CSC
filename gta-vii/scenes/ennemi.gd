@@ -5,8 +5,9 @@ extends CharacterBody3D
 var cible = null
 @export var vie_max := 100.0
 var vie := vie_max
+var hitbox_radius = 0.9
 
-@export var distance_attaque = 1.5
+@export var distance_attaque = 1.3
 @export var distance_detection = 10.0
 @export var distance_lacher = 20.0
 
@@ -88,6 +89,7 @@ func prendre_degats(degats: float) -> void:
 	vie -= degats
 	vie = max(vie, 0)
 	print( self.name, " Touché : -", degats)
+	
 	afficher_degats(degats)
 	
 	if vie <= 0:
@@ -113,6 +115,8 @@ func couleur_degats(degats: float) -> Color:
 	
 	return blanc.lerp(orange, t)
 	
+
+
 
 #On affiche les dégats
 var popup_tween: Tween

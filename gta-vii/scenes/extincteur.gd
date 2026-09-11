@@ -5,6 +5,7 @@ extends Node3D
 @onready var muzzle: Node3D = $Muzzle
 @onready var direction_marker: Marker3D = $Muzzle/DirectionMarker
 
+
 @export_group("Charge")
 ## Réserve maximale de l'extincteur au début du niveau.
 @export_range(1.0, 1000.0, 1.0, "or_greater") var max_charge: float = 100.0
@@ -60,14 +61,14 @@ func _physics_process(delta: float) -> void:
 			var origin: Vector3 = muzzle.global_position 
 			var to_target: Vector3 = target_body.global_position - origin
 			var target_direction: Vector3 = to_target.normalized() #direction à l'ennemi
-			var body_radius = body.get_node("CollisionShape3D").shape.radius
+			
 			var distance := to_target.length()
 			var forward: Vector3 = (direction_marker.global_position - muzzle.global_position).normalized() #direction de visée du joueur
 
 			var alignment: float = forward.dot(target_direction) #produit scalaire entre les deux directions
 			var angle = acos(alignment)
 
-			if angle <= deg_to_rad(cone_angle) + atan(body_radius / distance):
+			if angle <= deg_to_rad(cone_angle) + atan(body.hitbox_radius / distance):
 				#si l'ennemi est dans le cône, on attaque
 				
 				if Input.is_action_pressed("primary_attack") and !is_overheated:

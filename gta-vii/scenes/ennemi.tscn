@@ -21,8 +21,8 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_1ta0d"]
-radius = 0.94108015
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ta0d"]
+size = Vector3(1.7168427, 2.7529297, 0.43432617)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ii04w"]
 radius = 5.0
@@ -37,8 +37,8 @@ surface_material_override/0 = ExtResource("2_a8sfv")
 script = ExtResource("3_1ta0d")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=308344845]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9890845, 0.006474972)
-shape = SubResource("SphereShape3D_1ta0d")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0059127808, 1.3987525, 0.104985714)
+shape = SubResource("BoxShape3D_1ta0d")
 debug_color = Color(0, 0.6, 0.69803923, 1)
 
 [node name="SurfaceDetection" type="Area3D" parent="." unique_id=1118271271]

@@ -8,6 +8,8 @@ var invincible: bool = false
 @onready var visual: Node3D = $visual
 @onready var Extincteur = $visual/weapon_holder/Extincteur
 @onready var BarreDeVie = $Interface/Vie/BarreDeVie
+@onready var damage_flash: ColorRect = $CanvasLayer/DamageFlash
+var flash_tween: Tween
 
 @export_group("Déplacement")
 ## Vitesse de marche, en unités par seconde.
@@ -146,12 +148,22 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 
-
+func flash_degats() -> void:
+	if flash_tween:
+		flash_tween.kill()
+	damage_flash.visible = true
+	damage_flash.color.a = 0.0
+	
+	flash_tween = create_tween()
+	flash_tween.tween_property(damage_flash,"color:a",0.4,0.05)
+	flash_tween.tween_property(damage_flash,"color:a",0.0,0.2)
 
 func prendre_degats(degats: float) -> void:
 	# Quitter la fonction avant de retirer de la vie si le mode est actif.
 	if invincible:
 		return
+		
+	flash_degats()
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
 	BarreDeVie.value = BarreDeVie.value
