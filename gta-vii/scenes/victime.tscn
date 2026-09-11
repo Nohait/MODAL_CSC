@@ -38,5 +38,13 @@ billboard = 1
 text = "Libérer"
 font_size = 48
 
+[node name="BonusLabel" type="Label3D" parent="."]
+visible = false
+position = Vector3(0, 1.45, 0)
+billboard = 1
+text = "SPORTIVE\nDash : cooldown -20 %"
+font_size = 36
+modulate = Color(1, 0.8, 0.3, 1)
+
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
 [connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]

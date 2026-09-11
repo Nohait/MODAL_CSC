@@ -4,6 +4,11 @@ signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
 
+@export_group("Bonus d'escorte")
+## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
+## Plusieurs sportives ne cumulent pas leur bonus. L'évacuation retire leur contribution.
+@export var bonus_dash: bool = false
+
 @export_group("Suivi")
 
 ## Vitesse de déplacement de la victime.
@@ -30,7 +35,22 @@ func _on_detection_body_exited(body: Node3D) -> void:
 		interaction_label.visible = false
 		
 func _ready() -> void:
-	update_interaction_label()	
+	# Chaque sportive possède sa propre copie du matériau : sa couleur orange
+	# ne doit pas recolorer les victimes ordinaires qui partagent la même ressource.
+	if bonus_dash:
+		var visuel: MeshInstance3D = $MeshInstance3D
+		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
+		materiau.albedo_color = Color(1.0, 0.65, 0.12, 1.0)
+		visuel.set_surface_override_material(0, materiau)
+		$BonusLabel.show()
+	update_interaction_label()
+
+
+func get_nom_affiche() -> String:
+	# Le nom du nœud distingue les individus ; le suffixe explique leur type au menu.
+	if bonus_dash:
+		return "%s (sportive : dash -20 %%)" % name
+	return str(name)
 
 func _physics_process(_delta: float) -> void:
 	if player_nearby and not is_freed:
