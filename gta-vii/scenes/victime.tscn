@@ -31,4 +31,12 @@ shape = SubResource("CapsuleShape3D_2f56o")
 [node name="FormeDetection" type="CollisionShape3D" parent="Detection" unique_id=723925216]
 shape = SubResource("SphereShape3D_sysh0")
 
+[node name="InteractionLabel" type="Label3D" parent="." unique_id=692538401]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.83697385, 0)
+visible = false
+billboard = 1
+text = "Libérer"
+font_size = 48
+
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
+[connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]
