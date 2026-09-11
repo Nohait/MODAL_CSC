@@ -34,6 +34,21 @@ size = Vector3(10, 3, 0.5)
 [node name="main" type="Node3D" unique_id=2102349628]
 script = ExtResource("5_test")
 
+[node name="InterfaceTest" type="CanvasLayer" parent="."]
+editor_description = "Indication du mode invincible, réservé à cette scène de test. I active ou désactive le mode ; R recharge le niveau sans invincibilité."
+
+[node name="EtatInvincibilite" type="Label" parent="InterfaceTest"]
+offset_left = 25.0
+offset_top = 175.0
+offset_right = 500.0
+offset_bottom = 203.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "I : activer l'invincibilité"
+
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
 editor_description = "Éclairage du niveau de test. Les deux nœuds ci-dessous permettent de voir le terrain et les personnages sans script."
 

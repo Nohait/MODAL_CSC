@@ -68,7 +68,6 @@ func _physics_process(delta: float) -> void:
 
 			if alignment >= minimum_alignment:
 				#si l'ennemi est dans le cône, on attaque
-				print("Ennemi dans le cône :", target_body)
 				if Input.is_action_pressed("primary_attack"):
 					attaque_1(body)
 
