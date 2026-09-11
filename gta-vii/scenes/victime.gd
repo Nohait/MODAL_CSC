@@ -4,6 +4,8 @@ signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
+@onready var particles: GPUParticles3D = $"../player/visual/weapon_holder/Extincteur/Muzzle/GPUParticles3D"
+@onready var portee_extincteur: CollisionShape3D = $Extincteur/Muzzle/DamageArea/CollisionShape3D
 
 @export_group("Bonus d'escorte")
 ## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
@@ -38,6 +40,7 @@ func _on_detection_body_exited(body: Node3D) -> void:
 func _ready() -> void:
 	# Chaque sportive possède sa propre copie du matériau : sa couleur orange
 	# ne doit pas recolorer les victimes ordinaires qui partagent la même ressource.
+		
 	if bonus_dash:
 		var visuel: MeshInstance3D = $MeshInstance3D
 		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D

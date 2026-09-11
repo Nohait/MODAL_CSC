@@ -18,6 +18,7 @@ radius = 2.0
 
 [node name="victime" type="CharacterBody3D" unique_id=1870513431 groups=["victims"]]
 script = ExtResource("1_gyep1")
+bonus_range = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=489462347]
 mesh = SubResource("CapsuleMesh_cqhq5")

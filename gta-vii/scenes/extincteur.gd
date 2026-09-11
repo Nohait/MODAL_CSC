@@ -4,7 +4,13 @@ extends Node3D
 @onready var damage_area: Area3D = $Muzzle/DamageArea
 @onready var muzzle: Node3D = $Muzzle
 @onready var direction_marker: Marker3D = $Muzzle/DirectionMarker
-
+#Initialisation des constantes du cone de particules
+const ETALEMENT = 0.378
+const VITESSE = 5.6
+const BASE_RADIUS = 2.8
+const BASE_ANGLE = 15
+const BASE_NOMBRE = 500
+const DENSITE_PARTICULES = 542 #BASE_NOMBRE/(VITESSE*ETALEMENT*BASE_RADIUS*PI*(PI*BASE_ANGLE/360.0))  (r*N/V0)/l0*pi*r^2*(alpha/2)
 
 @export_group("Charge")
 ## Réserve maximale de l'extincteur au début du niveau.
@@ -17,7 +23,6 @@ extends Node3D
 @export_group("Attaque")
 ## Demi-angle en degrés : 30 donne une ouverture totale de 60 degrés.
 ## La portée se règle dans DamageArea/CollisionShape3D ; le jet visuel reste indépendant.
-@export_range(0.0, 180.0, 1.0) var cone_angle: float = 15.0
 @export_range(0,100,1) var degats1: float = 1.0
 @export_range(0,100,1) var attack_cooldown = 0.2
 var attack_timer = 0.0
@@ -27,6 +32,13 @@ var attack_timer = 0.0
 var is_attacking := false 
 var is_overheated := false #Entre en cooldown forcé si l'extincteur tombe à 0
 
+func _ready() -> void:
+	particles.process_material.spread = BASE_ANGLE*2
+	particles.process_material.flatness = ETALEMENT
+	particles.amount = BASE_NOMBRE
+
+	damage_area.get_node("CollisionShape3D").shape.radius = BASE_RADIUS
+	pass
 
 func start_primary_attack() -> void:
 	if not is_overheated:
@@ -40,6 +52,12 @@ func stop_primary_attack() -> void:
 	particles.emitting = false
 
 func _physics_process(delta: float) -> void:
+	if Input.is_key_label_pressed(KEY_J):
+		modifier(15,10)
+	if Input.is_key_label_pressed(KEY_K):
+		modifier(30,2)
+	if Input.is_key_label_pressed(KEY_M):
+		modifier(15,2.8)
 	if is_attacking:
 		charge -= consumption_rate * delta
 		if charge <= 0.0:
@@ -68,7 +86,7 @@ func _physics_process(delta: float) -> void:
 			var alignment: float = forward.dot(target_direction) #produit scalaire entre les deux directions
 			var angle = acos(alignment)
 
-			if angle <= deg_to_rad(cone_angle) + atan(body.hitbox_radius / distance):
+			if angle <= deg_to_rad(particles.process_material.spread/2) + atan(body.hitbox_radius / distance):
 				#si l'ennemi est dans le cône, on attaque
 				
 				if Input.is_action_pressed("primary_attack") and !is_overheated:
@@ -78,4 +96,9 @@ func attaque_1(cible):
 	if cible != null:
 		var multiplier = randf_range(0.9,1.1)
 		cible.prendre_degats(round(multiplier * degats1 *100.0)/100.0)
-	
+
+func modifier(angle, rayon):
+	particles.lifetime = rayon/VITESSE
+	particles.process_material.spread = 2*angle
+	particles.amount = DENSITE_PARTICULES*VITESSE*ETALEMENT*PI*rayon*(angle*PI/360)
+	damage_area.get_node("CollisionShape3D").shape.radius = rayon
