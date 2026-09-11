@@ -5,13 +5,25 @@ extends CanvasLayer
 @onready var jauge: ProgressBar = $Reserve/Jauge
 @onready var etat: Label = $Reserve/Etat
 
-const COULEUR_NORMALE = Color(0.273, 0.562, 0.0, 1.0)
-const COULEUR_SURCHAUFFE = Color(1.0, 0.35, 0.3)
+@onready var BarreDeVie: ProgressBar = $Vie/BarreDeVie
+@export var vie_max := 100.0
+var vie := vie_max
+
+const COULEUR_VIE = Color(0.19, 0.54, 0.8, 1.0)
+
+const COULEUR_NORMALE_EXTINCTEUR = Color(0.273, 0.562, 0.0, 1.0)
+const COULEUR_SURCHAUFFE_EXTINCTEUR = Color(1.0, 0.35, 0.3)
 
 
 func _ready() -> void:
 	jauge.max_value = extincteur.max_charge
+	BarreDeVie.max_value = vie_max
+	BarreDeVie.value = vie
+	BarreDeVie.self_modulate = COULEUR_VIE
+	
 	maj_affichage()
+	
+	
 
 
 func _process(_delta: float) -> void:
@@ -25,14 +37,14 @@ func maj_affichage() -> void:
 	# Feedback utilisateur sur la surchauffe :
 	if extincteur.is_overheated:
 		#sel_modulate permet de ne modifier que la couleur de la jauge
-		jauge.self_modulate = COULEUR_SURCHAUFFE
+		jauge.self_modulate = COULEUR_SURCHAUFFE_EXTINCTEUR
 		etat.text = "Surchauffe — recharge complète requise"
 	elif extincteur.is_attacking:
-		jauge.self_modulate = COULEUR_NORMALE
+		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
 		etat.text = "Jet en cours"
 	elif extincteur.charge < extincteur.max_charge:
-		jauge.self_modulate = COULEUR_NORMALE
+		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
 		etat.text = "Recharge en cours"
 	else:
-		jauge.self_modulate = COULEUR_NORMALE
+		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
 		etat.text = "Prêt"

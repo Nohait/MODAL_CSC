@@ -4,6 +4,7 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $Camera3D
 @onready var visual: Node3D = $visual
 @onready var Extincteur = $visual/weapon_holder/Extincteur
+@onready var BarreDeVie = $Interface/Vie/BarreDeVie
 
 @export_group("Déplacement")
 ## Vitesse de marche, en unités par seconde.
@@ -18,6 +19,7 @@ extends CharacterBody3D
 var last_direction := Vector3.FORWARD 
 var is_dashing := false
 var dash_time_left := 0.0
+
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -120,3 +122,14 @@ func _physics_process(delta: float) -> void:
 		Extincteur.stop_primary_attack()
 	
 	move_and_slide()
+
+func prendre_degats(degats: float) -> void:
+	BarreDeVie.value -= degats
+	BarreDeVie.value = max(BarreDeVie.value, 0)
+	BarreDeVie.value = BarreDeVie.value
+	
+	if BarreDeVie.value <= 0:
+		mourir()
+		
+func mourir():
+	queue_free()
