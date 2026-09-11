@@ -17,6 +17,9 @@ extends Node3D
 ## Demi-angle en degrés : 30 donne une ouverture totale de 60 degrés.
 ## La portée se règle dans DamageArea/CollisionShape3D ; le jet visuel reste indépendant.
 @export_range(0.0, 180.0, 1.0) var cone_angle: float = 15.0
+@export_range(0,100,1) var degats1: float = 1
+@export_range(0,100,1) var attack_cooldown = 0.2
+var attack_timer = 0.0
 
 # Attendre que Godot ait chargé les valeurs choisies dans l'Inspecteur.
 @onready var charge: float = max_charge #Charge actuelle au démarrage
@@ -66,3 +69,11 @@ func _physics_process(delta: float) -> void:
 			if alignment >= minimum_alignment:
 				#si l'ennemi est dans le cône, on attaque
 				print("Ennemi dans le cône :", target_body)
+				if Input.is_action_pressed("primary_attack"):
+					attaque_1(body)
+
+func attaque_1(cible):
+	if cible != null:
+		cible.prendre_degats(degats1)
+		print("La cible est : ", cible.name)
+	
