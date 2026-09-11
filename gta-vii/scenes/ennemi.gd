@@ -13,7 +13,7 @@ func _ready() -> void:
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
 	
-	position = Vector3(randi_range(-50,50),0.7,randi_range(-50,50)) #On place l'ennemi aléatoirment dans la map
+	position = Vector3(randi_range(-10,10),0.7,randi_range(-50,50)) #On place l'ennemi aléatoirment dans la map
 	# /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
 	pass # Replace with function body.
 
