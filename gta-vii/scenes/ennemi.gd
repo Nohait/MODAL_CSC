@@ -6,7 +6,7 @@ var cible = null
 @export var vie_max := 100.0
 var vie := vie_max
 
-@export var distance_attaque = 1.0
+@export var distance_attaque = 1.5
 @export var distance_detection = 10.0
 @export var distance_lacher = 20.0
 
@@ -14,7 +14,7 @@ var vie := vie_max
 @export var attaque_timer = 0.0 #temps initialisé à 0
 @export var degats_ennemi = 10.0
 
-@export var vitesse_ennemi = 6
+@export var vitesse_ennemi = 7
 
 
 # Called when the node enters the scene tree for the first time.
@@ -113,26 +113,28 @@ func couleur_degats(degats: float) -> Color:
 	
 	return blanc.lerp(orange, t)
 	
+
 #On affiche les dégats
+var popup_tween: Tween
 func afficher_degats(degats: float) -> void:
 	$PopUpDegats.text = "-" + str(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
 	$PopUpDegats.position = Vector3(0,2.5,0)
-	$PopUpDegats.font_size = 50
+	$PopUpDegats.font_size = 100
 	$PopUpDegats.visible = true
 	
-	
+	if popup_tween:
+		popup_tween.kill()
+		
 	var position_depart = Vector3(0,2.5,0)
 	var position_fin = position_depart + Vector3(0, 1, 0)
 	var taille_fin = 120
-	var tween = create_tween() #Fonction qui permet de faire un gradient
+	popup_tween = create_tween() #Fonction qui permet de faire un gradient
 
-	tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)
-	tween.parallel().tween_property($PopUpDegats,"font_size",taille_fin,0.2)
-	tween.parallel().tween_property($PopUpDegats,"modulate:a",0.0,0.4)
+	popup_tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)
+	popup_tween.parallel().tween_property($PopUpDegats,"font_size",taille_fin,0.2)
+	popup_tween.parallel().tween_property($PopUpDegats,"modulate:a",0.0,0.4)
 
-	await tween.finished
+	await popup_tween.finished
 
 	$PopUpDegats.visible = false
-	$PopUpDegats.position = position_depart
-	$PopUpDegats.modulate.a = 1.0
