@@ -4,11 +4,13 @@ extends Node3D
 # Permet de relancer la génération
 @export var generate := false ;
 const TILE_SIZE = 5.0
+const BOX_SCENE = preload("res://scenes/caisse.tscn")
+const DOOR_SCENE = preload("res://scenes/porte.tscn")
 
 var roomSize = Vector2i(10, 8)
 var grid = []
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if generate :
 		# For debug purposes
 		print("GENERATE :")
@@ -16,6 +18,7 @@ func _process(_delta: float) -> void:
 		generateRoom()
 		displayRoom()
 		displayWalls()
+		displayBoxes()
 		generate = false
 
 func _ready():
@@ -23,6 +26,7 @@ func _ready():
 	generateRoom()
 	displayRoom()
 	displayWalls()
+	displayBoxes()
 
 func clearRoom():
 	# On free tous les sous-noeuds
@@ -152,54 +156,156 @@ func displayRoom():
 						y * TILE_SIZE
 					)
 					add_child(mesh)
+				
+
 					
+func displayBoxes():
+	"""Place aléatoirement quelques caisses dans la salle"""
+	var numberOfBoxes = randi_range(5, 10)
+	var boxesPositions = []
+
+	while boxesPositions.size() < numberOfBoxes:
+		var position = Vector2i(
+			randi_range(0, roomSize.x - 1),
+			randi_range(0, roomSize.y - 1)
+		)
+
+		# On vérifie que la tile est du sol
+		if not grid[position.y][position.x]:
+			continue
+
+		# On vérifie qu'il n'y a pas déjà une caisse
+		if position in boxesPositions:
+			continue
+
+		boxesPositions.append(position)
+
+		var box = BOX_SCENE.instantiate()
+
+		box.position = Vector3(
+			position.x * TILE_SIZE,
+			1,
+			position.y * TILE_SIZE
+		)
+
+		add_child(box)
+		
 func displayWalls():
-	"""Place un mur sur chaque bord de la salle"""
+	"""Place des murs autour de la salle et une ou deux portes sur le bord"""
 	var debug := true
+	var numberOfDoors = randi_range(1, 2)
+	var doorsPositions = []
+
+	# Récupère tous les emplacements possibles pour les portes
+	var possibleDoors = []
+
 	for y in range(roomSize.y):
 		for x in range(roomSize.x):
 			if not grid[y][x]:
 				continue
+
+			if x == 0:
+				possibleDoors.append([Vector2i(x, y), Vector2i(-1, 0)])
+
+			if x == roomSize.x - 1:
+				possibleDoors.append([Vector2i(x, y), Vector2i(1, 0)])
+
+			if y == 0:
+				possibleDoors.append([Vector2i(x, y), Vector2i(0, -1)])
+
+			if y == roomSize.y - 1:
+				possibleDoors.append([Vector2i(x, y), Vector2i(0, 1)])
+
+	# Choisis aléatoirement les emplacements des portes
+	possibleDoors.shuffle()
+
+	for i in range(min(numberOfDoors, possibleDoors.size())):
+		doorsPositions.append(possibleDoors[i])
+
+	# Crée les murs
+	for y in range(roomSize.y):
+		for x in range(roomSize.x):
+			if not grid[y][x]:
+				continue
+
 			var directions = [
 				Vector2i(1, 0),
 				Vector2i(-1, 0),
 				Vector2i(0, 1),
 				Vector2i(0, -1)
 			]
+
 			for direction in directions:
 				var neighbour = Vector2i(x, y) + direction
+				var position = Vector2i(x, y)
+
+				var exterior := false
+
 				if neighbour.x < 0 or neighbour.x >= roomSize.x:
-					createWall(Vector2i(x, y), direction, debug, true)
+					exterior = true
+				elif neighbour.y < 0 or neighbour.y >= roomSize.y:
+					exterior = true
+				elif not grid[neighbour.y][neighbour.x]:
+					createWall(position, direction, debug, false)
 					continue
-				if neighbour.y < 0 or neighbour.y >= roomSize.y:
-					createWall(Vector2i(x, y), direction, debug, true)
-					continue
-				if not grid[neighbour.y][neighbour.x]:
-					createWall(Vector2i(x, y), direction, debug, false)
+
+				if exterior:
+					if [position, direction] in doorsPositions:
+						createDoor(position, direction)
+					else:
+						createWall(position, direction, debug, true)
 					
 func createWall(pos: Vector2i, direction: Vector2i, debug: bool, exterior: bool):
 	"""Crée un mur sur un côté d'une tile"""
 	var mesh = MeshInstance3D.new()
 	var box = BoxMesh.new()
+
 	box.size = Vector3(TILE_SIZE, 3.0, 0.2)
 	mesh.mesh = box
+
 	mesh.position = Vector3(
 		pos.x * TILE_SIZE,
 		1.5,
 		pos.y * TILE_SIZE
 	)
+
 	if direction.x != 0:
 		box.size = Vector3(0.2, 3.0, TILE_SIZE)
 		mesh.position.x += direction.x * TILE_SIZE / 2.0
+
 	else:
 		box.size = Vector3(TILE_SIZE, 3.0, 0.2)
 		mesh.position.z += direction.y * TILE_SIZE / 2.0
-	if exterior:
+	
+	if exterior :
 		mesh.visible = true
+	
 	elif debug:
 		var material = StandardMaterial3D.new()
 		material.albedo_color = Color.GREEN
 		mesh.material_override = material
+		mesh.visible = true
+
 	else:
 		mesh.visible = false
+
 	add_child(mesh)
+
+func createDoor(position: Vector2i, direction: Vector2i):
+	"""Crée une porte à la place d'un mur"""
+	var door = DOOR_SCENE.instantiate()
+
+	door.position = Vector3(
+		position.x * TILE_SIZE,
+		0,
+		position.y * TILE_SIZE
+	)
+
+	if direction.x != 0:
+		door.position.x += direction.x * TILE_SIZE / 2.0
+		door.rotation.y = PI / 2.0
+
+	else:
+		door.position.z += direction.y * TILE_SIZE / 2.0
+
+	add_child(door)
