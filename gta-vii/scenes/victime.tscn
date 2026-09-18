@@ -18,7 +18,6 @@ radius = 2.0
 
 [node name="victime" type="CharacterBody3D" unique_id=1870513431 groups=["victims"]]
 script = ExtResource("1_gyep1")
-bonus_range = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=489462347]
 mesh = SubResource("CapsuleMesh_cqhq5")
@@ -46,7 +45,7 @@ billboard = 1
 modulate = Color(1, 0.8, 0.3, 1)
 text = "SPORTIVE
 Dash : cooldown -20 %"
-font_size = 36
+font_size = 50
 
 [node name="NavigationAgent" type="NavigationAgent3D" parent="." unique_id=1264487809]
 

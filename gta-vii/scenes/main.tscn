@@ -9,7 +9,8 @@
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 [ext_resource type="PackedScene" path="res://scenes/point_evacuation.tscn" id="8_evacuation"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
-[ext_resource type="PackedScene" path="res://scenes/porte.tscn" id="10_porte"]
+[ext_resource type="PackedScene" uid="uid://dtvrjfbrfls11" path="res://scenes/porte.tscn" id="10_porte"]
+[ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/menu_bonus.tscn" id="11_bonus"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -76,9 +77,6 @@ text = "I : activer l'invincibilité"
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
 editor_description = "Éclairage du niveau de test. Les deux nœuds ci-dessous permettent de voir le terrain et les personnages sans script."
 
-[node name="Porte" parent="." instance=ExtResource("10_porte")]
-position = Vector3(6.1, 0.1, -4.55)
-
 [node name="Soleil" type="DirectionalLight3D" parent="Eclairage" unique_id=286219491]
 editor_description = "Éclaire tout le niveau dans une même direction, comme un soleil. Inclinaison de -60 degrés sur X pour éclairer le sol. Les ombres aident à percevoir le relief. Régler Light > Energy pour modifier son intensité."
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 10, 0)
@@ -87,6 +85,9 @@ shadow_enabled = true
 [node name="Ambiance" type="WorldEnvironment" parent="Eclairage" unique_id=2131836162]
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
+
+[node name="Porte" parent="." unique_id=1687552476 instance=ExtResource("10_porte")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, -4.55)
 
 [node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -102,6 +103,7 @@ bonus_dash = true
 
 [node name="victime2" parent="." unique_id=497796421 instance=ExtResource("4_tefeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, -10)
+bonus_degats = true
 
 [node name="victime3" parent="." unique_id=956654796 instance=ExtResource("4_tefeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.75, -10)
@@ -188,3 +190,5 @@ theme_override_font_sizes/font_size = 24
 text = "Salle libérée !"
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="MenuBonus" parent="." unique_id=1886819313 instance=ExtResource("11_bonus")]

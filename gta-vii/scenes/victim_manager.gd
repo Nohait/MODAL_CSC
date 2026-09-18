@@ -70,13 +70,18 @@ func reorganiser_file() -> void:
 func actualiser_bonus() -> void:
 	if not is_instance_valid(player):
 		return
-	# Repartir de false puis chercher AU MOINS une sportive dans la liste actuelle.
-	# Cela retire le bonus après la dernière sportive, mais le conserve s'il en reste une.
+	# Recalculer à partir de l'escorte actuelle : chaque type est actif ou inactif.
+	# Deux victimes du même type ne cumulent pas leur bonus.
 	player.bonus_dash_actif = false
+	player.Extincteur.bonus_degats_actif = false
 	for victime in freed_victims:
-		if is_instance_valid(victime) and not victime.is_queued_for_deletion() and victime.bonus_dash:
+		if not is_instance_valid(victime) or victime.is_queued_for_deletion():
+			continue
+		if victime.bonus_dash:
 			player.bonus_dash_actif = true
-			break # Inutile de continuer : le bonus ne se cumule pas.
+		if victime.bonus_degats:
+			player.Extincteur.bonus_degats_actif = true
+		# Ne pas sortir après la sportive : une spécialiste peut se trouver après elle.
 
 
 func _on_victim_exiting(victim: CharacterBody3D) -> void:
