@@ -9,28 +9,13 @@
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 [ext_resource type="PackedScene" path="res://scenes/point_evacuation.tscn" id="8_evacuation"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
+[ext_resource type="PackedScene" path="res://scenes/porte.tscn" id="10_porte"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.4
 reflected_light_source = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victoire"]
-bg_color = Color(0.04, 0.12, 0.1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.35, 0.95, 0.65, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
-content_margin_left = 24.0
-content_margin_top = 16.0
-content_margin_right = 24.0
-content_margin_bottom = 16.0
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_sysh0"]
 vertices = PackedVector3Array(-49.5, 0.4, -4, -5.75, 0.4, -3.75, -5.75, 0.4, -5.25, -5.25, 0.4, -5.75, -3.75, 0.4, -5.75, -4, 0.4, -49.5, -49.5, 0.4, -49.5, 4, 0.4, -5.75, 4.25, 0.4, -49.5, 5.5, 0.4, -5.75, 5.75, 0.4, -5, 49.5, 0.4, -5, 49.5, 0.4, -49.5, 2.25, 0.4, -4, 2.25, 0.4, -3.25, 3.5, 0.4, -3, 5.25, 0.4, -4, 9.25, 0.4, 6.75, 9.5, 0.4, 8, 49.5, 0.4, 8, 3.5, 0.4, -1.25, 7.25, 0.4, 6.75, -49.5, 0.4, 4.25, -5.75, 0.4, 4, 0.75, 0.4, -3, -4, 0.4, -4, 6.75, 0.4, 7.25, 3, 0.4, -0.5, 0.75, 0.4, -0.75, -4, 0.4, 5.25, -4.75, 0.4, 5.75, 1.75, 1.9, -2.25, 1.75, 1.9, -1.75, 2.25, 1.9, -1.75, 2.25, 1.9, -2.25, -5.75, 0.4, 5.5, -5, 0.4, 49.5, -5, 0.4, 5.75, -49.5, 0.4, 49.5, 6.75, 0.4, 9.25, 8, 0.4, 49.5, 8, 0.4, 9.5, 7.75, 1.9, 7.75, 7.75, 1.9, 8.25, 8.25, 1.9, 8.25, 8.25, 1.9, 7.75, 9, 0.4, 9.5, 49.5, 0.4, 49.5)
@@ -55,6 +40,22 @@ size = Vector3(10, 3, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jyhfs"]
 size = Vector3(10, 3, 0.5)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victoire"]
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.04, 0.12, 0.1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.95, 0.65, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 [node name="main" type="Node3D" unique_id=2102349628]
 script = ExtResource("5_test")
 
@@ -74,6 +75,9 @@ text = "I : activer l'invincibilité"
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
 editor_description = "Éclairage du niveau de test. Les deux nœuds ci-dessous permettent de voir le terrain et les personnages sans script."
+
+[node name="Porte" parent="." instance=ExtResource("10_porte")]
+position = Vector3(6.1, 0.1, -4.55)
 
 [node name="Soleil" type="DirectionalLight3D" parent="Eclairage" unique_id=286219491]
 editor_description = "Éclaire tout le niveau dans une même direction, comme un soleil. Inclinaison de -60 degrés sur X pour éclairer le sol. Les ombres aident à percevoir le relief. Régler Light > Energy pour modifier son intensité."
@@ -149,24 +153,24 @@ victim_manager = NodePath("../VictimManager")
 [node name="RoomManager" type="Node3D" parent="." unique_id=1555917378]
 script = ExtResource("9_85g3d")
 
-[node name="InterfaceSalle" type="CanvasLayer" parent="RoomManager"]
+[node name="InterfaceSalle" type="CanvasLayer" parent="RoomManager" unique_id=1830693134]
 layer = 2
 
-[node name="Objectifs" type="Label" parent="RoomManager/InterfaceSalle"]
+[node name="Objectifs" type="Label" parent="RoomManager/InterfaceSalle" unique_id=1821781728]
 offset_left = 25.0
-offset_top = 215.0
+offset_top = 600.0
 offset_right = 650.0
-offset_bottom = 245.0
-mouse_filter = 2
+offset_bottom = 630.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 20
-text = "Objectifs de la salle"
+text = "Objectifs :"
 
-[node name="MessageVictoire" type="PanelContainer" parent="RoomManager/InterfaceSalle"]
-visible = false
+[node name="MessageVictoire" type="PanelContainer" parent="RoomManager/InterfaceSalle" unique_id=1987246026]
 editor_description = "Bandeau de fin de salle : apparition en fondu, puis disparition. Ne bloque pas les commandes du joueur."
+visible = false
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -280.0
@@ -177,11 +181,10 @@ grow_horizontal = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_victoire")
 
-[node name="Texte" type="Label" parent="RoomManager/InterfaceSalle/MessageVictoire"]
+[node name="Texte" type="Label" parent="RoomManager/InterfaceSalle/MessageVictoire" unique_id=730086809]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.65, 1, 0.8, 1)
 theme_override_font_sizes/font_size = 24
-text = "Salle libérée !\nToutes les victimes libérées, tous les ennemis vaincus."
+text = "Salle libérée !"
 horizontal_alignment = 1
 autowrap_mode = 2

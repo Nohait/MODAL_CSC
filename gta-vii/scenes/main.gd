@@ -35,6 +35,8 @@ func _ready() -> void:
 	for i in range(nombre_ennemis):
 		creer_ennemi(i)
 	# Tous les ennemis existent maintenant : le gestionnaire peut les compter.
+	# Connecter avant l'initialisation, qui peut déjà valider une salle vide.
+	$RoomManager.room_cleared.connect($Porte.ouvrir)
 	$RoomManager.initialiser_salle()
 
 

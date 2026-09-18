@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://dtvrjfbrfls11"]
+
+[ext_resource type="Script" uid="uid://csxw2bycubox2" path="res://scenes/porte.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Cadre"]
+albedo_color = Color(0.07, 0.09, 0.11, 1)
+
+[sub_resource type="BoxMesh" id="MontantMesh"]
+material = SubResource("Cadre")
+size = Vector3(0.15, 3, 0.3)
+
+[sub_resource type="BoxShape3D" id="MontantShape"]
+size = Vector3(0.15, 3, 0.3)
+
+[sub_resource type="BoxMesh" id="TraverseMesh"]
+material = SubResource("Cadre")
+size = Vector3(2.5, 0.2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="Rouge"]
+albedo_color = Color(1, 0.12, 0.08, 1)
+emission_enabled = true
+emission = Color(1, 0.12, 0.08, 1)
+
+[sub_resource type="BoxMesh" id="VoyantMesh"]
+material = SubResource("Rouge")
+size = Vector3(0.6, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.19, 0.24, 0.28, 1)
+metallic = 0.5
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BattantMesh"]
+material = SubResource("Metal")
+size = Vector3(2.2, 2.8, 0.18)
+
+[sub_resource type="BoxShape3D" id="BattantShape"]
+size = Vector3(2.2, 2.8, 0.18)
+
+[sub_resource type="BoxMesh" id="PoigneeMesh"]
+material = SubResource("Cadre")
+size = Vector3(0.5, 0.09, 0.12)
+
+[node name="Porte" type="Node3D" unique_id=1670415283]
+editor_description = "Origine au sol, au centre du passage. Le signal room_cleared appelle ouvrir()."
+script = ExtResource("1_script")
+
+[node name="Encadrement" type="StaticBody3D" parent="." unique_id=1296170403]
+editor_description = "Corps fixe nécessaire pour que les collisions des montants bloquent les personnages."
+
+[node name="MontantGauche" type="MeshInstance3D" parent="Encadrement" unique_id=395491851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.5, -0.12)
+mesh = SubResource("MontantMesh")
+
+[node name="CollisionMontantGauche" type="CollisionShape3D" parent="Encadrement" unique_id=2010530190]
+position = Vector3(-1.2, 1.5, -0.12)
+shape = SubResource("MontantShape")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="Encadrement" unique_id=1545599288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.5, -0.12)
+mesh = SubResource("MontantMesh")
+
+[node name="Traverse" type="MeshInstance3D" parent="Encadrement" unique_id=1761098343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -0.12)
+mesh = SubResource("TraverseMesh")
+
+[node name="CollisionMontantDroit" type="CollisionShape3D" parent="Encadrement" unique_id=577901753]
+position = Vector3(1.2, 1.5, -0.12)
+shape = SubResource("MontantShape")
+
+[node name="Voyant" type="MeshInstance3D" parent="." unique_id=1443244705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0.09)
+mesh = SubResource("VoyantMesh")
+
+[node name="Charniere" type="Node3D" parent="." unique_id=2032921023]
+editor_description = "Pivot au bord gauche. Tourner Y pour ouvrir. Le battant est décalé de sa demi-largeur."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0, 0)
+
+[node name="Battant" type="AnimatableBody3D" parent="Charniere" unique_id=1312956028]
+editor_description = "Collision mobile animée par son parent au rythme physique. Synchronisation automatique désactivée car le Tween est déjà en mode physique."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.4, 0)
+sync_to_physics = false
+
+[node name="Visuel" type="MeshInstance3D" parent="Charniere/Battant" unique_id=158729063]
+mesh = SubResource("BattantMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Charniere/Battant" unique_id=400794447]
+shape = SubResource("BattantShape")
+
+[node name="Poignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1278190910]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0, 0.14)
+mesh = SubResource("PoigneeMesh")
