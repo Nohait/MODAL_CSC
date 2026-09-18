@@ -21,31 +21,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				$InterfaceTest/EtatInvincibilite.text = "I : activer l'invincibilité"
 
 
-#Génération aléatoire du nombre d'ennemis
-var ennemi_scene = preload("res://scenes/ennemi.tscn")
-#On copie la scene type d'un ennemi
-
-@export_group("Génération")
-@export var nombre_min_ennemis := 3
-@export var nombre_max_ennemis := 8
-
-
 func _ready() -> void:
-	# La mort appartient au joueur ; le choix de l'écran suivant appartient au niveau.
+	# main ne gère plus les apparitions : il relie seulement les systèmes du jeu.
 	$player.died.connect(_on_player_died, CONNECT_ONE_SHOT)
-	var nombre_ennemis = randi_range(nombre_min_ennemis, nombre_max_ennemis)
-	for i in range(nombre_ennemis):
-		creer_ennemi(i)
-	# Tous les ennemis existent maintenant : le gestionnaire peut les compter.
-	# Connecter avant l'initialisation, qui peut déjà valider une salle vide.
-	$RoomManager.room_cleared.connect($Porte.ouvrir)
-	$RoomManager.initialiser_salle()
-
-
-func creer_ennemi(i: int) -> void:
-	var ennemi = ennemi_scene.instantiate()
-	ennemi.name = "Ennemi " + str(i)
-	$Ennemis.add_child(ennemi)
+	# Tous les enfants doivent avoir terminé leur _ready avant de générer les salles.
+	$Salles/RoomManager.call_deferred("demarrer_partie")
 
 
 func _on_player_died() -> void:

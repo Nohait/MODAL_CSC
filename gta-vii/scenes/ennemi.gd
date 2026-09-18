@@ -35,7 +35,7 @@ func _ready() -> void:
 	var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
-	position = Vector3(randi_range(-20,20),0.7,randi_range(-20,20)) #On place l'ennemi aléatoirment dans la map # /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
+	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.
 	
 	pass # Replace with function body.
 

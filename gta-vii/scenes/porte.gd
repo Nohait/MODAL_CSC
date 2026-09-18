@@ -1,5 +1,8 @@
 extends Node3D
 
+# Le passage attend la fin du mouvement, pas seulement le début de l'ouverture.
+signal ouverte
+
 @export_group("Ouverture")
 ## Angle autour de Y : le signe choisit le côté d'ouverture.
 @export_range(-180.0, 180.0, 1.0) var angle_ouverture: float = -175.0
@@ -43,3 +46,4 @@ func ouvrir() -> void:
 	# Petit rebond qui ralentit, puis retour plus doux contre le mur.
 	animation.tween_property(charniere, "rotation_degrees:y", angle_retour, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	animation.tween_property(charniere, "rotation_degrees:y", angle_final, 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	animation.tween_callback(func(): ouverte.emit())

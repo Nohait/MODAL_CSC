@@ -9,6 +9,11 @@ extends Node3D
 var follow_speed: float = 8.0
 
 func _ready() -> void:
+	recentrer()
+
+
+func recentrer() -> void:
+	# Au changement de salle, sauter directement à la cible, puis reprendre le lissage.
 	if is_instance_valid(target):
 		global_position = target.global_position
 
