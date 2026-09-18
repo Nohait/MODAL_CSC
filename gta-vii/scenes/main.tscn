@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
 [ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
-[ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
+[ext_resource type="PackedScene" uid="uid://c1amk27paihww" path="res://scenes/caisse.tscn" id="4_caisse"]
 [ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victime.tscn" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
 [ext_resource type="PackedScene" uid="uid://bn6gcohvukjr2" path="res://scenes/tour_enflammee.tscn" id="5_ya4ey"]

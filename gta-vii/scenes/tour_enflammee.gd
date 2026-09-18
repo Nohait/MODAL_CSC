@@ -22,8 +22,8 @@ var attaque_timer = 0.0 #temps initialisé à 0
 
 var projectile_scene = preload("res://scenes/projectile_tour.tscn")
 @onready var muzzle: Marker3D = $Muzzle
-@onready var projectile_tour = get_tree().current_scene.get_node("Ennemis/ProjectilesTour")
-
+@onready var projectiles_tour = get_tree().current_scene.get_node("Ennemis/ProjectilesTour")
+@onready var player = $"../../player"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -85,11 +85,12 @@ func mourir():
 func tirer_projectile() -> void:
 	if cible != null:
 		var projectile = projectile_scene.instantiate()
-		projectile_tour.add_child(projectile)
+		projectiles_tour.add_child(projectile)
 
 		projectile.global_position = muzzle.global_position
-		projectile.direction = (cible.global_position - muzzle.global_position).normalized()
+		var dir : Vector3 = (cible.global_position - muzzle.global_position)
 		
+		projectile.direction = (dir + player.velocity.normalized()*dir.length()*player.speed/projectile.vitesse  ).normalized() 
 	attaque_timer = attaque_cooldown
 
 	
