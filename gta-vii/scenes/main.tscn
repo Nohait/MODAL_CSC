@@ -85,7 +85,7 @@ shadow_enabled = true
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
 
-[node name="Porte" parent="." unique_id=964332129 instance=ExtResource("10_porte")]
+[node name="Porte" parent="." unique_id=1168768743 instance=ExtResource("10_porte")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, -4.55)
 
 [node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
