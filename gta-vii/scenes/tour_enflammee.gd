@@ -4,53 +4,44 @@ extends CharacterBody3D
 signal died
 var est_mort := false
 
-# L'agent calcule le chemin ; ce CharacterBody3D réalise le déplacement.
-@onready var navigation_agent: NavigationAgent3D = $NavigationAgent
-
 var cible = null
 
-@export var vie_max := 100.0
-@export var vitesse_ennemi = 7
+@export var vie_max := 200.0
 var vie := vie_max
-var hitbox_radius = 0.9
+var hitbox_radius = 1.5
 
 @export_group('Portée')
 @export var distance_attaque = 1.3
-@export var distance_detection = 10.0
-@export var distance_lacher = 20.0
+@export var distance_detection = 25.0
+@export var distance_lacher = 30.0
 
 @export_group("Attaque")
-@export var attaque_cooldown = 1.0
+@export var attaque_cooldown = 3.0
 var attaque_timer = 0.0 #temps initialisé à 0
-@export var degats_ennemi = 10.0
-@export var repos_apres_attaque := 0.3
-var timer_apres_attaque := 0.0
+@export var degats_ennemi = 30.0
+
+var projectile_scene = preload("res://scenes/projectile_tour.tscn")
+@onready var muzzle: Marker3D = $Muzzle
+@onready var projectile_tour = get_tree().current_scene.get_node("Ennemis/ProjectilesTour")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	
-	var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
+	var detection_shape: CollisionShape3D = $"SurfaceDetection/CollisionShape3D"
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
-	position = Vector3(randi_range(-20,20),0.7,randi_range(-20,20)) #On place l'ennemi aléatoirment dans la map # /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
+	position = Vector3(randi_range(-20,20),0,randi_range(-20,20)) #On place l'ennemi aléatoirment dans la map # /!\ à modifier pour s'adapter à la taille de la map (peut être prendre un rayon graine de la map en input ?)
 	
 	pass # Replace with function body.
 
-func _on_surface_detection_body_entered(body: Node3D) -> void:
-
+func _on_surface_de_detection_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		cible = body
 		
+		
 func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
-	timer_apres_attaque -= delta
-	
-	
-	if timer_apres_attaque > 0.0:
-		velocity = Vector3.ZERO
-		move_and_slide()
-		return
 	# Le joueur peut avoir été supprimé après sa mort : ne plus lire sa position.
 	if not is_instance_valid(cible):
 		cible = null
@@ -60,50 +51,13 @@ func _physics_process(delta):
 	if cible != null:	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
 		
-		#On tourne l'ennemi et sa hitbox vers la cible
-		var direction = global_position.direction_to(cible.global_position)
-		var theta = atan2(direction.x, direction.z) - rotation.y	
-		self.rotate(Vector3(0,1,0),theta)
-		var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
-		detection_shape.rotate(Vector3(0,1,0),theta)
-		
-		
 		if distance > distance_lacher: #calcul de sortie de range
 			cible = null
 			velocity = Vector3.ZERO
 			move_and_slide()	
-			
-		elif distance > distance_attaque: # comportement dans la range
-			# Suivre les étapes d'un chemin au lieu de foncer directement vers le joueur.
-			suivre_cible_navigation()
-			
-		else: #comportement dans la portée d'attaque
-			velocity = Vector3.ZERO 
-			
-			if attaque_timer < 0.0:
-				attaque()
-			
-func suivre_cible_navigation() -> void:
-	# Arrêt par défaut si la carte n'est pas prête ou si aucun chemin n'est trouvé.
-	velocity = Vector3.ZERO
-	# Au démarrage, Godot synchronise la carte de navigation avec le monde physique.
-	# Une itération à 0 indique qu'il faut attendre le prochain delta.
-	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
-		return
-
-	# La destination est actualisée car le joueur peut bouger pendant la poursuite.
-	navigation_agent.target_position = cible.global_position
-	var prochaine_position := navigation_agent.get_next_path_position()
-
-	# Ce point peut être intermédiaire.
-	var direction := prochaine_position - global_position
-	direction.y = 0.0 # Déplacement horizontal
-	if direction.length() > 0.01:
-		# Normaliser conserve uniquement la direction.
-		velocity = direction.normalized() * vitesse_ennemi
-
-	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
-	move_and_slide()
+		else:
+			if attaque_timer <0 :
+				tirer_projectile()
 
 
 func prendre_degats(degats: float) -> void:
@@ -128,19 +82,20 @@ func mourir():
 	print("Bravo, vous avez tué l'ennemi")
 	queue_free()
 
-func attaque() -> void:
+func tirer_projectile() -> void:
 	if cible != null:
-		var multiplier = randf_range(0.9,1.1)
-		cible.prendre_degats(round(multiplier * degats_ennemi *100.0)/100.0)
+		var projectile = projectile_scene.instantiate()
+		projectile_tour.add_child(projectile)
 
+		projectile.global_position = muzzle.global_position
+		projectile.direction = (cible.global_position - muzzle.global_position).normalized()
+		
 	attaque_timer = attaque_cooldown
-	timer_apres_attaque = repos_apres_attaque
 
 	
 
 
 func couleur_degats(degats: float) -> Color:
-	
 	var t = clamp((degats - 0.9*degats_ennemi) / 1.0, 0.0, 1.0)
 	
 	var blanc = Color(0.998, 1.0, 0.29, 1.0)
@@ -157,7 +112,7 @@ func afficher_degats(degats: float) -> void:
 	
 	$PopUpDegats.text = "-" + str(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
-	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
+	$PopUpDegats.position = Vector3(rd1,3.4+rd2 ,0+rd3)
 	$PopUpDegats.font_size = 100*(1+rd2)
 	$PopUpDegats.visible = true
 	
