@@ -286,4 +286,5 @@ func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color) -> void
 	forme.size = taille
 	collision.shape = forme
 	corps.add_child(collision)
+	corps.add_to_group("collider")
 	salle_en_creation.get_node("Navigation/Decor").add_child(corps)

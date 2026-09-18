@@ -34,6 +34,8 @@ folder_colors={
 
 enemies=""
 flaque=""
+projectile=""
+collider=""
 
 [input]
 
