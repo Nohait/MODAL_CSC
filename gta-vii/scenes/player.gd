@@ -32,6 +32,15 @@ var dash_cooldown_left := 0.0
 var bonus_dash_actif: bool = false
 const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
 
+# Secousse caméra
+var camera_tremble := 0.0
+var sauvegarde_position = Vector3()
+var camera_retour := false
+
+func secouer_camera() -> void:
+	sauvegarde_position = camera.position
+	camera_tremble = 0.15
+	camera_retour = false
 
 func get_dash_cooldown() -> float:
 	# Conserver dash_cooldown comme valeur de base évite les erreurs de cumul.
@@ -73,8 +82,17 @@ func _physics_process(delta: float) -> void:
 
 	#On récupère la direction du joueur, par rapport à la caméra
 	var direction := camera_right * input_dir.x + camera_forward * (-input_dir.y)
-
-
+	
+	#Secousse si attaque (on a besoin de delta donc on le met dans le physique process)
+	if camera_tremble > 0.0:
+		camera_tremble -= delta
+		camera.position += Vector3(randf_range(-0.3, 0.3),randf_range(-0.3, 0.3),0.0)
+	elif not camera_retour and camera_tremble<0:
+		camera_retour = true
+		var tween_camera = create_tween()
+		tween_camera.tween_property(camera, "position", sauvegarde_position, 0.1)
+		
+	
 	
 	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
 		#initialise le dash
@@ -164,6 +182,7 @@ func prendre_degats(degats: float) -> void:
 		return
 		
 	flash_degats()
+	secouer_camera()
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
 	BarreDeVie.value = BarreDeVie.value
