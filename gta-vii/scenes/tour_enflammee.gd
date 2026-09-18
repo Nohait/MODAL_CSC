@@ -23,7 +23,7 @@ var attaque_timer = 0.0 #temps initialisé à 0
 var projectile_scene = preload("res://scenes/projectile_tour.tscn")
 @onready var muzzle: Marker3D = $Muzzle
 @onready var projectiles_tour = get_tree().current_scene.get_node("Ennemis/ProjectilesTour")
-@onready var player = $"../../player"
+@onready var player = get_tree().get_first_node_in_group("player")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -81,12 +81,14 @@ func mourir():
 
 func tirer_projectile() -> void:
 	if cible != null:
+		#On cree une nouvelle scene projectile (notre projectile) et on l'ajoute à l'ensemble des projectiles de la tour
 		var projectile = projectile_scene.instantiate()
 		projectiles_tour.add_child(projectile)
-
+	
 		projectile.global_position = muzzle.global_position
 		var dir : Vector3 = (cible.global_position - muzzle.global_position)
 		
+		#On prédit la direction à tirer en fonction de la position du joueur, sa vitesse, la vitesse du projectile et de la distance à la tour
 		projectile.direction = (dir + player.velocity.normalized()*dir.length()*player.speed/projectile.vitesse  ).normalized() 
 	attaque_timer = attaque_cooldown
 
@@ -110,14 +112,14 @@ func afficher_degats(degats: float) -> void:
 	
 	$PopUpDegats.text = "-" + str(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
-	$PopUpDegats.position = Vector3(rd1,3.4+rd2 ,0+rd3)
+	$PopUpDegats.position = Vector3(rd1,4.5+rd2 ,0+rd3)
 	$PopUpDegats.font_size = 100*(1+rd2)
 	$PopUpDegats.visible = true
 	
 	if popup_tween:
 		popup_tween.kill()
 	
-	var position_depart = Vector3(rd1,2.5+rd2 ,0+rd3)
+	var position_depart = Vector3(rd1,4.5+rd2 ,0+rd3)
 	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
 	var taille_fin = 120*(1+rd1)
 	popup_tween = create_tween() #Fonction qui permet de faire un gradient

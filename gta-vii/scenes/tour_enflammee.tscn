@@ -17,6 +17,14 @@ radius = 1.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_18ogr"]
 radius = 25.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3m7n"]
+albedo_color = Color(1, 0.49803922, 0.13333334, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_wegx8"]
+material = SubResource("StandardMaterial3D_q3m7n")
+radius = 0.3
+height = 0.6
+
 [node name="TourEnflammee" type="CharacterBody3D" unique_id=1672808714 groups=["enemies"]]
 script = ExtResource("1_wegx8")
 
@@ -35,7 +43,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5086672, 0)
 shape = SubResource("SphereShape3D_18ogr")
 
 [node name="PopUpDegats" type="Label3D" parent="." unique_id=258706726]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 4.5, 0)
 visible = false
 billboard = 1
 text = "-10"
@@ -44,5 +52,10 @@ outline_size = 20
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=322797387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6935358, 0)
+
+[node name="BouleFeu" type="MeshInstance3D" parent="." unique_id=1175027605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.694, 0)
+layers = 32769
+mesh = SubResource("SphereMesh_wegx8")
 
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_de_detection_body_entered"]

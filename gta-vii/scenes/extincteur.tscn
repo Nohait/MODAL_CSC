@@ -30,10 +30,10 @@ radius = 2.8
 [node name="Extincteur" type="Node3D" unique_id=826892117]
 script = ExtResource("1_script")
 
-[node name="Muzzle" type="MeshInstance3D" parent="." unique_id=139628240]
+[node name="AttaquePrincipale" type="MeshInstance3D" parent="." unique_id=139628240]
 transform = Transform3D(0.11, 0, 0, 0, -4.808253e-09, -0.11, 0, 0.11, -4.808253e-09, 0, 0.172, 0.12123349)
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Muzzle" unique_id=2081315521]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="AttaquePrincipale" unique_id=2081315521]
 editor_description = "Jet conique : Spread vaut 30 degrés (ouverture totale de 60 degrés). La vitesse de 8 et la durée de vie de 1 seconde allongent le jet. Pour changer uniquement sa longueur visuelle, ajuster Initial Velocity Min et Max dans Process Material. La zone d'attaque est indépendante de cet effet. Visibility AABB est élargie pour éviter que le jet disparaisse au bord de l'écran."
 transform = Transform3D(0.01169865, 0, -0.9999315, 0, 1, 0, 0.9999315, 0, 0.01169865, 0, 0.96934927, 0)
 amount = 500
@@ -43,13 +43,13 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bqdvy")
 draw_pass_1 = SubResource("SphereMesh_poajv")
 
-[node name="DamageArea" type="Area3D" parent="Muzzle" unique_id=543287765]
+[node name="DamageArea" type="Area3D" parent="AttaquePrincipale" unique_id=543287765]
 transform = Transform3D(9.090909, 0, 0, 0, -3.9737628e-07, 9.090909, 0, -9.090909, -3.9737628e-07, 0, -1.1021225, 1.5636364)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Muzzle/DamageArea" unique_id=1290565250]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttaquePrincipale/DamageArea" unique_id=1290565250]
 shape = SubResource("SphereShape3D_sysh0")
 
-[node name="DirectionMarker" type="Marker3D" parent="Muzzle" unique_id=831103565]
+[node name="DirectionMarker" type="Marker3D" parent="AttaquePrincipale" unique_id=831103565]
 transform = Transform3D(1, 0, 0, 0, 1, 3.5527137e-15, 0, -3.5527137e-15, 1, 0, 1.0464795, -1.1920929e-07)
 
 [node name="extincteur0" parent="." unique_id=1654426891 instance=ExtResource("2_klu21")]

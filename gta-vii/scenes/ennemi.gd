@@ -112,7 +112,6 @@ func prendre_degats(degats: float) -> void:
 		return
 	vie -= degats
 	vie = max(vie, 0)
-	print( self.name, " Touché : -", degats)
 	
 	afficher_degats(degats)
 	

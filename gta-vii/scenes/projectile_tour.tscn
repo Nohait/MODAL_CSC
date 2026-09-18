@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dmtdn0y7jc87q" path="res://scenes/projectile_tour.gd" id="1_ml7bw"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3m7n"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ml7bw"]
 albedo_color = Color(1, 0.49803922, 0.13333334, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_c8fcr"]
-material = SubResource("StandardMaterial3D_q3m7n")
+material = SubResource("StandardMaterial3D_ml7bw")
 radius = 0.3
 height = 0.6
 

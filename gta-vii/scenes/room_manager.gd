@@ -4,6 +4,7 @@ signal room_cleared
 signal partie_prete
 
 const ENNEMI_SCENE = preload("res://scenes/ennemi.tscn")
+const TOUR_ENFLAMMEE_SCENE = preload("res://scenes/tour_enflammee.tscn")
 const VICTIME_SCENE = preload("res://scenes/victime.tscn")
 const EVACUATION_SCENE = preload("res://scenes/point_evacuation.tscn")
 
@@ -13,6 +14,8 @@ const EVACUATION_SCENE = preload("res://scenes/point_evacuation.tscn")
 @export_group("Population des salles")
 @export_range(0, 20, 1) var nombre_min_ennemis := 3
 @export_range(0, 20, 1) var nombre_max_ennemis := 6
+@export_range(0,10,1) var nombre_min_tour_enflammee := 0
+@export_range(0,10,1) var nombre_max_tour_enflammee := 2
 @export_range(0, 5, 1) var nombre_victimes := 3
 
 @onready var generateur = $"../RoomGenerator"
@@ -85,15 +88,22 @@ func peupler_salle(salle: Node3D) -> void:
 		victime.freed.connect(_on_victim_freed.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
 	var maximum := maxi(nombre_min_ennemis, nombre_max_ennemis)
-	var nombre := mini(randi_range(nombre_min_ennemis, maximum), emplacements.size())
-	for i in range(nombre):
+	var nombre_ennemi := mini(randi_range(nombre_min_ennemis, maximum), emplacements.size())
+	for i in range(nombre_ennemi):
 		var ennemi = ENNEMI_SCENE.instantiate()
 		ennemi.name = "Ennemi%d" % (i + 1)
 		ennemi.position = emplacements.pop_back() + Vector3.UP * 0.75
 		salle.get_node("Ennemis").add_child(ennemi)
 		ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_enemies += 1
-
+	var nombre_tour_enflammee := mini(randi_range(nombre_min_tour_enflammee, nombre_max_tour_enflammee), emplacements.size())
+	for i in range(nombre_tour_enflammee):
+		var tour_enflamee = TOUR_ENFLAMMEE_SCENE.instantiate()
+		tour_enflamee.name = "Tour Enflamée%d" % (i + 1)
+		tour_enflamee.position = emplacements.pop_back()
+		salle.get_node("Ennemis").add_child(tour_enflamee)
+		tour_enflamee.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+		salle.remaining_enemies += 1
 
 func activer_salle(indice: int) -> void:
 	transition_en_cours = true

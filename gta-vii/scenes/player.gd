@@ -189,7 +189,6 @@ func prendre_degats(degats: float) -> void:
 	secouer_camera()
 	BarreDeVie.value -= degats
 	BarreDeVie.value = max(BarreDeVie.value, 0)
-	BarreDeVie.value = BarreDeVie.value
 	print( self.name, " Touché : -", degats)
 	
 	if BarreDeVie.value <= 0:
