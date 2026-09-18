@@ -2,8 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
-[ext_resource type="PackedScene" uid="uid://c1amk27paihww" path="res://scenes/caisse.tscn" id="4_caisse"]
-[ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victime.tscn" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
 [ext_resource type="PackedScene" uid="uid://bn6gcohvukjr2" path="res://scenes/tour_enflammee.tscn" id="5_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://33d8otsyev3h" path="res://scenes/projectile_tour.tscn" id="6_eb6dy"]
@@ -74,13 +72,7 @@ shadow_enabled = true
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
 
-[node name="Porte" parent="." unique_id=1687552476 instance=ExtResource("10_porte")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, -4.55)
-
 [node name="Ennemis" type="Node3D" parent="." unique_id=2078139259 groups=["enemies"]]
-
-[node name="ennemi" parent="Ennemis" unique_id=696569544 instance=ExtResource("2_0wfyh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 3)
 
 [node name="TourEnflammee" parent="Ennemis" unique_id=1672808714 instance=ExtResource("5_ya4ey")]
 
@@ -88,53 +80,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 3)
 
 [node name="ProjectileTour" parent="Ennemis/ProjectilesTour" unique_id=724792424 instance=ExtResource("6_eb6dy")]
 
-[node name="victime1" parent="." unique_id=1870513431 instance=ExtResource("4_tefeu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, 10)
-bonus_dash = true
-
-[node name="victime2" parent="." unique_id=497796421 instance=ExtResource("4_tefeu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, -10)
-bonus_degats = true
-
-[node name="victime3" parent="." unique_id=956654796 instance=ExtResource("4_tefeu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.75, -10)
-
-[node name="Navigation" type="NavigationRegion3D" parent="." unique_id=732020830]
-navigation_mesh = SubResource("NavigationMesh_sysh0")
-
-[node name="Decor" type="Node3D" parent="Navigation" unique_id=1801484677]
-
-[node name="sol" type="StaticBody3D" parent="Navigation/Decor" unique_id=1045521397]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Navigation/Decor/sol" unique_id=1516817490]
-mesh = SubResource("BoxMesh_sysh0")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Navigation/Decor/sol" unique_id=39777274]
-shape = SubResource("BoxShape3D_sgp6g")
-
-[node name="mur" type="StaticBody3D" parent="Navigation/Decor" unique_id=404490295]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -5)
-
-[node name="visuel" type="MeshInstance3D" parent="Navigation/Decor/mur" unique_id=1666567145]
-mesh = SubResource("BoxMesh_sugp2")
-
-[node name="collisions" type="CollisionShape3D" parent="Navigation/Decor/mur" unique_id=937195199]
-shape = SubResource("BoxShape3D_jyhfs")
-
-[node name="caisse" parent="Navigation/Decor" unique_id=1975595329 instance=ExtResource("4_caisse")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.85, 8)
-
-[node name="caisse_2" parent="Navigation/Decor" unique_id=1135792342 instance=ExtResource("4_caisse")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.85, -2)
-
-[node name="mur_gauche" type="StaticBody3D" parent="Navigation/Decor" unique_id=1374854748]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5, 1.6, 0)
-
-[node name="visuel" type="MeshInstance3D" parent="Navigation/Decor/mur_gauche" unique_id=71899973]
-mesh = SubResource("BoxMesh_sugp2")
-
-[node name="collisions" type="CollisionShape3D" parent="Navigation/Decor/mur_gauche" unique_id=1792740105]
-shape = SubResource("BoxShape3D_jyhfs")
 [node name="VictimManager" type="Node3D" parent="." unique_id=595087372]
 script = ExtResource("7_o6xl0")
 
