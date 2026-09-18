@@ -53,7 +53,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_fqnpg")
 
 [node name="look_debug" type="MeshInstance3D" parent="visual" unique_id=78907567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
-visible = false
 mesh = SubResource("BoxMesh_sysh0")
 surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
 
@@ -73,11 +72,7 @@ transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70
 editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'affichage 2D des déplacements du monde 3D. Le script lit simplement la charge de l'extincteur."
 script = ExtResource("4_interface")
 
-<<<<<<< Updated upstream
 [node name="BonusEscorte" type="Label" parent="Interface" unique_id=2114490398]
-=======
-[node name="BonusEscorte" type="Label" parent="Interface" unique_id=350122328]
->>>>>>> Stashed changes
 offset_left = 25.0
 offset_top = 210.0
 offset_right = 490.0

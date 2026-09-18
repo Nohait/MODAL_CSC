@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://dt47l8r7abrjp"]
 
-[ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/extincteur.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
 [ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victime.tscn" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
-[ext_resource type="PackedScene" uid="uid://df6bl58awbw06" path="res://scenes/mur.tscn" id="6_85g3d"]
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 [ext_resource type="PackedScene" path="res://scenes/point_evacuation.tscn" id="8_evacuation"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
-[ext_resource type="PackedScene" uid="uid://dtvrjfbrfls11" path="res://scenes/porte.tscn" id="10_porte"]
+[ext_resource type="PackedScene" path="res://scenes/porte.tscn" id="10_porte"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -120,8 +119,14 @@ mesh = SubResource("BoxMesh_sysh0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Navigation/Decor/sol" unique_id=39777274]
 shape = SubResource("BoxShape3D_sgp6g")
 
-[node name="mur" parent="Navigation/Decor" unique_id=1740296920 instance=ExtResource("6_85g3d")]
+[node name="mur" type="StaticBody3D" parent="Navigation/Decor" unique_id=404490295]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -5)
+
+[node name="visuel" type="MeshInstance3D" parent="Navigation/Decor/mur" unique_id=1666567145]
+mesh = SubResource("BoxMesh_sugp2")
+
+[node name="collisions" type="CollisionShape3D" parent="Navigation/Decor/mur" unique_id=937195199]
+shape = SubResource("BoxShape3D_jyhfs")
 
 [node name="caisse" parent="Navigation/Decor" unique_id=1975595329 instance=ExtResource("4_caisse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.85, 8)
