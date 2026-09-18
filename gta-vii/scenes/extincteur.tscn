@@ -1,20 +1,12 @@
 [gd_scene format=3 uid="uid://cj5mcflqq4lnc"]
 
 [ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/extincteur.gd" id="1_script"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_afuq2"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bqdvy"]
-albedo_color = Color(0.7176471, 0, 0, 1)
-metallic = 0.54
-roughness = 0.8
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_bqdvy"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3tmt"]
-albedo_color = Color(0.036556315, 0.03655632, 0.03655632, 1)
+[ext_resource type="PackedScene" uid="uid://8srttl8ul3pr" path="res://assets/extincteur0.blend" id="2_klu21"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
+emission_shape = 1
+emission_sphere_radius = 0.2
+inherit_velocity_ratio = 1.0
 direction = Vector3(0, 1, 0)
 spread = 30.0
 flatness = 0.387
@@ -26,28 +18,20 @@ scale_max = 10.0
 anim_speed_max = 11.71
 turbulence_noise_strength = 0.8
 turbulence_noise_scale = 4.0
+collision_use_scale = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_poajv"]
 radius = 0.1
-height = 0.1
+height = 0.2
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
 radius = 2.8
 
-[sub_resource type="BoxMesh" id="BoxMesh_afuq2"]
-
 [node name="Extincteur" type="Node3D" unique_id=826892117]
 script = ExtResource("1_script")
 
-[node name="body" type="MeshInstance3D" parent="." unique_id=318434896]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
-mesh = SubResource("CylinderMesh_afuq2")
-surface_material_override/0 = SubResource("StandardMaterial3D_bqdvy")
-
 [node name="Muzzle" type="MeshInstance3D" parent="." unique_id=139628240]
 transform = Transform3D(0.11, 0, 0, 0, -4.808253e-09, -0.11, 0, 0.11, -4.808253e-09, 0, 0.172, 0.12123349)
-mesh = SubResource("CylinderMesh_bqdvy")
-surface_material_override/0 = SubResource("StandardMaterial3D_q3tmt")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Muzzle" unique_id=2081315521]
 editor_description = "Jet conique : Spread vaut 30 degrés (ouverture totale de 60 degrés). La vitesse de 8 et la durée de vie de 1 seconde allongent le jet. Pour changer uniquement sa longueur visuelle, ajuster Initial Velocity Min et Max dans Process Material. La zone d'attaque est indépendante de cet effet. Visibility AABB est élargie pour éviter que le jet disparaisse au bord de l'écran."
@@ -68,7 +52,5 @@ shape = SubResource("SphereShape3D_sysh0")
 [node name="DirectionMarker" type="Marker3D" parent="Muzzle" unique_id=831103565]
 transform = Transform3D(1, 0, 0, 0, 1, 3.5527137e-15, 0, -3.5527137e-15, 1, 0, 1.0464795, -1.1920929e-07)
 
-[node name="Handle" type="MeshInstance3D" parent="." unique_id=984155214]
-transform = Transform3D(0.03534715, 0, 0, 0, 0.028197458, -0.062422916, 0, 0.009552285, 0.18426666, 0, 0.21990937, -0.061914608)
-mesh = SubResource("BoxMesh_afuq2")
-surface_material_override/0 = SubResource("StandardMaterial3D_q3tmt")
+[node name="extincteur0" parent="." unique_id=1654426891 instance=ExtResource("2_klu21")]
+transform = Transform3D(-3.2564984e-08, 0, 0.745, 0, 0.745, 0, -0.745, 0, -3.2564984e-08, -6.114712e-09, -0.32437807, -0.08326684)
