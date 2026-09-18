@@ -53,6 +53,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_fqnpg")
 
 [node name="look_debug" type="MeshInstance3D" parent="visual" unique_id=78907567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+visible = false
 mesh = SubResource("BoxMesh_sysh0")
 surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
 

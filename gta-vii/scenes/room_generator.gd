@@ -46,7 +46,7 @@ func generateRoom():
 		grid.append(row)
 
 	# à adapter ?
-	var numberOfCuts = randi_range(3, 8)
+	var numberOfCuts = randi_range(3, 5)
 	
 	for i in range(numberOfCuts):
 		removeRandomRectangle()

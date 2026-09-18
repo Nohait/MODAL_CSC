@@ -77,6 +77,7 @@ func _physics_process(delta: float) -> void:
 
 	for body in bodies:
 		if body.is_in_group("enemies"):
+			
 			var target_body := body as PhysicsBody3D
 			var origin: Vector3 = muzzle.global_position 
 			var to_target: Vector3 = target_body.global_position - origin
