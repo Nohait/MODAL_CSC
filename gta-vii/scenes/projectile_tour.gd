@@ -18,6 +18,7 @@ func _physics_process(delta: float) -> void:
 		var rd_scale = randf_range(1,2)
 		flaque.scale *= rd_scale
 		flaque.get_node("PopUpDegats").scale /= rd_scale
+		flaque.hitbox_radius *= rd_scale
 		queue_free()
 
 func _on_body_entered(body: Node3D) -> void:

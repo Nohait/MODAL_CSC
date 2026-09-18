@@ -32,7 +32,6 @@ func _on_body_exited(body: Node3D) -> void:
 func prendre_degats(degats: float) -> void:
 	vie -= degats
 	vie = max(vie, 0)
-	print( self.name, " Touché : -", degats)	
 	afficher_degats(degats)
 	
 	if vie <= 0:
