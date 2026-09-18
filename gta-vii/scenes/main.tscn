@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
 [ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
 [ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victime.tscn" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
@@ -60,6 +61,17 @@ corner_radius_bottom_left = 12
 [node name="main" type="Node3D" unique_id=2102349628]
 script = ExtResource("5_test")
 
+[node name="player" parent="." unique_id=1836946001 node_paths=PackedStringArray("camera") instance=ExtResource("1_o5qli")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+camera = NodePath("../CameraRig/Camera3D")
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=1921470474 node_paths=PackedStringArray("target")]
+script = ExtResource("3_eb6dy")
+target = NodePath("../player")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=601324523]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 5, 6, 5)
+
 [node name="InterfaceTest" type="CanvasLayer" parent="." unique_id=615713353]
 editor_description = "Indication du mode invincible, réservé à cette scène de test. I active ou désactive le mode ; R recharge le niveau sans invincibilité."
 
@@ -88,9 +100,6 @@ environment = SubResource("Environment_test")
 
 [node name="Porte" parent="." unique_id=1687552476 instance=ExtResource("10_porte")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, -4.55)
-
-[node name="player" parent="." unique_id=1836946001 instance=ExtResource("1_o5qli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="Ennemis" type="Node3D" parent="." unique_id=2078139259 groups=["enemies"]]
 
