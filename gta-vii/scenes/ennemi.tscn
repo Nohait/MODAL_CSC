@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bctknvq5lsvt5" path="res://scenes/ennemi.gd" id="1_i8ure"]
 [ext_resource type="Material" uid="uid://b1d8tls54jf5s" path="res://meshes/flame_shader.tres" id="2_a8sfv"]
+[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/flames.tscn" id="2_r3twd"]
 [ext_resource type="PackedScene" uid="uid://ta7qi2dsltn2" path="res://assets/fire_elemental.glb" id="2_wutyl"]
 [ext_resource type="Script" uid="uid://dndpgtox034on" path="res://scenes/droplet.gd" id="3_1ta0d"]
 
@@ -30,6 +31,12 @@ radius = 5.0
 
 [node name="ennemi" type="CharacterBody3D" unique_id=696569544 groups=["enemies"]]
 script = ExtResource("1_i8ure")
+
+[node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_r3twd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.712935, 0.81300354, 0.35450697)
+
+[node name="vfx_fire2" parent="." unique_id=944750977 instance=ExtResource("2_r3twd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77011704, 0.81300354, 0.38884628)
 
 [node name="Sketchfab_Scene" parent="." unique_id=2004259214 instance=ExtResource("2_wutyl")]
 transform = Transform3D(1.73, 0, 0, 0, 1.73, 0, 0, 0, 1.73, 0, 1.7237091, 0)

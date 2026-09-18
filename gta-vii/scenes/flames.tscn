@@ -15,7 +15,7 @@ shader_parameter/DisolveTexture = ExtResource("3_f0diw")
 shader_parameter/FloatParameter = 0.6
 
 [sub_resource type="Curve" id="Curve_r6e7l"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.31182796, 0.3928572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.33870968, 0.9553572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_bl361"]
@@ -26,7 +26,7 @@ emission_shape = 1
 emission_sphere_radius = 0.1
 angle_min = -14.9999895
 angle_max = 15.0000105
-gravity = Vector3(0, 3, 0)
+gravity = Vector3(0, 5, 0)
 damping_min = 0.5
 damping_max = 1.0
 scale_min = 0.75
@@ -69,6 +69,7 @@ transform = Transform3D(0.56, 0, 0, 0, 0.56, 0, 0, 0, 0.56, 0, -0.1390686, 0)
 material_override = SubResource("ShaderMaterial_0jbfk")
 amount = 20
 lifetime = 1.2
+local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bqdvy")
 draw_pass_1 = SubResource("QuadMesh_q3tmt")
 
