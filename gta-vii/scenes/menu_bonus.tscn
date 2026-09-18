@@ -152,7 +152,7 @@ autowrap_mode = 2
 [node name="AucunBonusEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Aucun bonus d'escorte actif pour le moment."
+text = "À VENIR\nAucun bonus d'escorte actif pour le moment."
 autowrap_mode = 2
 
 [node name="Cartes" type="HFlowContainer" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=2110256000]
