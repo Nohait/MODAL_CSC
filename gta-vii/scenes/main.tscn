@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dt47l8r7abrjp"]
 
-[ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/extincteur.tscn" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://j2apuxy0kpov" path="res://assets/tile.jpg" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dwiv1dkuelgob" path="res://scenes/ennemi.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" path="res://scenes/caisse.tscn" id="4_caisse"]
@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
 [ext_resource type="PackedScene" path="res://scenes/point_evacuation.tscn" id="8_evacuation"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
-[ext_resource type="PackedScene" path="res://scenes/porte.tscn" id="10_porte"]
+[ext_resource type="PackedScene" uid="uid://dtvrjfbrfls11" path="res://scenes/porte.tscn" id="10_porte"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
