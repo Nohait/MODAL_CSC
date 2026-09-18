@@ -1,0 +1,279 @@
+[gd_scene format=3 uid="uid://dp50ppdaf7soj"]
+
+[ext_resource type="Script" uid="uid://b3j281ppid2x6" path="res://scenes/menu_bonus.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="Fond"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.045, 0.065, 0.09, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.22, 0.3, 0.38, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="Dash"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.16, 0.105, 0.045, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.62, 0.2, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="Degats"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.04, 0.11, 0.18, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.65, 1, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="Permanent"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.09, 0.09, 0.13, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.35, 0.48, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="MenuBonus" type="CanvasLayer" unique_id=2085504517]
+process_mode = 3
+layer = 20
+script = ExtResource("1")
+
+[node name="Raccourci" type="Button" parent="." unique_id=84433714]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -280.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 66.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("Fond")
+text = "[B] Bonus"
+
+[node name="Menu" type="Control" parent="." unique_id=1570649918]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Voile" type="ColorRect" parent="Menu" unique_id=1841447410]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.01, 0.02, 0.04, 0.8)
+
+[node name="Panneau" type="PanelContainer" parent="Menu" unique_id=759396956]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.92
+anchor_bottom = 0.92
+theme_override_styles/panel = SubResource("Fond")
+
+[node name="Disposition" type="VBoxContainer" parent="Menu/Panneau" unique_id=908392619]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Entete" type="Label" parent="Menu/Panneau/Disposition" unique_id=2118386567]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "VOS BONUS"
+
+[node name="Pause" type="Label" parent="Menu/Panneau/Disposition" unique_id=702912078]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.74, 0.84, 1)
+text = "JEU EN PAUSE · Retrouvez ici les avantages de votre équipe."
+autowrap_mode = 2
+
+[node name="Defilement" type="ScrollContainer" parent="Menu/Panneau/Disposition" unique_id=1673847881]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Sections" type="VBoxContainer" parent="Menu/Panneau/Disposition/Defilement" unique_id=2146370685]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="TitreEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=1495984394]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "01 / VICTIMES ESCORTÉES"
+autowrap_mode = 2
+
+[node name="RegleEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=847143372]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Actifs tant que la victime vous accompagne. Sans cumul entre victimes du même type ; retirés après évacuation."
+autowrap_mode = 2
+
+[node name="AucunBonusEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "À VENIR\nAucun bonus d'escorte actif pour le moment."
+autowrap_mode = 2
+
+[node name="Cartes" type="HFlowContainer" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=2110256000]
+layout_mode = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+
+[node name="CarteDash" type="PanelContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes" unique_id=424102119]
+visible = false
+unique_name_in_owner = true
+custom_minimum_size = Vector2(290, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Dash")
+
+[node name="Contenu" type="VBoxContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash" unique_id=28782671]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Symbole" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash/Contenu" unique_id=106771398]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = ">>"
+autowrap_mode = 2
+
+[node name="Titre" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash/Contenu" unique_id=787197005]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SPORTIVE"
+autowrap_mode = 2
+
+[node name="Valeur" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash/Contenu" unique_id=1956531309]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "−20 %"
+autowrap_mode = 2
+
+[node name="Description" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash/Contenu" unique_id=915429316]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Délai entre deux dashs"
+autowrap_mode = 2
+
+[node name="EtatDash" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDash/Contenu" unique_id=202709792]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "INACTIF"
+autowrap_mode = 2
+
+[node name="CarteDegats" type="PanelContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes" unique_id=1750902594]
+visible = false
+unique_name_in_owner = true
+custom_minimum_size = Vector2(290, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Degats")
+
+[node name="Contenu" type="VBoxContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats" unique_id=1183380165]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Symbole" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats/Contenu" unique_id=776971902]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "+"
+autowrap_mode = 2
+
+[node name="Titre" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats/Contenu" unique_id=1276767264]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SPÉCIALISTE"
+autowrap_mode = 2
+
+[node name="Valeur" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats/Contenu" unique_id=315614762]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "+25 %"
+autowrap_mode = 2
+
+[node name="Description" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats/Contenu" unique_id=1621073513]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Dégâts de l’extincteur"
+autowrap_mode = 2
+
+[node name="EtatDegats" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes/CarteDegats/Contenu" unique_id=2025891598]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "INACTIF"
+autowrap_mode = 2
+
+[node name="TitrePermanents" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=509757199]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "02 / BONUS PERMANENTS"
+autowrap_mode = 2
+
+[node name="Permanents" type="PanelContainer" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=1859752365]
+layout_mode = 2
+theme_override_styles/panel = SubResource("Permanent")
+
+[node name="Contenu" type="VBoxContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Permanents" unique_id=301741614]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Titre" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu" unique_id=1938119012]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "À VENIR"
+autowrap_mode = 2
+
+[node name="Description" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu" unique_id=1657210645]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Aucun bonus permanent disponible pour le moment.
+Les futures améliorations indépendantes de l’escorte apparaîtront ici."
+autowrap_mode = 2
+
+[node name="Fermer" type="Button" parent="Menu/Panneau/Disposition" unique_id=678505723]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Reprendre · Échap"

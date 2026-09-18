@@ -1,10 +1,14 @@
 extends CharacterBody3D
 
+# Le niveau écoute la mort pour remplacer le jeu par l'écran de défaite.
+signal died
+var est_mort := false
+
 # Mode de test : activé depuis main.gd avec la touche I.
 var invincible: bool = false
 
 
-@onready var camera: Camera3D = $Camera3D
+@export var camera : Camera3D 
 @onready var visual: Node3D = $visual
 @onready var Extincteur = $visual/weapon_holder/Extincteur
 @onready var BarreDeVie = $Interface/Vie/BarreDeVie
@@ -178,7 +182,7 @@ func flash_degats() -> void:
 
 func prendre_degats(degats: float) -> void:
 	# Quitter la fonction avant de retirer de la vie si le mode est actif.
-	if invincible:
+	if invincible or est_mort:
 		return
 		
 	flash_degats()
@@ -192,4 +196,10 @@ func prendre_degats(degats: float) -> void:
 		mourir()
 		
 func mourir():
+	# Plusieurs impacts peuvent arriver avant la suppression en fin d'image.
+	if est_mort:
+		return
+	est_mort = true
+	Extincteur.stop_primary_attack()
+	died.emit()
 	queue_free()

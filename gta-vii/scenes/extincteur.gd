@@ -21,9 +21,11 @@ const DENSITE_PARTICULES = 542 #BASE_NOMBRE/(VITESSE*ETALEMENT*BASE_RADIUS*PI*(P
 @export_range(0.1, 100.0, 0.1, "or_greater") var reload_rate: float = 50.0
 
 @export_group("Attaque")
-## Demi-angle en degrés : 30 donne une ouverture totale de 60 degrés.
-## La portée se règle dans DamageArea/CollisionShape3D ; le jet visuel reste indépendant.
+## Dégâts de base par impact, avant le bonus d'escorte et la variation aléatoire.
 @export_range(0,100,1) var degats1: float = 1.0
+# Le VictimManager recalcule ce booléen quand l'escorte change.
+var bonus_degats_actif := false
+const AUGMENTATION_DEGATS_ESCORTE: float = 0.25
 @export_range(0,100,1) var attack_cooldown = 0.2
 var attack_timer = 0.0
 
@@ -75,6 +77,7 @@ func _physics_process(delta: float) -> void:
 
 	for body in bodies:
 		if body.is_in_group("enemies"):
+			
 			var target_body := body as PhysicsBody3D
 			var origin: Vector3 = muzzle.global_position 
 			var to_target: Vector3 = target_body.global_position - origin
@@ -92,10 +95,17 @@ func _physics_process(delta: float) -> void:
 				if Input.is_action_pressed("primary_attack") and !is_overheated:
 					attaque_1(body)
 
+func get_degats() -> float:
+	# Ne jamais modifier degats1 : le bonus doit pouvoir disparaître sans dérive.
+	if bonus_degats_actif:
+		return degats1 * (1.0 + AUGMENTATION_DEGATS_ESCORTE)
+	return degats1
+
+
 func attaque_1(cible):
 	if cible != null:
 		var multiplier = randf_range(0.9,1.1)
-		cible.prendre_degats(round(multiplier * degats1 *100.0)/100.0)
+		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
 
 func modifier(angle, rayon):
 	particles.lifetime = rayon/VITESSE

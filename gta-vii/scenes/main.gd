@@ -31,6 +31,8 @@ var ennemi_scene = preload("res://scenes/ennemi.tscn")
 
 
 func _ready() -> void:
+	# La mort appartient au joueur ; le choix de l'écran suivant appartient au niveau.
+	$player.died.connect(_on_player_died, CONNECT_ONE_SHOT)
 	var nombre_ennemis = randi_range(nombre_min_ennemis, nombre_max_ennemis)
 	for i in range(nombre_ennemis):
 		creer_ennemi(i)
@@ -44,3 +46,16 @@ func creer_ennemi(i: int) -> void:
 	var ennemi = ennemi_scene.instantiate()
 	ennemi.name = "Ennemi " + str(i)
 	$Ennemis.add_child(ennemi)
+
+
+func _on_player_died() -> void:
+	# Arrêter le combat immédiatement. L'écran suivant rétablira un arbre non pausé.
+	get_tree().paused = true
+	# Les dégâts arrivent pendant la physique : différer le changement de scène
+	# pour ne pas supprimer les corps pendant le traitement de leurs collisions.
+	call_deferred("afficher_ecran_mort")
+
+
+func afficher_ecran_mort() -> void:
+	# Changer de scène détruit TOUT le niveau, dont ses CanvasLayer et menus.
+	get_tree().change_scene_to_file("res://scenes/ecran_mort.tscn")

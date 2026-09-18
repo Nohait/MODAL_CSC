@@ -4,13 +4,14 @@ signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
-@onready var particles: GPUParticles3D = $"../player/visual/weapon_holder/Extincteur/Muzzle/GPUParticles3D"
-@onready var portee_extincteur: CollisionShape3D = $Extincteur/Muzzle/DamageArea/CollisionShape3D
 
 @export_group("Bonus d'escorte")
 ## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
 ## Plusieurs sportives ne cumulent pas leur bonus. L'évacuation retire leur contribution.
 @export var bonus_dash: bool = false
+## Cocher pour une spécialiste : dégâts de l'extincteur augmentés de 25 % pendant l'escorte.
+## Comme le dash, ce bonus ne se cumule pas entre victimes du même type.
+@export var bonus_degats: bool = false
 
 @export_group("Suivi")
 
@@ -46,12 +47,26 @@ func _ready() -> void:
 		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
 		materiau.albedo_color = Color(1.0, 0.65, 0.12, 1.0)
 		visuel.set_surface_override_material(0, materiau)
+		$BonusLabel.text = "SPORTIVE \nDash : cooldown -20 %"
+		$BonusLabel.show()
+	elif bonus_degats:
+		# Le bleu distingue la spécialiste de la sportive orange.
+		var visuel: MeshInstance3D = $MeshInstance3D
+		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
+		materiau.albedo_color = Color(0.15, 0.65, 1.0)
+		visuel.set_surface_override_material(0, materiau)
+		$BonusLabel.modulate = Color(0.4, 0.8, 1.0)
+		$BonusLabel.text = "SPÉCIALISTE\nDégâts +25 %"
 		$BonusLabel.show()
 	update_interaction_label()
 
 
 func get_nom_affiche() -> String:
 	# Le nom du nœud distingue les individus ; le suffixe explique leur type au menu.
+	if bonus_dash and bonus_degats:
+		return "%s (dash -20 %%, dégâts +25 %%)" % name
+	if bonus_degats:
+		return "%s (spécialiste : dégâts +25 %%)" % name
 	if bonus_dash:
 		return "%s (sportive : dash -20 %%)" % name
 	return str(name)
@@ -65,6 +80,9 @@ func _physics_process(_delta: float) -> void:
 		follow_target_node()
 
 func free_victim() -> void:
+	# Une interaction répétée ne doit pas enregistrer une deuxième libération.
+	if is_freed:
+		return
 	is_freed = true
 	interaction_label.visible = false
 
