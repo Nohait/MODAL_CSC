@@ -15,7 +15,7 @@ var materiau_voyant: StandardMaterial3D
 
 
 func _ready() -> void:
-	# Chaque porte a son matériau : ouvrir l'une ne doit pas verdir les autres.
+	# Chaque porte est individuelle : ouvrir une ne doit pas ouvrir les autres.
 	materiau_voyant = voyant.get_active_material(0).duplicate() as StandardMaterial3D
 	voyant.material_override = materiau_voyant
 
