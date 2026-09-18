@@ -16,6 +16,12 @@ func _ready() -> void:
 
 	for victim in victims:
 		##On connecte le signal freed à la fonction qui enregistre une victime libérée
+		surveiller_victime(victim)
+
+
+func surveiller_victime(victim: CharacterBody3D) -> void:
+	# Fonction également appelée pour les victimes créées pendant la génération.
+	if not victim.freed.is_connected(register_victim):
 		victim.freed.connect(register_victim)
 
 
@@ -23,6 +29,9 @@ func register_victim(victim: CharacterBody3D) -> void:
 	# has évite d'ajouter deux fois le même personnage si le signal se répète.
 	if freed_victims.has(victim):
 		return
+	# Sortir la victime de sa salle AVANT de surveiller sa disparition.
+	# Elle continuera à suivre le joueur quand l'ancienne salle sera désactivée.
+	victim.reparent(get_node("../Escorte"), true)
 	if freed_victims.is_empty():
 		victim.follow_target = player
 	else:

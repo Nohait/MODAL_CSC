@@ -37,6 +37,9 @@ func _input(event: InputEvent) -> void:
 
 
 func ouvrir_menu() -> void:
+	# Ne pas suspendre la préparation de la navigation pendant un changement de salle.
+	if get_parent().get_node("Salles/RoomManager").transition_en_cours:
+		return
 	# Ne pas superposer ce menu à celui d'évacuation, qui possède déjà la pause.
 	if menu.visible or get_tree().paused or not is_instance_valid(gestionnaire.player):
 		return

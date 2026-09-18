@@ -8,7 +8,7 @@ var est_mort := false
 var invincible: bool = false
 
 
-@onready var camera: Camera3D = $Camera3D
+@export var camera : Camera3D 
 @onready var visual: Node3D = $visual
 @onready var Extincteur = $visual/weapon_holder/Extincteur
 @onready var BarreDeVie = $Interface/Vie/BarreDeVie
