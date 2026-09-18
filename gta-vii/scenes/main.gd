@@ -34,6 +34,8 @@ func _ready() -> void:
 	var nombre_ennemis = randi_range(nombre_min_ennemis, nombre_max_ennemis)
 	for i in range(nombre_ennemis):
 		creer_ennemi(i)
+	# Tous les ennemis existent maintenant : le gestionnaire peut les compter.
+	$RoomManager.initialiser_salle()
 
 
 func creer_ennemi(i: int) -> void:

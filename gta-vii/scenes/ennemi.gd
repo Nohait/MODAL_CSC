@@ -1,4 +1,9 @@
 extends CharacterBody3D
+
+# Annonce une vraie mort au RoomManager, avant la suppression du nœud.
+signal died
+var est_mort := false
+
 # L'agent calcule le chemin ; ce CharacterBody3D réalise le déplacement.
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 
@@ -96,6 +101,9 @@ func suivre_cible_navigation() -> void:
 
 
 func prendre_degats(degats: float) -> void:
+	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
+	if est_mort:
+		return
 	vie -= degats
 	vie = max(vie, 0)
 	print( self.name, " Touché : -", degats)
@@ -106,6 +114,11 @@ func prendre_degats(degats: float) -> void:
 		mourir()
 		
 func mourir():
+	# Une mort ne doit émettre le signal qu'une seule fois.
+	if est_mort:
+		return
+	est_mort = true
+	died.emit()
 	print("Bravo, vous avez tué l'ennemi")
 	queue_free()
 
