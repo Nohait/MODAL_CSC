@@ -32,7 +32,6 @@ var timer_apres_attaque := 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	
-	
 	var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
@@ -49,6 +48,7 @@ func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
 	timer_apres_attaque -= delta
 	
+	
 	if timer_apres_attaque > 0.0:
 		velocity = Vector3.ZERO
 		move_and_slide()
@@ -61,6 +61,14 @@ func _physics_process(delta):
 	
 	if cible != null:	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
+		
+		#On tourne l'ennemi et sa hitbox vers la cible
+		var direction = global_position.direction_to(cible.global_position)
+		var theta = atan2(direction.x, direction.z) - rotation.y	
+		self.rotate(Vector3(0,1,0),theta)
+		var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
+		detection_shape.rotate(Vector3(0,1,0),theta)
+		
 		
 		if distance > distance_lacher: #calcul de sortie de range
 			cible = null
