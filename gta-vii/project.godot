@@ -24,8 +24,8 @@ window/stretch/aspect="expand"
 
 folder_colors={
 "res://assets/": "purple",
-"res://scenes/": "red",
-"res://docs/": "green"
+"res://docs/": "green",
+"res://scenes/": "red"
 }
 
 [global_group]

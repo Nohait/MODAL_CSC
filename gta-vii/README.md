@@ -21,7 +21,7 @@ scenes/
 ├── interfaces/
 │   ├── hud/               affichage du joueur pendant la partie
 │   └── menus/             bonus, titre, mort, victoire et navigation des menus
-└── effets/feu/            scène de flammes et script d'effet
+└── effets/                feu/ pour les flammes, apparition/ pour les annonces
 
 assets/
 ├── modeles/               modèles 3D et sources Blender

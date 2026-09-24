@@ -11,6 +11,8 @@ var liberee := false
 # Positions réservées aux mobiles encore à venir ; chaque salle garde son attente.
 var mobiles_a_creer: Array[Vector3] = []
 var temps_avant_vague := 0.0
+# Un mobile annoncé reste « à venir » jusqu'à la fin de son cercle animé.
+var apparitions_en_cours := 0
 
 
 func _on_passage(corps: Node3D) -> void:

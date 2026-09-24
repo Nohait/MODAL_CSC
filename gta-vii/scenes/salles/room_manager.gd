@@ -4,6 +4,7 @@ signal room_cleared
 signal partie_prete
 
 const ENNEMI_SCENE = preload("res://scenes/ennemis/mobiles/ennemi.tscn")
+const ANNONCE_SCENE = preload("res://scenes/effets/apparition/annonce_apparition.tscn")
 const TOUR_ENFLAMMEE_SCENE = preload("res://scenes/ennemis/tourelles/tour_enflammee.tscn")
 const FLAQUE_SCENE = preload("res://scenes/ennemis/dangers/flaque_de_feu.tscn")
 const VICTIME_SCENE = preload("res://scenes/victimes/victime.tscn")
@@ -24,6 +25,10 @@ const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuat
 @export_range(1, 5, 1) var taille_min_vague := 1
 @export_range(1, 5, 1) var taille_max_vague := 3
 @export_range(0.2, 30.0, 0.1) var delai_vagues := 4.0
+## Temps pendant lequel le cercle prévient le joueur avant l'apparition.
+@export_range(0.2, 3.0, 0.1) var duree_annonce := 1.0
+## Distance horizontale minimale entre le joueur et un nouvel ennemi.
+@export_range(1.5, 10.0, 0.5) var distance_securite_spawn := 3.0
 @export_group("Victimes présentes dès le début")
 @export_range(0, 5, 1) var nombre_min_victimes := 0
 @export_range(0, 5, 1) var nombre_max_victimes := 3
@@ -156,12 +161,57 @@ func _process(delta: float) -> void:
 func creer_vague() -> void:
 	var nombre := mini(randi_range(taille_min_vague, maxi(taille_min_vague, taille_max_vague)), salle_actuelle.mobiles_a_creer.size())
 	for i in range(nombre):
-		var ennemi = ENNEMI_SCENE.instantiate()
-		ennemi.position = salle_actuelle.mobiles_a_creer.pop_back() + Vector3.UP * 0.75
-		salle_actuelle.get_node("Ennemis").add_child(ennemi)
-		ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
-		# Ne pas incrémenter ici : ces ennemis sont déjà compris dans l'objectif.
+		var indice := trouver_emplacement_eloigne(salle_actuelle)
+		if indice == -1:
+			break # Toutes les places sont trop proches : réessayer à la prochaine vague.
+		var emplacement: Vector3 = salle_actuelle.mobiles_a_creer[indice]
+		# Retirer la place empêche une autre vague de l'annoncer en même temps.
+		# L'ennemi reste néanmoins « à venir » grâce au compteur des animations.
+		salle_actuelle.mobiles_a_creer.remove_at(indice)
+		salle_actuelle.apparitions_en_cours += 1
+		var annonce = ANNONCE_SCENE.instantiate()
+		annonce.position = emplacement + Vector3.UP * 0.13 # Juste au-dessus du sol.
+		annonce.duree = duree_annonce
+		# bind ajoute ces deux arguments au signal terminee, qui n'en fournit aucun.
+		# Chaque cercle conserve ainsi SA salle et SA position, même après la boucle.
+		# CONNECT_ONE_SHOT déconnecte cet appel après la première émission du signal.
+		annonce.terminee.connect(_terminer_apparition.bind(salle_actuelle, emplacement), CONNECT_ONE_SHOT)
+		# L'ajout à l'arbre déclenche _ready(), donc démarre le Tween du cercle.
+		# C'est pourquoi la durée et la connexion ont été préparées AVANT cette ligne.
+		salle_actuelle.add_child(annonce)
 	actualiser_objectifs()
+
+
+func emplacement_suffisamment_eloigne(salle: Node3D, emplacement: Vector3) -> bool:
+	if not is_instance_valid(joueur):
+		return false
+	var ecart: Vector3 = salle.to_global(emplacement) - joueur.global_position
+	ecart.y = 0.0 # Le saut du joueur ne doit pas autoriser une apparition sous lui.
+	return ecart.length() >= distance_securite_spawn
+
+
+func trouver_emplacement_eloigne(salle: Node3D) -> int:
+	# Parcourir les cases déjà réservées garantit de rester sur le sol, hors des caisses.
+	for i in range(salle.mobiles_a_creer.size()):
+		if emplacement_suffisamment_eloigne(salle, salle.mobiles_a_creer[i]):
+			return i
+	return -1
+
+
+func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
+	salle.apparitions_en_cours -= 1
+	# Une fois le cercle lancé, l'apparition est confirmée même si le joueur approche.
+	# Seul un changement de salle reporte encore la création de l'ennemi.
+	if salle != salle_actuelle or transition_en_cours:
+		salle.mobiles_a_creer.append(emplacement)
+	else:
+		var ennemi = ENNEMI_SCENE.instantiate()
+		ennemi.position = emplacement + Vector3.UP * 0.75
+		salle.get_node("Ennemis").add_child(ennemi)
+		ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+		# Déjà compté à la préparation de la salle : ne pas ajouter au total.
+	if salle == salle_actuelle:
+		actualiser_objectifs()
 
 
 func activer_salle(indice: int) -> void:
@@ -248,8 +298,9 @@ func actualiser_objectifs() -> void:
 	remaining_enemies = salle_actuelle.remaining_enemies
 	is_room_cleared = salle_actuelle.liberee
 	objectifs.text = "Salle %d/%d · Victimes : %d · Ennemis : %d" % [indice_salle + 1, nombre_salles, remaining_victims, remaining_enemies]
-	if not salle_actuelle.mobiles_a_creer.is_empty():
-		objectifs.text += " · À venir : %d" % salle_actuelle.mobiles_a_creer.size()
+	var a_venir: int = salle_actuelle.mobiles_a_creer.size() + salle_actuelle.apparitions_en_cours
+	if a_venir > 0:
+		objectifs.text += " · À venir : %d" % a_venir
 	if remaining_victims == 0 and remaining_enemies == 0 and not is_room_cleared:
 		salle_actuelle.liberee = true
 		is_room_cleared = true

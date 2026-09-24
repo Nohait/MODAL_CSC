@@ -121,6 +121,27 @@ sans bonus. Si les trois poids valent zéro, aucun pouvoir n'est attribué.
 Les places d'arrivée de l'escorte sont réservées selon le maximum de victimes,
 afin de garder assez de place même si toutes les salles tirent ce maximum.
 
-Les apparitions utilisent des cases de sol réservées, mais n'ont pas encore
-d'avertissement visuel et ne cherchent pas à s'éloigner du joueur s'il occupe
-la case au moment de l'apparition. Ces deux améliorations peuvent venir ensuite.
+## Annonce animée des apparitions
+
+`scenes/effets/apparition/annonce_apparition.tscn` contient un anneau rouge sans
+collision, posé juste au-dessus du sol. Son script fait grandir puis resserrer
+l'anneau avec un Tween. Après une seconde, il émet `terminee`, puis se supprime.
+Le matériau n'utilise pas l'éclairage : le rouge reste visible dans les ombres.
+
+`creer_vague()` choisit une position réservée à au moins 3 unités du joueur
+(distance horizontale). S'il n'y a pas de place assez éloignée, le mobile reste
+en attente pour une prochaine vague. Une position annoncée sort de la liste des
+places disponibles et augmente `apparitions_en_cours` : elle ne peut donc pas
+être annoncée deux fois en même temps.
+
+Le signal appelle `_terminer_apparition(salle, emplacement)` grâce à `bind()`.
+Une fois l'animation lancée, l'ennemi apparaît à l'endroit annoncé même si le
+joueur s'en approche. La distance est vérifiée uniquement avant l'annonce.
+Seul un changement de salle reporte encore l'apparition.
+
+L'objectif inclut les mobiles en attente ET ceux dont l'animation est en cours.
+Le total des ennemis restants ne diminue qu'à leur mort. Le Tween suit la pause
+du jeu et appartient à la salle : quitter la partie détruit aussi les annonces.
+
+Les réglages `duree_annonce` (1 seconde) et `distance_securite_spawn` (3 unités),
+sont exposés dans le groupe des vagues du RoomManager.
