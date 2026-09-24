@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dp50ppdaf7soj"]
+[gd_scene format=3 uid="uid://cfvwgmwnlloq2"]
 
-[ext_resource type="Script" uid="uid://b3j281ppid2x6" path="res://scenes/menu_bonus.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/menu_bonus.gd" id="1"]
 
 [sub_resource type="StyleBoxFlat" id="Fond"]
 content_margin_left = 20.0
@@ -149,10 +149,11 @@ theme_override_font_sizes/font_size = 16
 text = "Actifs tant que la victime vous accompagne. Sans cumul entre victimes du même type ; retirés après évacuation."
 autowrap_mode = 2
 
-[node name="AucunBonusEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections"]
+[node name="AucunBonusEscorte" type="Label" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=218734706]
 unique_name_in_owner = true
 layout_mode = 2
-text = "À VENIR\nAucun bonus d'escorte actif pour le moment."
+text = "À VENIR
+Aucun bonus d'escorte actif pour le moment."
 autowrap_mode = 2
 
 [node name="Cartes" type="HFlowContainer" parent="Menu/Panneau/Disposition/Defilement/Sections" unique_id=2110256000]
@@ -161,8 +162,8 @@ theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 14
 
 [node name="CarteDash" type="PanelContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes" unique_id=424102119]
-visible = false
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(290, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Dash")
@@ -203,8 +204,8 @@ text = "INACTIF"
 autowrap_mode = 2
 
 [node name="CarteDegats" type="PanelContainer" parent="Menu/Panneau/Disposition/Defilement/Sections/Cartes" unique_id=1750902594]
-visible = false
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(290, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Degats")

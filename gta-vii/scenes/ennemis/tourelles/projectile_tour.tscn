@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://33d8otsyev3h"]
+
+[ext_resource type="Script" uid="uid://dmtdn0y7jc87q" path="res://scenes/ennemis/tourelles/projectile_tour.gd" id="1_ml7bw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ml7bw"]
+albedo_color = Color(1, 0.49803922, 0.13333334, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_c8fcr"]
+material = SubResource("StandardMaterial3D_ml7bw")
+radius = 0.3
+height = 0.6
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_softn"]
+radius = 0.3
+
+[node name="ProjectileTour" type="Area3D" unique_id=724792424]
+script = ExtResource("1_ml7bw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1127022002]
+layers = 32769
+mesh = SubResource("SphereMesh_c8fcr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1316777774]
+shape = SubResource("SphereShape3D_softn")

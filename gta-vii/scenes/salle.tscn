@@ -1,17 +1,21 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dtqtekuvfw70u"]
 
 [ext_resource type="Script" path="res://scenes/salle.gd" id="1"]
 
-[node name="Salle" type="Node3D"]
+[node name="Salle" type="Node3D" unique_id=1523019774]
 script = ExtResource("1")
 
-[node name="Navigation" type="NavigationRegion3D" parent="."]
+[node name="Navigation" type="NavigationRegion3D" parent="." unique_id=896426665]
 enabled = false
 
-[node name="Decor" type="Node3D" parent="Navigation"]
+[node name="Decor" type="Node3D" parent="Navigation" unique_id=324735294]
 
-[node name="Portes" type="Node3D" parent="."]
+[node name="Portes" type="Node3D" parent="." unique_id=1264399151]
 
-[node name="Ennemis" type="Node3D" parent="."]
+[node name="Ennemis" type="Node3D" parent="." unique_id=2070502493]
 
-[node name="Victimes" type="Node3D" parent="."]
+[node name="Victimes" type="Node3D" parent="." unique_id=1874015602]
+
+[node name="ProjectilesTour" type="Node3D" parent="." unique_id=1606747750]
+
+[node name="FlaquesDeFeu" type="Node3D" parent="." unique_id=114278435]

@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://luimd4nfrie4"]
+
+[ext_resource type="Script" uid="uid://6j050metnw7f" path="res://scenes/joueur/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/armes/extincteur/extincteur.tscn" id="2_g2els"]
+[ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_sysh0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqnpg"]
+albedo_color = Color(0, 0, 0.11372549, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sysh0"]
+size = Vector3(0.1, 0.1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qhqgy"]
+albedo_color = Color(0.17155394, 0.46661443, 1, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_vie_fond"]
+bg_color = Color(0.045, 0.06, 0.085, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.45, 0.55, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_vie_remplissage"]
+bg_color = Color(0.188, 0.541, 0.8, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_fond"]
+bg_color = Color(0.06, 0.07, 0.09, 0.95)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_charge"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="player" type="CharacterBody3D" unique_id=1836946001 groups=["player"]]
+script = ExtResource("1_3vyb7")
+
+[node name="visual" type="Node3D" parent="." unique_id=1533517147]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="visual" unique_id=53678333]
+mesh = SubResource("CapsuleMesh_sysh0")
+surface_material_override/0 = SubResource("StandardMaterial3D_fqnpg")
+
+[node name="look_debug" type="MeshInstance3D" parent="visual" unique_id=78907567]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+visible = false
+mesh = SubResource("BoxMesh_sysh0")
+surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
+
+[node name="weapon_holder" type="Node3D" parent="visual" unique_id=1552559189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30966657, 0, 0)
+
+[node name="Extincteur" parent="visual/weapon_holder" unique_id=826892117 instance=ExtResource("2_g2els")]
+transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, -0.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=457942430]
+shape = SubResource("CapsuleShape3D_sge3q")
+
+[node name="Interface" type="CanvasLayer" parent="." unique_id=1569438624]
+editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'affichage 2D des déplacements du monde 3D. Le script lit simplement la charge de l'extincteur."
+script = ExtResource("4_interface")
+
+[node name="Vie" type="VBoxContainer" parent="Interface" unique_id=1609755627]
+editor_description = "Barre de vie : fond opaque et remplissage bleu définis dans Theme Overrides > Styles de BarreDeVie. La couleur du remplissage est indépendante du texte."
+offset_left = 25.0
+offset_top = 12.0
+offset_right = 365.0
+offset_bottom = 65.0
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Titre" type="Label" parent="Interface/Vie" unique_id=540207653]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "VIE"
+
+[node name="BarreDeVie" type="ProgressBar" parent="Interface/Vie" unique_id=2044568990]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+theme_override_styles/background = SubResource("StyleBox_vie_fond")
+theme_override_styles/fill = SubResource("StyleBox_vie_remplissage")
+step = 0.0
+value = 100.0
+
+[node name="Reserve" type="VBoxContainer" parent="Interface" unique_id=815601660]
+editor_description = "Range automatiquement le titre, la jauge et l'état verticalement, en haut à gauche. Mouse Filter est sur Ignore pour laisser les clics servir au tir."
+offset_left = 25.0
+offset_top = 69.0
+offset_right = 365.0
+offset_bottom = 155.0
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Titre" type="Label" parent="Interface/Reserve" unique_id=1781822031]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "Mousse"
+
+[node name="Jauge" type="ProgressBar" parent="Interface/Reserve" unique_id=71629810]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBox_reserve_fond")
+theme_override_styles/fill = SubResource("StyleBox_reserve_charge")
+step = 0.0
+value = 100.0
+show_percentage = false
+
+[node name="Etat" type="Label" parent="Interface/Reserve" unique_id=450970133]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "Prêt"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=737152856]
+
+[node name="DamageFlash" type="ColorRect" parent="CanvasLayer" unique_id=564493702]
+visible = false
+offset_left = -92.0
+offset_top = -50.0
+offset_right = 1211.0
+offset_bottom = 704.0
+color = Color(0.81960785, 0.08235294, 0, 1)

@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://dgoqykl58hnc"]
+
+[ext_resource type="Script" uid="uid://bfe83qpkk3qk4" path="res://scenes/interfaces/menus/navigation_menus.gd" id="1"]
+[sub_resource type="StyleBoxFlat" id="Panneau"]
+content_margin_left = 36.0
+content_margin_top = 32.0
+content_margin_right = 36.0
+content_margin_bottom = 32.0
+bg_color = Color(0, 0, 0, 0)
+border_width_top = 4
+border_color = Color(0.9, 0.25, 0.16, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="Bouton"]
+content_margin_top = 14.0
+content_margin_bottom = 14.0
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="Survol"]
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 1
+border_color = Color(1, 0.7, 0.35, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="EcranVictoire" type="Control" unique_id=1972142951]
+editor_description = "Écran autonome : le niveau précédent et toutes ses interfaces ont été retirés."
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Fond" type="ColorRect" parent="." unique_id=697530995]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.025, 0.035, 0.05, 1)
+
+[node name="Centre" type="CenterContainer" parent="." unique_id=1626037727]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panneau" type="PanelContainer" parent="Centre" unique_id=1300091740]
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Panneau")
+
+[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau" unique_id=1610622563]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Surtitre" type="Label" parent="Centre/Panneau/Contenu" unique_id=1425215291]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.65, 0.45, 1)
+theme_override_font_sizes/font_size = 16
+text = "INTERVENTION TERMINÉE"
+horizontal_alignment = 1
+
+[node name="Titre" type="Label" parent="Centre/Panneau/Contenu" unique_id=1519266384]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.82, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 38
+text = "IMMEUBLE LIBÉRÉ"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Centre/Panneau/Contenu" unique_id=1055797651]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 18
+text = "Toutes les salles ont été libérées."
+horizontal_alignment = 1
+
+[node name="NouvellePartie" type="Button" parent="Centre/Panneau/Contenu" unique_id=2021494091]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
+theme_override_colors/font_focus_color = Color(1, 0.65, 0.4, 1)
+theme_override_colors/font_hover_color = Color(1, 0.65, 0.4, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Bouton")
+theme_override_styles/pressed = SubResource("Bouton")
+theme_override_styles/hover = SubResource("Survol")
+theme_override_styles/focus = SubResource("Focus")
+text = "Nouvelle partie"
+
+[node name="EcranTitre" type="Button" parent="Centre/Panneau/Contenu" unique_id=1238126151]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
+theme_override_colors/font_focus_color = Color(1, 0.65, 0.4, 1)
+theme_override_colors/font_hover_color = Color(1, 0.65, 0.4, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Bouton")
+theme_override_styles/pressed = SubResource("Bouton")
+theme_override_styles/hover = SubResource("Survol")
+theme_override_styles/focus = SubResource("Focus")
+text = "Écran titre"
+
