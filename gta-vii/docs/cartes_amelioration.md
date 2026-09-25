@@ -60,3 +60,20 @@ ensuite séparément : avec une spécialiste et un choix à +20 %, dégâts = ba
 Grande réserve ajoute à la charge actuelle seulement la capacité gagnée.
 La jauge suit automatiquement le nouveau maximum. Les choix acquis apparaissent
 dans la section des bonus permanents du MenuBonus. Évacuer une victime ne les retire pas.
+
+## Menu des bonus acquis
+
+MenuBonus reprend les mêmes cartes en lecture seule, dans un format compact de
+240 × 365. Le fond utilise le papier existant teinté bordeaux et le shader commun
+des contours brûlés. Les deux sections restent séparées : escorte et renforts acquis.
+Une amélioration répétée apparaît une seule fois avec son niveau et son effet total.
+Seuls les bonus possédés sont montrés ; chaque section possède son propre état vide.
+
+Les cartes d'escorte utilisent deux pictogrammes SVG remplaçables dans
+assets/textures/interfaces/ameliorations. Leurs effets sont lus depuis les constantes
+du joueur et de l'extincteur. Elles disparaissent dès que le bonus d'escorte n'est plus actif.
+Le menu se reconstruit sur escort_changed et ameliorations_changees, ainsi qu'à l'ouverture.
+
+Le mode lecture_seule de carte_amelioration.gd désactive selected et le focus de choix.
+Le survol conserve seulement l'accent lumineux ; il n'agrandit pas les cartes du récapitulatif.
+Les cartes de l'écran de choix gardent leur format et leur comportement d'origine.

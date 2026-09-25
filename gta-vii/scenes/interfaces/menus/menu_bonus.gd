@@ -4,16 +4,19 @@ extends CanvasLayer
 @onready var gestionnaire = get_parent().get_node("VictimManager")
 @onready var raccourci: Button = $Raccourci
 @onready var menu: Control = $Menu
-@onready var panneau: PanelContainer = %Panneau
+@onready var panneau: Control = %Panneau
 @onready var fermer: Button = %Fermer
-@onready var carte_dash: PanelContainer = %CarteDash
-@onready var carte_degats: PanelContainer = %CarteDegats
-@onready var etat_dash: Label = %EtatDash
-@onready var etat_degats: Label = %EtatDegats
-@onready var aucune_escorte: Label = %AucunBonusEscorte
+const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
+const IMAGE_SPORTIVE = preload("res://assets/textures/interfaces/ameliorations/bonus_sportive.svg")
+const IMAGE_SPECIALISTE = preload("res://assets/textures/interfaces/ameliorations/bonus_specialiste.svg")
+
 @onready var upgrades = get_parent().get_node("UpgradeManager")
-@onready var titre_permanents: Label = $Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu/Titre
-@onready var description_permanents: Label = $Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu/Description
+@onready var cartes_escorte: HFlowContainer = %CartesEscorte
+@onready var cartes_permanents: HFlowContainer = %CartesPermanents
+@onready var vide_escorte: Label = %VideEscorte
+@onready var vide_permanents: Label = %VidePermanents
+@onready var papier: TextureRect = $Menu/Panneau/Papier
+var temps_braises := 0.0
 var souris_avant: int
 var animation: Tween
 
@@ -24,7 +27,21 @@ func _ready() -> void:
 	fermer.pressed.connect(fermer_menu)
 	gestionnaire.escort_changed.connect(actualiser_affichage)
 	upgrades.ameliorations_changees.connect(actualiser_affichage)
+	papier.material = papier.material.duplicate()
+	papier.resized.connect(_actualiser_taille_papier)
+	_actualiser_taille_papier.call_deferred()
 	actualiser_affichage()
+
+
+func _actualiser_taille_papier() -> void:
+	papier.material.set_shader_parameter("taille", papier.size)
+
+
+func _process(delta: float) -> void:
+	if menu.visible:
+		# Même horloge que les cartes : les braises restent animées pendant la pause.
+		temps_braises += delta
+		papier.material.set_shader_parameter("horloge", temps_braises)
 
 
 func _input(event: InputEvent) -> void:
@@ -81,7 +98,7 @@ func fermer_menu() -> void:
 
 
 func actualiser_affichage() -> void:
-	# escort_changed arrive APRÈS le recalcul des bonus dans le VictimManager.
+	# Les signaux arrivent après le recalcul des effets. Le menu ne les applique jamais.
 	var joueur = gestionnaire.player
 	if not is_instance_valid(joueur):
 		return
@@ -90,16 +107,54 @@ func actualiser_affichage() -> void:
 	var nombre := int(dash_actif) + int(degats_actifs)
 	for niveau in upgrades.niveaux.values():
 		nombre += int(niveau)
-	# Ces bonus appartiennent à la partie, pas à l'escorte.
-	titre_permanents.text = "RENFORTS DE LA PARTIE"
-	description_permanents.text = upgrades.get_resume()
 	var touches := InputMap.action_get_events("menu_bonus")
 	var touche := touches[0].as_text() if not touches.is_empty() else "B"
 	raccourci.text = "[%s] Bonus · %d actif(s)" % [touche, nombre]
-	# Masquer les bonus non possédés pour ne révéler ni leur nom ni leur effet.
-	# Le HFlowContainer ne réserve pas de place aux cartes masquées.
-	carte_dash.visible = dash_actif
-	carte_degats.visible = degats_actifs
-	aucune_escorte.visible = nombre == 0
-	etat_dash.text = "ACTIF · délai %.2f s" % joueur.get_dash_cooldown()
-	etat_degats.text = "ACTIF · dégâts de base ×1,25"
+
+	_vider_cartes(cartes_escorte)
+	_vider_cartes(cartes_permanents)
+	# On ne crée que les cartes possédées : aucun nom de bonus inconnu n'est révélé.
+	if dash_actif:
+		_ajouter_carte(cartes_escorte, &"sportive", "Sportive",
+			"Votre escorte vous aide à enchaîner les esquives.",
+			"−%s %% de délai de dash" % String.num(joueur.REDUCTION_DASH_ESCORTE * 100, 2).trim_suffix(".0"),
+			"VICTIME · MOBILITÉ", "ACTIF TANT QU’ELLE VOUS SUIT", IMAGE_SPORTIVE)
+	if degats_actifs:
+		_ajouter_carte(cartes_escorte, &"specialiste", "Spécialiste",
+			"Votre escorte renforce l’efficacité de l’extincteur.",
+			"+%s %% de dégâts" % String.num(joueur.extincteur.AUGMENTATION_DEGATS_ESCORTE * 100, 2).trim_suffix(".0"),
+			"VICTIME · EXTINCTEUR", "ACTIF TANT QU’ELLE VOUS SUIT", IMAGE_SPECIALISTE)
+	for proposition in upgrades.POOL:
+		var niveau: int = upgrades.niveaux[proposition.id]
+		if niveau == 0:
+			continue
+		# Une carte par type, avec son nombre d'acquisitions et son effet TOTAL.
+		_ajouter_carte(cartes_permanents, proposition.id, proposition.titre,
+			proposition.description, upgrades.texte_effet(proposition.id, niveau),
+			"RENFORT · NIVEAU %d" % niveau, "ACQUIS POUR CETTE PARTIE")
+	vide_escorte.visible = cartes_escorte.get_child_count() == 0
+	vide_permanents.visible = cartes_permanents.get_child_count() == 0
+
+
+func _vider_cartes(conteneur: Container) -> void:
+	# Retirer immédiatement évite de compter les cartes en attente de queue_free().
+	for carte in conteneur.get_children():
+		conteneur.remove_child(carte)
+		carte.queue_free()
+
+
+func _ajouter_carte(conteneur: Container, identifiant: StringName, titre: String,
+		description: String, effet: String, categorie: String, statut: String,
+		illustration: Texture2D = null) -> void:
+	var carte = CARTE.instantiate()
+	carte.lecture_seule = true
+	carte.identifiant = identifiant
+	carte.titre = titre
+	carte.description = description
+	carte.effet_affiche = effet
+	carte.categorie = categorie
+	carte.statut = statut
+	if illustration != null:
+		carte.illustration = illustration
+	# Aucun signal selected connecté : consulter une carte n'octroie rien.
+	conteneur.add_child(carte)

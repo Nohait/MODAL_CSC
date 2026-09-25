@@ -5,6 +5,11 @@ extends Control
 ## Le signal existant est conservé sans argument : le gestionnaire pourra utiliser bind(carte).
 signal selected
 
+@export_group("Consultation")
+## Mode utilisé dans le menu des bonus : aucune sélection ni récompense au clic.
+@export var lecture_seule := false
+@export var statut := "ACQUISE POUR CETTE PARTIE"
+
 @export_group("Contenu")
 ## Identifiant stable utilisé par le pool ; aucun effet de jeu n'est appliqué ici.
 @export var identifiant: StringName = &"pression"
@@ -60,6 +65,8 @@ func _ready() -> void:
 	materiau_image = image.material.duplicate() as ShaderMaterial
 	papier.material = materiau_papier
 	image.material = materiau_image
+	if lecture_seule:
+		preparer_consultation()
 	resized.connect(actualiser_dimensions)
 	image.resized.connect(actualiser_dimensions)
 	actualiser_contenu()
@@ -80,6 +87,28 @@ func actualiser_contenu() -> void:
 	$Visuel/Contenu/Organisation/Effet.text = effet_affiche
 	$Visuel/Contenu/Organisation/Entete/Categorie.text = categorie
 	image.texture = illustration
+	if lecture_seule:
+		invitation.text = statut
+
+
+# Même carte et mêmes shaders, dans un format plus compact pour le récapitulatif.
+func preparer_consultation() -> void:
+	custom_minimum_size = Vector2(240, 365)
+	size = custom_minimum_size
+	focus_mode = Control.FOCUS_NONE
+	mouse_filter = Control.MOUSE_FILTER_PASS
+	mouse_default_cursor_shape = Control.CURSOR_ARROW
+	hover_scale = 1.0 # Éviter de déborder sur les voisines dans le défilement.
+	$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 112
+	$Visuel/Contenu/Organisation.add_theme_constant_override("separation", 8)
+	for cote in ["left", "top", "right", "bottom"]:
+		$Visuel/Contenu.add_theme_constant_override("margin_" + cote, 18)
+	$Visuel/Contenu/Organisation/Titre.add_theme_font_size_override("font_size", 24)
+	$Visuel/Contenu/Organisation/Description.add_theme_font_size_override("font_size", 13)
+	$Visuel/Contenu/Organisation/Effet.add_theme_font_size_override("font_size", 15)
+	# Réserver deux lignes même pour un effet court garde les illustrations alignées.
+	$Visuel/Contenu/Organisation/Effet.custom_minimum_size.y = 54
+	$Visuel/Contenu/Organisation/Effet.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 
 ## Donne les tailles en pixels aux shaders pour conserver des bordures régulières.
@@ -91,6 +120,8 @@ func actualiser_dimensions() -> void:
 
 ## Anime les braises même si le jeu est en pause : la scène est en mode Always.
 func _process(delta: float) -> void:
+	if not is_visible_in_tree():
+		return
 	temps_animation += delta
 	var lumiere := Vector2(0.25, 0.15)
 	if souris_dessus and size.x > 0.0 and size.y > 0.0:
@@ -117,7 +148,8 @@ func _on_mouse_exited() -> void:
 ## Anime le visuel et les braises ensemble, sans agrandir la zone qui reçoit la souris.
 func actualiser_survol() -> void:
 	var actif := souris_dessus or has_focus()
-	invitation.text = "CHOISIR CETTE AMÉLIORATION" if actif else "CLIC OU ENTRÉE POUR CHOISIR"
+	if not lecture_seule:
+		invitation.text = "CHOISIR CETTE AMÉLIORATION" if actif else "CLIC OU ENTRÉE POUR CHOISIR"
 	if hover_tween:
 		hover_tween.kill()
 	z_index = 1 if actif else 0
@@ -131,7 +163,7 @@ func actualiser_survol() -> void:
 
 ## Émet selected pour un clic gauche ou ui_accept (Entrée/manette) lorsque la carte a le focus.
 func _on_gui_input(event: InputEvent) -> void:
-	if event.is_echo():
+	if lecture_seule or event.is_echo():
 		return
 	var clic: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
 	if clic or (has_focus() and event.is_action_pressed("ui_accept")):
