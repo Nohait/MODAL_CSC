@@ -17,7 +17,7 @@ var hitbox_radius = 1.5
 
 @export_group("Attaque")
 @export var attaque_cooldown = 3.0
-var attaque_timer = 0.0 #temps initialisé à 0
+var attaque_timer = 3.0 #temps initialisé à 0
 @export var degats_ennemi = 30.0
 
 var projectile_scene = preload("res://scenes/ennemis/tourelles/projectile_tour.tscn")
