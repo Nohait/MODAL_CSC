@@ -4,6 +4,10 @@ signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
+@onready var animation_degats: AnimationPlayer = $AnimationDegats
+
+@export var vie_max := 100.0
+var vie := vie_max
 
 @export_group("Bonus d'escorte")
 ## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
@@ -16,7 +20,7 @@ signal freed(victim: CharacterBody3D)
 @export_group("Suivi")
 
 ## Vitesse de déplacement de la victime.
-@export_range(0.0, 20.0, 0.1, "or_greater") var follow_speed: float = 3.0
+@export_range(0.0, 20.0, 0.1, "or_greater") var speed: float = 4.5
 
 # Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
@@ -113,10 +117,25 @@ func follow_target_node() -> void:
 
 		if direction.length() > 0.01:
 			direction = direction.normalized()
-			velocity.x = direction.x * follow_speed
-			velocity.z = direction.z * follow_speed
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
 
 	move_and_slide()
+
+func prendre_degats(degats: float) -> void:
+	print("OMG la victime prend des dégâts")
+	vie -= degats
+	flash_degats()
+	if vie < 0:
+		mourir()
+	pass
+
+func mourir():
+	queue_free()
+
+func flash_degats():
+	self.animation_degats.play("Dégats")
+	pass
 
 func update_interaction_label() -> void:
 	var events := InputMap.action_get_events("interact")

@@ -6,6 +6,11 @@ var est_mort := false
 
 var cible = null
 
+@onready var player = get_tree().get_first_node_in_group("player")
+@onready var detection_shape: CollisionShape3D = $"SurfaceDetection/CollisionShape3D"
+@onready var SurfaceDetection: Area3D = $"SurfaceDetection"
+@onready var muzzle: Marker3D = $Muzzle
+
 @export var vie_max := 200.0
 var vie := vie_max
 var hitbox_radius = 1.5
@@ -20,26 +25,29 @@ var hitbox_radius = 1.5
 var attaque_timer = 3.0 #temps initialisé à 0
 @export var degats_ennemi = 30.0
 
+@export_group("Cible_manager")
+@export var chgt_cible_cooldown = 3.0 #On reste 3s sur la meme cible avant de se demander si on change
+var chgt_cible_timer = 3.0 #temps initialisé à 0
+
 var projectile_scene = preload("res://scenes/ennemis/tourelles/projectile_tour.tscn")
-@onready var muzzle: Marker3D = $Muzzle
 # Fourni avant add_child : les projectiles appartiennent à la salle de cette tour.
 @export var projectiles_tour: Node3D
-@onready var player = get_tree().get_first_node_in_group("player")
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
-	var detection_shape: CollisionShape3D = $"SurfaceDetection/CollisionShape3D"
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	pass # Replace with function body.
-
-func _on_surface_de_detection_body_entered(body: Node3D) -> void:
-	if body.is_in_group("player"):
-		cible = body
-		
 		
 func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
+	
+	#On définit la cible.
+	#Il y a un timer pour eviter que l'ennemi soit indécis
+	chgt_cible_timer -= delta
+	if chgt_cible_timer < 0:
+		choisir_cible()
+	
 	# Le joueur peut avoir été supprimé après sa mort : ne plus lire sa position.
 	if not is_instance_valid(cible):
 		cible = null
@@ -90,11 +98,28 @@ func tirer_projectile() -> void:
 		var dir : Vector3 = (cible.global_position - muzzle.global_position)
 		
 		#On prédit la direction à tirer en fonction de la position du joueur, sa vitesse, la vitesse du projectile et de la distance à la tour
-		projectile.direction = (dir + player.velocity.normalized()*dir.length()*player.speed/projectile.vitesse  ).normalized() 
+		projectile.direction = (dir + cible.velocity.normalized()*dir.length()*cible.speed/projectile.vitesse  ).normalized() 
 	attaque_timer = attaque_cooldown
 
+func choisir_cible():
+	var bodies = SurfaceDetection.get_overlapping_bodies()
+	for body in bodies:
+		var distance_min = 10000.0
+		if body.is_in_group("player"):
+			var distance_body = global_position.distance_to(body.global_position)
+			if distance_body <= distance_min:
+				distance_min = distance_body
+				cible = body
+		if body.is_in_group("victime"):
+			if body.is_freed:
+				var distance_body = global_position.distance_to(body.global_position)
+				if distance_body <= distance_min:
+					distance_min = distance_body
+					cible = body
+			
+			
+	chgt_cible_timer = chgt_cible_cooldown
 	
-
 
 func couleur_degats(degats: float) -> Color:
 	var t = clamp((degats - 0.9*degats_ennemi) / 1.0, 0.0, 1.0)

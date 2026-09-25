@@ -28,7 +28,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 func _on_body_entered(body: Node3D) -> void:
-	if body.is_in_group("player"): #si c'est un joueur, il prend des degats
+	if body.is_in_group("player") or body.is_in_group("victime") : #si c'est un joueur, il prend des degats
 		var multiplier = randf_range(0.9,1.1)
 		body.prendre_degats(round(multiplier * degats *100.0)/100.0)
 		queue_free()

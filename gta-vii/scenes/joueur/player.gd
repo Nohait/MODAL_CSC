@@ -31,7 +31,7 @@ var is_dashing := false
 var dash_time_left := 0.0
 var dash_cooldown_left := 0.0
 
-# Le gestionnaire active ce booléen si une victime sportive est dans la file.
+	# Le gestionnaire active ce booléen si une victime sportive est dans la file.
 # Un booléen ne peut pas s'additionner : deux sportives ne doublent pas le bonus.
 var bonus_dash_actif: bool = false
 const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
