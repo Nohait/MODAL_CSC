@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bhlrjecqdgqno"]
+
+[ext_resource type="Texture2D" uid="uid://bmudt21upk1l4" path="res://assets/textures/decors/weathered_brown_planks_nor_gl_2k.png" id="1_xprbn"]
+
+[resource]
+albedo_color = Color(0.87058824, 0.84705883, 0.7921569, 1)
+roughness = 0.75
+normal_enabled = true
+normal_scale = 0.7
+normal_texture = ExtResource("1_xprbn")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true

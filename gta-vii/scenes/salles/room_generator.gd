@@ -6,6 +6,10 @@ extends Node3D
 @export var generate := false
 @export var apercu_auto := false
 @export var roomSize := Vector2i(10, 8)
+## Matériau appliqué aux cases de sol.
+@export var materiau_sol: StandardMaterial3D
+## Matériau des murs et des morceaux de mur autour des portes.
+@export var materiau_murs: StandardMaterial3D
 const TILE_SIZE = 5.0
 const BOX_SCENE = preload("res://scenes/decors/caisse.tscn")
 const DOOR_SCENE = preload("res://scenes/decors/porte.tscn")
@@ -175,7 +179,12 @@ func isConnected():
 func displayRoom() -> void:
 	# Chaque case est désormais un corps fixe : le sol est visible ET solide.
 	for cellule in cellules_disponibles:
-		creer_bloc(position_cellule(cellule), Vector3(TILE_SIZE, 0.2, TILE_SIZE), Color(0.3, 0.32, 0.34))
+				creer_bloc(
+			position_cellule(cellule),
+			Vector3(TILE_SIZE, 0.2, TILE_SIZE),
+			Color(0.3, 0.32, 0.34),
+			materiau_sol
+		)
 
 
 func displayBoxes() -> void:
@@ -228,7 +237,12 @@ func createWall(cellule: Vector2i, direction: Vector2i) -> void:
 	if direction.x != 0:
 		taille = Vector3(0.2, 3.0, TILE_SIZE)
 	var normale := Vector3(direction.x, 0, direction.y)
-	creer_bloc(position_cellule(cellule) + normale * TILE_SIZE / 2.0 + Vector3.UP * 1.6, taille, Color(0.22, 0.24, 0.27))
+	creer_bloc(
+	position_cellule(cellule) + normale * TILE_SIZE / 2.0 + Vector3.UP * 1.6,
+	taille,
+	Color(0.22, 0.24, 0.27),
+	materiau_murs
+	)
 
 
 func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
@@ -236,10 +250,16 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	var tangente := Vector3(normale.z, 0, -normale.x)
 	var centre := position_cellule(cellule) + normale * TILE_SIZE / 2.0
 	var porte = DOOR_SCENE.instantiate()
-	# Le +Z local indique l'extérieur. Le battant s'ouvre vers l'intérieur.
-	porte.position = centre - normale * 0.25 + Vector3.UP * 0.1
-	porte.rotation.y = atan2(normale.x, normale.z)
-	porte.angle_ouverture = 175.0
+	# Le voyant et la poignée sont du côté +Z local : ce côté doit regarder
+	# vers l'intérieur, donc dans le sens OPPOSÉ à la normale extérieure du mur.
+	porte.rotation.y = atan2(-normale.x, -normale.z)
+	# Le cadre est légèrement reculé dans porte.tscn (Z = -0.12).
+	# Compenser ce recul après rotation place le cadre dans l'axe des murs,
+	# au lieu de décaler arbitrairement toute la porte de 0.25 unité.
+	var decalage_cadre: float = porte.get_node("Encadrement/MontantGauche").position.z
+	porte.position = centre + normale * decalage_cadre + Vector3.UP * 0.1
+	# La porte a été retournée : inverser aussi l'angle pour ouvrir vers la salle.
+	porte.angle_ouverture = -175.0
 	salle_en_creation.get_node("Portes").add_child(porte)
 	# La porte fait 2,5 unités avec son cadre ; fermer le reste du bord de 5 unités.
 	var largeur_cote := (TILE_SIZE - 2.5) / 2.0
@@ -247,7 +267,12 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	if direction.x != 0:
 		taille = Vector3(0.2, 3, largeur_cote)
 	for signe in [-1, 1]:
-		creer_bloc(centre + tangente * signe * (1.25 + largeur_cote / 2.0) + Vector3.UP * 1.6, taille, Color(0.22, 0.24, 0.27))
+		creer_bloc(
+			centre + tangente * signe * (1.25 + largeur_cote / 2.0) + Vector3.UP * 1.6,
+			taille,
+			Color(0.22, 0.24, 0.27),
+			materiau_murs
+			)
 	# Petit palier au-delà du seuil : même un dash ne tombe pas immédiatement dans le vide.
 	var palier := Vector3(2.5, 0.2, 6)
 	if direction.x != 0:
@@ -258,7 +283,8 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	zone.monitoring = false
 	zone.collision_layer = 0
 	zone.collision_mask = 1
-	zone.position = Vector3(0, 1.5, 3.5)
+	# L'extérieur se trouve maintenant du côté -Z local de la porte.
+	zone.position = Vector3(0, 1.5, -3.5)
 	var collision := CollisionShape3D.new()
 	var forme := BoxShape3D.new()
 	forme.size = Vector3(2.2, 3, 5.0)
@@ -270,15 +296,22 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	zone.body_entered.connect(salle_en_creation._on_passage)
 
 
-func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color) -> void:
+func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materiau_personnalise: Material = null) -> void:
+	#le materiau_personnalise est facultatif, vaut null s'il n'est pas renseigné
 	var corps := StaticBody3D.new()
 	corps.position = position_bloc
 	var visuel := MeshInstance3D.new()
 	var mesh := BoxMesh.new()
 	mesh.size = taille
-	var materiau := StandardMaterial3D.new()
-	materiau.albedo_color = couleur
-	mesh.material = materiau
+	if materiau_personnalise != null:
+		# Utiliser le matériau fourni, avec tous ses réglages.
+		mesh.material = materiau_personnalise
+	else:
+		# Sans matériau fourni, conserver la couleur simple utilisée jusque-là.
+		var materiau := StandardMaterial3D.new()
+		materiau.albedo_color = couleur
+		mesh.material = materiau
+	
 	visuel.mesh = mesh
 	corps.add_child(visuel)
 	var collision := CollisionShape3D.new()

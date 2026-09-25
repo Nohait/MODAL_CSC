@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://yxwcbf3tp1qf"]
+
+[ext_resource type="Texture2D" uid="uid://dki45qm3y7gfx" path="res://assets/textures/decors/weathered_brown_planks_diff_1k.jpg" id="1_lg4rd"]
+[ext_resource type="Texture2D" uid="uid://clnm6aekic2al" path="res://assets/textures/decors/suie_variations.tres" id="2_lg4rd"]
+
+[resource]
+albedo_color = Color(0.71997714, 0.69100815, 0.67296934, 1)
+albedo_texture = ExtResource("1_lg4rd")
+roughness = 0.9
+detail_enabled = true
+detail_blend_mode = 3
+detail_uv_layer = 1
+detail_albedo = ExtResource("2_lg4rd")
+uv1_scale = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv2_scale = Vector3(0.04, 0.04, 0.04)
+uv2_triplanar = true
+uv2_world_triplanar = true
