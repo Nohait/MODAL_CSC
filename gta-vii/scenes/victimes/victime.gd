@@ -5,6 +5,8 @@ signal freed(victim: CharacterBody3D)
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var animation_degats: AnimationPlayer = $AnimationDegats
+@onready var visuel: MeshInstance3D = $MeshInstance3D
+@onready var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
 
 @export var vie_max := 100.0
 var vie := vie_max
@@ -20,7 +22,7 @@ var vie := vie_max
 @export_group("Suivi")
 
 ## Vitesse de déplacement de la victime.
-@export_range(0.0, 20.0, 0.1, "or_greater") var speed: float = 4.5
+@export_range(0.0, 20.0, 0.1, "or_greater") var speed: float = 6
 
 # Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
@@ -45,18 +47,15 @@ func _on_detection_body_exited(body: Node3D) -> void:
 func _ready() -> void:
 	# Chaque sportive possède sa propre copie du matériau : sa couleur orange
 	# ne doit pas recolorer les victimes ordinaires qui partagent la même ressource.
-		
+	visuel.material_override = materiau
 	if bonus_dash:
-		var visuel: MeshInstance3D = $MeshInstance3D
-		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
 		materiau.albedo_color = Color(1.0, 0.65, 0.12, 1.0)
 		visuel.set_surface_override_material(0, materiau)
 		$BonusLabel.text = "SPORTIVE \nDash : cooldown -20 %"
 		$BonusLabel.show()
 	elif bonus_degats:
 		# Le bleu distingue la spécialiste de la sportive orange.
-		var visuel: MeshInstance3D = $MeshInstance3D
-		var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
+		
 		materiau.albedo_color = Color(0.15, 0.65, 1.0)
 		visuel.set_surface_override_material(0, materiau)
 		$BonusLabel.modulate = Color(0.4, 0.8, 1.0)
@@ -141,7 +140,13 @@ func mourir():
 	queue_free()
 
 func flash_degats():
-	self.animation_degats.play("Dégats")
+	var tween_degats = create_tween()
+	var couleur_init = materiau.albedo_color
+	print(couleur_init)
+	tween_degats.tween_property(materiau,"albedo_color",Color(1.0, 0.0, 0.0, 1.0),0.1)
+	tween_degats.tween_property(materiau,"albedo_color",Color(1, 1, 1, 1.0),0.2)
+	tween_degats.tween_property(materiau,"albedo_color",couleur_init,0.1)
+
 	pass
 
 func update_interaction_label() -> void:

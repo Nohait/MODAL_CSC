@@ -8,6 +8,7 @@ var est_mort := false
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 @onready var SurfaceDetection: Area3D = $"SurfaceDetection"
+@onready var player: CharacterBody3D = $"player"
 var cible = null
 
 @export var vie_max := 100.0
@@ -134,7 +135,7 @@ func prendre_degats(degats: float) -> void:
 		return
 	vie -= degats
 	vie = max(vie, 0)
-	
+	cible = player
 	afficher_degats(degats)
 	
 	if vie <= 0:

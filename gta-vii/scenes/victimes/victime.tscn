@@ -7,7 +7,7 @@ radius = 0.3
 height = 1.3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gyep1"]
-albedo_color = Color(0.8173157, 2.623126e-06, 1.0588765e-06, 1)
+albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2f56o"]
 radius = 0.3
@@ -15,48 +15,6 @@ height = 1.3
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
 radius = 2.0
-
-[sub_resource type="Animation" id="Animation_3ujhg"]
-resource_name = "Dégats"
-length = 0.6333333
-markers = [{
-"color": Color(0, 1, 1, 1),
-"name": &"new_marker",
-"time": 1.0
-}]
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3D:surface_material_override/0:albedo_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Color(0.8173157, 2.623126e-06, 1.0588765e-06, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(0.8156863, 0, 0, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_pjp7j"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3D:surface_material_override/0:albedo_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0.8173157, 2.623126e-06, 1.0588765e-06, 1)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_tjb4j"]
-_data = {
-&"Dégats": SubResource("Animation_3ujhg"),
-&"RESET": SubResource("Animation_pjp7j")
-}
 
 [node name="victime" type="CharacterBody3D" unique_id=1870513431 groups=["victime", "victims"]]
 script = ExtResource("1_gyep1")
@@ -93,9 +51,6 @@ font_size = 50
 editor_description = "Une faible distance de validation oblige la victime à suivre les virages du chemin au lieu de couper au-dessus des flaques. Le script ajuste la hauteur du chemin à celle du corps."
 path_desired_distance = 0.15
 target_desired_distance = 0.15
-
-[node name="AnimationDegats" type="AnimationPlayer" parent="." unique_id=1557591163]
-libraries/ = SubResource("AnimationLibrary_tjb4j")
 
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
 [connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]

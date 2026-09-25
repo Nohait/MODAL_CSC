@@ -135,7 +135,7 @@ func prendre_degats(degats: float) -> void:
 		return
 	vie -= degats
 	vie = max(vie, 0)
-	print( self.name, " Touché : -", degats)
+	cible = player #On change l'aggro si le joueur attaque la tour
 	
 	afficher_degats(degats)
 	
