@@ -10,6 +10,12 @@ extends Node3D
 @export var materiau_sol: StandardMaterial3D
 ## Matériau des murs et des morceaux de mur autour des portes.
 @export var materiau_murs: StandardMaterial3D
+@export_group("Trous du plancher")
+## Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
+@export_range(0.2, 1.2, 0.05) var largeur_bord_trou := 0.8
+## Intensité des fragments orange sur les bords ; zéro conserve seulement le charbon.
+@export_range(0.0, 5.0, 0.1) var intensite_braises := 1.5
+const TROUS_PLANCHER = preload("res://scenes/decors/trous_plancher.gd")
 const TILE_SIZE = 5.0
 const BOX_SCENE = preload("res://scenes/decors/caisse.tscn")
 const DOOR_SCENE = preload("res://scenes/decors/porte.tscn")
@@ -20,6 +26,7 @@ var grid = []
 var salle_en_creation: Node3D
 var cellules_disponibles: Array[Vector2i] = []
 var cellules_reservees: Array[Vector2i] = []
+var cellules_trous := {}
 
 
 func _ready() -> void:
@@ -61,7 +68,12 @@ func generer_salle(nombre_arrivants: int = 1) -> Node3D:
 			if grid[y][x]:
 				cellules_disponibles.append(Vector2i(x, y))
 	displayRoom()
+	# Seuls les vides enfermés dans la salle deviennent des trous. Les découpes
+	# reliées à l'extérieur gardent les murs et ne deviennent pas des précipices.
+	cellules_trous = TROUS_PLANCHER.trouver_trous(grid, roomSize)
 	displayWalls()
+	TROUS_PLANCHER.construire(salle_en_creation, cellules_trous, TILE_SIZE,
+		materiau_sol, largeur_bord_trou, intensite_braises)
 	# Réserver assez de place pour le joueur et TOUTE son escorte avant les caisses.
 	cellules_disponibles.shuffle()
 	var places_par_cellule := 9
@@ -223,7 +235,11 @@ func displayWalls() -> void:
 			sorties_possibles.append(bord)
 	var portes: Array = sorties_possibles.slice(0, mini(randi_range(1, 2), sorties_possibles.size()))
 	for bord in bords:
-		if bord in portes:
+		if cellules_trous.has(bord[0] + bord[1]):
+			# La barrière garde les dimensions du mur, mais n'a aucun visuel.
+			# Sous Navigation/Decor, elle est prise en compte par les deux maillages.
+			createWall(bord[0], bord[1], true)
+		elif bord in portes:
 			createDoor(bord[0], bord[1])
 		else:
 			createWall(bord[0], bord[1])
@@ -232,7 +248,11 @@ func displayWalls() -> void:
 		cellules_disponibles.erase(bord[0])
 
 
-func createWall(cellule: Vector2i, direction: Vector2i) -> void:
+## Crée un mur sur le côté de [param cellule] indiqué par [param direction].
+## Les coordonnées de cellule sont dans la grille, pas en mètres.
+## Avec [param invisible] à true, conserve uniquement la collision : utilisé au bord des trous.
+## Le corps est ajouté sous Navigation/Decor, donc lu lors du calcul des chemins.
+func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false) -> void:
 	var taille := Vector3(TILE_SIZE, 3.0, 0.2)
 	if direction.x != 0:
 		taille = Vector3(0.2, 3.0, TILE_SIZE)
@@ -241,7 +261,8 @@ func createWall(cellule: Vector2i, direction: Vector2i) -> void:
 	position_cellule(cellule) + normale * TILE_SIZE / 2.0 + Vector3.UP * 1.6,
 	taille,
 	Color(0.22, 0.24, 0.27),
-	materiau_murs
+	materiau_murs,
+	invisible
 	)
 
 
@@ -296,10 +317,27 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	zone.body_entered.connect(salle_en_creation._on_passage)
 
 
-func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materiau_personnalise: Material = null) -> void:
+## Ajoute un bloc fixe à la salle en cours de génération.
+## [param position_bloc] et [param taille] sont exprimées en mètres, dans le repère de la salle.
+## [param materiau_personnalise] remplace la couleur simple lorsqu'il est fourni.
+## [param invisible] supprime uniquement la partie visuelle : la collision et le groupe
+## collider restent présents pour bloquer les personnages et être lus par la navigation.
+## Cette fonction ne renvoie pas le bloc ; elle l'ajoute directement à Navigation/Decor.
+func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materiau_personnalise: Material = null, invisible: bool = false) -> void:
 	#le materiau_personnalise est facultatif, vaut null s'il n'est pas renseigné
 	var corps := StaticBody3D.new()
 	corps.position = position_bloc
+	if invisible:
+		# Aucun mesh, même caché : pas d'ombre de mur autour du vide.
+		corps.name = "BarriereTrou"
+		var collision_trou := CollisionShape3D.new()
+		var forme_trou := BoxShape3D.new()
+		forme_trou.size = taille
+		collision_trou.shape = forme_trou
+		corps.add_child(collision_trou)
+		corps.add_to_group("collider")
+		salle_en_creation.get_node("Navigation/Decor").add_child(corps)
+		return
 	var visuel := MeshInstance3D.new()
 	var mesh := BoxMesh.new()
 	mesh.size = taille

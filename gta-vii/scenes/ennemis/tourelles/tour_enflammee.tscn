@@ -32,12 +32,11 @@ albedo_color = Color(1, 0.12, 0.06, 0.15)
 
 [sub_resource type="BoxMesh" id="LaserMesh"]
 material = SubResource("LaserMateriau")
-size = Vector3(1, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="DisqueMateriau"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(1, 1, 1, 0.07)
+albedo_color = Color(1, 1, 1, 0.007843138)
 
 [sub_resource type="CylinderMesh" id="DisqueMesh"]
 material = SubResource("DisqueMateriau")
@@ -54,7 +53,6 @@ albedo_color = Color(1, 1, 1, 0.5)
 [sub_resource type="TorusMesh" id="CercleMesh"]
 material = SubResource("CercleMateriau")
 inner_radius = 0.994
-outer_radius = 1.0
 rings = 96
 
 [node name="TourEnflammee" type="CharacterBody3D" unique_id=1672808714 groups=["enemies", "obstacles_navigation"]]
@@ -90,21 +88,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.694, 0)
 layers = 32769
 mesh = SubResource("SphereMesh_wegx8")
 
-[node name="Laser" type="MeshInstance3D" parent="."]
+[node name="Laser" type="MeshInstance3D" parent="." unique_id=219159288]
 editor_description = "Rayon entre Muzzle et le joueur. Visible uniquement pendant le chargement ; son opacité augmente et sa largeur diminue."
 visible = false
 cast_shadow = 0
 mesh = SubResource("LaserMesh")
 
-[node name="IndicateurDetection" type="Node3D" parent="."]
+[node name="IndicateurDetection" type="Node3D" parent="." unique_id=1778016170]
 editor_description = "Disque et bordure blancs indiquant la portée d'attaque. Apparaît à la détection et reste visible tant que le joueur est ciblé. Sortir du cercle interrompt la visée. Rayon adapté à distance_attaque."
-position = Vector3(0, 0.025, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
 visible = false
 
-[node name="Disque" type="MeshInstance3D" parent="IndicateurDetection"]
+[node name="Disque" type="MeshInstance3D" parent="IndicateurDetection" unique_id=1041964858]
 cast_shadow = 0
 mesh = SubResource("DisqueMesh")
 
-[node name="Cercle" type="MeshInstance3D" parent="IndicateurDetection"]
+[node name="Cercle" type="MeshInstance3D" parent="IndicateurDetection" unique_id=260049445]
 cast_shadow = 0
 mesh = SubResource("CercleMesh")
