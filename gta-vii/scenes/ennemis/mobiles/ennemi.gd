@@ -134,6 +134,7 @@ func choisir_cible():
 		
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
+		$EnnemiRepere.play("PopUp")
 		print("J'ai changé de cible de cible")
 		print("Cible avant: ", cible_avant)
 		print("Cible mtn: ", cible)
@@ -146,8 +147,9 @@ func prendre_degats(degats: float) -> void:
 	vie = max(vie, 0)
 	#Le joueur prends l'aggro
 	if cible != player:
+		$EnnemiRepere.play("PopUp")
 		cible = player
-		chgt_cible_timer = chgt_cible_cooldown*5
+		chgt_cible_timer = chgt_cible_cooldown*4 #On veut que la cible ait le temps de "s'echapper"
 	
 	afficher_degats(degats)
 	

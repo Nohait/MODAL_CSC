@@ -4,7 +4,6 @@ signal freed(victim: CharacterBody3D)
 
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
-@onready var animation_degats: AnimationPlayer = $AnimationDegats
 @onready var visuel: MeshInstance3D = $MeshInstance3D
 @onready var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
 
