@@ -82,7 +82,7 @@ func actualiser_affichage() -> void:
 	if not is_instance_valid(joueur):
 		return
 	var dash_actif: bool = joueur.bonus_dash_actif
-	var degats_actifs: bool = joueur.Extincteur.bonus_degats_actif
+	var degats_actifs: bool = joueur.extincteur.bonus_degats_actif
 	var nombre := int(dash_actif) + int(degats_actifs)
 	var touches := InputMap.action_get_events("menu_bonus")
 	var touche := touches[0].as_text() if not touches.is_empty() else "B"

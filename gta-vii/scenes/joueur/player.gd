@@ -10,13 +10,16 @@ var invincible: bool = false
 
 @export var camera : Camera3D 
 @onready var visual: Node3D = $visual
-@onready var Extincteur = $visual/weapon_holder/Extincteur
+@onready var extincteur = $visual/weapon_holder/Extincteur
 @onready var BarreDeVie = $Interface/Vie/BarreDeVie
 @onready var damage_flash: ColorRect = $CanvasLayer/DamageFlash
 var flash_tween: Tween
 
+@onready var victim_manager: Node3D = $"../VictimManager"
 @onready var Effets: Node3D = $"../Effets"
 @onready var fleche_victime_scene = preload("res://scenes/effets/fleche_victime/fleche.tscn")
+var fleche_victime = null
+var fleche_tween = null
 var clic_milieu_deja_fait := false
 
 @export_group("Déplacement")
@@ -173,12 +176,14 @@ func _physics_process(delta: float) -> void:
 				bouger_victime(target_position)
 		else:
 			clic_milieu_deja_fait = false
-			
+				
+		if Input.is_key_pressed(KEY_A):
+			victim_manager.retour_nav_auto()
 	
 	if Input.is_action_pressed("primary_attack"):
-		Extincteur.start_primary_attack()
+		extincteur.start_primary_attack()
 	else:
-		Extincteur.stop_primary_attack()
+		extincteur.stop_primary_attack()
 	
 	move_and_slide()
 
@@ -211,25 +216,33 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
-	Extincteur.stop_primary_attack()
+	extincteur.stop_primary_attack()
 	died.emit()
 	queue_free()
 
 func animation_fleche(position):
-	var fleche_victime = fleche_victime_scene.instantiate()
+	if fleche_tween:
+		fleche_tween.kill()
+	if is_instance_valid(fleche_victime):
+		fleche_victime.queue_free()
+	
+	fleche_victime = fleche_victime_scene.instantiate()
 	Effets.add_child(fleche_victime)
 	fleche_victime.position = position
 	fleche_victime.visible = true
-	var fleche_tween = create_tween()
+	fleche_tween = create_tween()
 	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-2,0),0.2)
 	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-1.7,0),0.2)
-	fleche_tween.tween_callback(
-		func():
-		fleche_victime.queue_free()
-	)
 	
-
+	fleche_tween.tween_callback(cacher_fleche)
+	
+	
+func cacher_fleche():
+	fleche_victime.visible = false
+	
 func bouger_victime(position):
-	
 	animation_fleche(position)
+	victim_manager.diriger_victime(fleche_victime)
+	
+	
 	
