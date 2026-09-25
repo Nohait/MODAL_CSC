@@ -1,21 +1,25 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b7nmp862ll38o"]
 
-[ext_resource type="Script" path="res://scenes/salles/salle.gd" id="1"]
+[ext_resource type="Script" uid="uid://braukxknlagoi" path="res://scenes/salles/salle.gd" id="1"]
 
-[node name="Salle" type="Node3D"]
+[node name="Salle" type="Node3D" unique_id=225131258]
 script = ExtResource("1")
 
-[node name="Navigation" type="NavigationRegion3D" parent="."]
+[node name="Navigation" type="NavigationRegion3D" parent="." unique_id=321804017]
 enabled = false
 
-[node name="Decor" type="Node3D" parent="Navigation"]
+[node name="Decor" type="Node3D" parent="Navigation" unique_id=1386229444]
 
-[node name="Portes" type="Node3D" parent="."]
+[node name="NavigationEnnemis" type="NavigationRegion3D" parent="."]
+editor_description = "Maillage réservé aux ennemis : contourne les tourelles mais autorise les flaques. Utilise une carte séparée pour ne pas mélanger les deux chemins superposés."
+enabled = false
 
-[node name="Ennemis" type="Node3D" parent="."]
+[node name="Portes" type="Node3D" parent="." unique_id=1730727423]
 
-[node name="Victimes" type="Node3D" parent="."]
+[node name="Ennemis" type="Node3D" parent="." unique_id=943494551]
 
-[node name="ProjectilesTour" type="Node3D" parent="."]
+[node name="Victimes" type="Node3D" parent="." unique_id=952052424]
 
-[node name="FlaquesDeFeu" type="Node3D" parent="."]
+[node name="ProjectilesTour" type="Node3D" parent="." unique_id=1486991816]
+
+[node name="FlaquesDeFeu" type="Node3D" parent="." unique_id=515798422]
