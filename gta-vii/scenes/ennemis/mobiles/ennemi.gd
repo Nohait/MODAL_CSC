@@ -8,7 +8,7 @@ var est_mort := false
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 @onready var SurfaceDetection: Area3D = $"SurfaceDetection"
-@onready var player: CharacterBody3D = $"player"
+@onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
 @export var vie_max := 100.0
@@ -22,6 +22,7 @@ var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largue
 @export var distance_attaque = 1.3
 @export var distance_detection = 10.0
 @export var distance_lacher = 20.0
+var distance_min = 1000.0 #Pour définir qui est la cible
 
 @export_group("Attaque")
 @export var attaque_cooldown = 1.0
@@ -113,21 +114,29 @@ func suivre_cible_navigation() -> void:
 	move_and_slide()
 
 func choisir_cible():
+	var cible_avant = cible #on sauvegardde la cible
 	var bodies = SurfaceDetection.get_overlapping_bodies()
+	if cible != null:
+		distance_min = global_position.distance_to(cible.global_position)
+	else:
+		distance_min = 1000.0
+		
 	for body in bodies:
-		var distance_min = 10000.0
-		if body.is_in_group("player"):
+		#les cibles ne peuvent etre que des gentils libérés
+		if body.is_in_group("player") or (body.is_in_group("victime") and body.is_freed):
 			var distance_body = global_position.distance_to(body.global_position)
+			print(body, " dbody: ",distance_body," dmin: ", distance_min)
+			
+			#La cible choisie est la plus proche
 			if distance_body <= distance_min:
 				distance_min = distance_body
 				cible = body
-		if body.is_in_group("victime"):
-			if body.is_freed:
-				var distance_body = global_position.distance_to(body.global_position)
-				if distance_body <= distance_min:
-					distance_min = distance_body
-					cible = body
+		
 	chgt_cible_timer = chgt_cible_cooldown
+	if cible != cible_avant:
+		print("J'ai changé de cible de cible")
+		print("Cible avant: ", cible_avant)
+		print("Cible mtn: ", cible)
 
 func prendre_degats(degats: float) -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
@@ -135,7 +144,11 @@ func prendre_degats(degats: float) -> void:
 		return
 	vie -= degats
 	vie = max(vie, 0)
-	cible = player
+	#Le joueur prends l'aggro
+	if cible != player:
+		cible = player
+		chgt_cible_timer = chgt_cible_cooldown*5
+	
 	afficher_degats(degats)
 	
 	if vie <= 0:

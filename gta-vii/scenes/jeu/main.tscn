@@ -89,6 +89,8 @@ materiau_murs = ExtResource("7_pc1m8")
 
 [node name="RoomManager" type="Node3D" parent="Salles" unique_id=1555917378]
 script = ExtResource("9_85g3d")
+nombre_min_ennemis = 1
+nombre_max_ennemis = 1
 
 [node name="InterfaceSalle" type="CanvasLayer" parent="Salles/RoomManager" unique_id=1830693134]
 layer = 2
