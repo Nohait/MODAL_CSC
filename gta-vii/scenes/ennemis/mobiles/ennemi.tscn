@@ -33,10 +33,10 @@ radius = 5.0
 script = ExtResource("1_i8ure")
 
 [node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_r3twd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.712935, 0.81300354, 0.35450697)
+transform = Transform3D(1.9128275, 0, 0, 0, 1, 0, 0, 0, 1.7528492, 0.62883043, 0.81300354, 0.45320082)
 
-[node name="vfx_fire2" parent="." unique_id=944750977 instance=ExtResource("2_r3twd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77011704, 0.81300354, 0.38884628)
+[node name="vfx_fire" parent="vfx_fire" unique_id=1348524129 instance=ExtResource("2_r3twd")]
+transform = Transform3D(1.2232149, 0, 0, 0, 1, 0, 0, 0, 0.9859687, -0.6816061, -0.036562085, 0.009313464)
 
 [node name="Sketchfab_Scene" parent="." unique_id=2004259214 instance=ExtResource("2_wutyl")]
 transform = Transform3D(1.73, 0, 0, 0, 1.73, 0, 0, 0, 1.73, 0, 1.7237091, 0)
