@@ -6,13 +6,16 @@ var est_mort := false
 
 # L'agent calcule le chemin ; ce CharacterBody3D réalise le déplacement.
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
-
+@onready var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
+@onready var SurfaceDetection: Area3D = $"SurfaceDetection"
 var cible = null
 
 @export var vie_max := 100.0
-@export var vitesse_ennemi = 7
 var vie := vie_max
-var hitbox_radius = 0.9
+
+@export var vitesse_ennemi = 7
+
+var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largueur de l'ennemi dans son cône d'attaque
 
 @export_group('Portée')
 @export var distance_attaque = 1.3
@@ -26,26 +29,30 @@ var attaque_timer = 0.0 #temps initialisé à 0
 @export var repos_apres_attaque := 0.3
 var timer_apres_attaque := 0.0
 
+@export_group("Cible_manager")
+@export var chgt_cible_cooldown = 1.3 #On reste 3s sur la meme cible avant de se demander si on change
+var chgt_cible_timer = 0.0 #temps initialisé à 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
-	var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
 	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.
 	
 	pass # Replace with function body.
 
-func _on_surface_detection_body_entered(body: Node3D) -> void:
-
-	if body.is_in_group("player"):
-		cible = body
 		
 func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
 	timer_apres_attaque -= delta
 	
+	#On définit la cible.
+	#Il y a un timer pour eviter que l'ennemi soit indécis
+	if cible == null:
+		chgt_cible_timer = 0.0
+	chgt_cible_timer -= delta
+	if chgt_cible_timer < 0:
+		choisir_cible()
 	
 	if timer_apres_attaque > 0.0:
 		velocity = Vector3.ZERO
@@ -64,7 +71,6 @@ func _physics_process(delta):
 		var direction = global_position.direction_to(cible.global_position)
 		var theta = atan2(direction.x, direction.z) - rotation.y	
 		self.rotate(Vector3(0,1,0),theta)
-		var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 		detection_shape.rotate(Vector3(0,1,0),theta)
 		
 		
@@ -105,6 +111,22 @@ func suivre_cible_navigation() -> void:
 	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
 	move_and_slide()
 
+func choisir_cible():
+	var bodies = SurfaceDetection.get_overlapping_bodies()
+	for body in bodies:
+		var distance_min = 10000.0
+		if body.is_in_group("player"):
+			var distance_body = global_position.distance_to(body.global_position)
+			if distance_body <= distance_min:
+				distance_min = distance_body
+				cible = body
+		if body.is_in_group("victime"):
+			if body.is_freed:
+				var distance_body = global_position.distance_to(body.global_position)
+				if distance_body <= distance_min:
+					distance_min = distance_body
+					cible = body
+	chgt_cible_timer = chgt_cible_cooldown
 
 func prendre_degats(degats: float) -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
