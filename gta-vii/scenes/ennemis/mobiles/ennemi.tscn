@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_r3twd"]
 [ext_resource type="PackedScene" uid="uid://ta7qi2dsltn2" path="res://assets/modeles/ennemis/fire_elemental.glb" id="2_wutyl"]
 [ext_resource type="Script" uid="uid://dndpgtox034on" path="res://scenes/effets/feu/droplet.gd" id="3_1ta0d"]
+[ext_resource type="PackedScene" uid="uid://jou2viln2jqw" path="res://assets/modeles/effets/exclamation_point.glb" id="6_rwpig"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_a8sfv"]
 resource_name = "Sketchfab_Scene_Drop_2_1_0"
@@ -28,6 +29,57 @@ size = Vector3(1.7168427, 2.7529297, 0.43432617)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ii04w"]
 radius = 5.0
+
+[sub_resource type="Animation" id="Animation_0d17i"]
+resource_name = "PopUp"
+length = 0.9
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.3, 1, 0.1, 0.1, 0.15, 0.6666667, 1, 0.1, 0.1, 0.1, 0.9, 1, 0, 0, 0)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_oir6u"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pilda"]
+_data = {
+&"PopUp": SubResource("Animation_0d17i"),
+&"RESET": SubResource("Animation_oir6u")
+}
 
 [node name="ennemi" type="CharacterBody3D" unique_id=696569544 groups=["enemies"]]
 script = ExtResource("1_i8ure")
@@ -68,5 +120,13 @@ billboard = 1
 text = "-10"
 font_size = 50
 outline_size = 20
+
+[node name="PointExclamation" parent="." unique_id=1486772837 instance=ExtResource("6_rwpig")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3287945, 0)
+visible = false
+
+[node name="EnnemiRepere" type="AnimationPlayer" parent="." unique_id=579217555]
+root_node = NodePath("../PointExclamation")
+libraries/ = SubResource("AnimationLibrary_pilda")
 
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]
