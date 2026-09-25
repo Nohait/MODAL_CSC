@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://chfsuo0muijx4"]
 
-[ext_resource type="Script" path="res://scenes/player.gd" id="1_3vyb7"]
-[ext_resource type="PackedScene" path="res://scenes/extincteur.tscn" id="2_g2els"]
-[ext_resource type="Script" path="res://scenes/interface_joueur.gd" id="4_interface"]
+[ext_resource type="Script" uid="uid://6j050metnw7f" path="res://scenes/joueur/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://c0v5h44a2cd42" path="res://scenes/extincteur.tscn" id="2_g2els"]
+[ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sysh0"]
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bwfxbb0ltd24b"]
 
-[ext_resource type="Script" path="res://scenes/point_evacuation.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bmmrb0u5f43a3" path="res://scenes/victimes/evacuation/point_evacuation.gd" id="1_script"]
 
 [sub_resource type="StandardMaterial3D" id="Vert"]
 albedo_color = Color(0.12, 0.7, 0.35, 1)

@@ -69,4 +69,6 @@ text = "-10"
 font_size = 50
 outline_size = 20
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1212595705]
+
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]

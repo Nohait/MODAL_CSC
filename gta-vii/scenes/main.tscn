@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://dg4m3sl875m7e"]
 
 [ext_resource type="PackedScene" uid="uid://chfsuo0muijx4" path="res://scenes/player.tscn" id="1_o5qli"]
-[ext_resource type="Script" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
-[ext_resource type="Script" path="res://scenes/main.gd" id="5_test"]
-[ext_resource type="Script" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
-[ext_resource type="Script" path="res://scenes/room_manager.gd" id="9_85g3d"]
+[ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/jeu/camera_rig.gd" id="3_eb6dy"]
+[ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/jeu/main.gd" id="5_test"]
+[ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victimes/victim_manager.gd" id="7_o6xl0"]
+[ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/salles/room_manager.gd" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://cfvwgmwnlloq2" path="res://scenes/menu_bonus.tscn" id="11_bonus"]
-[ext_resource type="Script" path="res://scenes/room_generator.gd" id="12_generateur"]
+[ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/salles/room_generator.gd" id="12_generateur"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://qbs6alg33ltf"]
 
-[ext_resource type="Script" path="res://scenes/projectile_tour.gd" id="1_ml7bw"]
+[ext_resource type="Script" uid="uid://dmtdn0y7jc87q" path="res://scenes/ennemis/tourelles/projectile_tour.gd" id="1_ml7bw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ml7bw"]
 albedo_color = Color(1, 0.49803922, 0.13333334, 1)

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c0v5h44a2cd42"]
 
-[ext_resource type="Script" path="res://scenes/extincteur.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://assets/extincteur0.blend" id="2_klu21"]
+[ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/armes/extincteur/extincteur.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://8srttl8ul3pr" path="res://assets/modeles/extincteur/extincteur0.blend" id="2_klu21"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
 emission_shape = 1
