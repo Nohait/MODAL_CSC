@@ -32,12 +32,31 @@ La carte est en Process Mode Always. Son horloge de shader est fournie par `_pro
 les braises et les Tweens de survol fonctionnent même lorsque le jeu est en pause.
 Intensite braises, Hover scale et Hover duration sont réglables dans l'inspecteur.
 
-## Branchement futur du gestionnaire (non implémenté)
+## Gestionnaire et passage de porte
 
-La carte reste une vue : elle ne tire pas le pool, ne met pas le jeu en pause et
-n'applique pas les bonus. Son signal `selected` ne prend toujours aucun argument.
-Le gestionnaire pourra connecter `carte.selected.connect(_sur_choix.bind(carte))`,
-puis lire `carte.identifiant`. Les textes ne doivent pas servir à calculer les effets.
+La scène upgrade_manager.tscn est instanciée sous main/UpgradeManager. Son script
+upgrade_manager.gd écoute choix_amelioration_demande du RoomManager. Ce signal arrive
+après validation de la zone de passage d'une salle libérée et après le traitement physique.
 
-Le point d'entrée du parcours est `_on_sortie_franchie(salle)` dans
-`scenes/salles/room_manager.gd`. 
+Le gestionnaire mélange une copie du POOL et crée trois cartes distinctes. Avec trois
+entrées, seuls leurs emplacements varient. Le jeu est mis en pause et le curseur est visible.
+Le choix est obligatoire. Un verrou empêche de recevoir plusieurs récompenses par double clic.
+Après sélection : appliquer le bonus, fermer les cartes, restaurer le curseur, retirer
+la pause, puis demander passer_salle_suivante(). La dernière sortie mène directement
+à la victoire sans proposer de récompense inutile.
+
+## Équilibrage et cumul
+
+Dans main.tscn, sélectionner UpgradeManager puis « Équilibrage — bonus par choix ».
+Les trois exports fixent les gains de dégâts, capacité et vitesse de recharge.
+Saisir 20 pour +20 %. Régler ces valeurs avant de lancer une partie ; les textes des
+cartes et le récapitulatif utilisent ces mêmes pourcentages.
+
+Les niveaux sont conservés par le gestionnaire de la partie, détruit au changement
+de scène : aucune sauvegarde permanente entre parties. Le cumul est additif sur la
+base : deux choix à +20 % donnent +40 %. Le bonus de dégâts d'escorte s'applique
+ensuite séparément : avec une spécialiste et un choix à +20 %, dégâts = base × 1.2 × 1.25.
+
+Grande réserve ajoute à la charge actuelle seulement la capacité gagnée.
+La jauge suit automatiquement le nouveau maximum. Les choix acquis apparaissent
+dans la section des bonus permanents du MenuBonus. Évacuer une victime ne les retire pas.

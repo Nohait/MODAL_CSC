@@ -25,6 +25,8 @@ const DENSITE_PARTICULES = 542 #BASE_NOMBRE/(VITESSE*ETALEMENT*BASE_RADIUS*PI*(P
 @export_range(0,100,1) var degats1: float = 1.0
 # Le VictimManager recalcule ce booléen quand l'escorte change.
 var bonus_degats_actif := false
+# Indépendant de l'escorte : reste actif quand une victime est évacuée.
+var multiplicateur_degats_ameliorations := 1.0
 const AUGMENTATION_DEGATS_ESCORTE: float = 0.25
 @export_range(0,100,1) var attack_cooldown = 0.2
 var attack_timer = 0.0
@@ -116,8 +118,8 @@ func _physics_process(delta: float) -> void:
 func get_degats() -> float:
 	# Ne jamais modifier degats1 : le bonus doit pouvoir disparaître sans dérive.
 	if bonus_degats_actif:
-		return degats1 * (1.0 + AUGMENTATION_DEGATS_ESCORTE)
-	return degats1
+		return degats1 * multiplicateur_degats_ameliorations * (1.0 + AUGMENTATION_DEGATS_ESCORTE)
+	return degats1 * multiplicateur_degats_ameliorations
 
 
 func attaque_1(cible):

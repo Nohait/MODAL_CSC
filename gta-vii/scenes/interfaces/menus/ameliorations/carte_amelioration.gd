@@ -1,12 +1,12 @@
 @tool
 extends Control
 
-## La carte annonce un choix. Le futur gestionnaire appliquera l'effet et changera de salle.
+## La carte annonce un choix. Le gestionnaire applique l'effet et change de salle.
 ## Le signal existant est conservé sans argument : le gestionnaire pourra utiliser bind(carte).
 signal selected
 
 @export_group("Contenu")
-## Identifiant stable destiné au futur pool ; aucun effet de jeu n'est appliqué ici.
+## Identifiant stable utilisé par le pool ; aucun effet de jeu n'est appliqué ici.
 @export var identifiant: StringName = &"pression"
 @export var titre := "Sous pression":
 	set(valeur):

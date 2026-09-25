@@ -2,6 +2,7 @@ extends Node
 
 signal room_cleared
 signal partie_prete
+signal choix_amelioration_demande
 
 const ENNEMI_SCENE = preload("res://scenes/ennemis/mobiles/ennemi.tscn")
 const ANNONCE_SCENE = preload("res://scenes/effets/apparition/annonce_apparition.tscn")
@@ -331,7 +332,16 @@ func _on_sortie_franchie(salle: Node3D) -> void:
 		return
 	transition_en_cours = true
 	# body_entered arrive pendant la physique : déplacer les corps au tour suivant.
-	call_deferred("passer_salle_suivante")
+	call_deferred("preparer_sortie")
+
+
+func preparer_sortie() -> void:
+	# La dernière porte mène à la victoire : pas de bonus sans salle suivante.
+	if indice_salle + 1 >= salles.get_child_count():
+		passer_salle_suivante()
+	else:
+		# Le verrou transition_en_cours reste actif jusqu'au choix puis à l'arrivée.
+		choix_amelioration_demande.emit()
 
 
 func passer_salle_suivante() -> void:

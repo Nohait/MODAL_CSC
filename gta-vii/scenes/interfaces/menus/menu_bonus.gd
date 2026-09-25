@@ -11,6 +11,9 @@ extends CanvasLayer
 @onready var etat_dash: Label = %EtatDash
 @onready var etat_degats: Label = %EtatDegats
 @onready var aucune_escorte: Label = %AucunBonusEscorte
+@onready var upgrades = get_parent().get_node("UpgradeManager")
+@onready var titre_permanents: Label = $Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu/Titre
+@onready var description_permanents: Label = $Menu/Panneau/Disposition/Defilement/Sections/Permanents/Contenu/Description
 var souris_avant: int
 var animation: Tween
 
@@ -20,6 +23,7 @@ func _ready() -> void:
 	raccourci.pressed.connect(ouvrir_menu)
 	fermer.pressed.connect(fermer_menu)
 	gestionnaire.escort_changed.connect(actualiser_affichage)
+	upgrades.ameliorations_changees.connect(actualiser_affichage)
 	actualiser_affichage()
 
 
@@ -84,6 +88,11 @@ func actualiser_affichage() -> void:
 	var dash_actif: bool = joueur.bonus_dash_actif
 	var degats_actifs: bool = joueur.extincteur.bonus_degats_actif
 	var nombre := int(dash_actif) + int(degats_actifs)
+	for niveau in upgrades.niveaux.values():
+		nombre += int(niveau)
+	# Ces bonus appartiennent à la partie, pas à l'escorte.
+	titre_permanents.text = "RENFORTS DE LA PARTIE"
+	description_permanents.text = upgrades.get_resume()
 	var touches := InputMap.action_get_events("menu_bonus")
 	var touche := touches[0].as_text() if not touches.is_empty() else "B"
 	raccourci.text = "[%s] Bonus · %d actif(s)" % [touche, nombre]
