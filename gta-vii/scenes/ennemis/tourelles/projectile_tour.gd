@@ -20,11 +20,8 @@ func _physics_process(delta: float) -> void:
 		flaque.global_position = global_position
 		flaque.position.y = 0.2
 		
-		#On randomise les caractéristiques de la flaque
-		var rd_scale = randf_range(1,2)
-		flaque.scale *= rd_scale
-		flaque.get_node("PopUpDegats").scale /= rd_scale
-		flaque.hitbox_radius *= rd_scale
+		# Même tirage de taille que les flaques présentes au début d'une salle.
+		flaque.choisir_taille_aleatoire()
 		queue_free()
 
 func _on_body_entered(body: Node3D) -> void:

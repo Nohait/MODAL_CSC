@@ -106,6 +106,13 @@ func follow_target_node() -> void:
 	velocity.z = 0.0
 
 	if to_target.length() > stop_distance:
+		# Les points du chemin sont près du sol, mais l'origine de la victime est
+		# au centre de son corps. Aligner leur hauteur permet une petite tolérance
+		# de passage (0,15 m) sans rester bloqué à cause de la distance verticale.
+		# Godot SOUSTRAIT path_height_offset : sol - corps remonte donc le chemin.
+		var point_sol := NavigationServer3D.map_get_closest_point(
+			navigation_agent.get_navigation_map(), global_position)
+		navigation_agent.path_height_offset = point_sol.y - global_position.y
 		# Donner à l'agent la destination : le joueur ou la victime précédente.
 		navigation_agent.target_position = follow_target.global_position
 

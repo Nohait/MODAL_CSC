@@ -12,6 +12,17 @@ var attaque_timer = 0.0 #temps initialisé à 0
 var cible = null
 var hitbox_radius = 0.5
 
+
+func choisir_taille_aleatoire() -> void:
+	# Appelée une seule fois à la création, pour les flaques initiales comme celles
+	# des projectiles. Agrandir la racine agrandit le visuel ET la zone de dégâts.
+	var facteur := randf_range(1.0, 2.0)
+	scale *= facteur
+	# Compenser l'agrandissement du parent pour garder un texte de taille lisible.
+	$PopUpDegats.scale /= facteur
+	# L'extincteur utilise ce rayon pour savoir si son jet atteint le bord du feu.
+	hitbox_radius *= facteur
+
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
