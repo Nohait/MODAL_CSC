@@ -1,0 +1,183 @@
+[gd_scene format=3 uid="uid://bx5r5mv7v8cud"]
+
+[ext_resource type="Script" uid="uid://bvpfbruarcplu" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gd" id="1_1cu54"]
+[ext_resource type="Shader" uid="uid://bmg8kmi14kviw" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="2_2328m"]
+[ext_resource type="Texture2D" uid="uid://dpc6hyifmn5ke" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="2_q5pjd"]
+[ext_resource type="Texture2D" uid="uid://dly5ursde0wfw" path="res://assets/textures/interfaces/ameliorations/test_illustration.png" id="4_ugw5x"]
+[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="5_w1v70"]
+[ext_resource type="FontFile" uid="uid://bscd0l1g0vgc2" path="res://assets/fonts/Almendra-BoldItalic.ttf" id="6_mol8f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqnpg"]
+bg_color = Color(0, 0, 0, 0.49803922)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sysh0"]
+bg_color = Color(0.46907496, 0.06829316, 0.10860511, 1)
+border_color = Color(0.7668623, 0.7032439, 0.24983716, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q5pjd"]
+shader = ExtResource("2_2328m")
+shader_parameter/ember_color = Color(1, 0.18, 0.02, 1)
+shader_parameter/hot_color = Color(1, 0.75, 0.15, 1)
+shader_parameter/burnt_color = Color(0.12, 0.015, 0.005, 1)
+shader_parameter/border_size = 0.025
+shader_parameter/glow_size = 0.06
+shader_parameter/irregularity = 0.35
+shader_parameter/animation_speed = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0tjo"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(1, 0.46254948, 0.15170373, 0.35000002)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sge3q"]
+bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0)
+border_color = Color(1, 0.58383155, 0.24780053, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1cu54"]
+bg_color = Color(0.19641912, 0.1680183, 0.13816993, 0.35000002)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.106126174, 0.07016479, 0.03876, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.22745098)
+shadow_offset = Vector2(0, 3)
+
+[node name="CarteAmelioration" type="Control" unique_id=1703966111]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -852.0
+offset_bottom = -198.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1cu54")
+
+[node name="Ombre" type="Panel" parent="." unique_id=1193791898]
+layout_mode = 0
+offset_top = 8.0
+offset_right = 300.0
+offset_bottom = 458.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fqnpg")
+
+[node name="Fond" type="Panel" parent="." unique_id=776309522]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sysh0")
+
+[node name="TextureCarte" type="TextureRect" parent="Fond" unique_id=1367600025]
+modulate = Color(0.9063318, 0.9063318, 0.9063318, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_q5pjd")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="LueurContour" type="Panel" parent="Fond" unique_id=717465426]
+material = SubResource("ShaderMaterial_q5pjd")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p0tjo")
+
+[node name="Contour" type="Panel" parent="Fond" unique_id=943396423]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sge3q")
+
+[node name="Contenu" type="MarginContainer" parent="Fond" unique_id=1927454815]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Organisation" type="VBoxContainer" parent="Fond/Contenu" unique_id=562805133]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 15
+
+[node name="Illustration" type="PanelContainer" parent="Fond/Contenu/Organisation" unique_id=993952507]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1cu54")
+
+[node name="Image" type="TextureRect" parent="Fond/Contenu/Organisation/Illustration" unique_id=218708816]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_ugw5x")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CadreBrule" type="TextureRect" parent="Fond/Contenu/Organisation/Illustration" unique_id=641652367]
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="Fond/Contenu/Organisation" unique_id=1029216600]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.19607843, 0.08235294, 0.05490196, 1)
+theme_override_fonts/font = ExtResource("5_w1v70")
+theme_override_font_sizes/font_size = 26
+text = "TEST DE TITRE"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Fond/Contenu/Organisation" unique_id=1133472464]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2901961, 0.1882353, 0.14509805, 1)
+theme_override_fonts/font = ExtResource("6_mol8f")
+text = "Test de description"
+vertical_alignment = 1
+autowrap_mode = 3
