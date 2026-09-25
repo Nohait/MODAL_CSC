@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://db5t5o56bwgtg"]
+
+[ext_resource type="Script" uid="uid://c8v61u5ebrnyi" path="res://scenes/effets/apparition/annonce_apparition.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="Rouge"]
+shading_mode = 0
+albedo_color = Color(1, 0.12, 0.05, 1)
+
+[sub_resource type="TorusMesh" id="Anneau"]
+material = SubResource("Rouge")
+inner_radius = 0.85
+rings = 32
+ring_segments = 8
+
+[node name="AnnonceApparition" type="Node3D" unique_id=125351658]
+script = ExtResource("1")
+
+[node name="Anneau" type="MeshInstance3D" parent="." unique_id=1778364432]
+cast_shadow = 0
+mesh = SubResource("Anneau")

@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/navigation_menus.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="Panneau"]
+bg_color = Color(0.075, 0.085, 0.11, 1)
+border_width_top = 4
+border_color = Color(0.95, 0.6, 0.2, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+content_margin_left = 36.0
+content_margin_right = 36.0
+content_margin_top = 32.0
+content_margin_bottom = 32.0
+
+[sub_resource type="StyleBoxFlat" id="Bouton"]
+bg_color = Color(0.18, 0.24, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_top = 14.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="Survol"]
+bg_color = Color(0.26, 0.34, 0.42, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.7, 0.35, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[node name="EcranTitre" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+editor_description = "Écran autonome : le niveau précédent et toutes ses interfaces ont été retirés."
+
+[node name="Fond" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.025, 0.035, 0.05, 1)
+
+[node name="Centre" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panneau" type="PanelContainer" parent="Centre"]
+layout_mode = 2
+custom_minimum_size = Vector2(460, 0)
+theme_override_styles/panel = SubResource("Panneau")
+
+[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Surtitre" type="Label" parent="Centre/Panneau/Contenu"]
+layout_mode = 2
+text = "SAUVEZ · ESCORTEZ · ÉVACUEZ"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.85, 0.65, 0.45, 1)
+
+[node name="Titre" type="Label" parent="Centre/Panneau/Contenu"]
+layout_mode = 2
+text = "GTA VII"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 38
+
+[node name="Description" type="Label" parent="Centre/Panneau/Contenu"]
+layout_mode = 2
+text = "Entrez dans l’immeuble.\nNe laissez personne derrière vous."
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+
+[node name="NouvellePartie" type="Button" parent="Centre/Panneau/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Nouvelle partie"
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Bouton")
+theme_override_styles/hover = SubResource("Survol")
+theme_override_styles/focus = SubResource("Focus")
+

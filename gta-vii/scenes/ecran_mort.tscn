@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://r3y40l7mqbh8"]
+[gd_scene format=3 uid="uid://csfk8qady22gr"]
 
-[ext_resource type="Script" uid="uid://bfe83qpkk3qk4" path="res://scenes/navigation_menus.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://baltyjqiaf6ir" path="res://assets/ecran_mort_pompier.png" id="2_illustration"]
+[ext_resource type="Script" path="res://scenes/navigation_menus.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ecran_mort_pompier.png" id="2_illustration"]
 
 [sub_resource type="StyleBoxFlat" id="Panneau"]
 content_margin_left = 36.0

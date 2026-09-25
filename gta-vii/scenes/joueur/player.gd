@@ -1,0 +1,204 @@
+extends CharacterBody3D
+
+# Le niveau écoute la mort pour remplacer le jeu par l'écran de défaite.
+signal died
+var est_mort := false
+
+# Mode de test : activé depuis main.gd avec la touche I.
+var invincible: bool = false
+
+
+@export var camera : Camera3D 
+@onready var visual: Node3D = $visual
+@onready var Extincteur = $visual/weapon_holder/Extincteur
+@onready var BarreDeVie = $Interface/Vie/BarreDeVie
+@onready var damage_flash: ColorRect = $CanvasLayer/DamageFlash
+var flash_tween: Tween
+
+@export_group("Déplacement")
+## Vitesse de marche, en unités par seconde.
+@export_range(0.0, 100.0, 0.1, "or_greater") var speed: float = 5.0
+
+@export_group("Dash")
+## Vitesse du dash, en unités par seconde.
+@export_range(0.0, 100.0, 0.1, "or_greater") var dash_speed: float = 50.0
+## Durée en secondes. Vitesse × durée donne la distance approximative du dash.
+@export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
+@export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.2
+
+var last_direction := Vector3.FORWARD 
+var is_dashing := false
+var dash_time_left := 0.0
+var dash_cooldown_left := 0.0
+
+# Le gestionnaire active ce booléen si une victime sportive est dans la file.
+# Un booléen ne peut pas s'additionner : deux sportives ne doublent pas le bonus.
+var bonus_dash_actif: bool = false
+const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
+
+# Secousse caméra
+var camera_tremble := 0.0
+var sauvegarde_position = Vector3()
+var camera_retour := false
+
+func secouer_camera() -> void:
+	sauvegarde_position = camera.position
+	camera_tremble = 0.15
+	camera_retour = false
+
+func get_dash_cooldown() -> float:
+	# Conserver dash_cooldown comme valeur de base évite les erreurs de cumul.
+	# Exemple : 0.2 seconde × (1 - 0.2) = 0.16 seconde avec le bonus.
+	if bonus_dash_actif:
+		return dash_cooldown * (1.0 - REDUCTION_DASH_ESCORTE)
+	return dash_cooldown
+
+
+func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	#On récupère l'input du joueur
+	#Vecteur à deux dimensions : +x c'est droite
+	#Et +y c'est l'arrière
+	var input_dir := Input.get_vector(
+		"move_left",
+		"move_right",
+		"move_forward",
+		"move_backward"
+	)
+
+	#On veut des mouvements intuitifs, qui suivent la direction de la caméra
+	#Et pas celle du monde
+	#Le +z de la caméra est l'arrière
+	#Le +x de la caméra est la droite
+
+	var camera_forward := -camera.global_transform.basis.z
+	var camera_right := camera.global_transform.basis.x
+
+	#La caméra pointe vers le bas, mais on ne veut pas que le joueur rentre dans le sol
+	camera_forward.y = 0.0
+	camera_right.y = 0.0
+
+	#On renormalise
+	camera_forward = camera_forward.normalized()
+	camera_right = camera_right.normalized()
+
+	#On récupère la direction du joueur, par rapport à la caméra
+	var direction := camera_right * input_dir.x + camera_forward * (-input_dir.y)
+	
+	#Secousse si attaque (on a besoin de delta donc on le met dans le physique process)
+	if camera_tremble > 0.0:
+		camera_tremble -= delta
+		camera.position += Vector3(randf_range(-0.3, 0.3),randf_range(-0.3, 0.3),0.0)
+	elif not camera_retour and camera_tremble<0:
+		camera_retour = true
+		var tween_camera = create_tween()
+		tween_camera.tween_property(camera, "position", sauvegarde_position, 0.1)
+		
+	
+	
+	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
+		#initialise le dash
+		is_dashing = true
+		# Chaque nouveau dash utilise le délai effectif, avec ou sans escorte.
+		# Un délai déjà commencé n'est pas recalculé en cours de route.
+		dash_cooldown_left = get_dash_cooldown()
+		dash_time_left = dash_duration
+		
+	if dash_cooldown_left > 0.0:
+		dash_cooldown_left -= delta
+
+	
+	if is_dashing:
+		#applique le dash
+		velocity.x = last_direction.x * dash_speed
+		velocity.z = last_direction.z * dash_speed
+		
+		dash_time_left -= delta
+		
+		if dash_time_left <= 0.0:
+			is_dashing = false
+	else:
+		#On normalise pour ne pas aller plus vite en diagonale
+		if direction.length() > 0.0:
+			direction = direction.normalized()
+			#On update la dernière direction prise
+			last_direction = direction
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+		else:
+			velocity.x = 0.0
+			velocity.z = 0.0
+		
+	
+	#VISEE DU JOUEUR
+	
+	#Recuperation de la position de la souris
+	#Le viewport est la zone dans laquelle le jeu est rendu 
+	#On récupère donc le vecteur position de la souris en 2D, sur l'écran.
+	var mouse_position := get_viewport().get_mouse_position()
+	
+	#Pour passer de la position 2D de la souris à une position en 3D dans le monde
+	#On veut créer un vecteur qui passe par la caméra et le point de l'écran désigné par la souris
+	#Puis regarder en quel point le rayon dirigé par ce vecteur intercepte le sol
+	
+	#ray_origin donne la position de la caméra, origine du vecteur
+	var ray_origin := camera.project_ray_origin(mouse_position)
+	#ray_direction donne sa direction
+	var ray_direction := camera.project_ray_normal(mouse_position)
+	#On crée un plan horizontal en donnant sa normale et sa hauteur
+	var ground_plane := Plane(Vector3.UP, 0.0)
+	
+	#On regarde quand est_ce que le rayon calculé précédemment
+	#intercepte ce plan
+	#on ne met pas de ":=" car il peut n'y avoir aucune intersection (renvoie null)
+	var target_position = ground_plane.intersects_ray(ray_origin, ray_direction)
+	
+	if target_position != null:
+		#On place la position de la cible sur la position du visuel
+		#(evite de regarder vers le sol)
+		target_position.y = visual.global_position.y
+		
+		#On s'oriente vers ce point, en gardant y comme verticale
+		visual.look_at(target_position, Vector3.UP)
+	
+	if Input.is_action_pressed("primary_attack"):
+		Extincteur.start_primary_attack()
+	else:
+		Extincteur.stop_primary_attack()
+	
+	move_and_slide()
+
+func flash_degats() -> void:
+	if flash_tween:
+		flash_tween.kill()
+	damage_flash.visible = true
+	damage_flash.color.a = 0.0
+	
+	flash_tween = create_tween()
+	flash_tween.tween_property(damage_flash,"color:a",0.4,0.05)
+	flash_tween.tween_property(damage_flash,"color:a",0.0,0.2)
+
+func prendre_degats(degats: float) -> void:
+	# Quitter la fonction avant de retirer de la vie si le mode est actif.
+	if invincible or est_mort:
+		return
+		
+	flash_degats()
+	secouer_camera()
+	BarreDeVie.value -= degats
+	BarreDeVie.value = max(BarreDeVie.value, 0)
+	print( self.name, " Touché : -", degats)
+	
+	if BarreDeVie.value <= 0:
+		mourir()
+		
+func mourir():
+	# Plusieurs impacts peuvent arriver avant la suppression en fin d'image.
+	if est_mort:
+		return
+	est_mort = true
+	Extincteur.stop_primary_attack()
+	died.emit()
+	queue_free()

@@ -1,14 +1,12 @@
-[gd_scene format=3 uid="uid://dt47l8r7abrjp"]
+[gd_scene format=3 uid="uid://dg4m3sl875m7e"]
 
-[ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/player.tscn" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
-[ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/main.gd" id="5_test"]
-[ext_resource type="PackedScene" uid="uid://bn6gcohvukjr2" path="res://scenes/tour_enflammee.tscn" id="5_ya4ey"]
-[ext_resource type="PackedScene" uid="uid://33d8otsyev3h" path="res://scenes/projectile_tour.tscn" id="6_eb6dy"]
-[ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
-[ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/room_manager.gd" id="9_85g3d"]
-[ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/menu_bonus.tscn" id="11_bonus"]
-[ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/room_generator.gd" id="12_generateur"]
+[ext_resource type="PackedScene" uid="uid://chfsuo0muijx4" path="res://scenes/player.tscn" id="1_o5qli"]
+[ext_resource type="Script" path="res://scenes/camera_rig.gd" id="3_eb6dy"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="5_test"]
+[ext_resource type="Script" path="res://scenes/victim_manager.gd" id="7_o6xl0"]
+[ext_resource type="Script" path="res://scenes/room_manager.gd" id="9_85g3d"]
+[ext_resource type="PackedScene" uid="uid://cfvwgmwnlloq2" path="res://scenes/menu_bonus.tscn" id="11_bonus"]
+[ext_resource type="Script" path="res://scenes/room_generator.gd" id="12_generateur"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -71,14 +69,6 @@ shadow_enabled = true
 [node name="Ambiance" type="WorldEnvironment" parent="Eclairage" unique_id=2131836162]
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
-
-[node name="Ennemis" type="Node3D" parent="." unique_id=2078139259 groups=["enemies"]]
-
-[node name="TourEnflammee" parent="Ennemis" unique_id=1672808714 instance=ExtResource("5_ya4ey")]
-
-[node name="ProjectilesTour" type="Node3D" parent="Ennemis" unique_id=60575020]
-
-[node name="ProjectileTour" parent="Ennemis/ProjectilesTour" unique_id=724792424 instance=ExtResource("6_eb6dy")]
 
 [node name="VictimManager" type="Node3D" parent="." unique_id=595087372]
 script = ExtResource("7_o6xl0")
