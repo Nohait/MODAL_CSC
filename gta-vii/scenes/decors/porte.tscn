@@ -1,19 +1,19 @@
 [gd_scene format=3 uid="uid://dtvrjfbrfls11"]
 
 [ext_resource type="Script" uid="uid://csxw2bycubox2" path="res://scenes/decors/porte.gd" id="1_script"]
-
-[sub_resource type="StandardMaterial3D" id="Cadre"]
-albedo_color = Color(0.07, 0.09, 0.11, 1)
+[ext_resource type="Material" uid="uid://bhlrjecqdgqno" path="res://assets/materiaux/porte_bois_peint.tres" id="2_fuwwc"]
+[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="3_cadre"]
+[ext_resource type="Material" path="res://assets/materiaux/poignee_porte.tres" id="4_poignee"]
 
 [sub_resource type="BoxMesh" id="MontantMesh"]
-material = SubResource("Cadre")
+material = ExtResource("3_cadre")
 size = Vector3(0.15, 3, 0.3)
 
 [sub_resource type="BoxShape3D" id="MontantShape"]
 size = Vector3(0.15, 3, 0.3)
 
 [sub_resource type="BoxMesh" id="TraverseMesh"]
-material = SubResource("Cadre")
+material = ExtResource("3_cadre")
 size = Vector3(2.5, 0.2, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Rouge"]
@@ -25,28 +25,31 @@ emission = Color(1, 0.12, 0.08, 1)
 material = SubResource("Rouge")
 size = Vector3(0.6, 0.1, 0.1)
 
-[sub_resource type="StandardMaterial3D" id="Metal"]
-albedo_color = Color(0.19, 0.24, 0.28, 1)
-metallic = 0.5
-roughness = 0.6
-
 [sub_resource type="BoxMesh" id="BattantMesh"]
-material = SubResource("Metal")
+material = ExtResource("2_fuwwc")
 size = Vector3(2.2, 2.8, 0.18)
 
 [sub_resource type="BoxShape3D" id="BattantShape"]
 size = Vector3(2.2, 2.8, 0.18)
 
 [sub_resource type="BoxMesh" id="PoigneeMesh"]
-material = SubResource("Cadre")
-size = Vector3(0.5, 0.09, 0.12)
+material = ExtResource("4_poignee")
+size = Vector3(0.38, 0.07, 0.08)
+
+[sub_resource type="BoxMesh" id="PlaquePoigneeMesh"]
+material = ExtResource("4_poignee")
+size = Vector3(0.13, 0.3, 0.025)
+
+[sub_resource type="BoxMesh" id="SupportPoigneeMesh"]
+material = ExtResource("4_poignee")
+size = Vector3(0.07, 0.07, 0.12)
 
 [node name="Porte" type="Node3D" unique_id=1670415283]
 editor_description = "Origine au sol, au centre du passage. Le signal room_cleared appelle ouvrir()."
 script = ExtResource("1_script")
 
 [node name="Encadrement" type="StaticBody3D" parent="." unique_id=1296170403]
-editor_description = "Corps fixe nécessaire pour que les collisions des montants bloquent les personnages."
+editor_description = "Corps fixe nécessaire pour que les collisions des montants bloquent les personnages. Les deux montants et la traverse partagent le matériau encadrement_porte : le modifier ajuste tout le cadre."
 
 [node name="MontantGauche" type="MeshInstance3D" parent="Encadrement" unique_id=395491851]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.5, -0.12)
@@ -88,5 +91,16 @@ mesh = SubResource("BattantMesh")
 shape = SubResource("BattantShape")
 
 [node name="Poignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1278190910]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0, 0.14)
+editor_description = "Levier tourné vers le centre de la porte. Comme la plaque et le support, il est enfant du battant : il suit automatiquement son ouverture. Les trois pièces partagent le matériau poignee_porte."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.66, -0.15, 0.23)
 mesh = SubResource("PoigneeMesh")
+
+[node name="PlaquePoignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1315517512]
+editor_description = "Petite plaque métallique posée sur la face intérieure du battant (côté +Z). Ces pièces sont décoratives : la collision du battant suffit."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.2, 0.1025)
+mesh = SubResource("PlaquePoigneeMesh")
+
+[node name="SupportPoignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1498149952]
+editor_description = "Relie la plaque au levier en le décollant de la porte pour donner du relief à la poignée."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.15, 0.16)
+mesh = SubResource("SupportPoigneeMesh")

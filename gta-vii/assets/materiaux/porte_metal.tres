@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ciaye4tc8jym8"]
+
+[ext_resource type="Texture2D" uid="uid://c3ccp3fn5bi6k" path="res://assets/textures/decors/green_metal_rust_diff_2k.jpg" id="1_oknk7"]
+
+[resource]
+albedo_texture = ExtResource("1_oknk7")
+metallic = 0.51
+roughness = 0.66
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true

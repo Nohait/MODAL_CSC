@@ -3,7 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/joueur/player.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/jeu/camera_rig.gd" id="3_eb6dy"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/jeu/main.gd" id="5_test"]
+[ext_resource type="Material" uid="uid://yxwcbf3tp1qf" path="res://assets/materiaux/sol_carbonise.tres" id="6_btjur"]
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victimes/victim_manager.gd" id="7_o6xl0"]
+[ext_resource type="Material" uid="uid://bcrpgjogbsnc5" path="res://assets/materiaux/mur_abime.tres" id="7_pc1m8"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/salles/room_manager.gd" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/interfaces/menus/menu_bonus.tscn" id="11_bonus"]
 [ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/salles/room_generator.gd" id="12_generateur"]
@@ -80,6 +82,8 @@ editor_description = "Le gestionnaire pilote le parcours ; le générateur fabri
 
 [node name="RoomGenerator" type="Node3D" parent="Salles" unique_id=601904784]
 script = ExtResource("12_generateur")
+materiau_sol = ExtResource("6_btjur")
+materiau_murs = ExtResource("7_pc1m8")
 
 [node name="Rooms" type="Node3D" parent="Salles" unique_id=648949322]
 

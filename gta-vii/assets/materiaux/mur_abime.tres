@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bcrpgjogbsnc5"]
+
+[ext_resource type="Texture2D" uid="uid://d0aeilx2a0x4r" path="res://assets/textures/decors/damaged_plaster_diff_2k.jpg" id="1_1tgi6"]
+[ext_resource type="Texture2D" uid="uid://clnm6aekic2al" path="res://assets/textures/decors/suie_variations.tres" id="2_et2fa"]
+[ext_resource type="Texture2D" uid="uid://c43soyuclmpua" path="res://assets/textures/decors/damaged_plaster_nor_gl_2k.png" id="2_qmuou"]
+
+[resource]
+albedo_color = Color(0.8593606, 0.8369809, 0.8103287, 1)
+albedo_texture = ExtResource("1_1tgi6")
+roughness = 0.95
+normal_enabled = true
+normal_texture = ExtResource("2_qmuou")
+detail_enabled = true
+detail_blend_mode = 3
+detail_uv_layer = 1
+detail_albedo = ExtResource("2_et2fa")
+uv1_scale = Vector3(0.125, 0.125, 0.125)
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv2_scale = Vector3(0.04, 0.04, 0.04)
+uv2_triplanar = true
+uv2_world_triplanar = true
