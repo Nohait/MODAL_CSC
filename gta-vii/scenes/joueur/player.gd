@@ -15,6 +15,10 @@ var invincible: bool = false
 @onready var damage_flash: ColorRect = $CanvasLayer/DamageFlash
 var flash_tween: Tween
 
+@onready var Effets: Node3D = $"../Effets"
+@onready var fleche_victime_scene = preload("res://scenes/effets/fleche_victime/fleche.tscn")
+var clic_milieu_deja_fait := false
+
 @export_group("Déplacement")
 ## Vitesse de marche, en unités par seconde.
 @export_range(0.0, 100.0, 0.1, "or_greater") var speed: float = 5.0
@@ -40,7 +44,8 @@ const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
 var camera_tremble := 0.0
 var sauvegarde_position = Vector3()
 var camera_retour := false
-
+	
+	
 func secouer_camera() -> void:
 	sauvegarde_position = camera.position
 	camera_tremble = 0.15
@@ -95,7 +100,6 @@ func _physics_process(delta: float) -> void:
 		camera_retour = true
 		var tween_camera = create_tween()
 		tween_camera.tween_property(camera, "position", sauvegarde_position, 0.1)
-		
 	
 	
 	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
@@ -163,6 +167,14 @@ func _physics_process(delta: float) -> void:
 		#On s'oriente vers ce point, en gardant y comme verticale
 		visual.look_at(target_position, Vector3.UP)
 	
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+			if not clic_milieu_deja_fait:
+				clic_milieu_deja_fait = true
+				bouger_victime(target_position)
+		else:
+			clic_milieu_deja_fait = false
+			
+	
 	if Input.is_action_pressed("primary_attack"):
 		Extincteur.start_primary_attack()
 	else:
@@ -193,7 +205,7 @@ func prendre_degats(degats: float) -> void:
 	
 	if BarreDeVie.value <= 0:
 		mourir()
-		
+
 func mourir():
 	# Plusieurs impacts peuvent arriver avant la suppression en fin d'image.
 	if est_mort:
@@ -202,3 +214,22 @@ func mourir():
 	Extincteur.stop_primary_attack()
 	died.emit()
 	queue_free()
+
+func animation_fleche(position):
+	var fleche_victime = fleche_victime_scene.instantiate()
+	Effets.add_child(fleche_victime)
+	fleche_victime.position = position
+	fleche_victime.visible = true
+	var fleche_tween = create_tween()
+	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-2,0),0.2)
+	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-1.7,0),0.2)
+	fleche_tween.tween_callback(
+		func():
+		fleche_victime.queue_free()
+	)
+	
+
+func bouger_victime(position):
+	
+	animation_fleche(position)
+	

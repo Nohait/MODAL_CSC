@@ -72,6 +72,8 @@ shadow_enabled = true
 editor_description = "Ajoute une lumière ambiante blanche pour que les zones à l'ombre restent visibles. "
 environment = SubResource("Environment_test")
 
+[node name="Effets" type="Node3D" parent="." unique_id=1501680013]
+
 [node name="VictimManager" type="Node3D" parent="." unique_id=595087372]
 script = ExtResource("7_o6xl0")
 
