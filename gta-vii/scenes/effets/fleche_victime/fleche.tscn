@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://66hv3rcjw7mw"]
+
+[ext_resource type="PackedScene" uid="uid://bujs0ca08rjp8" path="res://assets/modeles/effets/rounded_arrow.glb" id="1_ti35f"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rgd0h"]
+albedo_color = Color(0.21176471, 0.54901963, 0, 1)
+
+[node name="Fleche" unique_id=1024731478 instance=ExtResource("1_ti35f")]
+
+[node name="Sketchfab_model" parent="." index="0" unique_id=1503347033]
+transform = Transform3D(0.50612634, 2.549744, 9.656223, -5.899517, 7.8777866, -1.7709242, -8.058508, -5.607074, 1.9029413, 0, 1.5, 0)
+
+[node name="pCone1_Arrow_0" parent="Sketchfab_model/e324a6973ff3473fa174cb8099c774c6_fbx/RootNode/pCone1" parent_id_path=PackedInt32Array(2121874043) index="0" unique_id=866163560]
+transform = Transform3D(0.9994399, -0.033466622, 0.000587672, 0.033459116, 0.99939036, 0.009978322, -0.0009211004, -0.009953065, 0.99995005, 5.615633, 6.211689, 2.781255)
+surface_material_override/0 = SubResource("StandardMaterial3D_rgd0h")

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "Poignée en métal satiné"
+albedo_color = Color(0.72, 0.75, 0.78, 1)
+metallic = 0.7
+roughness = 0.35

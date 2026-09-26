@@ -10,10 +10,17 @@ var invincible: bool = false
 
 @export var camera : Camera3D 
 @onready var visual: Node3D = $visual
-@onready var Extincteur = $visual/weapon_holder/Extincteur
+@onready var extincteur = $visual/weapon_holder/Extincteur
 @onready var BarreDeVie = $Interface/Vie/BarreDeVie
 @onready var damage_flash: ColorRect = $CanvasLayer/DamageFlash
 var flash_tween: Tween
+
+@onready var victim_manager: Node3D = $"../VictimManager"
+@onready var Effets: Node3D = $"../Effets"
+@onready var fleche_victime_scene = preload("res://scenes/effets/fleche_victime/fleche.tscn")
+var fleche_victime = null
+var fleche_tween = null
+var clic_milieu_deja_fait := false
 
 @export_group("Déplacement")
 ## Vitesse de marche, en unités par seconde.
@@ -31,7 +38,7 @@ var is_dashing := false
 var dash_time_left := 0.0
 var dash_cooldown_left := 0.0
 
-# Le gestionnaire active ce booléen si une victime sportive est dans la file.
+	# Le gestionnaire active ce booléen si une victime sportive est dans la file.
 # Un booléen ne peut pas s'additionner : deux sportives ne doublent pas le bonus.
 var bonus_dash_actif: bool = false
 const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
@@ -40,7 +47,8 @@ const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
 var camera_tremble := 0.0
 var sauvegarde_position = Vector3()
 var camera_retour := false
-
+	
+	
 func secouer_camera() -> void:
 	sauvegarde_position = camera.position
 	camera_tremble = 0.15
@@ -95,7 +103,6 @@ func _physics_process(delta: float) -> void:
 		camera_retour = true
 		var tween_camera = create_tween()
 		tween_camera.tween_property(camera, "position", sauvegarde_position, 0.1)
-		
 	
 	
 	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
@@ -163,10 +170,20 @@ func _physics_process(delta: float) -> void:
 		#On s'oriente vers ce point, en gardant y comme verticale
 		visual.look_at(target_position, Vector3.UP)
 	
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+			if not clic_milieu_deja_fait:
+				clic_milieu_deja_fait = true
+				bouger_victime(target_position)
+		else:
+			clic_milieu_deja_fait = false
+				
+		if Input.is_key_pressed(KEY_A):
+			victim_manager.retour_nav_auto()
+	
 	if Input.is_action_pressed("primary_attack"):
-		Extincteur.start_primary_attack()
+		extincteur.start_primary_attack()
 	else:
-		Extincteur.stop_primary_attack()
+		extincteur.stop_primary_attack()
 	
 	move_and_slide()
 
@@ -193,12 +210,39 @@ func prendre_degats(degats: float) -> void:
 	
 	if BarreDeVie.value <= 0:
 		mourir()
-		
+
 func mourir():
 	# Plusieurs impacts peuvent arriver avant la suppression en fin d'image.
 	if est_mort:
 		return
 	est_mort = true
-	Extincteur.stop_primary_attack()
+	extincteur.stop_primary_attack()
 	died.emit()
 	queue_free()
+
+func animation_fleche(position):
+	if fleche_tween:
+		fleche_tween.kill()
+	if is_instance_valid(fleche_victime):
+		fleche_victime.queue_free()
+	
+	fleche_victime = fleche_victime_scene.instantiate()
+	Effets.add_child(fleche_victime)
+	fleche_victime.position = position
+	fleche_victime.visible = true
+	fleche_tween = create_tween()
+	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-2,0),0.2)
+	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-1.7,0),0.2)
+	
+	fleche_tween.tween_callback(cacher_fleche)
+	
+	
+func cacher_fleche():
+	fleche_victime.visible = false
+	
+func bouger_victime(position):
+	animation_fleche(position)
+	victim_manager.diriger_victime(fleche_victime)
+	
+	
+	

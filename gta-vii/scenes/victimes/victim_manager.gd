@@ -6,6 +6,7 @@ extends Node
 # Tableau ordonné : indice 0 = première victime, indice -1 = dernière victime.
 var freed_victims: Array[CharacterBody3D] = []
 var evacuated_count: int = 0
+var mode_suivi = true
 
 # Les menus peuvent écouter ce signal pour actualiser leur liste.
 signal escort_changed
@@ -24,7 +25,15 @@ func surveiller_victime(victim: CharacterBody3D) -> void:
 	if not victim.freed.is_connected(register_victim):
 		victim.freed.connect(register_victim)
 
+func diriger_victime(fleche):
+	if freed_victims != []:
+		freed_victims[0].follow_target = fleche
 
+func retour_nav_auto():
+	if freed_victims != []:
+		freed_victims[0].follow_target = player
+
+		
 func register_victim(victim: CharacterBody3D) -> void:
 	# has évite d'ajouter deux fois le même personnage si le signal se répète.
 	if freed_victims.has(victim):
@@ -82,14 +91,14 @@ func actualiser_bonus() -> void:
 	# Recalculer à partir de l'escorte actuelle : chaque type est actif ou inactif.
 	# Deux victimes du même type ne cumulent pas leur bonus.
 	player.bonus_dash_actif = false
-	player.Extincteur.bonus_degats_actif = false
+	player.extincteur.bonus_degats_actif = false
 	for victime in freed_victims:
 		if not is_instance_valid(victime) or victime.is_queued_for_deletion():
 			continue
 		if victime.bonus_dash:
 			player.bonus_dash_actif = true
 		if victime.bonus_degats:
-			player.Extincteur.bonus_degats_actif = true
+			player.extincteur.bonus_degats_actif = true
 		# Ne pas sortir après la sportive : une spécialiste peut se trouver après elle.
 
 

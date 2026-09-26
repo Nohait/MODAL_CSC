@@ -2,6 +2,7 @@ extends Node
 
 signal room_cleared
 signal partie_prete
+signal choix_amelioration_demande
 
 const ENNEMI_SCENE = preload("res://scenes/ennemis/mobiles/ennemi.tscn")
 const ANNONCE_SCENE = preload("res://scenes/effets/apparition/annonce_apparition.tscn")
@@ -118,6 +119,8 @@ func peupler_salle(salle: Node3D) -> void:
 	var nombre_flaques := mini(randi_range(nombre_min_flaques, maxi(nombre_min_flaques, nombre_max_flaques)), emplacements.size())
 	for i in range(nombre_flaques):
 		var flaque = FLAQUE_SCENE.instantiate()
+		# Choisir la taille avant le calcul de navigation : son empreinte sera exacte.
+		flaque.choisir_taille_aleatoire()
 		flaque.position = emplacements.pop_back() + Vector3.UP * 0.2
 		salle.get_node("Ennemis").add_child(flaque)
 		# Seules les flaques initiales comptent, pas celles produites par les tirs.
@@ -208,6 +211,8 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 		var ennemi = ENNEMI_SCENE.instantiate()
 		ennemi.position = emplacement + Vector3.UP * 0.75
 		salle.get_node("Ennemis").add_child(ennemi)
+		# Les mobiles utilisent le parcours qui autorise le feu, contrairement aux victimes.
+		ennemi.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 		ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 		# Déjà compté à la préparation de la salle : ne pas ajouter au total.
 	if salle == salle_actuelle:
@@ -221,7 +226,7 @@ func activer_salle(indice: int) -> void:
 	if is_instance_valid(salle_actuelle):
 		salle_actuelle.process_mode = Node.PROCESS_MODE_DISABLED
 		salle_actuelle.hide()
-		salle_actuelle.get_node("Navigation").enabled = false
+		salle_actuelle.activer_navigation(false)
 		var ancienne_borne = salle_actuelle.get_node_or_null("Navigation/Decor/PointEvacuation")
 		if ancienne_borne:
 			ancienne_borne.process_mode = Node.PROCESS_MODE_DISABLED
@@ -237,7 +242,7 @@ func activer_salle(indice: int) -> void:
 	# Réactiver la salle avant la synchronisation : une région sous un parent
 	# Disabled n'est pas utilisable par le serveur de navigation.
 	salle_actuelle.process_mode = Node.PROCESS_MODE_INHERIT
-	salle_actuelle.get_node("Navigation").enabled = true
+	salle_actuelle.activer_navigation(true)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	# Le décor des trois salles existe déjà. Cuire le chemin de la salle active
@@ -327,7 +332,16 @@ func _on_sortie_franchie(salle: Node3D) -> void:
 		return
 	transition_en_cours = true
 	# body_entered arrive pendant la physique : déplacer les corps au tour suivant.
-	call_deferred("passer_salle_suivante")
+	call_deferred("preparer_sortie")
+
+
+func preparer_sortie() -> void:
+	# La dernière porte mène à la victoire : pas de bonus sans salle suivante.
+	if indice_salle + 1 >= salles.get_child_count():
+		passer_salle_suivante()
+	else:
+		# Le verrou transition_en_cours reste actif jusqu'au choix puis à l'arrivée.
+		choix_amelioration_demande.emit()
 
 
 func passer_salle_suivante() -> void:

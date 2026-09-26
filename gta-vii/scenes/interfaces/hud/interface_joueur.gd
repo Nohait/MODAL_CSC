@@ -30,6 +30,8 @@ func _process(_delta: float) -> void:
 
 func maj_affichage() -> void:
 	# Les bonus sont désormais présentés dans MenuBonus, actualisé par signal.
+	# La capacité peut augmenter après un choix entre deux salles.
+	jauge.max_value = extincteur.max_charge
 	jauge.value = extincteur.charge
 
 	# Feedback utilisateur sur la surchauffe :

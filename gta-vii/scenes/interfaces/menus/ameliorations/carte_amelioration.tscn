@@ -1,0 +1,176 @@
+[gd_scene format=3 uid="uid://bx5r5mv7v8cud"]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gd" id="1"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="2"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_illustration.gdshader" id="3"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/test_illustration.png" id="5"]
+[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="6"]
+
+[sub_resource type="ShaderMaterial" id="Papier"]
+shader = ExtResource("2")
+shader_parameter/largeur_bord = 13.0
+shader_parameter/rayon_coin = 15.0
+
+[sub_resource type="ShaderMaterial" id="Image"]
+shader = ExtResource("3")
+shader_parameter/largeur_bord = 8.0
+shader_parameter/rayon_coin = 9.0
+
+[sub_resource type="StyleBoxFlat" id="Ombre"]
+bg_color = Color(0.015, 0.01, 0.008, 0.85)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_left = 15
+corner_radius_bottom_right = 15
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 14
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="Effet"]
+bg_color = Color(0.16, 0.075, 0.04, 0.10)
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0.27, 0.14, 0.07, 0.35)
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[node name="CarteAmelioration" type="Control"]
+editor_description = "Carte réutilisable : affiche les exports et émet selected. Ne choisit pas le pool, n'applique pas de bonus et ne change pas de salle."
+process_mode = 3
+texture_filter = 2
+custom_minimum_size = Vector2(320, 500)
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 500.0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+script = ExtResource("1")
+
+[node name="Visuel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Ombre" type="Panel" parent="Visuel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+offset_top = 5.0
+offset_bottom = 5.0
+theme_override_styles/panel = SubResource("Ombre")
+
+[node name="TextureCarte" type="TextureRect" parent="Visuel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("Papier")
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Contenu" type="MarginContainer" parent="Visuel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 23
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 23
+theme_override_constants/margin_bottom = 24
+
+[node name="Organisation" type="VBoxContainer" parent="Visuel/Contenu"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="Entete" type="HBoxContainer" parent="Visuel/Contenu/Organisation"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Categorie" type="Label" parent="Visuel/Contenu/Organisation/Entete"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.17, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "EXTINCTEUR"
+
+[node name="Marque" type="Label" parent="Visuel/Contenu/Organisation/Entete"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.4, 0.2, 0.08, 1)
+theme_override_font_sizes/font_size = 14
+text = "✦"
+
+[node name="Illustration" type="Control" parent="Visuel/Contenu/Organisation"]
+editor_description = "Image recadrée par son shader, avec le même charbon et les mêmes braises que la carte."
+custom_minimum_size = Vector2(0, 195)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Image" type="TextureRect" parent="Visuel/Contenu/Organisation/Illustration"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("Image")
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="Visuel/Contenu/Organisation"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.16, 0.065, 0.025, 1)
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 30
+text = "Sous pression"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Description" type="Label" parent="Visuel/Contenu/Organisation"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.24, 0.16, 0.105, 1)
+theme_override_font_sizes/font_size = 15
+text = "Un jet plus puissant pour repousser les flammes."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Effet" type="Label" parent="Visuel/Contenu/Organisation"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.105, 0.035, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("Effet")
+text = "+20 % de dégâts"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Invitation" type="Label" parent="Visuel/Contenu/Organisation"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.37, 0.26, 0.17, 1)
+theme_override_font_sizes/font_size = 10
+text = "CLIC OU ENTRÉE POUR CHOISIR"
+horizontal_alignment = 1
