@@ -134,7 +134,7 @@ func choisir_cible():
 		
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
-		$EnnemiRepere.play("PopUp")
+s		$EnnemiRepere.play("PopUp")
 		print("J'ai changé de cible de cible")
 		print("Cible avant: ", cible_avant)
 		print("Cible mtn: ", cible)
