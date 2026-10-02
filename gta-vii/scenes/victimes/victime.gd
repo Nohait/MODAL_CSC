@@ -6,9 +6,12 @@ signal freed(victim: CharacterBody3D)
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var visuel: MeshInstance3D = $MeshInstance3D
 @onready var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
+@onready var ennemis = $"../../Ennemis"
 
 @export var vie_max := 100.0
 var vie := vie_max
+@export var force_fuite_max = 2.5 #Correspond au poids que le vecteur fuite a par rapport à la direction optimale
+
 
 @export_group("Bonus d'escorte")
 ## Cocher pour créer une sportive : cooldown du dash réduit de 20 % pendant l'escorte.
@@ -130,7 +133,10 @@ func follow_target_node() -> void:
 		direction.y = 0.0
 		
 		if direction.length() > 0.01 :
+			#on ajoute une composante de fuite des monstres 
 			direction = direction.normalized()
+			direction += vecteur_fuite()
+			direction= direction.normalized()
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
 	else:
@@ -158,6 +164,21 @@ func flash_degats():
 	tween_degats.tween_property(materiau,"albedo_color",couleur_init,0.1)
 
 	pass
+
+func force_fuite(distance_ennemi):
+	return clamp((5.0 - distance_ennemi) / (5/force_fuite_max), 0.0, force_fuite_max) 
+	#fonction rampe pour adapter la fuite au danger imminant que représente l'ennemi
+
+func vecteur_fuite():
+	#on calcule un vecteur fuite pour rentre les victimes plus réalistes
+	var fuite = Vector3()
+	for ennemi in ennemis.get_children():
+		if ennemi.is_in_group("mobiles"):
+			var direction = global_position.direction_to(ennemi.global_position)
+			var distance_ennemi =global_position.distance_to(ennemi.global_position)
+			fuite -= direction*force_fuite(distance_ennemi)
+			#On ajoute les poids de fuite de chaque ennemi
+	return fuite
 
 func update_interaction_label() -> void:
 	var events := InputMap.action_get_events("interact")
