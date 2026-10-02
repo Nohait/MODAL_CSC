@@ -6,19 +6,25 @@ extends Node3D
 @export var generate := false
 @export var apercu_auto := false
 @export var roomSize := Vector2i(10, 8)
-## Matériau appliqué aux cases de sol.
+
+# Matériau appliqué aux cases de sol.
 @export var materiau_sol: StandardMaterial3D
-## Matériau des murs et des morceaux de mur autour des portes.
+
+# Matériau des murs et des morceaux de mur autour des portes.
 @export var materiau_murs: StandardMaterial3D
+
 @export_group("Matériaux des étages suivants")
 @export var sol_etage_2: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_2.tres")
 @export var murs_etage_2: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_2.tres")
 @export var sol_etage_3: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_3.tres")
 @export var murs_etage_3: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_3.tres")
+
 @export_group("Trous du plancher")
-## Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
+
+# Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
 @export_range(0.2, 1.2, 0.05) var largeur_bord_trou := 0.8
-## Intensité des fragments orange sur les bords ; zéro conserve seulement le charbon.
+
+# Intensité des fragments orange sur les bords ; zéro conserve seulement le charbon.
 @export_range(0.0, 5.0, 0.1) var intensite_braises := 1.5
 const TROUS_PLANCHER = preload("res://scenes/decors/trous_plancher.gd")
 const TILE_SIZE = 5.0
@@ -26,29 +32,27 @@ const BOX_SCENE = preload("res://scenes/decors/caisse.tscn")
 const DOOR_SCENE = preload("res://scenes/decors/porte.tscn")
 const ROOM_SCENE = preload("res://scenes/salles/salle.tscn")
 const DIRECTIONS = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
-
 var grid = []
 var salle_en_creation: Node3D
 var cellules_disponibles: Array[Vector2i] = []
 var cellules_reservees: Array[Vector2i] = []
 var cellules_trous := {}
-# Références choisies pour la salle en construction. On ne modifie jamais les
-# ressources elles-mêmes : les salles déjà générées gardent leurs matériaux.
+
+# Références choisies pour la salle en construction.
+# On ne modifie jamais les ressources elles-mêmes : les salles déjà générées gardent leurs matériaux.
 var sol_actuel: StandardMaterial3D
 var murs_actuels: StandardMaterial3D
 
-
 func _ready() -> void:
+
 	# L'aperçu reste utilisable dans RoomGenerator.tscn, sans lancer le jeu complet.
 	if apercu_auto:
 		regenerer_apercu()
-
 
 func _process(_delta: float) -> void:
 	if generate:
 		generate = false
 		regenerer_apercu()
-
 
 func regenerer_apercu() -> void:
 	for enfant in get_children():
@@ -56,27 +60,29 @@ func regenerer_apercu() -> void:
 		enfant.queue_free()
 	add_child(generer_salle())
 
-
 # Vrai uniquement pour la cinquième salle de chaque étage.
 var sortie_avec_escalier := false
 
-
 func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1) -> Node3D:
 	sortie_avec_escalier = fin_etage
+
 	# L'aperçu utilise l'étage 1 par défaut ; le RoomManager fournit l'étage en jeu.
 	# Au-delà de 3, conserver le béton en attendant de nouveaux décors.
 	var indice := clampi(etage - 1, 0, 2)
 	sol_actuel = [materiau_sol, sol_etage_2, sol_etage_3][indice]
 	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
+
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.
 	roomSize = roomSize.clamp(Vector2i(6, 6), Vector2i(20, 20))
 	salle_en_creation = ROOM_SCENE.instantiate()
 	generateRoom()
+
 	# Une découpe extrême ne doit pas enlever toutes les places réservées aux acteurs.
 	var total := 0
 	for ligne in grid:
 		total += ligne.count(true)
 	if total < 20:
+
 		# Repli rare et déterministe : un rectangle plein reste une salle valide.
 		for ligne in grid:
 			ligne.fill(true)
@@ -87,12 +93,14 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 			if grid[y][x]:
 				cellules_disponibles.append(Vector2i(x, y))
 	displayRoom()
-	# Seuls les vides enfermés dans la salle deviennent des trous. Les découpes
-	# reliées à l'extérieur gardent les murs et ne deviennent pas des précipices.
+
+	# Seuls les vides enfermés dans la salle deviennent des trous.
+	# Les découpes reliées à l'extérieur gardent les murs et ne deviennent pas des précipices.
 	cellules_trous = TROUS_PLANCHER.trouver_trous(grid, roomSize)
 	displayWalls()
 	TROUS_PLANCHER.construire(salle_en_creation, cellules_trous, TILE_SIZE,
 		sol_actuel, largeur_bord_trou, intensite_braises)
+
 	# Réserver assez de place pour le joueur et TOUTE son escorte avant les caisses.
 	cellules_disponibles.shuffle()
 	var places_par_cellule := 9
@@ -104,15 +112,14 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 			for x in [-1.4, 0.0, 1.4]:
 				salle_en_creation.points_arrivee.append(position_cellule(cellule) + Vector3(x, 0, z))
 	displayBoxes()
+
 	# Les emplacements restants serviront au RoomManager pour les personnages.
 	for cellule in cellules_disponibles:
 		salle_en_creation.points_spawn.append(position_cellule(cellule))
 	return salle_en_creation
 
-
 func position_cellule(cellule: Vector2i) -> Vector3:
 	return Vector3(cellule.x * TILE_SIZE, 0, cellule.y * TILE_SIZE)
-
 
 func generateRoom():
 	"""
@@ -124,15 +131,12 @@ func generateRoom():
 	grid.clear()
 	for y in range(roomSize.y):
 		var row = []
-
 		for x in range(roomSize.x):
 			row.append(true)
-
 		grid.append(row)
 
 	# à adapter ?
 	var numberOfCuts = randi_range(3, 5)
-	
 	for i in range(numberOfCuts):
 		removeRandomRectangle()
 
@@ -140,27 +144,24 @@ func removeRandomRectangle():
 	"""Cut un rectangle à la grid"""
 	var width = randi_range(1, 4)
 	var height = randi_range(1, 4)
-
 	var startX = randi_range(0, roomSize.x - width)
 	var startY = randi_range(0, roomSize.y - height)
-
 	var removedCells = []
-
 	for y in range(startY, startY + height):
 		for x in range(startX, startX + width):
 			if grid[y][x]:
 				removedCells.append(Vector2i(x, y))
 				grid[y][x] = false
+
 	# Vérifie la connexité
 	if not isConnected():
 		for cell in removedCells:
 			grid[cell.y][cell.x] = true
-			
+
 func isConnected():
 	"""Controle la connexité de la salle par parcours de graphe"""
 	var start = Vector2i(-1, -1)
 	var totalCells = 0
-
 	for y in range(roomSize.y):
 		for x in range(roomSize.x):
 			if grid[y][x]:
@@ -176,16 +177,10 @@ func isConnected():
 		for x in range(roomSize.x):
 			row.append(false)
 		visited.append(row)
-
 	visited[start.y][start.x] = true
 	while queue.size() > 0:
 		var current = queue.pop_front()
-		var directions = [
-			Vector2i(1, 0), 
-			Vector2i(-1, 0),
-			Vector2i(0, 1),
-			Vector2i(0, -1)
-		]
+		var directions = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
 		for direction in directions:
 			var next = current + direction
 			if next.x < 0 or next.x >= roomSize.x:
@@ -199,15 +194,14 @@ func isConnected():
 			visited[next.y][next.x] = true
 			queue.append(next)
 	var connectedCells = 0
-
 	for y in range(roomSize.y):
 		for x in range(roomSize.x):
 			if visited[y][x]:
 				connectedCells += 1
-
 	return connectedCells == totalCells
 
 func displayRoom() -> void:
+
 	# Chaque case est désormais un corps fixe : le sol est visible ET solide.
 	for cellule in cellules_disponibles:
 				creer_bloc(
@@ -217,8 +211,8 @@ func displayRoom() -> void:
 			sol_actuel
 		)
 
-
 func displayBoxes() -> void:
+
 	# Mélanger une liste finie évite la boucle infinie si la salle manque de place.
 	# Garder au moins 12 cases libres pour les personnages et la borne.
 	var nombre := mini(randi_range(5, 10), maxi(0, cellules_disponibles.size() - 12))
@@ -228,8 +222,8 @@ func displayBoxes() -> void:
 		caisse.position = position_cellule(cellule) + Vector3(0, 0.85, 0)
 		salle_en_creation.get_node("Navigation/Decor").add_child(caisse)
 
-
 func displayWalls() -> void:
+
 	# Tous les bords du sol sont admissibles, y compris après les découpes.
 	# Cela garantit au moins une sortie même si le rectangle d'origine a été rogné.
 	var bords: Array = []
@@ -239,8 +233,8 @@ func displayWalls() -> void:
 			if voisine.x < 0 or voisine.y < 0 or voisine.x >= roomSize.x or voisine.y >= roomSize.y or not grid[voisine.y][voisine.x]:
 				bords.append([cellule, direction])
 	bords.shuffle()
-	# Choisir des sorties vers l'extérieur de l'emprise de la salle : un palier ne
-	# doit pas traverser un autre morceau du décor dans une découpe concave.
+
+	# Choisir une sortie extérieure pour éviter que le palier traverse le décor.
 	var minimum := Vector2i(roomSize.x, roomSize.y)
 	var maximum := Vector2i.ZERO
 	for cellule in cellules_disponibles:
@@ -255,6 +249,7 @@ func displayWalls() -> void:
 	var portes: Array = sorties_possibles.slice(0, mini(randi_range(1, 2), sorties_possibles.size()))
 	for bord in bords:
 		if cellules_trous.has(bord[0] + bord[1]):
+
 			# La barrière garde les dimensions du mur, mais n'a aucun visuel.
 			# Sous Navigation/Decor, elle est prise en compte par les deux maillages.
 			createWall(bord[0], bord[1], true)
@@ -262,15 +257,16 @@ func displayWalls() -> void:
 			createDoor(bord[0], bord[1])
 		else:
 			createWall(bord[0], bord[1])
+
 	# Aucune caisse ni apparition au milieu du passage d'une porte.
 	for bord in portes:
 		cellules_disponibles.erase(bord[0])
 
+# Crée un mur sur le côté de [param cellule] indiqué par [param direction].
+# Les coordonnées de cellule sont dans la grille, pas en mètres.
+# Avec [param invisible] à true, conserve uniquement la collision : utilisé au bord des trous.
+# Le corps est ajouté sous Navigation/Decor, donc lu lors du calcul des chemins.
 
-## Crée un mur sur le côté de [param cellule] indiqué par [param direction].
-## Les coordonnées de cellule sont dans la grille, pas en mètres.
-## Avec [param invisible] à true, conserve uniquement la collision : utilisé au bord des trous.
-## Le corps est ajouté sous Navigation/Decor, donc lu lors du calcul des chemins.
 func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false) -> void:
 	var taille := Vector3(TILE_SIZE, 3.0, 0.2)
 	if direction.x != 0:
@@ -284,23 +280,24 @@ func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false)
 	invisible
 	)
 
-
 func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	var normale := Vector3(direction.x, 0, direction.y)
 	var tangente := Vector3(normale.z, 0, -normale.x)
 	var centre := position_cellule(cellule) + normale * TILE_SIZE / 2.0
 	var porte = DOOR_SCENE.instantiate()
-	# Le voyant et la poignée sont du côté +Z local : ce côté doit regarder
-	# vers l'intérieur, donc dans le sens OPPOSÉ à la normale extérieure du mur.
+
+	# Le côté +Z (voyant et poignée) doit regarder vers l’intérieur de la salle.
 	porte.rotation.y = atan2(-normale.x, -normale.z)
+
 	# Le cadre est légèrement reculé dans porte.tscn (Z = -0.12).
-	# Compenser ce recul après rotation place le cadre dans l'axe des murs,
-	# au lieu de décaler arbitrairement toute la porte de 0.25 unité.
+	# Compenser le recul du cadre après rotation pour l’aligner avec le mur.
 	var decalage_cadre: float = porte.get_node("Encadrement/MontantGauche").position.z
 	porte.position = centre + normale * decalage_cadre + Vector3.UP * 0.1
+
 	# La porte a été retournée : inverser aussi l'angle pour ouvrir vers la salle.
 	porte.angle_ouverture = -175.0
 	salle_en_creation.get_node("Portes").add_child(porte)
+
 	# La porte fait 2,5 unités avec son cadre ; fermer le reste du bord de 5 unités.
 	var largeur_cote := (TILE_SIZE - 2.5) / 2.0
 	var taille := Vector3(largeur_cote, 3, 0.2)
@@ -313,6 +310,7 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 			Color(0.22, 0.24, 0.27),
 			murs_actuels
 			)
+
 	# La téléportation reste au seuil : l'escalier annonce visuellement la montée.
 	if sortie_avec_escalier:
 		creer_escalier(centre, normale, direction)
@@ -326,31 +324,31 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	zone.set_collision_layer_value(5, true)
 	zone.set_collision_mask_value(2, true)
 	zone.monitoring = false
+
 	# L'extérieur se trouve maintenant du côté -Z local de la porte.
 	zone.position = Vector3(0, 1.5, -3.5)
 	var collision := CollisionShape3D.new()
 	var forme := BoxShape3D.new()
 	forme.size = Vector3(2.2, 3, 5.0)
 	collision.shape = forme
-	
 	zone.add_child(collision)
 	porte.add_child(zone)
+
 	# La sortie devient utilisable seulement une fois l'animation de porte terminée.
 	porte.ouverte.connect(func(): zone.set_deferred("monitoring", true))
 	zone.body_entered.connect(salle_en_creation._on_passage)
 
+# Ajoute un bloc en coordonnées locales, avec un matériau ou une couleur.
+# Un bloc invisible conserve sa collision et reste pris en compte par la navigation.
+# Cette fonction ne renvoie pas le bloc ; elle l'ajoute directement à Navigation/Decor.
 
-## Ajoute un bloc fixe à la salle en cours de génération.
-## [param position_bloc] et [param taille] sont exprimées en mètres, dans le repère de la salle.
-## [param materiau_personnalise] remplace la couleur simple lorsqu'il est fourni.
-## [param invisible] supprime uniquement la partie visuelle : la collision et le groupe
-## collider restent présents pour bloquer les personnages et être lus par la navigation.
-## Cette fonction ne renvoie pas le bloc ; elle l'ajoute directement à Navigation/Decor.
 func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materiau_personnalise: Material = null, invisible: bool = false) -> void:
-	#le materiau_personnalise est facultatif, vaut null s'il n'est pas renseigné
+
+	# le materiau_personnalise est facultatif, vaut null s'il n'est pas renseigné
 	var corps := StaticBody3D.new()
 	corps.position = position_bloc
 	if invisible:
+
 		# Aucun mesh, même caché : pas d'ombre de mur autour du vide.
 		corps.name = "BarriereTrou"
 		var collision_trou := CollisionShape3D.new()
@@ -365,14 +363,15 @@ func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materia
 	var mesh := BoxMesh.new()
 	mesh.size = taille
 	if materiau_personnalise != null:
+
 		# Utiliser le matériau fourni, avec tous ses réglages.
 		mesh.material = materiau_personnalise
 	else:
+
 		# Sans matériau fourni, conserver la couleur simple utilisée jusque-là.
 		var materiau := StandardMaterial3D.new()
 		materiau.albedo_color = couleur
 		mesh.material = materiau
-	
 	visuel.mesh = mesh
 	corps.add_child(visuel)
 	var collision := CollisionShape3D.new()
@@ -383,8 +382,8 @@ func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materia
 	corps.add_to_group("collider")
 	salle_en_creation.get_node("Navigation/Decor").add_child(corps)
 
-
 func creer_escalier(centre: Vector3, normale: Vector3, direction: Vector2i) -> void:
+
 	# Palier horizontal jusqu'au déclencheur, puis huit marches vers l'extérieur.
 	var palier := Vector3(2.5, 0.2, 1.6)
 	if direction.x != 0:
@@ -395,6 +394,7 @@ func creer_escalier(centre: Vector3, normale: Vector3, direction: Vector2i) -> v
 		var taille := Vector3(2.5, hauteur, 0.5)
 		if direction.x != 0:
 			taille = Vector3(0.5, hauteur, 2.5)
+
 		# Chaque bloc part du même niveau de base ; seule sa face supérieure monte.
 		var position_marche := centre + normale * (1.85 + i * 0.5)
 		position_marche.y += hauteur / 2.0 - 0.1

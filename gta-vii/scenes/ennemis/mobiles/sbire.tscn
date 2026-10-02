@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://c2no1g1sp532y"]
 
-[ext_resource type="Script" uid="uid://btcvmuhbbwlus" path="res://scenes/ennemis/mobiles/ennemi.gd" id="1_i8ure"]
+[ext_resource type="Script" uid="uid://btcvmuhbbwlus" path="res://scenes/ennemis/mobiles/sbire.gd" id="1_i8ure"]
 [ext_resource type="Material" uid="uid://b1d8tls54jf5s" path="res://assets/materiaux/flame_shader.tres" id="2_a8sfv"]
 [ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_r3twd"]
 [ext_resource type="PackedScene" uid="uid://ta7qi2dsltn2" path="res://assets/modeles/ennemis/fire_elemental.glb" id="2_wutyl"]
@@ -82,7 +82,7 @@ _data = {
 &"RESET": SubResource("Animation_oir6u")
 }
 
-[node name="ennemi" type="CharacterBody3D" unique_id=696569544 groups=["enemies", "mobiles"]]
+[node name="Sbire" type="CharacterBody3D" unique_id=696569544 groups=["enemies", "mobiles"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_i8ure")
@@ -116,7 +116,7 @@ collision_mask = 31
 shape = SubResource("SphereShape3D_ii04w")
 
 [node name="NavigationAgent" type="NavigationAgent3D" parent="." unique_id=1991117259]
-editor_description = "Calcule un chemin sur la carte de navigation de main. Le script ennemi.gd utilise le prochain point pour déplacer le corps. L'évitement entre personnages n'est pas activé."
+editor_description = "Calcule un chemin sur la carte de navigation de main. Le script sbire.gd utilise le prochain point pour déplacer le corps. L'évitement entre personnages n'est pas activé."
 
 [node name="PopUpDegats" type="Label3D" parent="." unique_id=1533043065]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
@@ -134,7 +134,7 @@ visible = false
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 2.329, 0)
 visible = false
 
-[node name="EnnemiRepere" type="AnimationPlayer" parent="." unique_id=579217555]
+[node name="SbireRepere" type="AnimationPlayer" parent="." unique_id=579217555]
 root_node = NodePath("../PointExclamation")
 libraries/ = SubResource("AnimationLibrary_pilda")
 

@@ -11,7 +11,7 @@ Dans extincteur.tscn, sélectionner la racine : la section Retour visuel — imp
 permet de désactiver la mousse et de régler intervalle_impacts (0,14 s par défaut).
 Ce délai est purement graphique : il ne modifie ni les dégâts, ni la portée du jet.
 
-Dans ennemi.tscn ou tour_enflammee.tscn, sélectionner la racine : afficher_cendres
+Dans sbire.tscn ou tour_enflammee.tscn, sélectionner la racine : afficher_cendres
 active l'effet, et duree_cendres règle la dissolution (0,7 s par défaut).
 Dans scenes/effets/combat/impact_mousse.tscn, sélectionner Vapeur pour régler amount,
 lifetime, initial_velocity_min/max et la taille du QuadMesh utilisé comme nuage.

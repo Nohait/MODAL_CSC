@@ -29,9 +29,9 @@ var cible = null
 @export var vie_max := 100.0
 var vie := vie_max
 
-@export var vitesse_ennemi = 7
+@export var vitesse_sbire = 7
 
-var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largueur de l'ennemi dans son cône d'attaque
+var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largueur de le sbire dans son cône d'attaque
 
 @export_group('Portée')
 @export var distance_attaque = 1.3
@@ -42,7 +42,7 @@ var distance_min = 1000.0 #Pour définir qui est la cible
 @export_group("Attaque")
 @export var attaque_cooldown = 1.0
 var attaque_timer = 0.0 #temps initialisé à 0
-@export var degats_ennemi = 10.0
+@export var degats_sbire = 10.0
 @export var repos_apres_attaque := 0.3
 var timer_apres_attaque := 0.0
 
@@ -70,7 +70,7 @@ func _ready() -> void:
 	var paliers := maxi(etage - 1, 0)
 	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
 	vie = vie_max
-	degats_ennemi *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
+	degats_sbire *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
 	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.
@@ -83,7 +83,7 @@ func _physics_process(delta):
 	timer_apres_attaque -= delta
 	
 	#On définit la cible.
-	#Il y a un timer pour eviter que l'ennemi soit indécis
+	#Il y a un timer pour eviter que le sbire soit indécis
 	if cible == null:
 		chgt_cible_timer = 0.0
 	chgt_cible_timer -= delta
@@ -110,7 +110,7 @@ func _physics_process(delta):
 	if cible != null :	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
 		
-		#On tourne l'ennemi et sa hitbox vers la cible
+		#On tourne le sbire et sa hitbox vers la cible
 		var direction = global_position.direction_to(cible.global_position)
 		var theta = atan2(direction.x, direction.z) - rotation.y	
 		self.rotate(Vector3(0,1,0),theta)
@@ -139,12 +139,12 @@ func _on_surface_detection_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		cible = body
 		en_idle = false
-		$EnnemiRepere.play("PopUp")
+		$SbireRepere.play("PopUp")
 
 	elif body.is_in_group("victime") and body.is_freed:
 		cible = body
 		en_idle = false
-		$EnnemiRepere.play("PopUp")
+		$SbireRepere.play("PopUp")
 
 func choisir_destination_idle():
 	var destination = Vector3.ZERO
@@ -180,7 +180,7 @@ func suivre_cible_navigation() -> void:
 	direction.y = 0.0 # Déplacement horizontal
 	if direction.length() > 0.01:
 		# Normaliser conserve uniquement la direction.
-		velocity = direction.normalized() * vitesse_ennemi
+		velocity = direction.normalized() * vitesse_sbire
 	
 	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
 	
@@ -208,7 +208,7 @@ func choisir_cible():
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
 		en_idle = false
-		$EnnemiRepere.play("PopUp")
+		$SbireRepere.play("PopUp")
 		print("J'ai changé de cible de cible")
 		print("Cible avant: ", cible_avant)
 		print("Cible mtn: ", cible)
@@ -252,17 +252,17 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
-	# Une copie du visuel termine l’animation ; le vrai ennemi meurt immédiatement.
+	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
 	if afficher_cendres:
 		RETOUR_COMBAT.creer_cendres(self, [$Sketchfab_Scene, $droplet], duree_cendres)
 	died.emit()
-	print("Bravo, vous avez tué l'ennemi")
+	print("Bravo, vous avez tué le sbire")
 	queue_free()
 
 func attaque() -> void:
 	if cible != null:
 		var multiplier = randf_range(0.9,1.1)
-		cible.prendre_degats(round(multiplier * degats_ennemi *100.0)/100.0)
+		cible.prendre_degats(round(multiplier * degats_sbire *100.0)/100.0)
 
 	attaque_timer = attaque_cooldown
 	timer_apres_attaque = repos_apres_attaque
@@ -272,7 +272,7 @@ func attaque() -> void:
 
 func couleur_degats(degats: float) -> Color:
 	
-	var t = clamp((degats - 0.9*degats_ennemi) / 1.0, 0.0, 1.0)
+	var t = clamp((degats - 0.9*degats_sbire) / 1.0, 0.0, 1.0)
 	
 	var blanc = Color(0.998, 1.0, 0.29, 1.0)
 	var orange = Color(1.0, 0.388, 0.0, 1.0)

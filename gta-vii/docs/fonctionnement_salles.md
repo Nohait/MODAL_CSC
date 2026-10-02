@@ -85,7 +85,7 @@ il n'impose pas l'évacuation de toutes les victimes.
 
 ## Ennemis fixes et vagues de mobiles
 
-Les trois types actuels sont utilisés : ennemi mobile, tour enflammée et flaque
+Les trois types actuels sont utilisés : sbire, tour enflammée et flaque
 de feu. Les tours (0 à 2) et les flaques initiales (0 à 3) sont créées pendant
 `peupler_salle()`. Les victimes aussi. Les nombres sont tirés séparément pour
 chaque salle, puis limités par les cases libres.
