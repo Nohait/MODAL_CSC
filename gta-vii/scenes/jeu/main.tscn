@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/interfaces/menus/menu_bonus.tscn" id="11_bonus"]
 [ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/salles/room_generator.gd" id="12_generateur"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
 
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
@@ -73,7 +74,7 @@ theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-text = "I : activer l'invincibilité"
+text = "I : menu de test"
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
 editor_description = "Fond lumineux faible pour la lisibilité. Les lumières locales du joueur, des yeux et des flaques donnent les variations de couleur."
@@ -103,10 +104,6 @@ editor_description = "Le gestionnaire pilote le parcours ; le générateur fabri
 script = ExtResource("12_generateur")
 materiau_sol = ExtResource("6_btjur")
 materiau_murs = ExtResource("7_pc1m8")
-sol_etage_2 = null
-murs_etage_2 = null
-sol_etage_3 = null
-murs_etage_3 = null
 
 [node name="Rooms" type="Node3D" parent="Salles" unique_id=648949322]
 
@@ -222,3 +219,5 @@ autowrap_mode = 2
 [node name="MenuBonus" parent="." unique_id=1886819313 instance=ExtResource("11_bonus")]
 
 [node name="UpgradeManager" parent="." unique_id=1917722069 instance=ExtResource("13_upgrades")]
+
+[node name="MenuDebug" parent="." instance=ExtResource("14_debug")]

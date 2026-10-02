@@ -34,6 +34,8 @@ var portions_jet: Array[Vector2] = []
 var bonus_degats_actif := false
 # Indépendant de l'escorte : reste actif quand une victime est évacuée.
 var multiplicateur_degats_ameliorations := 1.0
+# Option de test indépendante des statistiques et des améliorations acquises.
+var degats_colossaux_test := false
 const AUGMENTATION_DEGATS_ESCORTE: float = 0.25
 @export_range(0,100,1) var attack_cooldown = 0.2
 var attack_timer = 0.0
@@ -170,6 +172,8 @@ func cible_dans_jet(position_cible: Vector3, rayon_cible: float) -> bool:
 
 
 func get_degats() -> float:
+	if degats_colossaux_test:
+		return 100000.0
 	# Ne jamais modifier degats1 : le bonus doit pouvoir disparaître sans dérive.
 	if bonus_degats_actif:
 		return degats1 * multiplicateur_degats_ameliorations * (1.0 + AUGMENTATION_DEGATS_ESCORTE)

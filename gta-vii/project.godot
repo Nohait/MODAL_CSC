@@ -17,8 +17,6 @@ config/icon="res://icon.svg"
 
 [display]
 
-; Référence UI agrandie : à fenêtre identique, les éléments sont 20 % plus petits.
-; canvas_items conserve le rendu 3D à la résolution réelle de la fenêtre.
 window/size/viewport_width=1600
 window/size/viewport_height=900
 window/size/mode=2
