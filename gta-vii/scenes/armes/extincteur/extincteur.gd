@@ -5,13 +5,19 @@ extends Node3D
 @onready var muzzle: Node3D = $AttaquePrincipale
 @onready var direction_marker: Marker3D = $AttaquePrincipale/DirectionMarker
 @onready var indicateur_attaque = $IndicateurAttaque
-#Initialisation des constantes du cone de particules
-const ETALEMENT = 0.378
-const VITESSE = 5.6
-const BASE_RADIUS = 2.8
-const BASE_ANGLE = 15
-const BASE_NOMBRE = 500
-const DENSITE_PARTICULES = 542 #BASE_NOMBRE/(VITESSE*ETALEMENT*BASE_RADIUS*PI*(PI*BASE_ANGLE/360.0))  (r*N/V0)/l0*pi*r^2*(alpha/2)
+@export_group("Jet")
+## Distance maximale, en mètres depuis le départ du jet.
+# L'ancienne sphère de 2.8 était agrandie par l'échelle 1.5 de l'arme du joueur.
+@export_range(0.1, 30.0, 0.1) var portee_jet := 4.2
+## Angle de chaque côté de la visée : 15 donne une ouverture totale de 30°.
+@export_range(1.0, 85.0, 1.0) var demi_angle_jet := 15.0
+## Vitesse commune aux particules et aux limites de la zone de dégâts.
+@export_range(0.1, 30.0, 0.1) var vitesse_jet := 5.6
+@export_range(0.0, 1.0, 0.01) var opacite_particules := 0.8
+
+# Chaque appui crée une portion : X = distance du début, Y = distance de fin.
+# Plusieurs portions permettent de conserver les espaces entre des tirs brefs.
+var portions_jet: Array[Vector2] = []
 
 @export_group("Charge")
 ## Réserve maximale de l'extincteur au début du niveau.
@@ -38,22 +44,60 @@ var is_attacking := false
 var is_overheated := false #Entre en cooldown forcé si l'extincteur tombe à 0
 
 func _ready() -> void:
-	particles.process_material.spread = BASE_ANGLE*2
-	particles.process_material.flatness = ETALEMENT
-	particles.amount = BASE_NOMBRE
+	# Des ressources propres à cette arme évitent de modifier les autres instances.
+	particles.process_material = particles.process_material.duplicate()
+	particles.draw_pass_1 = particles.draw_pass_1.duplicate()
+	particles.draw_pass_1.material = particles.draw_pass_1.material.duplicate()
+	# Travailler en mètres, sans subir l'échelle 0.11 du parent AttaquePrincipale.
+	particles.top_level = true
+	damage_area.top_level = true
+	damage_area.get_node("CollisionShape3D").shape = damage_area.get_node("CollisionShape3D").shape.duplicate()
+	configurer_jet()
+	actualiser_position_jet()
 
-	damage_area.get_node("CollisionShape3D").shape.radius = BASE_RADIUS
-	pass
+
+func configurer_jet() -> void:
+	var simulation := particles.process_material as ParticleProcessMaterial
+	# Spread représente déjà un DEMI-angle dans Godot : ne pas le multiplier par 2.
+	simulation.spread = demi_angle_jet
+	simulation.initial_velocity_min = vitesse_jet
+	simulation.initial_velocity_max = vitesse_jet
+	particles.lifetime = portee_jet / vitesse_jet
+	particles.draw_pass_1.material.albedo_color.a = opacite_particules
+	particles.visibility_aabb = AABB(Vector3.ONE * -portee_jet, Vector3.ONE * portee_jet * 2.0)
+	damage_area.get_node("CollisionShape3D").shape.radius = portee_jet
+
+
+func direction_jet() -> Vector3:
+	var direction := direction_marker.global_position - muzzle.global_position
+	direction.y = 0.0
+	return direction.normalized()
+
+
+func actualiser_position_jet() -> void:
+	var direction := direction_jet()
+	particles.global_transform = Transform3D(Basis.looking_at(direction), muzzle.global_position)
+	damage_area.global_transform = Transform3D(Basis.IDENTITY, muzzle.global_position)
+	# local_coords reste activé : le jet déjà émis suit la visée, comme auparavant.
 
 func start_primary_attack() -> void:
-	if not is_overheated:
+	if not is_overheated and not is_attacking:
+		portions_jet.append(Vector2.ZERO)
 		is_attacking = true
 		particles.emitting = true
 
 
 func stop_primary_attack() -> void:
-	#arrête l'attaque principale
+	# Arrêter l'émission ; les portions déjà parties continuent leur trajet.
 	is_attacking = false
+	particles.emitting = false
+
+
+func vider_jet() -> void:
+	# Une téléportation vers une autre salle ne doit pas emporter un ancien tir.
+	stop_primary_attack()
+	portions_jet.clear()
+	particles.restart()
 	particles.emitting = false
 
 func _physics_process(delta: float) -> void:
@@ -68,56 +112,62 @@ func _physics_process(delta: float) -> void:
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true
-			is_attacking = false
-			particles.emitting = false
+			stop_primary_attack()
 	else:
 		charge += reload_rate * delta
 		if charge >= max_charge:
 			charge = max_charge
 			is_overheated = false
 	
-	var bodies := damage_area.get_overlapping_bodies()
-	var areas := damage_area.get_overlapping_areas()
-	
-	for body in bodies:
-		if body.is_in_group("enemies"):
-			
-			var target_body := body as PhysicsBody3D
-			var origin: Vector3 = muzzle.global_position 
-			var to_target: Vector3 = target_body.global_position - origin
-			to_target.y = 0.0
-			var target_direction: Vector3 = to_target.normalized() #direction à l'ennemi
-			
-			var distance := to_target.length()
-			var forward: Vector3 = (direction_marker.global_position - muzzle.global_position).normalized() #direction de visée du joueur
+	actualiser_position_jet()
+	avancer_jet(delta)
+	if portions_jet.is_empty():
+		return
+	# Même test pour les personnages (bodies) et les flaques (areas).
+	var candidats := damage_area.get_overlapping_bodies() + damage_area.get_overlapping_areas()
+	for cible in candidats:
+		if cible.is_in_group("enemies") and not cible.is_queued_for_deletion():
+			if cible_dans_jet(cible.global_position, cible.hitbox_radius):
+				attaque_1(cible)
 
-			var alignment = clamp(forward.dot(target_direction), -1.0, 1.0) #produit scalaire entre les deux directions
-			var angle = acos(alignment)
 
-			if angle <= deg_to_rad(particles.process_material.spread/2) + atan(body.hitbox_radius / distance):
-				#si l'ennemi est dans le cône, on attaque
-				if Input.is_action_pressed("primary_attack") and !is_overheated:
-					attaque_1(body)
-					
-	for body in areas:
-		if body.is_in_group("enemies"):
-			
-			var origin: Vector3 = muzzle.global_position 
-			var to_target: Vector3 = body.global_position - origin
-			to_target.y = 0
-			var target_direction: Vector3 = to_target.normalized() #direction à l'ennemi
-			
-			var distance := to_target.length()
-			var forward: Vector3 = (direction_marker.global_position - muzzle.global_position).normalized() #direction de visée du joueur
+func avancer_jet(delta: float) -> void:
+	var avance := vitesse_jet * delta
+	# Parcourir à l'envers permet de retirer les portions terminées sans décaler
+	# les indices de celles qu'il reste à examiner.
+	for i in range(portions_jet.size() - 1, -1, -1):
+		var portion := portions_jet[i]
+		portion.y = minf(portion.y + avance, portee_jet)
+		if is_attacking and i == portions_jet.size() - 1:
+			portion.x = 0.0 # Le tir maintenu continue de remplir le départ du jet.
+		else:
+			portion.x += avance # Après relâchement, le vide avance depuis l'arme.
+		if portion.x >= portee_jet:
+			portions_jet.remove_at(i)
+		else:
+			portions_jet[i] = portion
 
-			var alignment: float = forward.dot(target_direction) #produit scalaire entre les deux directions
-			var angle = acos(alignment)
 
-			if angle <= deg_to_rad(particles.process_material.spread/2) + atan(body.hitbox_radius / distance):
-				#si l'ennemi est dans le cône, on attaque
-				if Input.is_action_pressed("primary_attack") and !is_overheated:
-					attaque_1(body)
-	
+func cible_dans_jet(position_cible: Vector3, rayon_cible: float) -> bool:
+	# Le combat se lit au sol : projeter la position de l'ennemi sur X/Z.
+	var decalage := position_cible - muzzle.global_position
+	var point := Vector2(decalage.x, decalage.z)
+	var direction := direction_jet()
+	var avant := Vector2(direction.x, direction.z)
+	var angle := avant.angle_to(point)
+	var angle_limite := deg_to_rad(demi_angle_jet)
+	var direction_proche := avant.rotated(clampf(angle, -angle_limite, angle_limite))
+	for portion in portions_jet:
+		if portion.y <= portion.x:
+			continue
+		# Chercher le point du secteur le plus proche du centre de l'ennemi.
+		# Sa largeur compte, mais ne doit pas combler arbitrairement les trous du jet.
+		var distance_proche := clampf(point.dot(direction_proche), portion.x, portion.y)
+		var point_proche := direction_proche * distance_proche
+		if point.distance_to(point_proche) <= rayon_cible:
+			return true
+	return false
+
 
 func get_degats() -> float:
 	# Ne jamais modifier degats1 : le bonus doit pouvoir disparaître sans dérive.
@@ -134,7 +184,15 @@ func attaque_1(cible):
 		indicateur_attaque.signaler_impact()
 
 func modifier(angle, rayon):
-	particles.lifetime = rayon/VITESSE
-	particles.process_material.spread = 2*angle
-	particles.amount = DENSITE_PARTICULES*VITESSE*ETALEMENT*PI*rayon*(angle*PI/360)
-	damage_area.get_node("CollisionShape3D").shape.radius = rayon
+	if is_equal_approx(demi_angle_jet, float(angle)) and is_equal_approx(portee_jet, float(rayon)):
+		return
+	demi_angle_jet = clampf(angle, 1.0, 85.0)
+	portee_jet = maxf(rayon, 0.1)
+	# Un changement de réglage repart proprement, pour ne pas mélanger
+	# des particules anciennes avec une nouvelle portée ou un nouvel angle.
+	portions_jet.clear()
+	if is_attacking:
+		portions_jet.append(Vector2.ZERO)
+	configurer_jet()
+	particles.restart()
+	particles.emitting = is_attacking
