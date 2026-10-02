@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://chgr25lo0i0g6"]
 
 [ext_resource type="Script" uid="uid://cihc78eohkcd6" path="res://scenes/victimes/victime.gd" id="1_gyep1"]
+[ext_resource type="AudioStream" uid="uid://bty8pb0obb4ka" path="res://assets/sounds/woman_scream3.wav" id="2_tjb4j"]
+[ext_resource type="AudioStream" uid="uid://c1v61jkgc5lc4" path="res://assets/sounds/man_helpme.wav" id="3_3e8do"]
+[ext_resource type="AudioStream" uid="uid://bi73govvxn4v" path="res://assets/sounds/man_help2.wav" id="4_3e8do"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_cqhq5"]
 radius = 0.3
@@ -85,9 +88,20 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_fqnpg")
 value = 100.0
 
 [node name="HealthBarSprite" type="Sprite3D" parent="." unique_id=48386694]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9233055, 0)
 pixel_size = 0.005
 billboard = 1
+
+[node name="Sons" type="Node3D" parent="." unique_id=896474245]
+
+[node name="scream1" type="AudioStreamPlayer3D" parent="Sons" unique_id=297965837]
+stream = ExtResource("2_tjb4j")
+
+[node name="man_helpme1" type="AudioStreamPlayer3D" parent="Sons" unique_id=203652440]
+stream = ExtResource("3_3e8do")
+
+[node name="man_helpme2" type="AudioStreamPlayer3D" parent="Sons" unique_id=573838042]
+stream = ExtResource("4_3e8do")
 
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
 [connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]
