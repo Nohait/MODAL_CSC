@@ -84,6 +84,14 @@ menu_bonus={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Décor"
+3d_physics/layer_2="Joueur"
+3d_physics/layer_3="Ennemis"
+3d_physics/layer_4="Victimes"
+3d_physics/layer_5="Detection"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

@@ -1,17 +1,9 @@
 [gd_scene format=3 uid="uid://bn6gcohvukjr2"]
 
 [ext_resource type="Script" uid="uid://b58or6p5xbts" path="res://scenes/ennemis/tourelles/tour_enflammee.gd" id="1_wegx8"]
-
-[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/tourelle_oeil/tour.glb" id="2_tour"]
-[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/tourelle_oeil/oeil.glb" id="3_oeil"]
-[ext_resource type="Script" path="res://scenes/ennemis/tourelles/visuel_tourelle.gd" id="4_visuel"]
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_18ogr"]
-height = 2.9155273
-radius = 1.0
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_18ogr"]
-radius = 10.0
+[ext_resource type="PackedScene" uid="uid://dht2h3w7e1ru5" path="res://assets/modeles/ennemis/tourelle_oeil/tour.glb" id="2_tour"]
+[ext_resource type="PackedScene" uid="uid://bep7kihre8e2c" path="res://assets/modeles/ennemis/tourelle_oeil/oeil.glb" id="3_oeil"]
+[ext_resource type="Script" uid="uid://brepu3outyodl" path="res://scenes/ennemis/tourelles/visuel_tourelle.gd" id="4_visuel"]
 
 [sub_resource type="StandardMaterial3D" id="PupilleMateriau"]
 shading_mode = 0
@@ -19,8 +11,13 @@ albedo_color = Color(0.012, 0.004, 0.002, 1)
 
 [sub_resource type="SphereMesh" id="PupilleMesh"]
 material = SubResource("PupilleMateriau")
-radius = 0.5
-height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_18ogr"]
+height = 2.9155273
+radius = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_18ogr"]
+radius = 10.0
 
 [sub_resource type="StandardMaterial3D" id="LaserMateriau"]
 transparency = 1
@@ -53,32 +50,35 @@ inner_radius = 0.994
 rings = 96
 
 [node name="TourEnflammee" type="CharacterBody3D" unique_id=1672808714 groups=["enemies", "obstacles_navigation"]]
+collision_mask = 0
 script = ExtResource("1_wegx8")
 distance_detection = 14.0
 
-[node name="Visuel" type="Node3D" parent="."]
+[node name="Visuel" type="Node3D" parent="." unique_id=1853147251]
 script = ExtResource("4_visuel")
 
-[node name="Tour" parent="Visuel" instance=ExtResource("2_tour")]
+[node name="Tour" parent="Visuel" unique_id=2010323673 instance=ExtResource("2_tour")]
 
-[node name="OeilPivot" type="Node3D" parent="Visuel"]
-position = Vector3(0, 3.5419326, 0)
+[node name="OeilPivot" type="Node3D" parent="Visuel" unique_id=1507762408]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5419326, 0)
 
-[node name="Oeil" parent="Visuel/OeilPivot" instance=ExtResource("3_oeil")]
-scale = Vector3(0.62, 1.6, 0.85)
+[node name="Oeil" parent="Visuel/OeilPivot" unique_id=1246312331 instance=ExtResource("3_oeil")]
+transform = Transform3D(0.62, 0, 0, 0, 1.6, 0, 0, 0, 0.85, 0, 0, 0)
 
-[node name="LumiereOeil" type="OmniLight3D" parent="Visuel/OeilPivot"]
+[node name="LumiereOeil" type="OmniLight3D" parent="Visuel/OeilPivot" unique_id=881973185]
 editor_description = "Éclaire réellement la tour, les murs et le sol en orange. Son énergie suit le chargement dans visuel_tourelle.gd."
-position = Vector3(0, 0, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 light_color = Color(1, 0.3, 0.055, 1)
 light_energy = 0.7
-omni_range = 6.0
 shadow_enabled = true
+omni_range = 6.0
 
-[node name="Pupille" type="MeshInstance3D" parent="Visuel/OeilPivot"]
-position = Vector3(0, 0, -0.27)
-scale = Vector3(0.075, 0.38, 0.08)
+[node name="Pupille" type="MeshInstance3D" parent="Visuel/OeilPivot" unique_id=1793857442]
+transform = Transform3D(0.075, 0, 0, 0, 0.38, 0, 0, 0, 0.08, 0, 0, -0.27)
 mesh = SubResource("PupilleMesh")
+
+[node name="Muzzle" type="Marker3D" parent="Visuel/OeilPivot" unique_id=2022842185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.37)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1613306489]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5086672, 0)
@@ -86,6 +86,8 @@ shape = SubResource("CylinderShape3D_18ogr")
 
 [node name="SurfaceDetection" type="Area3D" parent="." unique_id=2013685587]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5086672, 0)
+collision_layer = 16
+collision_mask = 31
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection" unique_id=1299757839]
 shape = SubResource("SphereShape3D_18ogr")
@@ -97,9 +99,6 @@ billboard = 1
 text = "-10"
 font_size = 50
 outline_size = 20
-
-[node name="Muzzle" type="Marker3D" parent="Visuel/OeilPivot"]
-position = Vector3(0, 0, -0.37)
 
 [node name="Laser" type="MeshInstance3D" parent="." unique_id=219159288]
 editor_description = "Rayon entre Muzzle et le joueur. Visible uniquement pendant le chargement ; son opacité augmente et sa largeur diminue."
