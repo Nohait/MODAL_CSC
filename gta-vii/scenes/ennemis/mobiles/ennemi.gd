@@ -40,6 +40,13 @@ var attaque_timer = 0.0 #temps initialisé à 0
 @export var repos_apres_attaque := 0.3
 var timer_apres_attaque := 0.0
 
+@export_group("Idle")
+@export var rayon_idle := 5.0
+@export var temps_idle_min := 1.0
+@export var temps_idle_max := 3.0
+var idle_timer := 0.0
+var en_idle := true
+
 @export_group("Cible_manager")
 @export var chgt_cible_cooldown = 1.3 #On reste 3s sur la meme cible avant de se demander si on change
 var chgt_cible_timer = 0.0 #temps initialisé à 0
@@ -149,7 +156,7 @@ func choisir_cible():
 		
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
-		jouer_animation_reperage()
+		$EnnemiRepere.play("PopUp")
 		print("J'ai changé de cible de cible")
 		print("Cible avant: ", cible_avant)
 		print("Cible mtn: ", cible)
@@ -162,24 +169,15 @@ func prendre_degats(degats: float) -> void:
 	vie = max(vie, 0)
 	#Le joueur prends l'aggro
 	if cible != player:
-		jouer_animation_reperage()
+		$EnnemiRepere.play("PopUp")
 		cible = player
-		chgt_cible_timer = chgt_cible_cooldown*4 #On veut que la cible ait le temps de "s'echapper"
+		chgt_cible_timer = chgt_cible_cooldown*3 #On veut que la cible ait le temps de "s'echapper"
 	
 	afficher_degats(degats)
 	
 	if vie <= 0:
 		mourir()
 		
-func jouer_animation_reperage() -> void:
-	# Cet effet est facultatif : la scène actuelle ne contient pas encore EnnemiRepere.
-	# get_node_or_null évite une erreur si le nœud est absent.
-	var animation := get_node_or_null("EnnemiRepere") as AnimationPlayer
-	# Vérifier aussi PopUp : un AnimationPlayer vide ne suffit pas à jouer l'effet.
-	if animation != null and animation.has_animation("PopUp"):
-		animation.play("PopUp")
-
-
 func mourir():
 	# Une mort ne doit émettre le signal qu'une seule fois.
 	if est_mort:
