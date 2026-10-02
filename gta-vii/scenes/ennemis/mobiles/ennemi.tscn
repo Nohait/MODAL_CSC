@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ta7qi2dsltn2" path="res://assets/modeles/ennemis/fire_elemental.glb" id="2_wutyl"]
 [ext_resource type="Script" uid="uid://dndpgtox034on" path="res://scenes/effets/feu/droplet.gd" id="3_1ta0d"]
 [ext_resource type="PackedScene" uid="uid://jou2viln2jqw" path="res://assets/modeles/effets/exclamation_point.glb" id="6_rwpig"]
+[ext_resource type="PackedScene" uid="uid://de2ep4oxoxpeh" path="res://scenes/effets/point_exclamation_rouge.tscn" id="7_0d17i"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_a8sfv"]
 resource_name = "Sketchfab_Scene_Drop_2_1_0"
@@ -128,5 +129,9 @@ visible = false
 [node name="EnnemiRepere" type="AnimationPlayer" parent="." unique_id=579217555]
 root_node = NodePath("../PointExclamation")
 libraries/ = SubResource("AnimationLibrary_pilda")
+
+[node name="PointExclamationRouge" parent="." unique_id=947723480 instance=ExtResource("7_0d17i")]
+transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 2.329, 0)
+visible = false
 
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]
