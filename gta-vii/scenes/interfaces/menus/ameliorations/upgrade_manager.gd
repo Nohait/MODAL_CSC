@@ -140,6 +140,8 @@ func _acheter_booster(rarete: StringName) -> void:
 		&"commun": multiplicateur_choix_courant = puissance_commune / 100.0
 		&"rare": multiplicateur_choix_courant = puissance_rare / 100.0
 		&"epique": multiplicateur_choix_courant = puissance_epique / 100.0
+	# Le verrou d’achat est déjà actif : aucun second clic ne dépense de points.
+	await boutique.animer_ouverture(rarete)
 	boutique.hide()
 	var propositions: Array = POOL.duplicate()
 	propositions.shuffle()

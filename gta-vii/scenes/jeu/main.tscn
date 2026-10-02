@@ -14,25 +14,13 @@
 
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
 
+[ext_resource type="PackedScene" path="res://scenes/interfaces/hud/informations_salle.tscn" id="16_salle"]
+
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
 ambient_light_color = Color(0.9, 0.93, 1, 1)
 ambient_light_energy = 0.32
 reflected_light_source = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sysh0"]
-bg_color = Color(0.056291588, 0.05629161, 0.05629155, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqnpg"]
-bg_color = Color(0.9087188, 0.45442045, 0.18393013, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victoire"]
 content_margin_left = 8.0
@@ -123,59 +111,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InformationsSalle" type="VBoxContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=908166390]
-editor_description = "Centré en haut : ancrages à 0.5 et marges symétriques (-220 / +220). Les objectifs et le compte à rebours restent alignés à toute résolution."
+[node name="InformationsSalle" parent="Salles/RoomManager/InterfaceSalle/HUD" instance=ExtResource("16_salle")]
 layout_mode = 1
-anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -220.0
+offset_left = -210.0
 offset_top = 12.0
-offset_right = 220.0
-offset_bottom = 72.0
+offset_right = 210.0
+offset_bottom = 96.0
 grow_horizontal = 2
-theme_override_constants/separation = 6
-
-[node name="Objectifs" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle" unique_id=1821781728]
-editor_description = "Texte centré dans InformationsSalle. Le conteneur place automatiquement le compte à rebours en dessous."
-layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 14
-text = "Objectifs :"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="TimerContainer" type="Control" parent="Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle" unique_id=1285782572]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
-[node name="TimerBar" type="ProgressBar" parent="Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle/TimerContainer" unique_id=288330983]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_sysh0")
-theme_override_styles/fill = SubResource("StyleBoxFlat_fqnpg")
-max_value = 30.0
-value = 30.0
-show_percentage = false
-
-[node name="TimerText" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle/TimerContainer" unique_id=1274527265]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 12
-text = "Les victimes brûlent !"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="MessageVictoire" type="PanelContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=1987246026]
 editor_description = "Bandeau de fin de salle : apparition en fondu, puis disparition. Ne bloque pas les commandes du joueur."
@@ -185,9 +129,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -160.0
-offset_top = 72.0
+offset_top = 104.0
 offset_right = 160.0
-offset_bottom = 122.0
+offset_bottom = 154.0
 grow_horizontal = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_victoire")
@@ -198,24 +142,6 @@ theme_override_colors/font_color = Color(0.65, 1, 0.8, 1)
 theme_override_font_sizes/font_size = 15
 text = "Salle libérée !"
 horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="Objectifs" type="Label" parent="Salles/RoomManager/InterfaceSalle" unique_id=1076629123]
-editor_description = "Ancré en bas avec une marge de 25 pixels. Le texte remonte s'il occupe plusieurs lignes."
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 25.0
-offset_top = -55.0
-offset_right = -25.0
-offset_bottom = -25.0
-grow_vertical = 0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 20
-text = "Objectifs :"
 autowrap_mode = 2
 
 [node name="MenuBonus" parent="." unique_id=1886819313 instance=ExtResource("11_bonus")]

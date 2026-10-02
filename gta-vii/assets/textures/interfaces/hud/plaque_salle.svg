@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="176" viewBox="0 0 420 44">
+<defs>
+<linearGradient id="papier" x2="0" y2="1"><stop stop-color="#dbca9e"/><stop offset=".5" stop-color="#c7af82"/><stop offset="1" stop-color="#a98b64"/></linearGradient>
+<radialGradient id="brule"><stop stop-color="#261716" stop-opacity=".9"/><stop offset="1" stop-color="#261716" stop-opacity="0"/></radialGradient>
+<clipPath id="forme"><path d="M15 4L30 6L47 3L110 5L180 3L245 5L330 3L390 5L405 4L414 14L410 24L415 36L413 62L416 77L410 88L406 99L383 96L350 100L302 97L230 100L160 98L96 100L47 97L17 99L8 91L10 80L4 69L8 51L5 32L9 22L6 13Z"/></clipPath>
+</defs>
+<g transform="scale(1, 0.423)">
+<path d="M13 5L44 1L181 2L331 1L407 3L418 14L414 24L419 38L416 64L419 79L414 91L408 102L350 103L230 103L96 103L15 102L4 92L7 80L1 70L5 51L2 32L6 22L3 12Z" fill="#171011" stroke="#50352a"/>
+<g clip-path="url(#forme)"><rect width="420" height="104" fill="url(#papier)"/>
+<ellipse cx="8" cy="20" rx="56" ry="42" fill="url(#brule)"/><ellipse cx="409" cy="92" rx="63" ry="35" fill="url(#brule)"/><ellipse cx="180" cy="105" rx="115" ry="15" fill="url(#brule)"/>
+<g stroke="#59402e" stroke-width=".5" opacity=".1"><path d="M45 17l115 -2M91 43l256 1M49 68l79 -2M166 90l110 1M34 80l88 -1M266 12l82 2"/></g>
+<path d="M25 49H395" stroke="#5c3c2c" opacity=".35"/><path d="M25 50H395" stroke="#f0dfb0" opacity=".3"/>
+</g>
+<path d="M38 10l8 -1M342 98l20 -1M411 32l1 8M9 65l2 6" stroke="#aa633b" stroke-width=".8" opacity=".65"/>
+<path d="M20 23l4 -4l4 4l-4 4Z M392 23l4 -4l4 4l-4 4Z" fill="#71513b" opacity=".75"/>
+</g>
+</svg>

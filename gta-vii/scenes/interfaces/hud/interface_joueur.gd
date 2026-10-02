@@ -1,50 +1,39 @@
 extends CanvasLayer
 
-# L'interface ne fait que lire l'état actuel de l'arme
+# L’interface lit l’arme ; elle ne modifie ni sa charge, ni sa recharge.
 @onready var extincteur = $"../visual/weapon_holder/Extincteur"
-@onready var jauge: ProgressBar = $Reserve/Jauge
+@onready var jauge = $Reserve/Jauge
 @onready var etat: Label = $Reserve/Etat
-
-@onready var BarreDeVie: ProgressBar = $Vie/BarreDeVie
+@onready var BarreDeVie = $Vie/BarreDeVie
 @export var vie_max := 100.0
-
-const COULEUR_VIE = Color(0.188, 0.541, 0.8, 1.0)
-
-const COULEUR_NORMALE_EXTINCTEUR = Color(0.273, 0.562, 0.0, 1.0)
-const COULEUR_SURCHAUFFE_EXTINCTEUR = Color(1.0, 0.35, 0.3)
-
 
 func _ready() -> void:
 	jauge.max_value = extincteur.max_charge
 	BarreDeVie.max_value = vie_max
-	BarreDeVie.value = vie_max	
+	BarreDeVie.value = vie_max
+	# Le flash du cadre se produit uniquement si le joueur perd réellement des PV.
+	get_parent().degats_recus.connect(BarreDeVie.reagir_aux_degats)
 	maj_affichage()
-	
-	
-
 
 func _process(_delta: float) -> void:
-	# On recopie la charge à chaque image
 	maj_affichage()
 
-
 func maj_affichage() -> void:
-	# Les bonus sont désormais présentés dans MenuBonus, actualisé par signal.
-	# La capacité peut augmenter après un choix entre deux salles.
+	# La capacité peut changer après l’achat d’une amélioration.
 	jauge.max_value = extincteur.max_charge
 	jauge.value = extincteur.charge
-
-	# Feedback utilisateur sur la surchauffe :
+	var recharge: bool = not extincteur.is_attacking and extincteur.charge < extincteur.max_charge
+	jauge.afficher_recharge(recharge)
 	if extincteur.is_overheated:
-		#sel_modulate permet de ne modifier que la couleur de la jauge
-		jauge.self_modulate = COULEUR_SURCHAUFFE_EXTINCTEUR
-		etat.text = "Surchauffe — recharge complète requise"
-	elif extincteur.is_attacking:
-		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
-		etat.text = "Jet en cours"
-	elif extincteur.charge < extincteur.max_charge:
-		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
-		etat.text = "Recharge en cours"
+		jauge.couleur = Color(0.9, 0.32, 0.19)
+		etat.text = "SURCHAUFFE · Recharge complète requise"
+		etat.modulate = Color(1, 0.6, 0.4)
 	else:
-		jauge.self_modulate = COULEUR_NORMALE_EXTINCTEUR
-		etat.text = "Prêt"
+		jauge.couleur = Color(0.86, 0.8, 0.64)
+		etat.modulate = Color.WHITE
+		if extincteur.is_attacking:
+			etat.text = "JET EN COURS"
+		elif recharge:
+			etat.text = "RECHARGE EN COURS"
+		else:
+			etat.text = "PRÊT"
