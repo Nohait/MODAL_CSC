@@ -323,15 +323,16 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 		creer_bloc(centre + normale * 3.0, palier, Color(0.24, 0.28, 0.3))
 	var zone := Area3D.new()
 	zone.name = "Passage"
+	zone.set_collision_layer_value(5, true)
+	zone.set_collision_mask_value(2, true)
 	zone.monitoring = false
-	zone.collision_layer = 0
-	zone.collision_mask = 1
 	# L'extérieur se trouve maintenant du côté -Z local de la porte.
 	zone.position = Vector3(0, 1.5, -3.5)
 	var collision := CollisionShape3D.new()
 	var forme := BoxShape3D.new()
 	forme.size = Vector3(2.2, 3, 5.0)
 	collision.shape = forme
+	
 	zone.add_child(collision)
 	porte.add_child(zone)
 	# La sortie devient utilisable seulement une fois l'animation de porte terminée.

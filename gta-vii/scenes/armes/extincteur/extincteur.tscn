@@ -53,6 +53,8 @@ draw_pass_1 = SubResource("SphereMesh_poajv")
 [node name="DamageArea" type="Area3D" parent="AttaquePrincipale" unique_id=543287765]
 editor_description = "Présélection des ennemis proches, sur la hauteur des personnages et tourelles. Le script teste ensuite leur contact avec les portions actives du jet au sol."
 transform = Transform3D(9.090909, 0, 0, 0, -3.9737628e-07, 9.090909, 0, -9.090909, -3.9737628e-07, 0, -1.1021225, 1.5636364)
+collision_layer = 16
+collision_mask = 31
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AttaquePrincipale/DamageArea" unique_id=1290565250]
 shape = SubResource("SphereShape3D_sysh0")

@@ -100,6 +100,7 @@ layer = 2
 
 [node name="Objectifs" type="Label" parent="Salles/RoomManager/InterfaceSalle" unique_id=1821781728]
 editor_description = "Ancré en bas avec une marge de 25 pixels. Le texte remonte s'il occupe plusieurs lignes."
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -108,13 +109,12 @@ offset_top = -55.0
 offset_right = -25.0
 offset_bottom = -25.0
 grow_vertical = 0
-autowrap_mode = 2
-mouse_filter = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 20
 text = "Objectifs :"
+autowrap_mode = 2
 
 [node name="MessageVictoire" type="PanelContainer" parent="Salles/RoomManager/InterfaceSalle" unique_id=1987246026]
 editor_description = "Bandeau de fin de salle : apparition en fondu, puis disparition. Ne bloque pas les commandes du joueur."

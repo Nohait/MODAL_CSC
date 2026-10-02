@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://de2ep4oxoxpeh"]
+
+[ext_resource type="PackedScene" uid="uid://bwhs4cypfo3vg" path="res://assets/modeles/effets/exclamation_point_rouge.glb" id="1_wot8b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oir6u"]
+albedo_color = Color(1, 0, 0, 1)
+
+[node name="Sketchfab_Scene" unique_id=947723480 instance=ExtResource("1_wot8b")]
+
+[node name="Object_4" parent="Sketchfab_model/root/GLTF_SceneRootNode/Sphere_001_0" parent_id_path=PackedInt32Array(1972981754) index="0" unique_id=853206840]
+surface_material_override/0 = SubResource("StandardMaterial3D_oir6u")

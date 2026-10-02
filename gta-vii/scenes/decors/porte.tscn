@@ -50,6 +50,8 @@ script = ExtResource("1_script")
 
 [node name="Encadrement" type="StaticBody3D" parent="." unique_id=1296170403]
 editor_description = "Corps fixe nécessaire pour que les collisions des montants bloquent les personnages. Les deux montants et la traverse partagent le matériau encadrement_porte : le modifier ajuste tout le cadre."
+collision_layer = 16
+collision_mask = 31
 
 [node name="MontantGauche" type="MeshInstance3D" parent="Encadrement" unique_id=395491851]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.5, -0.12)
