@@ -25,6 +25,8 @@ var est_mort := false
 @onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
+
+
 @export_group("Statistiques de base")
 @export var vie_max := 100.0
 var vie := vie_max
@@ -243,6 +245,7 @@ func prendre_degats(degats: float) -> void:
 		chgt_cible_timer = aggro_cooldown #On veut que la cible ait le temps de "s'echapper"
 	
 	afficher_degats(degats)
+
 	
 	if vie <= 0:
 		mourir()
@@ -252,6 +255,14 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	
+	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
+	var steam_death=  AudioStreamPlayer3D.new()
+	get_parent().add_child(steam_death)
+	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
+	steam_death.global_position = global_position
+	steam_death.play()
+	
 	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
 	if afficher_cendres:
 		RETOUR_COMBAT.creer_cendres(self, [$Sketchfab_Scene, $droplet], duree_cendres)

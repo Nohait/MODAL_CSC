@@ -269,16 +269,16 @@ func actualiser_sauvetage(delta: float) -> void:
 
 	# Proportion écoulée : 0 au début, 0.5 à mi-parcours, 1 à la fin.
 	var proportion_ecoulee: float = 1.0 - salle.temps_sauvetage_restant / duree_sauvetage
+	
 	for victime in (salle.get_node("Victimes").get_children()):
-		if (
-			not is_instance_valid(victime)
-			or victime.is_queued_for_deletion()
-			or victime.est_morte
-			or victime.is_freed
-		):
+		if not is_instance_valid(victime) or victime.is_queued_for_deletion() or victime.est_morte or victime.is_freed:
 			continue
+		#marqueur de son pour l'urgence
+		if abs(proportion_ecoulee-0.5) < delta/ duree_sauvetage:
+			victime.cris.pick_random().play()
 		victime.actualiser_degats_sauvetage(proportion_ecoulee)
-	if (salle.temps_sauvetage_restant <= 0.0):
+		
+	if salle.temps_sauvetage_restant <= 0.0:
 		terminer_sauvetage(salle)
 	else:
 		actualiser_objectifs()

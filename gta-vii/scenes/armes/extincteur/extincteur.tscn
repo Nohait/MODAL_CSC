@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/armes/extincteur/extincteur.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://8srttl8ul3pr" path="res://assets/modeles/extincteur/extincteur0.blend" id="2_klu21"]
 [ext_resource type="Script" uid="uid://bxavtvxd02gl7" path="res://scenes/armes/extincteur/indicateur_attaque.gd" id="3_indicateur"]
+[ext_resource type="AudioStream" uid="uid://c3o7bvbflswqd" path="res://assets/sounds/extincteur/steam_damage2.wav" id="4_0ntp2"]
+[ext_resource type="AudioStream" uid="uid://dqm6lagpfbpe6" path="res://assets/sounds/extincteur/steam_damage1.wav" id="5_eg3a3"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
 emission_shape = 1
@@ -69,3 +71,13 @@ hauteur_sol = 0.11
 [node name="extincteur0" parent="." unique_id=1654426891 instance=ExtResource("2_klu21")]
 transform = Transform3D(-3.2564984e-08, 0, 0.745, 0, 0.745, 0, -0.745, 0, -3.2564984e-08, -6.114712e-09, -0.32437807, -0.08326684)
 visible = false
+
+[node name="Sons" type="Node3D" parent="." unique_id=670960918]
+
+[node name="steam_damage" type="Node3D" parent="Sons" unique_id=705348924]
+
+[node name="steam_damage2" type="AudioStreamPlayer3D" parent="Sons/steam_damage" unique_id=1437426322]
+stream = ExtResource("4_0ntp2")
+
+[node name="steam_damage1" type="AudioStreamPlayer3D" parent="Sons/steam_damage" unique_id=110784539]
+stream = ExtResource("5_eg3a3")

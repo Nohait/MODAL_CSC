@@ -172,6 +172,12 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
+	var steam_death=  AudioStreamPlayer3D.new()
+	get_parent().add_child(steam_death)
+	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
+	steam_death.global_position = global_position
+	steam_death.play()
 	# Une copie du visuel termine l’animation ; le vrai ennemi meurt immédiatement.
 	if afficher_cendres:
 		RETOUR_COMBAT.creer_cendres(self, [$Visuel/Tour, $Visuel/OeilPivot/Oeil, $Visuel/OeilPivot/Pupille], duree_cendres)

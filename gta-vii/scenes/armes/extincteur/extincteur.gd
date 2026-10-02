@@ -7,6 +7,9 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @onready var muzzle: Node3D = $AttaquePrincipale
 @onready var direction_marker: Marker3D = $AttaquePrincipale/DirectionMarker
 @onready var indicateur_attaque = $IndicateurAttaque
+@onready var steam_damage = $"Sons/steam_damage".get_children()
+@onready var steam_damage_sound = $"Sons/steam_damage/steam_damage2"
+
 @export_group("Jet")
 ## Distance maximale, en mètres depuis le départ du jet.
 # L'ancienne sphère de 2.8 était agrandie par l'échelle 1.5 de l'arme du joueur.
@@ -207,6 +210,10 @@ func attaque_1(cible):
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
 		# Colorer la zone uniquement après un impact, y compris sur les flaques.
 		indicateur_attaque.signaler_impact()
+		if not steam_damage_sound.playing:
+			print('son')
+			steam_damage_sound = steam_damage.pick_random()
+			steam_damage_sound.play()
 
 func modifier(angle, rayon):
 	if is_equal_approx(demi_angle_jet, float(angle)) and is_equal_approx(portee_jet, float(rayon)):

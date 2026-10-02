@@ -14,7 +14,7 @@ signal died(victim: CharacterBody3D)
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var visuel: MeshInstance3D = $MeshInstance3D
-@onready var sounds = $"Sons".get_children()
+@onready var cris = $"Sons/cris".get_children()
 @onready var materiau := (visuel.get_active_material(0).duplicate()as StandardMaterial3D)
 
 
@@ -187,6 +187,7 @@ func free_victim() -> void:
 	if est_morte or is_freed:
 		return
 	is_freed = true
+	$"Sons/UI/liberation".play()
 	arret = false
 	interaction_label.visible = false
 	freed.emit(self)
@@ -267,7 +268,7 @@ func prendre_degats(degats: float) -> void:
 	flash_degats()
 	print("Victime : -", degats, " PV (", vie, " / ", vie_max, ")")
 	if vie <= vie_max/2 and vie +degats >=vie_max/2:
-		var stream = sounds.pick_random()
+		var stream = cris.pick_random()
 		stream.play()
 	if vie <= 0.0:
 		mourir()
