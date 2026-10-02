@@ -9,7 +9,8 @@ var cible = null
 @onready var player = get_tree().get_first_node_in_group("player")
 @onready var detection_shape: CollisionShape3D = $"SurfaceDetection/CollisionShape3D"
 @onready var SurfaceDetection: Area3D = $"SurfaceDetection"
-@onready var muzzle: Marker3D = $Muzzle
+# Le laser et le projectile partent désormais de la face de l’œil.
+@onready var muzzle: Marker3D = $Visuel/OeilPivot/Muzzle
 
 @export var vie_max := 200.0
 var vie := vie_max
@@ -74,6 +75,8 @@ func _physics_process(delta: float) -> void:
 		cible = null
 	if cible == null:
 		cible = joueur_detecte
+	# Orienter l'œil AVANT de calculer le laser depuis son point de départ.
+	$Visuel.actualiser()
 	# Rester visible entre 10 et 14 m, ainsi que pendant le repos après un tir :
 	# sortir de la détection ne suffit pas à échapper à une tourelle déjà alertée.
 	disque.visible = is_instance_valid(cible)
@@ -93,6 +96,7 @@ func _physics_process(delta: float) -> void:
 
 	chargement_ecoule += delta
 	var progression := clampf(chargement_ecoule / duree_chargement, 0.0, 1.0)
+	$Visuel.actualiser()
 	actualiser_laser(progression)
 	if progression >= 1.0:
 		tirer_projectile()
