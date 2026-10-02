@@ -58,7 +58,7 @@ var accent := 0.0
 var temps_animation := 0.0
 
 
-## Prépare une copie des matériaux par carte et connecte souris/clavier.
+## Prépare une copie des matériaux par carte et connecte la souris.
 func _ready() -> void:
 	# Sans duplicate(), survoler une carte changerait aussi ses voisines.
 	materiau_papier = papier.material.duplicate() as ShaderMaterial
@@ -75,8 +75,6 @@ func _ready() -> void:
 		return
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
-	focus_entered.connect(actualiser_survol)
-	focus_exited.connect(actualiser_survol)
 	gui_input.connect(_on_gui_input)
 
 
@@ -134,7 +132,7 @@ func _process(delta: float) -> void:
 		materiau.set_shader_parameter("intensite_braises", intensite_braises)
 
 
-## Le focus clavier et le survol souris partagent exactement le même retour visuel.
+## Seul le survol souris met la carte en évidence.
 func _on_mouse_entered() -> void:
 	souris_dessus = true
 	actualiser_survol()
@@ -147,9 +145,9 @@ func _on_mouse_exited() -> void:
 
 ## Anime le visuel et les braises ensemble, sans agrandir la zone qui reçoit la souris.
 func actualiser_survol() -> void:
-	var actif := souris_dessus or has_focus()
+	var actif := souris_dessus
 	if not lecture_seule:
-		invitation.text = "CHOISIR CETTE AMÉLIORATION" if actif else "CLIC OU ENTRÉE POUR CHOISIR"
+		invitation.text = "CHOISIR CETTE AMÉLIORATION" if actif else "CLIQUER POUR CHOISIR"
 	if hover_tween:
 		hover_tween.kill()
 	z_index = 1 if actif else 0
@@ -161,11 +159,11 @@ func actualiser_survol() -> void:
 	hover_tween.tween_property(self, "accent", 1.0 if actif else 0.0, hover_duration)
 
 
-## Émet selected pour un clic gauche ou ui_accept (Entrée/manette) lorsque la carte a le focus.
+## Seul un clic gauche valide le choix ; les touches du clavier sont ignorées.
 func _on_gui_input(event: InputEvent) -> void:
 	if lecture_seule or event.is_echo():
 		return
 	var clic: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
-	if clic or (has_focus() and event.is_action_pressed("ui_accept")):
+	if clic:
 		accept_event()
 		selected.emit()

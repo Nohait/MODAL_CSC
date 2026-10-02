@@ -79,7 +79,8 @@ func _physics_process(_delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			free_victim()
 
-	if is_freed and follow_target != null:
+	# Une cible supprimée (flèche ou autre victime) n'est pas un nœud utilisable.
+	if is_freed and is_instance_valid(follow_target):
 		follow_target_node()
 
 func free_victim() -> void:

@@ -53,7 +53,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 500.0
-focus_mode = 2
+focus_mode = 0
 mouse_default_cursor_shape = 2
 script = ExtResource("1")
 
@@ -177,5 +177,5 @@ autowrap_mode = 3
 layout_mode = 2
 theme_override_colors/font_color = Color(0.37, 0.26, 0.17, 1)
 theme_override_font_sizes/font_size = 10
-text = "CLIC OU ENTRÉE POUR CHOISIR"
+text = "CLIQUER POUR CHOISIR"
 horizontal_alignment = 1

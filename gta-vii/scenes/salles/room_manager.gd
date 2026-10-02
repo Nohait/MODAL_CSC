@@ -223,6 +223,9 @@ func activer_salle(indice: int) -> void:
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
+	# Un ordre au clic milieu appartient à l'ancienne salle. Reprendre le suivi
+	# du joueur avant de téléporter l'escorte et de recalculer ses chemins.
+	joueur.annuler_ordre_victimes()
 	if is_instance_valid(salle_actuelle):
 		salle_actuelle.process_mode = Node.PROCESS_MODE_DISABLED
 		salle_actuelle.hide()
