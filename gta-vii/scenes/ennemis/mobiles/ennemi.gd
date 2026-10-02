@@ -42,11 +42,13 @@ var attaque_timer = 0.0 #temps initialisé à 0
 var timer_apres_attaque := 0.0
 
 @export_group("Idle")
-@export var rayon_idle := 5.0
+@export var rayon_idle := 10.0
 @export var temps_idle_min := 1.0
-@export var temps_idle_max := 3.0
+@export var temps_idle_max := 5
 var idle_timer := 0.0
 var en_idle := true
+@onready var cible_idle = Marker3D.new()
+
 
 @export_group("Cible_manager")
 @export var chgt_cible_cooldown = 1.3 #On reste 3s sur la meme cible avant de se demander si on change
@@ -55,6 +57,9 @@ var chgt_cible_timer = 0.0 #temps initialisé à 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	cible_idle.name = "Cible " + self.name
+	get_parent().add_child(cible_idle)
+	
 	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
 	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
 	var paliers := maxi(etage - 1, 0)
@@ -80,6 +85,13 @@ func _physics_process(delta):
 	if chgt_cible_timer < 0:
 		choisir_cible()
 	
+	if cible == null or en_idle:
+		idle_timer -= delta
+		if idle_timer <0 :
+			cible_idle.position =  choisir_destination_idle()
+			cible = cible_idle
+			idle_timer = randf_range(temps_idle_min,temps_idle_max)
+	
 	if timer_apres_attaque > 0.0:
 		velocity = Vector3.ZERO
 		move_and_slide()
@@ -90,7 +102,7 @@ func _physics_process(delta):
 		velocity = Vector3.ZERO
 		return
 	
-	if cible != null:	#Une fois que le joueur est pris pour cible
+	if cible != null :	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
 		
 		#On tourne l'ennemi et sa hitbox vers la cible
@@ -102,6 +114,7 @@ func _physics_process(delta):
 		
 		if distance > distance_lacher: #calcul de sortie de range
 			cible = null
+			en_idle = true
 			velocity = Vector3.ZERO
 			move_and_slide()	
 			
@@ -113,8 +126,35 @@ func _physics_process(delta):
 			velocity = Vector3.ZERO 
 			
 			if attaque_timer < 0.0:
-				attaque()
+				if cible.is_in_group("player") or cible.is_in_group("victime"):
+					attaque()
 			
+#On detecte pour bypass le cooldown de changer de cible dans choisir_cible() pour sortir instantanément de l'idle
+func _on_surface_detection_body_entered(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		cible = body
+		en_idle = false
+		$EnnemiRepere.play("PopUp")
+
+	elif body.is_in_group("victime") and body.is_freed:
+		cible = body
+		en_idle = false
+		$EnnemiRepere.play("PopUp")
+
+func choisir_destination_idle():
+	var destination = Vector3.ZERO
+	var map_rid := navigation_agent.get_navigation_map()
+	for i in range(10):
+		var rand_x = randf_range(-rayon_idle, rayon_idle)
+		var rand_z = randf_range(-rayon_idle, rayon_idle)
+		destination = Vector3(rand_x,0.0,rand_z) + global_position
+		var position_nav := NavigationServer3D.map_get_closest_point(map_rid,destination)
+		position_nav.y = 0.0
+		destination.y = 0.0
+		if destination.distance_to(position_nav) < 0.1:
+			return destination
+	return global_position
+
 func suivre_cible_navigation() -> void:
 	# Arrêt par défaut si la carte n'est pas prête ou si aucun chemin n'est trouvé.
 	velocity = Vector3.ZERO
@@ -125,6 +165,9 @@ func suivre_cible_navigation() -> void:
 
 	# La destination est actualisée car le joueur peut bouger pendant la poursuite.
 	navigation_agent.target_position = cible.global_position
+	if en_idle:
+		navigation_agent.target_position = cible_idle.position
+	
 	var prochaine_position := navigation_agent.get_next_path_position()
 
 	# Ce point peut être intermédiaire.
@@ -133,14 +176,15 @@ func suivre_cible_navigation() -> void:
 	if direction.length() > 0.01:
 		# Normaliser conserve uniquement la direction.
 		velocity = direction.normalized() * vitesse_ennemi
-
+	
 	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
+	
 	move_and_slide()
 
 func choisir_cible():
 	var cible_avant = cible #on sauvegardde la cible
 	var bodies = SurfaceDetection.get_overlapping_bodies()
-	if cible != null:
+	if cible != null and !en_idle:
 		distance_min = global_position.distance_to(cible.global_position)
 	else:
 		distance_min = 1000.0
@@ -158,6 +202,7 @@ func choisir_cible():
 		
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
+		en_idle = false
 		$EnnemiRepere.play("PopUp")
 		print("J'ai changé de cible de cible")
 		print("Cible avant: ", cible_avant)
