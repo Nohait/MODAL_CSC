@@ -7,6 +7,8 @@ extends Node
 var freed_victims: Array[CharacterBody3D] = []
 var evacuated_count: int = 0
 var mode_suivi = true
+@export_range(0.0, 20.0, 0.1, "or_greater") var suivi_cooldown = 3.0
+var suivi_timer = suivi_cooldown #Une fois à l'arret, elles retournent vers le joueur apres un certain cooldown
 
 # Les menus peuvent écouter ce signal pour actualiser leur liste.
 signal escort_changed
@@ -19,7 +21,16 @@ func _ready() -> void:
 		##On connecte le signal freed à la fonction qui enregistre une victime libérée
 		surveiller_victime(victim)
 
-
+func _physics_process(delta: float) -> void:
+	if freed_victims != []:
+		
+		if freed_victims[0].arret:
+			suivi_timer -=delta
+			if suivi_timer <0.0:
+				
+				suivi_timer = suivi_cooldown
+				freed_victims[0].follow_target = player
+				
 func surveiller_victime(victim: CharacterBody3D) -> void:
 	# Fonction également appelée pour les victimes créées pendant la génération.
 	if not victim.freed.is_connected(register_victim):

@@ -156,7 +156,7 @@ func prendre_degats(degats: float) -> void:
 	if cible != player:
 		$EnnemiRepere.play("PopUp")
 		cible = player
-		chgt_cible_timer = chgt_cible_cooldown*4 #On veut que la cible ait le temps de "s'echapper"
+		chgt_cible_timer = chgt_cible_cooldown*3 #On veut que la cible ait le temps de "s'echapper"
 	
 	afficher_degats(degats)
 	
