@@ -43,7 +43,6 @@ transform = Transform3D(0.11, 0, 0, 0, -4.808253e-09, -0.11, 0, 0.11, -4.808253e
 [node name="GPUParticles3D" type="GPUParticles3D" parent="AttaquePrincipale" unique_id=2081315521]
 editor_description = "Portée, demi-angle, vitesse et opacité sont réglés sur Extincteur, groupe Jet. Le script synchronise les particules et les portions actives de dégâts. Local Coords conserve un jet qui suit la visée."
 transform = Transform3D(0.011698651, 0, -0.9999316, 0, 1, 0, 0.9999316, 0, 0.011698651, 0, 0.96934927, 0)
-emitting = false
 amount = 500
 lifetime = 0.5
 visibility_aabb = AABB(-9, -9, -9, 18, 18, 18)
@@ -69,3 +68,4 @@ hauteur_sol = 0.11
 
 [node name="extincteur0" parent="." unique_id=1654426891 instance=ExtResource("2_klu21")]
 transform = Transform3D(-3.2564984e-08, 0, 0.745, 0, 0.745, 0, -0.745, 0, -3.2564984e-08, -6.114712e-09, -0.32437807, -0.08326684)
+visible = false

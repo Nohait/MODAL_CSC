@@ -33,6 +33,11 @@ var clic_milieu_deja_fait := false
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.2
 
+@onready var anim_tree: AnimationTree = $visual/pompier/visual/Armature/AnimationTree
+const PARAM_BLEND := "parameters/blend_position"
+var blend_actuel := Vector2.ZERO
+const INVERSER_MODELE := false
+
 var last_direction := Vector3.FORWARD 
 var is_dashing := false
 var dash_time_left := 0.0
@@ -185,7 +190,24 @@ func _physics_process(delta: float) -> void:
 	else:
 		extincteur.stop_primary_attack()
 	
+	animate(delta)
 	move_and_slide()
+
+func animate(delta: float) -> void:
+	var vitesse_h := Vector3(velocity.x, 0.0, velocity.z)
+	
+	var local := visual.global_transform.basis.orthonormalized().inverse() * vitesse_h
+
+	var cible := Vector2(local.x, -local.z) / speed
+	
+	if INVERSER_MODELE:
+		cible = -cible
+	cible = cible.limit_length(1.0)
+	
+	blend_actuel = blend_actuel.lerp(cible, 1.0 - exp(-12.0 * delta))
+	anim_tree[PARAM_BLEND] = blend_actuel
+	
+	
 
 func flash_degats() -> void:
 	if flash_tween:
