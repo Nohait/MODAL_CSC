@@ -6,6 +6,8 @@ var flaque_scene = preload("res://scenes/ennemis/dangers/flaque_de_feu.tscn")
 # Projectile -> ProjectilesTour -> Salle : ses flaques restent dans cette salle.
 @onready var flaques = get_parent().get_parent().get_node("FlaquesDeFeu")
 var direction := Vector3.ZERO
+# Transmis par la tourelle aux flaques issues de ses projectiles.
+var etage := 1
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -15,6 +17,7 @@ func _physics_process(delta: float) -> void:
 	#on crée la flaque quand le projectile touche le sol
 	if position.y <= 0.4:
 		var flaque = flaque_scene.instantiate()
+		flaque.etage = etage
 		flaques.add_child(flaque)
 		# Les deux conteneurs peuvent être décalés : conserver la position dans le monde.
 		flaque.global_position = global_position

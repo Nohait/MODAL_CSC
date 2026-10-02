@@ -10,6 +10,11 @@ extends Node3D
 @export var materiau_sol: StandardMaterial3D
 ## Matériau des murs et des morceaux de mur autour des portes.
 @export var materiau_murs: StandardMaterial3D
+@export_group("Matériaux des étages suivants")
+@export var sol_etage_2: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_2.tres")
+@export var murs_etage_2: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_2.tres")
+@export var sol_etage_3: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_3.tres")
+@export var murs_etage_3: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_3.tres")
 @export_group("Trous du plancher")
 ## Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
 @export_range(0.2, 1.2, 0.05) var largeur_bord_trou := 0.8
@@ -27,6 +32,10 @@ var salle_en_creation: Node3D
 var cellules_disponibles: Array[Vector2i] = []
 var cellules_reservees: Array[Vector2i] = []
 var cellules_trous := {}
+# Références choisies pour la salle en construction. On ne modifie jamais les
+# ressources elles-mêmes : les salles déjà générées gardent leurs matériaux.
+var sol_actuel: StandardMaterial3D
+var murs_actuels: StandardMaterial3D
 
 
 func _ready() -> void:
@@ -48,7 +57,17 @@ func regenerer_apercu() -> void:
 	add_child(generer_salle())
 
 
-func generer_salle(nombre_arrivants: int = 1) -> Node3D:
+# Vrai uniquement pour la cinquième salle de chaque étage.
+var sortie_avec_escalier := false
+
+
+func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1) -> Node3D:
+	sortie_avec_escalier = fin_etage
+	# L'aperçu utilise l'étage 1 par défaut ; le RoomManager fournit l'étage en jeu.
+	# Au-delà de 3, conserver le béton en attendant de nouveaux décors.
+	var indice := clampi(etage - 1, 0, 2)
+	sol_actuel = [materiau_sol, sol_etage_2, sol_etage_3][indice]
+	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.
 	roomSize = roomSize.clamp(Vector2i(6, 6), Vector2i(20, 20))
 	salle_en_creation = ROOM_SCENE.instantiate()
@@ -73,7 +92,7 @@ func generer_salle(nombre_arrivants: int = 1) -> Node3D:
 	cellules_trous = TROUS_PLANCHER.trouver_trous(grid, roomSize)
 	displayWalls()
 	TROUS_PLANCHER.construire(salle_en_creation, cellules_trous, TILE_SIZE,
-		materiau_sol, largeur_bord_trou, intensite_braises)
+		sol_actuel, largeur_bord_trou, intensite_braises)
 	# Réserver assez de place pour le joueur et TOUTE son escorte avant les caisses.
 	cellules_disponibles.shuffle()
 	var places_par_cellule := 9
@@ -195,7 +214,7 @@ func displayRoom() -> void:
 			position_cellule(cellule),
 			Vector3(TILE_SIZE, 0.2, TILE_SIZE),
 			Color(0.3, 0.32, 0.34),
-			materiau_sol
+			sol_actuel
 		)
 
 
@@ -261,7 +280,7 @@ func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false)
 	position_cellule(cellule) + normale * TILE_SIZE / 2.0 + Vector3.UP * 1.6,
 	taille,
 	Color(0.22, 0.24, 0.27),
-	materiau_murs,
+	murs_actuels,
 	invisible
 	)
 
@@ -292,13 +311,16 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 			centre + tangente * signe * (1.25 + largeur_cote / 2.0) + Vector3.UP * 1.6,
 			taille,
 			Color(0.22, 0.24, 0.27),
-			materiau_murs
+			murs_actuels
 			)
-	# Petit palier au-delà du seuil : même un dash ne tombe pas immédiatement dans le vide.
-	var palier := Vector3(2.5, 0.2, 6)
-	if direction.x != 0:
-		palier = Vector3(6, 0.2, 2.5)
-	creer_bloc(centre + normale * 3.0, palier, Color(0.24, 0.28, 0.3))
+	# La téléportation reste au seuil : l'escalier annonce visuellement la montée.
+	if sortie_avec_escalier:
+		creer_escalier(centre, normale, direction)
+	else:
+		var palier := Vector3(2.5, 0.2, 6)
+		if direction.x != 0:
+			palier = Vector3(6, 0.2, 2.5)
+		creer_bloc(centre + normale * 3.0, palier, Color(0.24, 0.28, 0.3))
 	var zone := Area3D.new()
 	zone.name = "Passage"
 	zone.monitoring = false
@@ -359,3 +381,21 @@ func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materia
 	corps.add_child(collision)
 	corps.add_to_group("collider")
 	salle_en_creation.get_node("Navigation/Decor").add_child(corps)
+
+
+func creer_escalier(centre: Vector3, normale: Vector3, direction: Vector2i) -> void:
+	# Palier horizontal jusqu'au déclencheur, puis huit marches vers l'extérieur.
+	var palier := Vector3(2.5, 0.2, 1.6)
+	if direction.x != 0:
+		palier = Vector3(1.6, 0.2, 2.5)
+	creer_bloc(centre + normale * 0.8, palier, Color(0.24, 0.28, 0.3))
+	for i in range(8):
+		var hauteur := 0.2 + (i + 1) * 0.22
+		var taille := Vector3(2.5, hauteur, 0.5)
+		if direction.x != 0:
+			taille = Vector3(0.5, hauteur, 2.5)
+		# Chaque bloc part du même niveau de base ; seule sa face supérieure monte.
+		var position_marche := centre + normale * (1.85 + i * 0.5)
+		position_marche.y += hauteur / 2.0 - 0.1
+		creer_bloc(position_marche, taille, Color(0.32, 0.34, 0.37))
+		salle_en_creation.get_node("Navigation/Decor").get_child(-1).name = "MarcheEscalier%d" % (i + 1)

@@ -1,5 +1,13 @@
 extends CharacterBody3D
 
+@export_group("Progression par étage")
+## Pourcentage ajouté à la valeur de base par étage après le premier.
+@export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
+@export_range(0.0, 200.0, 1.0) var degats_par_etage_pourcent := 10.0
+# Fourni par le créateur AVANT add_child, donc avant _ready.
+var etage := 1
+
+
 # Annonce une vraie mort au RoomManager, avant la suppression du nœud.
 signal died
 var est_mort := false
@@ -12,6 +20,7 @@ var cible = null
 # Le laser et le projectile partent désormais de la face de l’œil.
 @onready var muzzle: Marker3D = $Visuel/OeilPivot/Muzzle
 
+@export_group("Statistiques de base")
 @export var vie_max := 200.0
 var vie := vie_max
 var hitbox_radius = 1.5
@@ -27,7 +36,8 @@ var hitbox_radius = 1.5
 @export_range(0.1, 10.0, 0.1) var cooldown_post_tir := 1.5
 ## Temps pendant lequel le laser annonce le prochain tir.
 @export_range(0.1, 10.0, 0.1) var duree_chargement := 1.5
-@export var degats_ennemi = 30.0
+# Ancien dégât effectif du projectile : 25. La tourelle le pilote maintenant.
+@export var degats_ennemi = 25.0
 
 # Un temps de repos à zéro signifie que la tourelle peut commencer à viser.
 var repos_restant := 0.0
@@ -42,6 +52,12 @@ var projectile_scene = preload("res://scenes/ennemis/tourelles/projectile_tour.t
 
 
 func _ready() -> void:
+	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
+	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
+	var paliers := maxi(etage - 1, 0)
+	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
+	vie = vie_max
+	degats_ennemi *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	# Dupliquer la forme et le matériau évite qu'une tourelle modifie ses voisines.
 	detection_shape.shape = detection_shape.shape.duplicate()
 	detection_shape.shape.radius = distance_detection
@@ -159,6 +175,9 @@ func tirer_projectile() -> void:
 	if not is_instance_valid(cible) or not is_instance_valid(projectiles_tour):
 		return
 	var projectile = projectile_scene.instantiate()
+	# Transmettre les dégâts déjà ajustés ; ne pas multiplier une deuxième fois.
+	projectile.degats = degats_ennemi
+	projectile.etage = etage
 	projectiles_tour.add_child(projectile)
 	projectile.global_position = muzzle.global_position
 	# Le tir suit exactement le laser au moment du départ. L'ancienne anticipation

@@ -1,5 +1,13 @@
 extends CharacterBody3D
 
+@export_group("Progression par étage")
+## Pourcentage ajouté à la valeur de base par étage après le premier.
+@export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
+@export_range(0.0, 200.0, 1.0) var degats_par_etage_pourcent := 10.0
+# Fourni par le créateur AVANT add_child, donc avant _ready.
+var etage := 1
+
+
 # Annonce une vraie mort au RoomManager, avant la suppression du nœud.
 signal died
 var est_mort := false
@@ -12,6 +20,7 @@ var est_mort := false
 @onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
+@export_group("Statistiques de base")
 @export var vie_max := 100.0
 var vie := vie_max
 
@@ -46,6 +55,12 @@ var chgt_cible_timer = 0.0 #temps initialisé à 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
+	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
+	var paliers := maxi(etage - 1, 0)
+	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
+	vie = vie_max
+	degats_ennemi *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 	
 	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.

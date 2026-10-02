@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://ccgacwbvdy36a" path="res://assets/textures/pompier/Navesnoe_shlem_Breath_system_shlem_Roughne.png" id="8_wlhj0"]
 [ext_resource type="Texture2D" uid="uid://8230nkym0pap" path="res://assets/textures/pompier/Breath_system_shlem_Opacity.jpg" id="9_a2sq1"]
 [ext_resource type="PackedScene" uid="uid://8srttl8ul3pr" path="res://assets/modeles/extincteur/extincteur0.blend" id="10_317fc"]
-[ext_resource type="PackedScene" uid="uid://c0v5h44a2cd42" path="res://scenes/extincteur.tscn" id="10_asmv1"]
+[ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/armes/extincteur/extincteur.tscn" id="10_asmv1"]
 [ext_resource type="AnimationLibrary" uid="uid://dfwf16csviyjp" path="res://scenes/joueur/animations/Idle.res" id="10_oowqr"]
 [ext_resource type="AnimationLibrary" uid="uid://5fr5m3hq4sns" path="res://scenes/joueur/animations/Run.res" id="11_xryvk"]
 [ext_resource type="AnimationLibrary" uid="uid://chp7c7rbebwba" path="res://scenes/joueur/animations/Run_B.res" id="12_eopm0"]
@@ -1132,6 +1132,10 @@ skeleton = NodePath("..")
 [node name="Extincteur" parent="Armature/Skeleton3D" unique_id=826892117 instance=ExtResource("10_asmv1")]
 transform = Transform3D(3499.9978, 0, 0, 0, 3499.9966, 0, 0, 0, 3499.9956, -339.36133, 2216.534, 5292.6787)
 
+[node name="extincteur0" parent="Armature/Skeleton3D/Extincteur" index="2"]
+editor_description = "Le modèle visible est déjà attaché à Right_Hand_Holder. Masquer seulement celui de l'arme évite un doublon, tout en utilisant la scène commune pour le jet."
+visible = false
+
 [node name="Right_Hand_Holder" type="BoneAttachment3D" parent="Armature/Skeleton3D" unique_id=1516828660]
 transform = Transform3D(-0.034246285, 0.077972926, -0.99636644, 0.29077765, 0.9545995, 0.064709865, 0.95617676, -0.2875053, -0.055364244, 158.91016, 1929.4658, -169.04486)
 bone_name = "mixamorig_RightHand"
@@ -1153,3 +1157,5 @@ libraries/Run_B = ExtResource("12_eopm0")
 libraries/Strafe_L = ExtResource("13_gul30")
 libraries/Strafe_R = ExtResource("14_55a41")
 autoplay = &"Idle/Idle"
+
+[editable path="Armature/Skeleton3D/Extincteur"]
