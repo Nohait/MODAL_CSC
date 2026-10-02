@@ -106,7 +106,7 @@ func follow_target_node() -> void:
 	velocity.z = 0.0
 	
 	if follow_target.is_in_group("fleche"):
-		stop_distance = 0
+		stop_distance = 0.1
 	else:
 		stop_distance = stop_distance_player
 	
