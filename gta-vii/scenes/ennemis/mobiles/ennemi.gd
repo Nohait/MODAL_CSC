@@ -126,7 +126,7 @@ func _physics_process(delta):
 			velocity = Vector3.ZERO 
 			
 			if attaque_timer < 0.0:
-				if cible.is_in_group("player") or cible.is_in_group("victim"):
+				if cible.is_in_group("player") or cible.is_in_group("victime"):
 					attaque()
 			
 #On detecte pour bypass le cooldown de changer de cible dans choisir_cible() pour sortir instantanément de l'idle
