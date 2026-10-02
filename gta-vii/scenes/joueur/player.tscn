@@ -5,32 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/armes/extincteur/extincteur.tscn" id="2_g2els"]
 [ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
 
+[ext_resource type="PackedScene" path="res://scenes/interfaces/hud/jauge_equipement.tscn" id="5_jauge"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_mousse.svg" id="6_mousse"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="7_police"]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_vie_fond"]
-bg_color = Color(0.045, 0.06, 0.085, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.35, 0.45, 0.55, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_vie_remplissage"]
-bg_color = Color(0.188, 0.541, 0.8, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_fond"]
-bg_color = Color(0.06, 0.07, 0.09, 0.95)
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_reserve_charge"]
-bg_color = Color(1, 1, 1, 1)
 
 [node name="player" type="CharacterBody3D" unique_id=1836946001 groups=["player"]]
 collision_layer = 2
@@ -123,66 +102,41 @@ editor_description = "Interface fixe à l'écran : CanvasLayer sépare l'afficha
 script = ExtResource("4_interface")
 
 [node name="Vie" type="VBoxContainer" parent="Interface" unique_id=1609755627]
-editor_description = "Barre de vie : fond opaque et remplissage bleu définis dans Theme Overrides > Styles de BarreDeVie. La couleur du remplissage est indépendante du texte."
-offset_left = 25.0
-offset_top = 12.0
-offset_right = 365.0
-offset_bottom = 65.0
+editor_description = "Jauge métallique de vie. La ProgressBar conserve les PV utilisés par le joueur."
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 340.0
+offset_bottom = 88.0
 mouse_filter = 2
-theme_override_constants/separation = 4
 
-[node name="Titre" type="Label" parent="Interface/Vie" unique_id=540207653]
+[node name="BarreDeVie" parent="Interface/Vie" unique_id=2044568990 instance=ExtResource("5_jauge")]
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-text = "VIE"
-
-[node name="BarreDeVie" type="ProgressBar" parent="Interface/Vie" unique_id=2044568990]
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
-theme_override_styles/background = SubResource("StyleBox_vie_fond")
-theme_override_styles/fill = SubResource("StyleBox_vie_remplissage")
-step = 0.0
-value = 100.0
 
 [node name="Reserve" type="VBoxContainer" parent="Interface" unique_id=815601660]
-editor_description = "Range automatiquement le titre, la jauge et l'état verticalement, en haut à gauche. Mouse Filter est sur Ignore pour laisser les clics servir au tir."
-offset_left = 25.0
-offset_top = 69.0
-offset_right = 365.0
-offset_bottom = 155.0
+offset_left = 20.0
+offset_top = 94.0
+offset_right = 340.0
+offset_bottom = 190.0
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 3
 
-[node name="Titre" type="Label" parent="Interface/Reserve" unique_id=1781822031]
+[node name="Jauge" parent="Interface/Reserve" unique_id=71629810 instance=ExtResource("5_jauge")]
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-text = "Mousse"
-
-[node name="Jauge" type="ProgressBar" parent="Interface/Reserve" unique_id=71629810]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBox_reserve_fond")
-theme_override_styles/fill = SubResource("StyleBox_reserve_charge")
-step = 0.0
-value = 100.0
-show_percentage = false
+titre = "MOUSSE"
+couleur = Color(0.86, 0.8, 0.64, 1)
+pictogramme = ExtResource("6_mousse")
 
 [node name="Etat" type="Label" parent="Interface/Reserve" unique_id=450970133]
 layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.76, 0.69, 0.57, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-text = "Prêt"
+theme_override_fonts/font = ExtResource("7_police")
+theme_override_font_sizes/font_size = 13
+text = "PRÊT"
+horizontal_alignment = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=737152856]
 

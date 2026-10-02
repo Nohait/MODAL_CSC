@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/hud/jauge_equipement.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/cadre_equipement.svg" id="2"]
+[ext_resource type="Shader" path="res://scenes/interfaces/hud/remplissage_equipement.gdshader" id="3"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="4"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_vie.svg" id="5"]
+
+[sub_resource type="StyleBoxEmpty" id="Vide"]
+
+[sub_resource type="ShaderMaterial" id="Remplissage"]
+shader = ExtResource("3")
+
+[sub_resource type="Gradient" id="Blanc"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="Surface"]
+gradient = SubResource("Blanc")
+width = 8
+height = 8
+
+[node name="JaugeEquipement" type="ProgressBar"]
+custom_minimum_size = Vector2(320, 70)
+mouse_filter = 2
+theme_override_styles/background = SubResource("Vide")
+theme_override_styles/fill = SubResource("Vide")
+step = 0.0
+value = 100.0
+show_percentage = false
+script = ExtResource("1")
+pictogramme = ExtResource("5")
+
+[node name="Cadre" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="Remplissage" type="TextureRect" parent="."]
+material = SubResource("Remplissage")
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 59.0
+offset_top = 38.0
+offset_right = -24.0
+offset_bottom = 54.0
+mouse_filter = 2
+texture = SubResource("Surface")
+expand_mode = 1
+
+[node name="Icone" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 21.0
+offset_right = 44.0
+offset_bottom = 47.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="."]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 6.0
+offset_right = 183.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.84, 0.75, 0.61, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 16
+text = "VIE"
+
+[node name="Valeur" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -122.0
+offset_top = 6.0
+offset_right = -24.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.96, 0.89, 0.75, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 15
+text = "100 / 100"
+horizontal_alignment = 2

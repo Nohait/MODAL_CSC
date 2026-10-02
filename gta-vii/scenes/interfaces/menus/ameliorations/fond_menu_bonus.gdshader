@@ -6,7 +6,7 @@ shader_type canvas_item;
 void fragment() {
 	vec4 papier = texture(TEXTURE, UV);
 	float grain = dot(papier.rgb, vec3(0.299, 0.587, 0.114));
-	papier.rgb = mix(vec3(0.055, 0.012, 0.02), vec3(0.30, 0.085, 0.10), smoothstep(0.3, 0.9, grain));
+	papier.rgb = mix(vec3(0.075, 0.035, 0.04), vec3(0.34, 0.19, 0.19), smoothstep(0.3, 0.9, grain));
 	// Un grain fin évite que l'agrandissement de la petite texture paraisse uniforme.
 	papier.rgb *= 0.88 + 0.24 * bruit(UV * taille * 0.25);
 	COLOR = habiller(UV, papier) * modulation_noeud;

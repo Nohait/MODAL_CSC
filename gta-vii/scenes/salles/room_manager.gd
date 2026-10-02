@@ -88,6 +88,7 @@ var nombre_salles: int:
 @onready var joueur = $"../../player"
 @onready var camera_rig = $"../../CameraRig"
 @onready var victim_manager = $"../../VictimManager"
+@onready var informations_salle = $InterfaceSalle/HUD/InformationsSalle
 @onready var objectifs: Label = $InterfaceSalle/HUD/InformationsSalle/Objectifs
 @onready var timer_container: Control = $InterfaceSalle/HUD/InformationsSalle/TimerContainer
 @onready var timer_bar: ProgressBar = $InterfaceSalle/HUD/InformationsSalle/TimerContainer/TimerBar
@@ -488,14 +489,6 @@ func activer_salle(indice: int) -> void:
 	demarrer_sauvetage(salle_actuelle)
 	salle_commencee.emit(salle_actuelle)
 	actualiser_objectifs()
-	var texte_timer := "Vous avez %s secondes pour libérer les victimes !!" % formater_duree(duree_sauvetage)
-	if (salle_actuelle.etage != ancien_etage):
-		afficher_message("Étage %d — Salle 1/%d\n%s" % [salle_actuelle.etage, SALLES_PAR_ETAGE, texte_timer])
-	else:
-		afficher_message(texte_timer)
-
-func formater_duree(duree: float) -> String:
-	return String.num(duree, 1).trim_suffix(".0")
 
 # Mort / libération
 
@@ -527,13 +520,9 @@ func actualiser_objectifs() -> void:
 	is_room_cleared = salle_actuelle.liberee
 	var a_venir: int = salle_actuelle .mobiles_a_creer .size() + salle_actuelle .mobiles_annonces .size()
 
-	# Affichage volontairement compact : le timer possède maintenant sa propre barre juste dessous.
-	objectifs.text = (
-		"Salle %d/%d  ·  Ennemis : %d"
-		% [indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, remaining_enemies]
-	)
-	if a_venir > 0:
-		objectifs.text += "  ·  À venir : %d" % a_venir
+	# Le HUD affiche les données ; le RoomManager conserve les règles de la salle.
+	informations_salle.mettre_a_jour(salle_actuelle.etage,
+		indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, remaining_enemies, a_venir, remaining_victims)
 
 	# Seuls les ennemis conditionnent l'ouverture de la porte.
 	if (remaining_enemies == 0 and not is_room_cleared):
@@ -545,10 +534,8 @@ func actualiser_objectifs() -> void:
 		room_cleared.emit()
 
 func afficher_victoire() -> void:
-	objectifs.text = (
-		"Étage %d · Salle %d/%d libérée — franchissez une porte pour continuer."
-		% [salle_actuelle.etage, indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE]
-	)
+	informations_salle.mettre_a_jour(salle_actuelle.etage,
+		indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, 0, 0, salle_actuelle.remaining_victims)
 	afficher_message("Salle libérée !")
 
 func afficher_message(texte: String) -> void:

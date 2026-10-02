@@ -1,0 +1,96 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/hud/informations_salle.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/plaque_salle.svg" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="FondTimer"]
+bg_color = Color(0.13, 0.085, 0.06, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.39, 0.27, 0.17, 1)
+
+[sub_resource type="StyleBoxFlat" id="TempsRestant"]
+bg_color = Color(0.64, 0.37, 0.16, 1)
+
+[node name="InformationsSalle" type="Control"]
+offset_right = 420.0
+offset_bottom = 84.0
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Objectifs" type="Label" parent="."]
+offset_left = 35.0
+offset_top = 8.0
+offset_right = 385.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.94, 0.87, 0.73, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+text = "ÉTAGE 1  ·  SALLE 1 / 5"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="Ennemis" type="Label" parent="."]
+offset_left = 35.0
+offset_top = 30.0
+offset_right = 385.0
+offset_bottom = 49.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.8, 0.74, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 12
+text = "ENNEMIS RESTANTS"
+horizontal_alignment = 1
+
+[node name="TimerContainer" type="Control" parent="."]
+offset_left = 50.0
+offset_top = 47.0
+offset_right = 370.0
+offset_bottom = 84.0
+mouse_filter = 2
+
+[node name="Fond" type="TextureRect" parent="TimerContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="TimerBar" type="ProgressBar" parent="TimerContainer"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 26.0
+offset_right = -18.0
+offset_bottom = 31.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("FondTimer")
+theme_override_styles/fill = SubResource("TempsRestant")
+max_value = 30.0
+value = 30.0
+step = 0.0
+show_percentage = false
+
+[node name="TimerText" type="RichTextLabel" parent="TimerContainer"]
+layout_mode = 1
+anchor_right = 1.0
+offset_top = 3.0
+offset_bottom = 25.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.24, 0.13, 0.08, 1)
+theme_override_fonts/normal_font = ExtResource("3")
+theme_override_font_sizes/normal_font_size = 14
+scroll_active = false
+text = ""

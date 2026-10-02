@@ -5,6 +5,7 @@ signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
 signal continuer_demande
 
+const OUVERTURE = preload("res://scenes/interfaces/menus/ouverture_booster.tscn")
 const BOOSTER = preload("res://scenes/interfaces/menus/boutique/booster_apercu.tscn")
 const DEFI = preload("res://scenes/interfaces/menus/boutique/ligne_defi_apercu.gd")
 const ICONE = preload("res://assets/textures/interfaces/ameliorations/icone_victimes.svg")
@@ -29,6 +30,7 @@ var actifs: VBoxContainer
 var proposes: VBoxContainer
 var vide: Label
 var boosters: Array[Control] = []
+var ouverture: Control
 
 
 func _ready() -> void:
@@ -147,6 +149,7 @@ func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
 	booster.scale = Vector2.ONE * (2.0 / 3.0)
 	booster.selectionne.connect(_selectionner.bind(proposition))
 	emplacement.add_child(booster)
+	booster.set_meta("rarete", proposition.id)
 	boosters.append(booster)
 
 
@@ -257,3 +260,17 @@ func _creer_ligne_defi(defi: Dictionary, actif: bool) -> void:
 		ligne.afficher_progression()
 		if defi.get("echec", false):
 			ligne.entete.text += " · échoué"
+
+func animer_ouverture(rarete: StringName) -> void:
+	for booster in boosters:
+		if booster.get_meta("rarete") != rarete:
+			continue
+		if not is_instance_valid(ouverture):
+			ouverture = OUVERTURE.instantiate()
+			add_child(ouverture)
+		# Les copies prennent la place du booster pendant sa déchirure.
+		var tween: Tween = ouverture.lancer(booster)
+		booster.hide()
+		await tween.finished
+		booster.show()
+		return
