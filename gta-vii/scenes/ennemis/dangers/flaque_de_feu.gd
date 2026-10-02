@@ -22,7 +22,7 @@ func choisir_taille_aleatoire() -> void:
 	$PopUpDegats.scale /= facteur
 	# L'extincteur utilise ce rayon pour savoir si son jet atteint le bord du feu.
 	hitbox_radius *= facteur
-
+	
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)

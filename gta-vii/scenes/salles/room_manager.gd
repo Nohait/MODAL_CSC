@@ -119,10 +119,10 @@ func peupler_salle(salle: Node3D) -> void:
 	var nombre_flaques := mini(randi_range(nombre_min_flaques, maxi(nombre_min_flaques, nombre_max_flaques)), emplacements.size())
 	for i in range(nombre_flaques):
 		var flaque = FLAQUE_SCENE.instantiate()
+		salle.get_node("Ennemis").add_child(flaque)
 		# Choisir la taille avant le calcul de navigation : son empreinte sera exacte.
 		flaque.choisir_taille_aleatoire()
 		flaque.position = emplacements.pop_back() + Vector3.UP * 0.2
-		salle.get_node("Ennemis").add_child(flaque)
 		# Seules les flaques initiales comptent, pas celles produites par les tirs.
 		flaque.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_enemies += 1
