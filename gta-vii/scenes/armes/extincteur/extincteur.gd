@@ -85,12 +85,13 @@ func _physics_process(delta: float) -> void:
 			var target_body := body as PhysicsBody3D
 			var origin: Vector3 = muzzle.global_position 
 			var to_target: Vector3 = target_body.global_position - origin
+			to_target.y = 0.0
 			var target_direction: Vector3 = to_target.normalized() #direction à l'ennemi
 			
 			var distance := to_target.length()
 			var forward: Vector3 = (direction_marker.global_position - muzzle.global_position).normalized() #direction de visée du joueur
 
-			var alignment: float = forward.dot(target_direction) #produit scalaire entre les deux directions
+			var alignment = clamp(forward.dot(target_direction), -1.0, 1.0) #produit scalaire entre les deux directions
 			var angle = acos(alignment)
 
 			if angle <= deg_to_rad(particles.process_material.spread/2) + atan(body.hitbox_radius / distance):
@@ -100,8 +101,10 @@ func _physics_process(delta: float) -> void:
 					
 	for body in areas:
 		if body.is_in_group("enemies"):
+			
 			var origin: Vector3 = muzzle.global_position 
 			var to_target: Vector3 = body.global_position - origin
+			to_target.y = 0
 			var target_direction: Vector3 = to_target.normalized() #direction à l'ennemi
 			
 			var distance := to_target.length()
