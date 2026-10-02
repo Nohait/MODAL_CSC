@@ -239,7 +239,21 @@ func animation_fleche(position):
 	
 	
 func cacher_fleche():
-	fleche_victime.visible = false
+	if is_instance_valid(fleche_victime):
+		fleche_victime.visible = false
+
+
+func annuler_ordre_victimes() -> void:
+	# Reconnecter d'abord la file : aucune victime ne doit suivre la flèche supprimée.
+	victim_manager.reorganiser_file()
+	# Arrêter aussi son animation pour qu'elle ne rappelle pas cacher_fleche plus tard.
+	if fleche_tween:
+		fleche_tween.kill()
+		fleche_tween = null
+	if is_instance_valid(fleche_victime):
+		fleche_victime.queue_free()
+	fleche_victime = null
+	clic_milieu_deja_fait = false
 	
 func bouger_victime(position):
 	animation_fleche(position)
