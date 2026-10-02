@@ -25,6 +25,7 @@ var vie := vie_max
 
 # Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
+var stop_distance_player = stop_distance
 
 var follow_target: Node3D = null
 
@@ -103,7 +104,12 @@ func follow_target_node() -> void:
 
 	velocity.x = 0.0
 	velocity.z = 0.0
-
+	
+	if follow_target.is_in_group("fleche"):
+		stop_distance = 0
+	else:
+		stop_distance = stop_distance_player
+	
 	if to_target.length() > stop_distance:
 		# Les points du chemin sont près du sol, mais l'origine de la victime est
 		# au centre de son corps. Aligner leur hauteur permet une petite tolérance
@@ -119,8 +125,8 @@ func follow_target_node() -> void:
 		var next_position := navigation_agent.get_next_path_position()
 		var direction := next_position - global_position
 		direction.y = 0.0
-
-		if direction.length() > 0.01:
+		
+		if direction.length() > 0.01 :
 			direction = direction.normalized()
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
