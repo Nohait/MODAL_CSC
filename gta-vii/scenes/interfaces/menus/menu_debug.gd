@@ -15,6 +15,9 @@ var souris_avant: int
 
 func _ready() -> void:
 	menu.hide()
+	# Un fond doré distingue le survol et les options activées du fond sombre.
+	for bouton in [invincibilite, degats, suivant, %Fermer]:
+		_styliser_selection(bouton)
 	invincibilite.toggled.connect(_changer_invincibilite)
 	degats.toggled.connect(_changer_degats)
 	suivant.pressed.connect(_etage_suivant)
@@ -22,6 +25,7 @@ func _ready() -> void:
 	# Les boutons correspondent au nombre d'étages réglé dans le RoomManager.
 	for numero in range(1, salles.nombre_etages + 1):
 		var bouton := Button.new()
+		_styliser_selection(bouton)
 		bouton.text = "Étage %d" % numero
 		bouton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		# bind conserve le numéro de l'étage associé à CE bouton.
@@ -56,6 +60,7 @@ func ouvrir() -> void:
 	suivant.disabled = etage >= salles.nombre_etages
 	for i in range(etages.get_child_count()):
 		etages.get_child(i).disabled = i + 1 == etage
+		etages.get_child(i).text = "Étage %d%s" % [i + 1, " · actuel" if i + 1 == etage else ""]
 	joueur.extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -102,3 +107,18 @@ func _aller_etage(numero: int) -> void:
 	salles.transition_en_cours = true
 	var indice: int = (numero - 1) * salles.SALLES_PAR_ETAGE
 	salles.call_deferred("activer_salle", indice)
+
+
+func _styliser_selection(bouton: Button) -> void:
+	var accent := StyleBoxFlat.new()
+	accent.bg_color = Color("493921")
+	accent.border_color = Color("e7b968")
+	accent.set_border_width_all(2)
+	accent.set_corner_radius_all(5)
+	accent.content_margin_left = 10
+	accent.content_margin_right = 10
+	accent.content_margin_top = 7
+	accent.content_margin_bottom = 7
+	for etat in ["hover", "pressed", "hover_pressed", "focus"]:
+		bouton.add_theme_stylebox_override(etat, accent)
+	bouton.add_theme_color_override("font_pressed_color", Color("ffe2a4"))

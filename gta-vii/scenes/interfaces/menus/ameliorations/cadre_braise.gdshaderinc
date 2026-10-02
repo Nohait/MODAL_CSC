@@ -8,6 +8,9 @@ uniform float survol : hint_range(0.0, 1.0) = 0.0;
 uniform float horloge = 0.0;
 uniform vec2 point_lumiere = vec2(0.25, 0.15);
 uniform float intensite_braises : hint_range(0.0, 2.0) = 0.8;
+// Les boosters activent cette option ; les cartes gardent leurs braises orange.
+uniform bool braises_personnalisees = false;
+uniform vec4 teinte_braises : source_color = vec4(1.0, 0.68, 0.2, 1.0);
 varying vec4 modulation_noeud;
 
 // Conserver la couleur/opacité du Control et de ses parents : un futur fondu
@@ -50,18 +53,24 @@ vec4 habiller(vec2 uv, vec4 image) {
 	vec2 vers_centre = normalize(vec2(0.5) - uv + vec2(0.0001));
 	float eclairage = dot(vers_lampe, vers_centre);
 	vec3 couleur = mix(charbon, image.rgb, interieur);
-	couleur += biseau * (0.06 + 0.045 * eclairage) * vec3(1.0, 0.73, 0.44);
+	vec3 teinte_biseau = braises_personnalisees ? teinte_braises.rgb : vec3(1.0, 0.73, 0.44);
+	couleur += biseau * (0.06 + 0.045 * eclairage) * teinte_biseau;
 	// L'animation change la chaleur, pas la silhouette : les bords ne « nagent » pas.
 	float fissures = 1.0 - smoothstep(0.025, 0.085, abs(bruit(p * 0.22) - 0.5));
 	float chaleur = smoothstep(0.25, 0.8, bruit(p * 0.035 + vec2(horloge * 0.18, 0.0)));
 	float anneau = exp(-pow((d - 4.0 - n * 4.0) / 3.0, 2.0));
 	float braise = anneau * fissures * chaleur * intensite_braises;
 	vec3 feu = mix(vec3(0.95, 0.16, 0.025), vec3(1.0, 0.68, 0.2), chaleur);
+	if (braises_personnalisees) {
+		// Faire varier la luminosité conserve la couleur du booster pendant le scintillement.
+		feu = teinte_braises.rgb * mix(0.65, 1.25, chaleur);
+	}
 	couleur += feu * braise * (0.75 + survol * 0.65);
 	// Le survol éclaire doucement la matière, sans voile blanc sur les textes.
 	float reflet = exp(-length((uv - point_lumiere) * vec2(1.0, 1.4)) * 3.0);
 	couleur += vec3(0.07, 0.045, 0.02) * reflet * survol;
 	float contour_focus = exp(-pow((d - 1.2) / 0.9, 2.0)) * survol;
-	couleur += vec3(0.8, 0.45, 0.14) * contour_focus;
+	vec3 teinte_contour = braises_personnalisees ? teinte_braises.rgb : vec3(0.8, 0.45, 0.14);
+	couleur += teinte_contour * contour_focus;
 	return vec4(couleur, image.a * smoothstep(-0.7, 0.7, d));
 }

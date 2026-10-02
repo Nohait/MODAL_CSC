@@ -36,6 +36,11 @@ signal died(victim: CharacterBody3D)
 # VIE
 # ------------------------------------------------------------------
 
+@export_group("Défi — victime fragile")
+@export var defi_fragile := false
+# Une victime normale vaut un point ; celle du défi en vaut deux.
+@export_range(1, 10) var points_boutique := 1
+
 @export_group("Vie")
 
 ## Nombre maximal de points de vie de la victime.
@@ -123,6 +128,9 @@ func _ready() -> void:
 	# Sinon le flash rouge pourrait modifier plusieurs victimes
 	# partageant la même ressource.
 	visuel.material_override = materiau
+	if defi_fragile:
+		visuel.scale = Vector3.ONE * 0.65
+		materiau.albedo_color = Color("b789db")
 
 
 	# --------------------------------------------------------------

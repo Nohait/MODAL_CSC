@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://blakbm07a3aya"]
+
+[ext_resource type="Script" uid="uid://cm4uw2klixynb" path="res://scenes/interfaces/menus/boutique/booster_apercu.gd" id="1"]
+[ext_resource type="Shader" uid="uid://cc1e2upb5xoud" path="res://scenes/interfaces/menus/boutique/booster.gdshader" id="2"]
+[ext_resource type="Texture2D" uid="uid://dpc6hyifmn5ke" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="3"]
+[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n0irj"]
+shader = ExtResource("2")
+shader_parameter/taille = Vector2(270, 420)
+shader_parameter/largeur_bord = 5.0
+shader_parameter/rayon_coin = 4.0
+shader_parameter/survol = 0.0
+shader_parameter/horloge = 247.64353988888138
+shader_parameter/point_lumiere = Vector2(0.25, 0.15)
+shader_parameter/intensite_braises = 0.6
+shader_parameter/teinte_pochette = Color(0.44705883, 0.6784314, 0.6901961, 1)
+shader_parameter/intensite_metal = 1.200000057
+
+[node name="Booster" type="Control" unique_id=2012591704]
+custom_minimum_size = Vector2(270, 420)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 270.0
+offset_bottom = 420.0
+mouse_default_cursor_shape = 2
+script = ExtResource("1")
+
+[node name="Visuel" type="Control" parent="." unique_id=1192226500]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(135, 210)
+mouse_filter = 2
+
+[node name="Papier" type="TextureRect" parent="Visuel" unique_id=1203436311]
+material = SubResource("ShaderMaterial_n0irj")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="Marge" type="MarginContainer" parent="Visuel" unique_id=741655512]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 52
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 48
+
+[node name="Contenu" type="VBoxContainer" parent="Visuel/Marge" unique_id=2128028752]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 15
+
+[node name="Serie" type="Label" parent="Visuel/Marge/Contenu" unique_id=483316472]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "ÉQUIPEMENT DE SECOURS"
+horizontal_alignment = 1
+
+[node name="Symbole" type="Label" parent="Visuel/Marge/Contenu" unique_id=1257524206]
+unique_name_in_owner = true
+modulate = Color(0.6129412, 0.774902, 0.78313726, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 90
+text = "I"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Titre" type="Label" parent="Visuel/Marge/Contenu" unique_id=516263430]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 34
+text = "Renfort"
+horizontal_alignment = 1
+
+[node name="Contenu" type="Label" parent="Visuel/Marge/Contenu" unique_id=1634109262]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "3 cartes communes"
+horizontal_alignment = 1
+
+[node name="Prix" type="Label" parent="Visuel/Marge/Contenu" unique_id=1387118503]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "1 point"
+horizontal_alignment = 1

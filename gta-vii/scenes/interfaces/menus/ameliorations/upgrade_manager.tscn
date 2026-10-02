@@ -1,11 +1,16 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/boutique/defi_manager.gd" id="2"]
 
 [node name="UpgradeManager" type="CanvasLayer"]
 process_mode = 3
 layer = 20
 script = ExtResource("1")
+
+[node name="DefiManager" type="Node" parent="."]
+process_mode = 1
+script = ExtResource("2")
 
 [node name="Menu" type="Control" parent="."]
 visible = false

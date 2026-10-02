@@ -1,489 +1,235 @@
 extends CanvasLayer
 
-
 signal ameliorations_changees
 
+@export_group("Équilibrage — bonus de base à puissance 100 %")
+@export_range(0.0, 200.0, 1.0) var bonus_degats_pourcent := 20.0
+@export_range(0.0, 200.0, 1.0) var bonus_charge_pourcent := 25.0
+@export_range(0.0, 200.0, 1.0) var bonus_recharge_pourcent := 20.0
+@export_group("Boutique — prix")
+@export_range(1, 20) var prix_commun := 1
+@export_range(1, 20) var prix_rare := 2
+@export_range(1, 20) var prix_epique := 3
+@export_group("Boutique — puissance des raretés")
+# 50 % donne la moitié du bonus de base ; une carte dégâts à +20 % donne +10 %.
+@export_range(0.0, 300.0, 10.0) var puissance_commune := 50.0
+@export_range(0.0, 300.0, 10.0) var puissance_rare := 100.0
+@export_range(0.0, 300.0, 10.0) var puissance_epique := 150.0
 
-@export_group("Équilibrage — bonus de base par choix")
-
-## Valeur d'un choix dégâts à puissance 100 %.
-@export_range(0.0, 200.0, 1.0)
-var bonus_degats_pourcent := 20.0
-
-## Valeur d'un choix réserve à puissance 100 %.
-@export_range(0.0, 200.0, 1.0)
-var bonus_charge_pourcent := 25.0
-
-## Valeur d'un choix recharge à puissance 100 %.
-@export_range(0.0, 200.0, 1.0)
-var bonus_recharge_pourcent := 20.0
-
-
-@export_group("Puissance selon l'escorte")
-
-## Nombre de victimes bénéficiant du premier palier.
-@export_range(1, 20, 1)
-var victimes_palier_principal := 4
-
-## Puissance ajoutée par chacune des premières victimes.
-## 50 signifie +50 % de la valeur de base de la carte.
-@export_range(0.0, 200.0, 1.0)
-var puissance_par_premiere_victime := 50.0
-
-## Puissance ajoutée par chaque victime après le palier principal.
-@export_range(0.0, 200.0, 1.0)
-var puissance_par_victime_supplementaire := 25.0
-
-
-const CARTE = preload(
-	"res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn"
-)
-
-
+const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
+const BOUTIQUE = preload("res://scenes/interfaces/menus/boutique/prototype_boutique.tscn")
+const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_boutique.gd")
 const POOL = [
-	{
-		"id": &"pression",
-		"titre": "Sous pression",
-		"description": "Un jet plus puissant pour repousser les flammes."
-	},
-	{
-		"id": &"reserve",
-		"titre": "Grande réserve",
-		"description": "Plus de charge pour tenir face à l'incendie."
-	},
-	{
-		"id": &"recharge",
-		"titre": "Second souffle",
-		"description": "Reprendre l'avantage avant que le feu ne gagne."
-	}
+	{"id": &"pression", "titre": "Sous pression", "description": "Un jet plus puissant pour repousser les flammes."},
+	{"id": &"reserve", "titre": "Grande réserve", "description": "Plus de charge pour tenir face à l'incendie."},
+	{"id": &"recharge", "titre": "Second souffle", "description": "Reprendre l'avantage avant que le feu ne gagne."}
 ]
 
-
-@onready var room_manager = (
-	$"../Salles/RoomManager"
-)
-
-@onready var extincteur = (
-	$"../player".extincteur
-)
-
+@onready var room_manager = $"../Salles/RoomManager"
+@onready var extincteur = $"../player".extincteur
+@onready var escorte = $"../VictimManager"
+@onready var defis = $DefiManager
 @onready var menu: Control = $Menu
-
-@onready var cartes: HBoxContainer = (
-	$Menu/Defilement/Centre/Marge/Contenu/Cartes
-)
-
-
-# Le nombre de fois où chaque amélioration a été choisie.
-# Conservé pour les éventuels menus/statistiques.
-var niveaux := {
-	&"pression": 0,
-	&"reserve": 0,
-	&"recharge": 0
-}
-
-
-# Contrairement à l'ancien système, deux choix du même type
-# peuvent désormais avoir des puissances différentes.
-#
-# On conserve donc directement le pourcentage réellement acquis.
-var bonus_cumules_pourcent := {
-	&"pression": 0.0,
-	&"reserve": 0.0,
-	&"recharge": 0.0
-}
-
-
+@onready var cartes: HBoxContainer = $Menu/Defilement/Centre/Marge/Contenu/Cartes
+var boutique: Control
+var niveaux := {&"pression": 0, &"reserve": 0, &"recharge": 0}
+var bonus_cumules_pourcent := {&"pression": 0.0, &"reserve": 0.0, &"recharge": 0.0}
+# Le récapitulatif garde la rareté et le gain réel de chaque acquisition.
+var acquisitions: Array[Dictionary] = []
+var points := 0
+var boutique_ouverte := false
 var choix_ouverts := false
-
 var souris_avant: int
-
 var animation: Tween
-
-
 var charge_de_base: float
 var recharge_de_base: float
-
-
-# Puissance du choix actuellement présenté.
-# 0.5 = 50 %, 1.0 = 100 %, 2.0 = 200 %, etc.
 var multiplicateur_choix_courant := 1.0
-
-var victimes_choix_courant := 0
+var rarete_courante: StringName = &"commun"
 
 
 func _ready() -> void:
 	menu.hide()
-
 	charge_de_base = extincteur.max_charge
 	recharge_de_base = extincteur.reload_rate
+	# Le défi doit toujours coûter moins cher que le booster rare.
+	defis.prix_sans_degats = mini(defis.prix_sans_degats, prix_rare - 1)
+	room_manager.victimes_supplementaires_reserve = defis.victimes_supplementaires
+	boutique = BOUTIQUE.instantiate()
+	boutique.mode_demonstration = false
+	boutique.catalogue = offres_boosters()
+	add_child(boutique)
+	boutique.hide()
+	boutique.achat_demande.connect(_acheter_booster)
+	boutique.defi_demande.connect(_acheter_defi)
+	boutique.continuer_demande.connect(_continuer)
+	room_manager.choix_amelioration_demande.connect(ouvrir_choix)
 
-	room_manager.choix_amelioration_demande.connect(
-		ouvrir_choix
-	)
+
+func offres_boosters() -> Array[Dictionary]:
+	return [
+		{"id": &"commun", "titre": "Commun", "couleur": CATALOGUE.COULEURS[&"commun"], "prix": prix_commun, "puissance": puissance_commune, "symbole": "I"},
+		{"id": &"rare", "titre": "Rare", "couleur": CATALOGUE.COULEURS[&"rare"], "prix": prix_rare, "puissance": puissance_rare, "symbole": "II"},
+		{"id": &"epique", "titre": "Épique", "couleur": CATALOGUE.COULEURS[&"epique"], "prix": prix_epique, "puissance": puissance_epique, "symbole": "III"}
+	]
 
 
-func ouvrir_choix(
-	nombre_victimes: int
-) -> void:
-
-	if choix_ouverts:
+# Nom conservé pour le signal existant du RoomManager ; il ouvre désormais la boutique.
+func ouvrir_choix(_nombre_victimes: int) -> void:
+	if boutique_ouverte or choix_ouverts:
 		return
-
-	# Sécurité supplémentaire :
-	# normalement le RoomManager n'émet même pas le signal à zéro.
-	if nombre_victimes <= 0:
-		room_manager.call_deferred(
-			"passer_salle_suivante"
-		)
-
-		return
-
-
-	victimes_choix_courant = nombre_victimes
-
-	multiplicateur_choix_courant = (
-		calculer_multiplicateur_bonus(
-			nombre_victimes
-		)
-	)
-
-
-	choix_ouverts = true
-
+	points = 0
+	for victime in escorte.freed_victims:
+		if is_instance_valid(victime) and not victime.est_morte and not victime.is_queued_for_deletion():
+			points += victime.points_boutique
+	boutique_ouverte = true
 	extincteur.stop_primary_attack()
+	souris_avant = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	get_tree().paused = true
+	_actualiser_boutique()
+	boutique.show()
+	boutique.modulate.a = 0.0
+	# Un fondu court accompagne l'ouverture. Always permet au Tween de vivre en pause.
+	animation = create_tween()
+	animation.tween_property(boutique, "modulate:a", 1.0, 0.2)
 
 
-	var propositions: Array = (
-		POOL.duplicate()
-	)
+func _actualiser_boutique(message: String = "") -> void:
+	if message.is_empty():
+		message = defis.bilan + "Les points non dépensés seront perdus en quittant la boutique."
+	boutique.actualiser_boutique(points, defis.actifs, defis.propositions(), defis.boosters_rares_gratuits, message)
 
+
+func _acheter_defi(id: StringName) -> void:
+	if not boutique_ouverte or choix_ouverts:
+		return
+	for offre in defis.propositions():
+		if offre.id == id and points >= offre.prix:
+			if defis.accepter(id):
+				points -= offre.prix
+				_actualiser_boutique("Défi accepté : %s. Il commence dans la prochaine salle." % offre.titre)
+			return
+
+
+func _acheter_booster(rarete: StringName) -> void:
+	if not boutique_ouverte or choix_ouverts:
+		return
+	if rarete == &"rare_gratuit":
+		if defis.boosters_rares_gratuits <= 0:
+			return
+		defis.boosters_rares_gratuits -= 1
+		rarete = &"rare"
+	else:
+		var offre: Dictionary = {}
+		for proposition in offres_boosters():
+			if proposition.id == rarete:
+				offre = proposition
+		if offre.is_empty() or points < offre.prix:
+			_actualiser_boutique("Vous n'avez pas assez de points pour ce booster.")
+			return
+		points -= offre.prix
+	# Verrouiller avant de construire les cartes évite un double achat.
+	choix_ouverts = true
+	rarete_courante = rarete
+	match rarete:
+		&"commun": multiplicateur_choix_courant = puissance_commune / 100.0
+		&"rare": multiplicateur_choix_courant = puissance_rare / 100.0
+		&"epique": multiplicateur_choix_courant = puissance_epique / 100.0
+	boutique.hide()
+	var propositions: Array = POOL.duplicate()
 	propositions.shuffle()
-
-
-	for proposition in propositions.slice(
-		0,
-		3
-	):
+	for proposition in propositions.slice(0, 3):
 		var carte = CARTE.instantiate()
-
 		carte.identifiant = proposition.id
 		carte.titre = proposition.titre
 		carte.description = proposition.description
-
-		# La carte affiche directement le vrai bonus
-		# correspondant à l'escorte actuelle.
-		carte.effet_affiche = (
-			texte_effet_choix(
-				proposition.id
-			)
-		)
-
-		carte.selected.connect(
-			_choisir.bind(carte)
-		)
-
-		cartes.add_child(
-			carte
-		)
-
-
-	souris_avant = Input.mouse_mode
-
-	Input.mouse_mode = (
-		Input.MOUSE_MODE_VISIBLE
-	)
-
-	get_tree().paused = true
-
-
-	menu.modulate.a = 0.0
+		carte.rarete = rarete
+		carte.categorie = "EXTINCTEUR · " + CATALOGUE.NOMS[rarete].to_upper()
+		carte.effet_affiche = texte_effet_choix(proposition.id)
+		carte.selected.connect(_choisir.bind(carte))
+		cartes.add_child(carte)
 	menu.show()
 
 
-	animation = create_tween()
-
-	animation.tween_property(
-		menu,
-		"modulate:a",
-		1.0,
-		0.2
-	)
-
-
-func _choisir(
-	carte: Control
-) -> void:
-
-	if (
-		not choix_ouverts
-		or carte.get_parent() != cartes
-	):
+func _choisir(carte: Control) -> void:
+	if not choix_ouverts or carte.get_parent() != cartes:
 		return
-
-
 	choix_ouverts = false
+	appliquer_amelioration(carte.identifiant)
+	menu.hide()
+	for enfant in cartes.get_children():
+		cartes.remove_child(enfant)
+		enfant.queue_free()
+	_actualiser_boutique("Amélioration acquise. Vous pouvez acheter autre chose ou continuer.")
+	boutique.show()
 
 
-	appliquer_amelioration(
-		carte.identifiant
-	)
-
-
+func _continuer() -> void:
+	if not boutique_ouverte or choix_ouverts:
+		return
+	boutique_ouverte = false
+	points = 0 # Aucun report : la prochaine boutique recomptera l'escorte vivante.
 	if animation:
 		animation.kill()
-
-
-	menu.hide()
-
-
-	for enfant in cartes.get_children():
-		enfant.release_focus()
-
-		cartes.remove_child(
-			enfant
-		)
-
-		enfant.queue_free()
-
-
+	boutique.hide()
 	Input.mouse_mode = souris_avant
-
 	get_tree().paused = false
+	room_manager.call_deferred("passer_salle_suivante")
 
 
-	room_manager.call_deferred(
-		"passer_salle_suivante"
-	)
-
-
-func calculer_multiplicateur_bonus(
-	nombre_victimes: int
-) -> float:
-
-	if nombre_victimes <= 0:
-		return 0.0
-
-
-	var premieres := mini(
-		nombre_victimes,
-		victimes_palier_principal
-	)
-
-
-	var supplementaires := maxi(
-		nombre_victimes
-		- victimes_palier_principal,
-		0
-	)
-
-
-	var puissance_pourcent := (
-		premieres
-		* puissance_par_premiere_victime
-		+ supplementaires
-		* puissance_par_victime_supplementaire
-	)
-
-
-	return (
-		puissance_pourcent
-		/ 100.0
-	)
-
-
-func valeur_base(
-	identifiant: StringName
-) -> float:
-
+func valeur_base(identifiant: StringName) -> float:
 	match identifiant:
-		&"pression":
-			return bonus_degats_pourcent
-
-		&"reserve":
-			return bonus_charge_pourcent
-
-		&"recharge":
-			return bonus_recharge_pourcent
-
+		&"pression": return bonus_degats_pourcent
+		&"reserve": return bonus_charge_pourcent
+		&"recharge": return bonus_recharge_pourcent
 	return 0.0
 
 
-func appliquer_amelioration(
-	identifiant: StringName
-) -> void:
-
-	if not niveaux.has(
-		identifiant
-	):
+func appliquer_amelioration(identifiant: StringName) -> void:
+	if not niveaux.has(identifiant):
 		return
-
-
 	niveaux[identifiant] += 1
-
-
-	var gain_pourcent := (
-		valeur_base(identifiant)
-		* multiplicateur_choix_courant
-	)
-
-
-	bonus_cumules_pourcent[
-		identifiant
-	] += gain_pourcent
-
-
+	var gain: float = valeur_base(identifiant) * multiplicateur_choix_courant
+	bonus_cumules_pourcent[identifiant] += gain
+	acquisitions.append({"id": identifiant, "rarete": rarete_courante, "gain": gain})
 	match identifiant:
 		&"pression":
-			extincteur.multiplicateur_degats_ameliorations = (
-				1.0
-				+ bonus_cumules_pourcent[
-					identifiant
-				]
-				/ 100.0
-			)
-
-
+			extincteur.multiplicateur_degats_ameliorations = 1.0 + bonus_cumules_pourcent[identifiant] / 100.0
 		&"reserve":
-			var ancien_max: float = (
-				extincteur.max_charge
-			)
-
-			extincteur.max_charge = (
-				charge_de_base
-				* (
-					1.0
-					+ bonus_cumules_pourcent[
-						identifiant
-					]
-					/ 100.0
-				)
-			)
-
-			# Comme avant :
-			# on donne uniquement la capacité nouvellement gagnée.
-			extincteur.charge += (
-				extincteur.max_charge
-				- ancien_max
-			)
-
-
+			var ancien_max: float = extincteur.max_charge
+			extincteur.max_charge = charge_de_base * (1.0 + bonus_cumules_pourcent[identifiant] / 100.0)
+			# Remplir uniquement la capacité nouvellement ajoutée.
+			extincteur.charge += extincteur.max_charge - ancien_max
 		&"recharge":
-			extincteur.reload_rate = (
-				recharge_de_base
-				* (
-					1.0
-					+ bonus_cumules_pourcent[
-						identifiant
-					]
-					/ 100.0
-				)
-			)
-
-
+			extincteur.reload_rate = recharge_de_base * (1.0 + bonus_cumules_pourcent[identifiant] / 100.0)
 	ameliorations_changees.emit()
 
 
-func formater_pourcentage(
-	valeur: float
-) -> String:
-
-	return String.num(
-		valeur,
-		2
-	).trim_suffix(".0")
+func formater_pourcentage(valeur: float) -> String:
+	return String.num(valeur, 2).trim_suffix(".0")
 
 
-func formater_effet(
-	identifiant: StringName,
-	pourcentage: float
-) -> String:
-
-	var nombre := (
-		formater_pourcentage(
-			pourcentage
-		)
-	)
-
+func formater_effet(identifiant: StringName, pourcentage: float) -> String:
+	var nombre := formater_pourcentage(pourcentage)
 	match identifiant:
-		&"pression":
-			return (
-				"+%s %% de dégâts"
-				% nombre
-			)
-
-		&"reserve":
-			return (
-				"+%s %% de charge maximale"
-				% nombre
-			)
-
-		&"recharge":
-			return (
-				"+%s %% de vitesse de recharge"
-				% nombre
-			)
-
+		&"pression": return "+%s %% de dégâts" % nombre
+		&"reserve": return "+%s %% de charge maximale" % nombre
+		&"recharge": return "+%s %% de vitesse de recharge" % nombre
 	return ""
 
 
-# Fonction conservée avec son ancien comportement général :
-# "nombre" copies du bonus de base.
-func texte_effet(
-	identifiant: StringName,
-	nombre: int = 1
-) -> String:
-
-	return formater_effet(
-		identifiant,
-		valeur_base(identifiant)
-		* nombre
-	)
+func texte_effet(identifiant: StringName, _nombre: int = 1) -> String:
+	# Le récapitulatif lit les vrais gains cumulés, qui dépendent désormais des raretés.
+	return formater_effet(identifiant, bonus_cumules_pourcent[identifiant])
 
 
-func texte_effet_choix(
-	identifiant: StringName
-) -> String:
-
-	return formater_effet(
-		identifiant,
-		valeur_base(identifiant)
-		* multiplicateur_choix_courant
-	)
+func texte_effet_choix(identifiant: StringName) -> String:
+	return formater_effet(identifiant, valeur_base(identifiant) * multiplicateur_choix_courant)
 
 
 func get_resume() -> String:
 	var lignes := PackedStringArray()
-
-
 	for proposition in POOL:
-		var total: float = (
-			bonus_cumules_pourcent[
-				proposition.id
-			]
-		)
-
-		if total <= 0.0:
-			continue
-
-		lignes.append(
-			"%s : %s"
-			% [
-				proposition.titre,
-				formater_effet(
-					proposition.id,
-					total
-				)
-			]
-		)
-
-
-	if lignes.is_empty():
-		return (
-			"Aucune amélioration acquise."
-		)
-
-
-	return "\n".join(
-		lignes
-	)
+		if niveaux[proposition.id] > 0:
+			lignes.append("%s : %s" % [proposition.titre, texte_effet(proposition.id)])
+	return "Aucune amélioration acquise." if lignes.is_empty() else "\n".join(lignes)

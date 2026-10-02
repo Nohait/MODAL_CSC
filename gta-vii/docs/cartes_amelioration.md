@@ -32,48 +32,20 @@ La carte est en Process Mode Always. Son horloge de shader est fournie par `_pro
 les braises et les Tweens de survol fonctionnent même lorsque le jeu est en pause.
 Intensite braises, Hover scale et Hover duration sont réglables dans l'inspecteur.
 
-## Gestionnaire et passage de porte
+## Boutique, gestionnaire et cartes acquises
 
-La scène upgrade_manager.tscn est instanciée sous main/UpgradeManager. Son script
-upgrade_manager.gd écoute choix_amelioration_demande du RoomManager. Ce signal arrive
-après validation de la zone de passage d'une salle libérée et après le traitement physique.
+Le passage de porte ouvre maintenant la boutique, et non un choix gratuit direct.
+Le fonctionnement, l'équilibrage des raretés, les points et les défis sont décrits dans
+[boutique.md](boutique.md). Cette documentation remplace les anciennes règles
+fondées sur la puissance proportionnelle au nombre de victimes.
 
-Le gestionnaire mélange une copie du POOL et crée trois cartes distinctes. Avec trois
-entrées, seuls leurs emplacements varient. Le jeu est mis en pause et le curseur est visible.
-Le choix est obligatoire. Un verrou empêche de recevoir plusieurs récompenses par double clic.
-Après sélection : appliquer le bonus, fermer les cartes, restaurer le curseur, retirer
-la pause, puis demander passer_salle_suivante(). La dernière sortie mène directement
-à la victoire sans proposer de récompense inutile.
+UpgradeManager crée trois cartes lors d'un achat et leur transmet une rareté.
+Le shader colore légèrement le papier et utilise les braises de cette rareté autour
+de la carte et de l'illustration. Les autres cartes gardent leur aspect original avec
+rarete = aucune. Les matériaux sont dupliqués pour que chaque carte reste indépendante.
 
-## Équilibrage et cumul
-
-Dans main.tscn, sélectionner UpgradeManager puis « Équilibrage — bonus par choix ».
-Les trois exports fixent les gains de dégâts, capacité et vitesse de recharge.
-Saisir 20 pour +20 %. Régler ces valeurs avant de lancer une partie ; les textes des
-cartes et le récapitulatif utilisent ces mêmes pourcentages.
-
-Les niveaux sont conservés par le gestionnaire de la partie, détruit au changement
-de scène : aucune sauvegarde permanente entre parties. Le cumul est additif sur la
-base : deux choix à +20 % donnent +40 %. Le bonus de dégâts d'escorte s'applique
-ensuite séparément : avec une spécialiste et un choix à +20 %, dégâts = base × 1.2 × 1.25.
-
-Grande réserve ajoute à la charge actuelle seulement la capacité gagnée.
-La jauge suit automatiquement le nouveau maximum. Les choix acquis apparaissent
-dans la section des bonus permanents du MenuBonus. Évacuer une victime ne les retire pas.
-
-## Menu des bonus acquis
-
-MenuBonus reprend les mêmes cartes en lecture seule, dans un format compact de
-240 × 365. Le fond utilise le papier existant teinté bordeaux et le shader commun
-des contours brûlés. Les deux sections restent séparées : escorte et renforts acquis.
-Une amélioration répétée apparaît une seule fois avec son niveau et son effet total.
-Seuls les bonus possédés sont montrés ; chaque section possède son propre état vide.
-
-Les cartes d'escorte utilisent deux pictogrammes SVG remplaçables dans
-assets/textures/interfaces/ameliorations. Leurs effets sont lus depuis les constantes
-du joueur et de l'extincteur. Elles disparaissent dès que le bonus d'escorte n'est plus actif.
-Le menu se reconstruit sur escort_changed et ameliorations_changees, ainsi qu'à l'ouverture.
-
-Le mode lecture_seule de carte_amelioration.gd désactive selected et le focus de choix.
-Le survol conserve seulement l'accent lumineux ; il n'agrandit pas les cartes du récapitulatif.
-Les cartes de l'écran de choix gardent leur format et leur comportement d'origine.
+Les gains sont cumulés de manière additive sur les statistiques de base. Grande
+réserve remplit uniquement la capacité gagnée. MenuBonus montre les cartes acquises,
+avec leur rareté et le vrai gain de chacune, en lecture seule. Les bonus d'escorte
+ne sont plus présentés dans ce menu. Les trois améliorations restent les dégâts,
+la capacité et la vitesse de recharge de l'extincteur.

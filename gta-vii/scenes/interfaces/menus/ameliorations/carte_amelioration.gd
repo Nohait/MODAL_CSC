@@ -11,6 +11,12 @@ signal selected
 @export var statut := "ACQUISE POUR CETTE PARTIE"
 
 @export_group("Contenu")
+const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_boutique.gd")
+@export_enum("aucune", "commun", "rare", "epique") var rarete: String = "aucune":
+	set(valeur):
+		rarete = valeur
+		if is_node_ready():
+			actualiser_contenu()
 ## Identifiant stable utilisé par le pool ; aucun effet de jeu n'est appliqué ici.
 @export var identifiant: StringName = &"pression"
 @export var titre := "Sous pression":
@@ -80,6 +86,13 @@ func _ready() -> void:
 
 ## Met à jour l'affichage à partir des exports, sans modifier les statistiques du joueur.
 func actualiser_contenu() -> void:
+	var coloree := CATALOGUE.COULEURS.has(StringName(rarete))
+	var teinte: Color = CATALOGUE.COULEURS.get(StringName(rarete), Color.WHITE)
+	materiau_papier.set_shader_parameter("rarete_coloree", coloree)
+	materiau_papier.set_shader_parameter("teinte_rarete", teinte)
+	for materiau in [materiau_papier, materiau_image]:
+		materiau.set_shader_parameter("braises_personnalisees", coloree)
+		materiau.set_shader_parameter("teinte_braises", teinte)
 	$Visuel/Contenu/Organisation/Titre.text = titre
 	$Visuel/Contenu/Organisation/Description.text = description
 	$Visuel/Contenu/Organisation/Effet.text = effet_affiche

@@ -2,7 +2,14 @@ extends Node
 
 
 signal room_cleared
+# Les défis suivent une salle depuis son activation jusqu’au passage de sa porte.
+signal salle_preparee(salle: Node3D)
+signal salle_commencee(salle: Node3D)
+signal salle_terminee(salle: Node3D)
 signal partie_prete
+
+# Fourni avant la génération par l'UpgradeManager, selon le réglage du défi.
+var victimes_supplementaires_reserve := 1
 
 ## Indique à l'UpgradeManager combien de victimes vivantes
 ## sont actuellement dans l'escorte.
@@ -270,12 +277,12 @@ func demarrer_partie() -> void:
 		# On réserve suffisamment de points d'arrivée pour
 		# toute l'escorte potentielle.
 		var salle = generateur.generer_salle(
-			1
+			2 # Le joueur et une éventuelle victime fragile.
 			+ nombre_salles
-			* maxi(
+			* (victimes_supplementaires_reserve + maxi(
 				nombre_min_victimes,
 				nombre_max_victimes
-			),
+			)),
 			fin_etage,
 			etage_pour_salle(i)
 		)
@@ -1129,6 +1136,9 @@ func activer_salle(
 	)
 
 
+	# Les défis peuvent compléter la population avant le démarrage du timer.
+	salle_preparee.emit(salle_actuelle)
+
 	# Le décor est actif pour préparer la navigation,
 	# mais le combat reste momentanément gelé.
 	salle_actuelle.get_node(
@@ -1360,6 +1370,7 @@ func activer_salle(
 	)
 
 
+	salle_commencee.emit(salle_actuelle)
 	actualiser_objectifs()
 
 
@@ -1636,6 +1647,8 @@ func compter_victimes_escorte_vivantes() -> int:
 
 
 func preparer_sortie() -> void:
+	# Valider les défis avant de calculer les points et récompenses de la boutique.
+	salle_terminee.emit(salle_actuelle)
 	# Dernière salle : aucune amélioration intermédiaire.
 	if (
 		indice_salle + 1
@@ -1648,12 +1661,6 @@ func preparer_sortie() -> void:
 	var nombre_victimes := (
 		compter_victimes_escorte_vivantes()
 	)
-
-
-	# Aucune victime vivante = aucun choix d'amélioration.
-	if nombre_victimes <= 0:
-		passer_salle_suivante()
-		return
 
 
 	choix_amelioration_demande.emit(
@@ -1674,3 +1681,40 @@ func passer_salle_suivante() -> void:
 		get_tree().change_scene_to_file(
 			"res://scenes/interfaces/menus/ecran_victoire.tscn"
 		)
+
+# Ajouter les participants du défi dans une salle déjà générée, sur des points libres.
+func ajouter_population_defi(salle: Node3D, mobiles: int, victimes: int) -> Vector2i:
+	var libres: Array[Vector3] = []
+	for point in salle.points_spawn:
+		if salle.mobiles_a_creer.has(point):
+			continue
+		var occupe := false
+		for conteneur in [salle.get_node("Ennemis"), salle.get_node("Victimes")]:
+			for entite in conteneur.get_children():
+				if entite is Node3D:
+					var ecart: Vector3 = entite.position - point
+					ecart.y = 0.0
+					if ecart.length() < 1.5:
+						occupe = true
+		if not occupe:
+			libres.append(point)
+	libres.shuffle()
+	var ajoutes := Vector2i.ZERO
+	# Réserver les victimes en premier pour ne pas perdre le bénéfice du défi.
+	for i in range(mini(victimes, libres.size())):
+		var victime = VICTIME_SCENE.instantiate()
+		victime.position = libres.pop_back() + Vector3.UP * 0.75
+		victime.bonus_dash = false
+		victime.bonus_degats = false
+		salle.get_node("Victimes").add_child(victime)
+		victime.set_ennemis_container(salle.get_node("Ennemis"))
+		victim_manager.surveiller_victime(victime)
+		victime.freed.connect(_on_victim_freed.bind(salle), CONNECT_ONE_SHOT)
+		victime.died.connect(_on_victim_died.bind(salle), CONNECT_ONE_SHOT)
+		salle.remaining_victims += 1
+		ajoutes.y += 1
+	for i in range(mini(mobiles, libres.size())):
+		salle.mobiles_a_creer.append(libres.pop_back())
+		salle.remaining_enemies += 1
+		ajoutes.x += 1
+	return ajoutes

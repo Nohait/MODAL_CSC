@@ -7,13 +7,9 @@ extends CanvasLayer
 @onready var panneau: Control = %Panneau
 @onready var fermer: Button = %Fermer
 const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
-const IMAGE_SPORTIVE = preload("res://assets/textures/interfaces/ameliorations/bonus_sportive.svg")
-const IMAGE_SPECIALISTE = preload("res://assets/textures/interfaces/ameliorations/bonus_specialiste.svg")
 
 @onready var upgrades = get_parent().get_node("UpgradeManager")
-@onready var cartes_escorte: HFlowContainer = %CartesEscorte
 @onready var cartes_permanents: HFlowContainer = %CartesPermanents
-@onready var vide_escorte: Label = %VideEscorte
 @onready var vide_permanents: Label = %VidePermanents
 @onready var papier: TextureRect = $Menu/Panneau/Papier
 var temps_braises := 0.0
@@ -25,7 +21,6 @@ func _ready() -> void:
 	# Process Mode = Always dans la scène : le menu et son animation vivent en pause.
 	raccourci.pressed.connect(ouvrir_menu)
 	fermer.pressed.connect(fermer_menu)
-	gestionnaire.escort_changed.connect(actualiser_affichage)
 	upgrades.ameliorations_changees.connect(actualiser_affichage)
 	papier.material = papier.material.duplicate()
 	papier.resized.connect(_actualiser_taille_papier)
@@ -102,37 +97,24 @@ func actualiser_affichage() -> void:
 	var joueur = gestionnaire.player
 	if not is_instance_valid(joueur):
 		return
-	var dash_actif: bool = joueur.bonus_dash_actif
-	var degats_actifs: bool = joueur.extincteur.bonus_degats_actif
-	var nombre := int(dash_actif) + int(degats_actifs)
+	# Compter seulement les améliorations acquises pour cette partie.
+	var nombre := 0
 	for niveau in upgrades.niveaux.values():
 		nombre += int(niveau)
 	var touches := InputMap.action_get_events("menu_bonus")
 	var touche := touches[0].as_text() if not touches.is_empty() else "B"
 	raccourci.text = "[%s] Bonus · %d actif(s)" % [touche, nombre]
 
-	_vider_cartes(cartes_escorte)
 	_vider_cartes(cartes_permanents)
-	# On ne crée que les cartes possédées : aucun nom de bonus inconnu n'est révélé.
-	if dash_actif:
-		_ajouter_carte(cartes_escorte, &"sportive", "Sportive",
-			"Votre escorte vous aide à enchaîner les esquives.",
-			"−%s %% de délai de dash" % String.num(joueur.REDUCTION_DASH_ESCORTE * 100, 2).trim_suffix(".0"),
-			"VICTIME · MOBILITÉ", "ACTIF TANT QU’ELLE VOUS SUIT", IMAGE_SPORTIVE)
-	if degats_actifs:
-		_ajouter_carte(cartes_escorte, &"specialiste", "Spécialiste",
-			"Votre escorte renforce l’efficacité de l’extincteur.",
-			"+%s %% de dégâts" % String.num(joueur.extincteur.AUGMENTATION_DEGATS_ESCORTE * 100, 2).trim_suffix(".0"),
-			"VICTIME · EXTINCTEUR", "ACTIF TANT QU’ELLE VOUS SUIT", IMAGE_SPECIALISTE)
-	for proposition in upgrades.POOL:
-		var niveau: int = upgrades.niveaux[proposition.id]
-		if niveau == 0:
-			continue
-		# Une carte par type, avec son nombre d'acquisitions et son effet TOTAL.
-		_ajouter_carte(cartes_permanents, proposition.id, proposition.titre,
-			proposition.description, upgrades.texte_effet(proposition.id, niveau),
-			"RENFORT · NIVEAU %d" % niveau, "ACQUIS POUR CETTE PARTIE")
-	vide_escorte.visible = cartes_escorte.get_child_count() == 0
+	# Chaque carte acquise conserve sa rareté et le gain réellement obtenu.
+	for acquisition in upgrades.acquisitions:
+		for proposition in upgrades.POOL:
+			if proposition.id != acquisition.id:
+				continue
+			_ajouter_carte(cartes_permanents, proposition.id, proposition.titre,
+				proposition.description, upgrades.formater_effet(proposition.id, acquisition.gain),
+				"EXTINCTEUR · " + upgrades.CATALOGUE.NOMS[acquisition.rarete].to_upper(),
+				"ACQUISE POUR CETTE PARTIE", null, acquisition.rarete)
 	vide_permanents.visible = cartes_permanents.get_child_count() == 0
 
 
@@ -145,9 +127,10 @@ func _vider_cartes(conteneur: Container) -> void:
 
 func _ajouter_carte(conteneur: Container, identifiant: StringName, titre: String,
 		description: String, effet: String, categorie: String, statut: String,
-		illustration: Texture2D = null) -> void:
+		illustration: Texture2D = null, rarete: StringName = &"aucune") -> void:
 	var carte = CARTE.instantiate()
 	carte.lecture_seule = true
+	carte.rarete = rarete
 	carte.identifiant = identifiant
 	carte.titre = titre
 	carte.description = description

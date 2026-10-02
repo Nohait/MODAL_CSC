@@ -1,6 +1,8 @@
 extends CharacterBody3D
 
 # Le niveau écoute la mort pour remplacer le jeu par l'écran de défaite.
+# Émis uniquement quand des PV sont réellement retirés, pour le défi sans dégâts.
+signal degats_recus(quantite: float)
 signal died
 var est_mort := false
 
@@ -226,8 +228,11 @@ func prendre_degats(degats: float) -> void:
 		
 	flash_degats()
 	secouer_camera()
-	BarreDeVie.value -= degats
+	var vie_avant: float = BarreDeVie.value
+	BarreDeVie.value -= maxf(degats, 0.0)
 	BarreDeVie.value = max(BarreDeVie.value, 0)
+	if BarreDeVie.value < vie_avant:
+		degats_recus.emit(vie_avant - BarreDeVie.value)
 	print( self.name, " Touché : -", degats)
 	
 	if BarreDeVie.value <= 0:
