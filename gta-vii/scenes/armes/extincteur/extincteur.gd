@@ -4,6 +4,7 @@ extends Node3D
 @onready var damage_area: Area3D = $AttaquePrincipale/DamageArea
 @onready var muzzle: Node3D = $AttaquePrincipale
 @onready var direction_marker: Marker3D = $AttaquePrincipale/DirectionMarker
+@onready var indicateur_attaque = $IndicateurAttaque
 #Initialisation des constantes du cone de particules
 const ETALEMENT = 0.378
 const VITESSE = 5.6
@@ -126,6 +127,8 @@ func attaque_1(cible):
 	if cible != null:
 		var multiplier = randf_range(0.9,1.1)
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
+		# Colorer la zone uniquement après un impact, y compris sur les flaques.
+		indicateur_attaque.signaler_impact()
 
 func modifier(angle, rayon):
 	particles.lifetime = rayon/VITESSE
