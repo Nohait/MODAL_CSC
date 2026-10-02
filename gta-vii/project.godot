@@ -35,7 +35,11 @@ flaque=""
 projectile=""
 collider=""
 victime=""
+<<<<<<< Updated upstream
 fleche=""
+=======
+mobiles=""
+>>>>>>> Stashed changes
 
 [input]
 
