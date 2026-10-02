@@ -14,10 +14,22 @@ signal died(victim: CharacterBody3D)
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var visuel: MeshInstance3D = $MeshInstance3D
+<<<<<<< Updated upstream
 @onready var materiau := visuel.get_active_material(0).duplicate() as StandardMaterial3D
 
 # Barre de vie
 # SubViewport qui dessine l'interface 2D de la barre.
+=======
+@onready var sounds = $"Sons".get_children()
+@onready var materiau := (visuel.get_active_material(0).duplicate()as StandardMaterial3D)
+
+
+# ------------------------------------------------------------------
+# BARRE DE VIE
+# ------------------------------------------------------------------
+
+## SubViewport qui dessine l'interface 2D de la barre.
+>>>>>>> Stashed changes
 @onready var health_bar_viewport: SubViewport = $HealthBarViewport
 
 # Vraie ProgressBar Godot.
@@ -39,24 +51,39 @@ signal died(victim: CharacterBody3D)
 # Nombre maximal de points de vie de la victime.
 @export_range(1.0, 1000.0, 1.0, "or_greater") var vie_max: float = 100.0
 
+<<<<<<< Updated upstream
 # La valeur est initialisée après le chargement des propriétés exportées.
 # Une nouvelle victime commence donc réellement à vie_max.
 @onready var vie: float = vie_max
 
 # Dégâts déjà appliqués par le timer, pour ne retirer que la différence.
+=======
+## La valeur est initialisée après le chargement des propriétés exportées.
+## Une nouvelle victime commence donc réellement à vie_max.
+@onready var vie: float = vie_max
+## Quantité totale de dégâts que le compte à rebours a déjà infligée.
+## Cette valeur permet d'avoir une diminution mathématiquement exacte : à 50 % du timer, exactement 50 % de vie_max auront été retirés par le timer, indépendamment du framerate.
+>>>>>>> Stashed changes
 var degats_sauvetage_appliques: float = 0.0
 var est_morte := false
 
 # Fuite
 
 @export_group("Fuite")
+<<<<<<< Updated upstream
 
 # Poids maximal du vecteur de fuite face aux ennemis mobiles.
 @export_range(0.0, 10.0, 0.1, "or_greater") var force_fuite_max: float = 2.5
+=======
+## Poids maximal du vecteur de fuite face aux ennemis mobiles.
+@export_range(0.0, 10.0, 0.1, "or_greater")
+var force_fuite_max: float = 2.5
+>>>>>>> Stashed changes
 
 # Ancien système de bonus
 
 @export_group("Bonus d'escorte")
+<<<<<<< Updated upstream
 
 # Ancien système conservé dans le projet.
 @export var bonus_dash: bool = false
@@ -73,6 +100,24 @@ var est_morte := false
 
 # Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
+=======
+## Ancien système conservé dans le projet.
+@export var bonus_dash: bool = false
+## Ancien système conservé dans le projet.
+@export var bonus_degats: bool = false
+
+# ------------------------------------------------------------------
+# SUIVI
+# ------------------------------------------------------------------
+
+@export_group("Suivi")
+## Vitesse de déplacement de la victime.
+@export_range(0.0, 20.0, 0.1, "or_greater")
+var speed: float = 6.0
+## Distance à laquelle la victime s'arrête de suivre sa cible.
+@export_range(0.0, 10.0, 0.1, "or_greater")
+var stop_distance: float = 2.0
+>>>>>>> Stashed changes
 var stop_distance_player: float
 var arret := true
 var follow_target: Node3D = null
@@ -92,6 +137,7 @@ func _ready() -> void:
 	# Chaque victime possède son propre matériau.
 	# Sinon le flash rouge pourrait modifier plusieurs victimes partageant la même ressource.
 	visuel.material_override = materiau
+<<<<<<< Updated upstream
 	if defi_fragile:
 		visuel.scale = Vector3.ONE * 0.65
 		materiau.albedo_color = Color("b789db")
@@ -118,6 +164,35 @@ func _ready() -> void:
 	health_bar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+=======
+	# --------------------------------------------------------------
+	# ANCIEN SYSTÈME DE TYPES
+	# --------------------------------------------------------------
+	$BonusLabel.hide()
+	if bonus_dash:
+		materiau.albedo_color = Color(1.0,0.65,0.12,1.0)
+		visuel.set_surface_override_material(0,materiau)
+
+		$BonusLabel.text = "SPORTIVE \nDash : cooldown -20 %"
+		$BonusLabel.show()
+	elif bonus_degats:
+		materiau.albedo_color = Color(0.15,0.65,1.0,1.0)
+
+		visuel.set_surface_override_material(0,materiau)
+
+		$BonusLabel.modulate = Color(0.4,0.8,1.0)
+
+		$BonusLabel.text = ("SPÉCIALISTE\nDégâts +25 %")
+		$BonusLabel.show()
+	# --------------------------------------------------------------
+	# BARRE DE VIE
+	# --------------------------------------------------------------
+	# Le Sprite3D affiche directement la texture générée par le SubViewport.
+	health_bar_sprite.texture = health_bar_viewport.get_texture()
+	# La barre occupe automatiquement toute la surface du SubViewport.
+	health_bar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+>>>>>>> Stashed changes
 	# On utilise directement les PV comme valeurs de la ProgressBar.
 	health_bar.min_value = 0.0
 	health_bar.max_value = vie_max
@@ -127,6 +202,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if est_morte:
 		return
+<<<<<<< Updated upstream
 	if player_nearby and not is_freed:
 		if Input.is_action_just_pressed("interact"):
 			free_victim()
@@ -136,11 +212,29 @@ func _physics_process(_delta: float) -> void:
 # Interaction
 
 func _on_detection_body_entered(body: Node3D) -> void:
+=======
+
+	if player_nearby and not is_freed:
+		if Input.is_action_just_pressed("interact"):
+			free_victim()
+	if is_freed and is_instance_valid(follow_target):
+		follow_target_node()
+		
+# ------------------------------------------------------------------
+# INTERACTION
+# ------------------------------------------------------------------
+func _on_detection_body_entered(body: Node3D) -> void:
+
+>>>>>>> Stashed changes
 	if body.is_in_group("player"):
 		player_nearby = true
 		if not is_freed:
 			interaction_label.visible = true
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 func _on_detection_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = false
@@ -155,7 +249,11 @@ func free_victim() -> void:
 	freed.emit(self)
 	print("Victime libérée avec ", vie, " / ", vie_max, " PV")
 
+<<<<<<< Updated upstream
 func _jouer_effet_liberation(_victime: CharacterBody3D) -> void:
+=======
+	print("Victime libérée avec ",vie," / ",vie_max," PV")
+>>>>>>> Stashed changes
 
 	# La victime achetée dans la boutique rejoint déjà l'escorte : ce n'est pas un sauvetage.
 	if not afficher_effet_liberation or defi_fragile:
@@ -163,6 +261,7 @@ func _jouer_effet_liberation(_victime: CharacterBody3D) -> void:
 	var effet = EFFET_LIBERATION.instantiate()
 	effet.duree = duree_effet_liberation
 
+<<<<<<< Updated upstream
 	# Enfant de la victime : l'anneau et l'icône suivent son départ vers le joueur.
 	add_child(effet)
 
@@ -180,14 +279,40 @@ func get_nom_affiche() -> String:
 		return "%s (spécialiste : dégâts +25 %%)" % name
 	if bonus_dash:
 		return "%s (sportive : dash -20 %%)" % name
+=======
+func set_ennemis_container(conteneur: Node) -> void:
+	# Le RoomManager appelle cette fonction à chaque changement de salle afin que les victimes libérées fuient les ennemis de la bonne salle.
+	ennemis = conteneur
+	
+# ------------------------------------------------------------------
+# ANCIEN NOM / TYPE
+# ------------------------------------------------------------------
+
+func get_nom_affiche() -> String:
+	if bonus_dash and bonus_degats:
+		return ("%s (dash -20 %%, dégâts +25 %%)"% name)
+
+	if bonus_degats:
+		return ("%s (spécialiste : dégâts +25 %%)"% name)
+
+	if bonus_dash:
+		return ("%s (sportive : dash -20 %%)"% name)
+		
+>>>>>>> Stashed changes
 	return str(name)
 
 # Suivi
 
 func follow_target_node() -> void:
+<<<<<<< Updated upstream
 	if (NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0):
 		return
 	var to_target := follow_target.global_position - global_position
+=======
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map())== 0:
+		return
+	var to_target := follow_target.global_position- global_position
+>>>>>>> Stashed changes
 	to_target.y = 0.0
 	velocity.x = 0.0
 	velocity.z = 0.0
@@ -197,6 +322,7 @@ func follow_target_node() -> void:
 		stop_distance = stop_distance_player
 	if to_target.length() > stop_distance:
 		arret = false
+<<<<<<< Updated upstream
 		var point_sol := (
 			NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(), global_position)
 		)
@@ -205,12 +331,31 @@ func follow_target_node() -> void:
 		var next_position := navigation_agent.get_next_path_position()
 		var direction := next_position - global_position
 		direction.y = 0.0
+=======
+
+
+		var point_sol := NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(),global_position)
+
+		navigation_agent.path_height_offset = point_sol.y- global_position.y
+		navigation_agent.target_position = follow_target.global_position
+
+		var next_position := navigation_agent.get_next_path_position()
+		var direction := next_position -global_position
+		direction.y = 0.0
+
+>>>>>>> Stashed changes
 		if direction.length() > 0.01:
 			direction = direction.normalized()
 			direction += vecteur_fuite()
 			direction = direction.normalized()
+<<<<<<< Updated upstream
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
+=======
+			velocity.x = direction.x* speed
+			velocity.z = direction.z* speed
+			
+>>>>>>> Stashed changes
 	else:
 		if follow_target.is_in_group("fleche"):
 			arret = true
@@ -218,6 +363,7 @@ func follow_target_node() -> void:
 
 # Dégâts normaux
 
+<<<<<<< Updated upstream
 func prendre_degats(degats: float) -> void:
 	if est_morte:
 		return
@@ -225,11 +371,28 @@ func prendre_degats(degats: float) -> void:
 	actualiser_barre_vie()
 	flash_degats()
 	print("Victime : -", degats, " PV (", vie, " / ", vie_max, ")")
+=======
+# ------------------------------------------------------------------
+# DÉGÂTS NORMAUX
+# ------------------------------------------------------------------
+
+func prendre_degats(degats: float) -> void:
+	if est_morte:
+		return
+	vie = maxf(vie - degats,0.0)
+	actualiser_barre_vie()
+	flash_degats()
+	print("Victime : -",degats," PV (",vie," / ",vie_max,")")
+	if vie <= vie_max/2 and vie +degats >=vie_max/2:
+		var stream = sounds.pick_random()
+		stream.play()
+>>>>>>> Stashed changes
 	if vie <= 0.0:
 		mourir()
 
 # Dégâts du timer
 
+<<<<<<< Updated upstream
 func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
 
 	# Une victime libérée n'est plus touchée par le compte à rebours.
@@ -246,6 +409,26 @@ func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
 	degats_sauvetage_appliques = nouveaux_degats_sauvetage
 	vie = maxf(vie - difference, 0.0)
 	actualiser_barre_vie()
+=======
+# ------------------------------------------------------------------
+# DÉGÂTS DU TIMER
+# ------------------------------------------------------------------
+
+func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
+	# Une victime libérée n'est plus touchée par le compte à rebours.
+	if est_morte or is_freed:
+		return
+	# Exemple avec 100 PV :proportion = 0.25 -> le timer doit avoir retiré 25 PV au total.
+	var nouveaux_degats_sauvetage: float = vie_max* clampf(proportion_ecoulee,0.0,1.0)
+	# On retire uniquement ce qui n'a pas encore été appliqué.
+	var difference: float = nouveaux_degats_sauvetage- degats_sauvetage_appliques
+	if difference <= 0.0:
+		return
+	degats_sauvetage_appliques = nouveaux_degats_sauvetage
+	vie = maxf(vie - difference,0.0)
+	actualiser_barre_vie()
+	
+>>>>>>> Stashed changes
 	if vie <= 0.0:
 		mourir()
 
@@ -257,9 +440,17 @@ func actualiser_barre_vie() -> void:
 	health_bar.max_value = vie_max
 
 	# Aucun calcul graphique supplémentaire : la ProgressBar reçoit directement les vrais PV.
+<<<<<<< Updated upstream
 	health_bar.value = clampf(vie, 0.0, vie_max)
 
 # Mort
+=======
+	health_bar.value = clampf(vie,0.0,vie_max)
+
+# ------------------------------------------------------------------
+# MORT
+# ------------------------------------------------------------------
+>>>>>>> Stashed changes
 
 func mourir() -> void:
 	if est_morte:
@@ -279,23 +470,52 @@ func flash_degats() -> void:
 	tween_degats.tween_property(materiau, "albedo_color", Color(1.0, 1.0, 1.0, 1.0), 0.2)
 	tween_degats.tween_property(materiau, "albedo_color", couleur_init, 0.1)
 
+<<<<<<< Updated upstream
 # Fuite
 
 func force_fuite(distance_ennemi: float) -> float:
 	if force_fuite_max <= 0.0:
 		return 0.0
 	return clampf((5.0 - distance_ennemi) * force_fuite_max / 5.0, 0.0, force_fuite_max)
+=======
+	var couleur_init := materiau.albedo_color
+	tween_degats.tween_property(materiau,"albedo_color",Color(1.0,0.0,0.0,1.0),0.1)
+	tween_degats.tween_property(materiau,"albedo_color",Color(1.0,1.0,1.0,1.0),0.2)
+
+	tween_degats.tween_property(materiau,"albedo_color",couleur_init,0.1)
+
+# ------------------------------------------------------------------
+# FUITE
+# ------------------------------------------------------------------
+
+func force_fuite(
+	distance_ennemi: float) -> float:
+	if force_fuite_max <= 0.0:
+		return 0.0
+	return clampf((5.0 - distance_ennemi)* force_fuite_max/ 5.0,0.0,force_fuite_max
+	)
+
+>>>>>>> Stashed changes
 
 func vecteur_fuite() -> Vector3:
 	var fuite := Vector3.ZERO
 	if not is_instance_valid(ennemis):
 		return fuite
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 	for ennemi in ennemis.get_children():
 		if not ennemi.is_in_group("mobiles"):
 			continue
 		var direction := global_position.direction_to(ennemi.global_position)
 		var distance_ennemi := global_position.distance_to(ennemi.global_position)
+<<<<<<< Updated upstream
 		fuite -= direction * force_fuite(distance_ennemi)
+=======
+		
+		fuite -= direction* force_fuite(distance_ennemi)
+>>>>>>> Stashed changes
 	return fuite
 
 # Texte d'interaction
@@ -305,6 +525,13 @@ func update_interaction_label() -> void:
 	if events.is_empty():
 		interaction_label.text = "Libérer"
 		return
+<<<<<<< Updated upstream
 	var event := events[0]
 	if event is InputEventKey:
 		interaction_label.text = "[" + event.as_text_physical_keycode() + "] Libérer"
+=======
+
+	var event := events[0]
+	if event is InputEventKey:
+		interaction_label.text = ("["+ event.as_text_physical_keycode()+ "] Libérer")
+>>>>>>> Stashed changes
