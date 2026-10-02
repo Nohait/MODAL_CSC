@@ -249,6 +249,7 @@ func activer_salle(indice: int) -> void:
 	# après sa réactivation pour que ses collisions soient prises en compte.
 	salle_actuelle.cuire_navigation()
 	# Téléporter les mêmes personnages conserve leur état et leurs bonus.
+	joueur.extincteur.vider_jet()
 	joueur.global_position = salle_actuelle.to_global(salle_actuelle.points_arrivee[0]) + Vector3.UP * 1.1
 	joueur.velocity = Vector3.ZERO
 	joueur.is_dashing = false
