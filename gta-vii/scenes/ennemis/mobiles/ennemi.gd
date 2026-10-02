@@ -31,13 +31,6 @@ var attaque_timer = 0.0 #temps initialisé à 0
 @export var repos_apres_attaque := 0.3
 var timer_apres_attaque := 0.0
 
-@export_group("Idle")
-@export var rayon_idle := 5.0
-@export var temps_idle_min := 1.0
-@export var temps_idle_max := 3.0
-var idle_timer := 0.0
-var en_idle := true
-
 @export_group("Cible_manager")
 @export var chgt_cible_cooldown = 1.3 #On reste 3s sur la meme cible avant de se demander si on change
 var chgt_cible_timer = 0.0 #temps initialisé à 0

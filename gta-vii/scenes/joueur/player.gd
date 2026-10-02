@@ -170,20 +170,13 @@ func _physics_process(delta: float) -> void:
 		#On s'oriente vers ce point, en gardant y comme verticale
 		visual.look_at(target_position, Vector3.UP)
 	
-		"""if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			if not clic_milieu_deja_fait:
 				clic_milieu_deja_fait = true
 				bouger_victime(target_position)
 		else:
-			clic_milieu_deja_fait = false"""
-		
-		if Input.is_key_pressed(KEY_F):
-			if not clic_milieu_deja_fait:
-				clic_milieu_deja_fait = true
-				bouger_victime(target_position)
-			else:
-				clic_milieu_deja_fait = false
-		
+			clic_milieu_deja_fait = false
+				
 		if Input.is_key_pressed(KEY_A):
 			victim_manager.retour_nav_auto()
 	
