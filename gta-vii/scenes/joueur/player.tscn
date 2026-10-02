@@ -144,8 +144,11 @@ text = "Prêt"
 
 [node name="DamageFlash" type="ColorRect" parent="CanvasLayer" unique_id=564493702]
 visible = false
-offset_left = -92.0
-offset_top = -50.0
-offset_right = 1211.0
-offset_bottom = 704.0
+editor_description = "Ancré aux quatre bords : le flash couvre toute la fenêtre, quelle que soit sa taille."
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 color = Color(0.81960785, 0.08235294, 0, 1)
