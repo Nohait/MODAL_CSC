@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://cq5wgw8tjdhl3"]
-
-[ext_resource type="PackedScene" uid="uid://jou2viln2jqw" path="res://assets/modeles/effets/exclamation_point.glb" id="1_b4bdw"]
-
-[node name="Sketchfab_Scene" unique_id=1486772837 instance=ExtResource("1_b4bdw")]
