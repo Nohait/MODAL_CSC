@@ -1,19 +1,9 @@
 [gd_scene format=3 uid="uid://luimd4nfrie4"]
 
 [ext_resource type="Script" uid="uid://6j050metnw7f" path="res://scenes/joueur/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://bsk238q653gxr" path="res://scenes/joueur/player_pompier.tscn" id="2_6e3g7"]
 [ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/armes/extincteur/extincteur.tscn" id="2_g2els"]
 [ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_sysh0"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqnpg"]
-albedo_color = Color(0, 0, 0.11372549, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_sysh0"]
-size = Vector3(0.1, 0.1, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qhqgy"]
-albedo_color = Color(0.17155394, 0.46661443, 1, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
 
@@ -43,33 +33,95 @@ bg_color = Color(0.06, 0.07, 0.09, 0.95)
 bg_color = Color(1, 1, 1, 1)
 
 [node name="player" type="CharacterBody3D" unique_id=1836946001 groups=["player"]]
+collision_layer = 2
 script = ExtResource("1_3vyb7")
 
 [node name="visual" type="Node3D" parent="." unique_id=1533517147]
 
-[node name="LumiereLisibilite" type="OmniLight3D" parent="."]
-editor_description = "Éclairage doux autour du joueur pour lire le sol même loin des feux. Couleur légèrement froide pour distinguer les sources chaudes."
-position = Vector3(0, 2, 0)
-light_color = Color(0.75, 0.84, 1, 1)
-light_energy = 0.65
-omni_range = 7.0
-shadow_enabled = true
+[node name="pompier" parent="visual" unique_id=245445476 instance=ExtResource("2_6e3g7")]
+transform = Transform3D(-0.125, 1.8874475e-08, 0, -1.8874475e-08, -0.125, 0, 0, 0, 0.125, 0, 0.19406104, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="visual" unique_id=53678333]
-mesh = SubResource("CapsuleMesh_sysh0")
-surface_material_override/0 = SubResource("StandardMaterial3D_fqnpg")
+[node name="Armature" parent="visual/pompier/visual" parent_id_path=PackedInt32Array(245445476, 468847339) index="0" unique_id=1710248061]
+transform = Transform3D(1, 4.2351642e-22, 1.8512492e-29, 0, -4.371139e-08, 1, 4.2351642e-22, -1, -4.371139e-08, 0, 0, 0)
 
-[node name="look_debug" type="MeshInstance3D" parent="visual" unique_id=78907567]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
-visible = false
-mesh = SubResource("BoxMesh_sysh0")
-surface_material_override/0 = SubResource("StandardMaterial3D_qhqgy")
+[node name="Skeleton3D" parent="visual/pompier/visual/Armature" index="0" unique_id=234326854]
+bones/0/position = Vector3(0.03725831, 93.32031, -1.361679)
+bones/0/rotation = Quaternion(-0.031714283, -0.024943868, -0.080827214, 0.99591124)
+bones/1/rotation = Quaternion(-0.044498645, -0.012370699, 0.083751775, 0.9954158)
+bones/2/rotation = Quaternion(-0.03198534, -0.0154320495, 0.020021059, 0.9991687)
+bones/3/rotation = Quaternion(-0.032115933, -0.016051967, 0.019237831, 0.99917006)
+bones/4/rotation = Quaternion(0.099737346, 0.0020243241, -0.05382873, 0.9935547)
+bones/5/rotation = Quaternion(-0.08819714, -0.010719819, 0.004734953, 0.9960341)
+bones/7/rotation = Quaternion(0.602622, 0.393346, -0.55461353, 0.4177675)
+bones/8/rotation = Quaternion(0.5627488, 0.018107083, -0.12700692, 0.816612)
+bones/9/rotation = Quaternion(0.0069642193, 0.0004682474, 0.18801777, 0.98214084)
+bones/10/rotation = Quaternion(0.021343488, 0.17090866, -0.008629539, 0.9850179)
+bones/11/rotation = Quaternion(0.077634946, 0.073210716, 0.112092584, 0.98795164)
+bones/12/rotation = Quaternion(0.0130674895, -0.009629295, 0.051882178, 0.9985213)
+bones/13/rotation = Quaternion(-0.024645196, -0.10200353, 0.10089332, 0.98934746)
+bones/15/rotation = Quaternion(0.0845232, 0.0030546233, 0.065243386, 0.99427855)
+bones/16/rotation = Quaternion(0.112195954, 9.600552e-05, -0.005825766, 0.9936691)
+bones/17/rotation = Quaternion(0.13571654, -0.0004987216, -0.010797521, 0.9906888)
+bones/19/rotation = Quaternion(0.029378874, 0.0025582255, 0.061569802, 0.99766713)
+bones/20/rotation = Quaternion(0.12393314, 0.00011364126, -0.0060063405, 0.99227244)
+bones/21/rotation = Quaternion(0.14781858, -0.00043252035, -0.010581119, 0.9889579)
+bones/23/rotation = Quaternion(0.082809776, 0.008884023, 0.062586874, 0.9945585)
+bones/24/rotation = Quaternion(0.1421711, 0.00030903463, -0.0056293886, 0.9898261)
+bones/25/rotation = Quaternion(0.2166961, -0.0006212708, -0.008438104, 0.97620255)
+bones/27/rotation = Quaternion(0.100684196, 0.016366446, 0.012026455, 0.99471116)
+bones/28/rotation = Quaternion(0.120471776, 0.004469275, 0.031057218, 0.99222076)
+bones/29/rotation = Quaternion(0.09091644, 0.0005795854, 0.0031110127, 0.99585354)
+bones/35/rotation = Quaternion(0.07895959, -0.09425779, -0.1341364, 0.9833048)
+bones/36/rotation = Quaternion(-0.0054398132, 0.03973309, 0.04494606, 0.9981842)
+bones/37/rotation = Quaternion(0.0056344317, -0.004471926, -0.09494961, 0.9954561)
+bones/39/rotation = Quaternion(0.18654008, -0.016548479, -0.039640382, 0.9815079)
+bones/40/rotation = Quaternion(0.08981742, 4.625501e-06, 0.008308499, 0.99592364)
+bones/41/rotation = Quaternion(0.13275671, 0.00013721689, 0.015988065, 0.9910198)
+bones/43/rotation = Quaternion(0.113991074, -0.009111762, -0.05743731, 0.99177825)
+bones/44/rotation = Quaternion(0.116388425, -1.8181745e-06, 0.008304148, 0.99316907)
+bones/45/rotation = Quaternion(0.21958254, 0.03680876, 0.03399157, 0.9743065)
+bones/47/rotation = Quaternion(0.16873206, -0.012408349, -0.048583016, 0.9843858)
+bones/48/rotation = Quaternion(0.09679122, -0.00010123332, 0.009515338, 0.9952593)
+bones/49/rotation = Quaternion(0.16528638, 0.10300369, 0.034644507, 0.98024)
+bones/51/rotation = Quaternion(0.12666328, -0.009221841, -0.052791953, 0.9904971)
+bones/52/rotation = Quaternion(0.12473363, -5.9649814e-05, 0.013718659, 0.9920955)
+bones/53/rotation = Quaternion(0.19210912, 0.0001611052, 0.021373041, 0.98114085)
+bones/55/rotation = Quaternion(0.06226757, 0.09500574, 0.9892297, -0.09231183)
+bones/56/rotation = Quaternion(-0.30124956, -0.06500344, 0.023275446, 0.9510424)
+bones/57/rotation = Quaternion(0.6071764, -0.06553515, 0.014794115, 0.79172164)
+bones/58/rotation = Quaternion(0.30015475, -0.0988412, 0.032291017, 0.9482061)
+bones/60/rotation = Quaternion(-0.06612261, -0.01008241, 0.9934979, -0.0921313)
+bones/61/rotation = Quaternion(-0.13046871, 0.049769543, -0.0076044877, 0.99017334)
+bones/62/rotation = Quaternion(0.55229676, 0.01846783, -0.03991373, 0.8324868)
+bones/63/rotation = Quaternion(0.30174968, 0.1093723, -0.033813562, 0.94648904)
+
+[node name="Right_Hand_Holder" parent="visual/pompier/visual/Armature/Skeleton3D" index="11" unique_id=1516828660]
+transform = Transform3D(0.38200265, -0.23947114, -0.8925952, 0.27809945, 0.9508633, -0.13608564, 0.88132465, -0.19624543, 0.42982915, 988.5178, 2155.213, -1057.4795)
+
+[node name="AnimationPlayer" parent="visual/pompier/visual/Armature" index="2" unique_id=1625294714]
+autoplay = &""
 
 [node name="weapon_holder" type="Node3D" parent="visual" unique_id=1552559189]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30966657, 0, 0)
 
 [node name="Extincteur" parent="visual/weapon_holder" unique_id=826892117 instance=ExtResource("2_g2els")]
-transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, -0.5)
+transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, -0.234384, 0.26739576, -0.43727767)
+
+[node name="LumiereLisibilite" type="OmniLight3D" parent="." unique_id=2062443512]
+editor_description = "Éclairage doux autour du joueur pour lire le sol même loin des feux. Couleur légèrement froide pour distinguer les sources chaudes."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+light_color = Color(0.75, 0.84, 1, 1)
+light_energy = 0.65
+shadow_enabled = true
+omni_range = 7.0
+
+[node name="LumiereLisibilite" type="OmniLight3D" parent="." unique_id=1200185484]
+editor_description = "Éclairage doux autour du joueur pour lire le sol même loin des feux. Couleur légèrement froide pour distinguer les sources chaudes."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+light_color = Color(0.75, 0.84, 1, 1)
+light_energy = 0.65
+shadow_enabled = true
+omni_range = 7.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=457942430]
 shape = SubResource("CapsuleShape3D_sge3q")
@@ -143,8 +195,8 @@ text = "Prêt"
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=737152856]
 
 [node name="DamageFlash" type="ColorRect" parent="CanvasLayer" unique_id=564493702]
-visible = false
 editor_description = "Ancré aux quatre bords : le flash couvre toute la fenêtre, quelle que soit sa taille."
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -152,3 +204,5 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0.81960785, 0.08235294, 0, 1)
+
+[editable path="visual/pompier"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cprfn78efmdf8"]
 
-[ext_resource type="PackedScene" uid="uid://bsk238q653gxr" path="res://scenes/joueur/pompier2.tscn" id="1_ihk18"]
+[ext_resource type="PackedScene" uid="uid://bsk238q653gxr" path="res://scenes/joueur/player_pompier.tscn" id="1_ihk18"]
 
 [node name="pompier" type="Node3D" unique_id=1487199817]
 transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, 0, 0)

@@ -43,7 +43,6 @@ transform = Transform3D(0.11, 0, 0, 0, -4.808253e-09, -0.11, 0, 0.11, -4.808253e
 [node name="GPUParticles3D" type="GPUParticles3D" parent="AttaquePrincipale" unique_id=2081315521]
 editor_description = "Portée, demi-angle, vitesse et opacité sont réglés sur Extincteur, groupe Jet. Le script synchronise les particules et les portions actives de dégâts. Local Coords conserve un jet qui suit la visée."
 transform = Transform3D(0.011698651, 0, -0.9999316, 0, 1, 0, 0.9999316, 0, 0.011698651, 0, 0.96934927, 0)
-emitting = false
 amount = 500
 lifetime = 0.5
 visibility_aabb = AABB(-9, -9, -9, 18, 18, 18)
@@ -54,6 +53,8 @@ draw_pass_1 = SubResource("SphereMesh_poajv")
 [node name="DamageArea" type="Area3D" parent="AttaquePrincipale" unique_id=543287765]
 editor_description = "Présélection des ennemis proches, sur la hauteur des personnages et tourelles. Le script teste ensuite leur contact avec les portions actives du jet au sol."
 transform = Transform3D(9.090909, 0, 0, 0, -3.9737628e-07, 9.090909, 0, -9.090909, -3.9737628e-07, 0, -1.1021225, 1.5636364)
+collision_layer = 16
+collision_mask = 31
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AttaquePrincipale/DamageArea" unique_id=1290565250]
 shape = SubResource("SphereShape3D_sysh0")
@@ -67,3 +68,4 @@ hauteur_sol = 0.11
 
 [node name="extincteur0" parent="." unique_id=1654426891 instance=ExtResource("2_klu21")]
 transform = Transform3D(-3.2564984e-08, 0, 0.745, 0, 0.745, 0, -0.745, 0, -3.2564984e-08, -6.114712e-09, -0.32437807, -0.08326684)
+visible = false

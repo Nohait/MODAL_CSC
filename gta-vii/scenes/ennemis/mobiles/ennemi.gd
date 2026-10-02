@@ -16,6 +16,7 @@ var est_mort := false
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var detection_shape: CollisionShape3D = $SurfaceDetection/CollisionShape3D
 @onready var SurfaceDetection: Area3D = $"SurfaceDetection"
+@onready var exclamationRouge: Node3D = $"PointExclamationRouge"
 @onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
@@ -49,6 +50,7 @@ var en_idle := true
 
 @export_group("Cible_manager")
 @export var chgt_cible_cooldown = 1.3 #On reste 3s sur la meme cible avant de se demander si on change
+@export var aggro_cooldown = chgt_cible_cooldown*3
 var chgt_cible_timer = 0.0 #temps initialisé à 0
 
 # Called when the node enters the scene tree for the first time.
@@ -161,17 +163,34 @@ func choisir_cible():
 		print("Cible avant: ", cible_avant)
 		print("Cible mtn: ", cible)
 
+func animation_enerve():
+	var tween_enerve = create_tween()
+	var scale_origine = Vector3(0.16,0.16,0.16)
+	#var couleur_origine = exclamation.modulate
+	exclamationRouge.scale = Vector3(0.0,0.0,0.0)
+	exclamationRouge.visible = true
+	#exclamation.modulate= Color(0.546, 0.0, 0.016, 1.0)
+	tween_enerve.tween_property(exclamationRouge, "scale", scale_origine, 0.2)
+	tween_enerve.tween_property(exclamationRouge, "scale",  Vector3(0.0,0.0,0.0), aggro_cooldown-0.2)
+	#await tween_enerve.finished
+	#exclamation.visible = false
+	#exclamation.modulate =couleur_origine
+
+
+
 func prendre_degats(degats: float) -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
 	if est_mort:
 		return
 	vie -= degats
 	vie = max(vie, 0)
+	
 	#Le joueur prends l'aggro
 	if cible != player:
-		$EnnemiRepere.play("PopUp")
+		animation_enerve()
+		
 		cible = player
-		chgt_cible_timer = chgt_cible_cooldown*3 #On veut que la cible ait le temps de "s'echapper"
+		chgt_cible_timer = aggro_cooldown #On veut que la cible ait le temps de "s'echapper"
 	
 	afficher_degats(degats)
 	

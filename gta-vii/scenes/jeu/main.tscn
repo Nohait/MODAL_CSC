@@ -124,6 +124,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Objectifs" type="Label" parent="Salles/RoomManager/InterfaceSalle" unique_id=1821781728]
+editor_description = "Ancré en bas avec une marge de 25 pixels. Le texte remonte s'il occupe plusieurs lignes."
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -55.0
+offset_right = -25.0
+offset_bottom = -25.0
+grow_vertical = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+text = "Objectifs :"
+autowrap_mode = 2
+
 [node name="InformationsSalle" type="VBoxContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=908166390]
 editor_description = "Centré en haut : ancrages à 0.5 et marges symétriques (-220 / +220). Les objectifs et le compte à rebours restent alignés à toute résolution."
 layout_mode = 1
