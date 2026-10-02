@@ -82,6 +82,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Dégâts colossaux (100 000 par impact)"
 
+[node name="PointsBoutique" type="CheckButton" parent="Menu/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Points abondants (999 par boutique)"
+tooltip_text = "Activez avant de franchir la porte : chaque boutique démarrera avec 999 points."
+
 [node name="Separateur" type="HSeparator" parent="Menu/Centre/Panneau/Marge/Contenu"]
 layout_mode = 2
 

@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
 
+[ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
+
 [sub_resource type="Environment" id="Environment_test"]
 ambient_light_source = 2
 ambient_light_color = Color(0.9, 0.93, 1, 1)
@@ -221,3 +223,5 @@ autowrap_mode = 2
 [node name="UpgradeManager" parent="." unique_id=1917722069 instance=ExtResource("13_upgrades")]
 
 [node name="MenuDebug" parent="." unique_id=1775271064 instance=ExtResource("14_debug")]
+
+[node name="TransitionEtage" parent="." instance=ExtResource("15_transition")]

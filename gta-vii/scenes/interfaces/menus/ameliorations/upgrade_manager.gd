@@ -37,6 +37,9 @@ var bonus_cumules_pourcent := {&"pression": 0.0, &"reserve": 0.0, &"recharge": 0
 # Le récapitulatif garde la rareté et le gain réel de chaque acquisition.
 var acquisitions: Array[Dictionary] = []
 var points := 0
+# Le menu de debug active ce mode pour la partie en cours, sans modifier l'escorte.
+var points_abondants_test := false
+const POINTS_BOUTIQUE_TEST := 999
 var boutique_ouverte := false
 var choix_ouverts := false
 var souris_avant: int
@@ -81,6 +84,8 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 	for victime in escorte.freed_victims:
 		if is_instance_valid(victime) and not victime.est_morte and not victime.is_queued_for_deletion():
 			points += victime.points_boutique
+	if points_abondants_test:
+		points = POINTS_BOUTIQUE_TEST
 	boutique_ouverte = true
 	extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode

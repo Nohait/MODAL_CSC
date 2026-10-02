@@ -1,5 +1,10 @@
 extends CharacterBody3D
 
+const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
+@export_group("Retour visuel — mort")
+@export var afficher_cendres := true
+@export_range(0.2, 2.0, 0.05) var duree_cendres := 0.7
+
 @export_group("Progression par étage")
 ## Pourcentage ajouté à la valeur de base par étage après le premier.
 @export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
@@ -167,6 +172,9 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	# Une copie du visuel termine l’animation ; le vrai ennemi meurt immédiatement.
+	if afficher_cendres:
+		RETOUR_COMBAT.creer_cendres(self, [$Visuel/Tour, $Visuel/OeilPivot/Oeil, $Visuel/OeilPivot/Pupille], duree_cendres)
 	died.emit()
 	print("Bravo, vous avez tué l'ennemi")
 	queue_free()

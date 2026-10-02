@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/effets/liberation/liberation_victime.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/victime_liberee.svg" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="Vert"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.3, 0.95, 0.48, 0.7)
+
+[sub_resource type="TorusMesh" id="Cercle"]
+inner_radius = 0.75
+outer_radius = 0.85
+rings = 32
+ring_segments = 8
+material = SubResource("Vert")
+
+[node name="LiberationVictime" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Anneau" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.62, 0)
+scale = Vector3(1, 0.1, 1)
+cast_shadow = 0
+mesh = SubResource("Cercle")
+
+[node name="Pictogramme" type="Sprite3D" parent="."]
+position = Vector3(0, 2.6, 0)
+billboard = 1
+shaded = false
+pixel_size = 0.009
+texture = ExtResource("2")

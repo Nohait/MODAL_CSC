@@ -6,6 +6,8 @@ extends CanvasLayer
 @onready var menu: Control = $Menu
 @onready var invincibilite: CheckButton = %Invincibilite
 @onready var degats: CheckButton = %Degats
+@onready var points_boutique: CheckButton = %PointsBoutique
+@onready var ameliorations = $"../UpgradeManager"
 @onready var etages: HBoxContainer = %Etages
 @onready var suivant: Button = %Suivant
 @onready var situation: Label = %Situation
@@ -16,10 +18,11 @@ var souris_avant: int
 func _ready() -> void:
 	menu.hide()
 	# Un fond doré distingue le survol et les options activées du fond sombre.
-	for bouton in [invincibilite, degats, suivant, %Fermer]:
+	for bouton in [invincibilite, degats, points_boutique, suivant, %Fermer]:
 		_styliser_selection(bouton)
 	invincibilite.toggled.connect(_changer_invincibilite)
 	degats.toggled.connect(_changer_degats)
+	points_boutique.toggled.connect(_changer_points_boutique)
 	suivant.pressed.connect(_etage_suivant)
 	%Fermer.pressed.connect(fermer)
 	# Les boutons correspondent au nombre d'étages réglé dans le RoomManager.
@@ -54,6 +57,7 @@ func ouvrir() -> void:
 		return
 	invincibilite.set_pressed_no_signal(joueur.invincible)
 	degats.set_pressed_no_signal(joueur.extincteur.degats_colossaux_test)
+	points_boutique.set_pressed_no_signal(ameliorations.points_abondants_test)
 	var etage: int = salles.salle_actuelle.etage
 	situation.text = "Étage %d/%d — Salle %d/%d" % [etage, salles.nombre_etages,
 		salles.indice_salle % salles.SALLES_PAR_ETAGE + 1, salles.SALLES_PAR_ETAGE]
@@ -86,12 +90,20 @@ func _changer_degats(active: bool) -> void:
 	_actualiser_raccourci()
 
 
+func _changer_points_boutique(active: bool) -> void:
+	# La prochaine ouverture initialise 999 points ; les achats les déduisent normalement.
+	ameliorations.points_abondants_test = active
+	_actualiser_raccourci()
+
+
 func _actualiser_raccourci() -> void:
 	raccourci.text = "I : menu de test"
 	if joueur.invincible:
 		raccourci.text += " · Invincible"
 	if joueur.extincteur.degats_colossaux_test:
 		raccourci.text += " · Dégâts colossaux"
+	if ameliorations.points_abondants_test:
+		raccourci.text += " · Points abondants"
 
 
 func _etage_suivant() -> void:

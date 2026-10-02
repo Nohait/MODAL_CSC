@@ -79,3 +79,12 @@ la barre avec le nouvel avancement à son ouverture.
 
 Ajouter uniquement une description crée une offre, pas la logique de son objectif.
 Les nouveaux types de récompenses demanderont aussi un traitement côté gestionnaire.
+
+## Points de test
+
+Appuyer sur I avant de franchir une porte, puis activer « Points abondants
+(999 par boutique) ». Chaque prochaine boutique démarre avec 999 points,
+indépendamment de l'escorte. Les achats déduisent toujours leur prix normalement.
+Désactiver l'option remet le calcul habituel à la prochaine ouverture de boutique.
+Le mode est désactivé par défaut et n'est pas conservé après une nouvelle partie.
+Le menu de debug reste inaccessible lorsqu'un autre menu possède déjà la pause.

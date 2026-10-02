@@ -1,5 +1,7 @@
 extends Node3D
 
+const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
+
 @onready var particles: GPUParticles3D = $AttaquePrincipale/GPUParticles3D
 @onready var damage_area: Area3D = $AttaquePrincipale/DamageArea
 @onready var muzzle: Node3D = $AttaquePrincipale
@@ -18,6 +20,12 @@ extends Node3D
 # Chaque appui crée une portion : X = distance du début, Y = distance de fin.
 # Plusieurs portions permettent de conserver les espaces entre des tirs brefs.
 var portions_jet: Array[Vector2] = []
+
+@export_group("Retour visuel — impacts")
+@export var afficher_impacts_mousse := true
+## Délai entre deux éclaboussures sur une même cible ; ne change pas les dégâts.
+@export_range(0.05, 0.5, 0.01) var intervalle_impacts := 0.14
+var delais_impacts: Dictionary = {}
 
 @export_group("Charge")
 ## Réserve maximale de l'extincteur au début du niveau.
@@ -103,6 +111,12 @@ func vider_jet() -> void:
 	particles.emitting = false
 
 func _physics_process(delta: float) -> void:
+	# Les délais sont indépendants par cible et disparaissent une fois expirés.
+	for id in delais_impacts.keys():
+		delais_impacts[id] -= delta
+		if delais_impacts[id] <= 0.0:
+			delais_impacts.erase(id)
+
 	if Input.is_key_label_pressed(KEY_J):
 		modifier(15,10)
 	if Input.is_key_label_pressed(KEY_K):
@@ -182,6 +196,13 @@ func get_degats() -> float:
 
 func attaque_1(cible):
 	if cible != null:
+		# Créer l'éclaboussure avant les dégâts, car cet impact peut tuer la cible.
+		# Les flaques conservent leur rendu actuel ; seuls les corps reçoivent la mousse.
+		if afficher_impacts_mousse and cible is CharacterBody3D and not cible.est_mort:
+			var id: int = cible.get_instance_id()
+			if not delais_impacts.has(id):
+				RETOUR_COMBAT.creer_impact(cible, muzzle.global_position)
+				delais_impacts[id] = intervalle_impacts
 		var multiplier = randf_range(0.9,1.1)
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
 		# Colorer la zone uniquement après un impact, y compris sur les flaques.

@@ -8,6 +8,8 @@ signal salle_commencee(salle: Node3D)
 signal salle_terminee(salle: Node3D)
 signal partie_prete
 
+@onready var transition_etage = $"../../TransitionEtage"
+
 # Fourni avant la génération par l'UpgradeManager, selon le réglage du défi.
 var victimes_supplementaires_reserve := 1
 
@@ -1096,6 +1098,9 @@ func activer_salle(
 	)
 
 
+	# Première salle et passages dans un même étage gardent leur comportement habituel.
+	var changer_etage := is_instance_valid(salle_actuelle) and etage_pour_salle(indice) != ancien_etage
+
 	transition_en_cours = true
 
 
@@ -1118,6 +1123,9 @@ func activer_salle(
 		salle_actuelle.process_mode = (
 			Node.PROCESS_MODE_DISABLED
 		)
+
+		if changer_etage:
+			await transition_etage.masquer()
 
 		salle_actuelle.hide()
 
@@ -1335,6 +1343,10 @@ func activer_salle(
 	# --------------------------------------------------------------
 	# RÉACTIVATION
 	# --------------------------------------------------------------
+
+	# La salle et ses chemins sont prêts, mais le combat et le timer restent gelés.
+	if changer_etage:
+		await transition_etage.reveler(salle_actuelle.etage)
 
 	joueur.set_physics_process(
 		true

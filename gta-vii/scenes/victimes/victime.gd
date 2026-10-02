@@ -1,5 +1,10 @@
 extends CharacterBody3D
 
+const EFFET_LIBERATION = preload("res://scenes/effets/liberation/liberation_victime.tscn")
+@export_group("Retour visuel — libération")
+@export var afficher_effet_liberation := true
+@export_range(0.2, 2.0, 0.05) var duree_effet_liberation := 0.55
+
 
 signal freed(victim: CharacterBody3D)
 
@@ -122,6 +127,8 @@ var ennemis: Node = null
 
 
 func _ready() -> void:
+	# Le même signal prévient le VictimManager et déclenche le retour visuel local.
+	freed.connect(_jouer_effet_liberation)
 	stop_distance_player = stop_distance
 
 	# Chaque victime possède son propre matériau.
@@ -274,6 +281,16 @@ func free_victim() -> void:
 		vie_max,
 		" PV"
 	)
+
+
+func _jouer_effet_liberation(_victime: CharacterBody3D) -> void:
+	# La victime achetée dans la boutique rejoint déjà l'escorte : ce n'est pas un sauvetage.
+	if not afficher_effet_liberation or defi_fragile:
+		return
+	var effet = EFFET_LIBERATION.instantiate()
+	effet.duree = duree_effet_liberation
+	# Enfant de la victime : l'anneau et l'icône suivent son départ vers le joueur.
+	add_child(effet)
 
 
 func set_ennemis_container(
