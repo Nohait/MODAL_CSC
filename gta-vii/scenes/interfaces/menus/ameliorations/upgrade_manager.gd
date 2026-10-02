@@ -61,7 +61,7 @@ func ouvrir_choix() -> void:
 	# Le gestionnaire est Always : le fondu et les cartes vivent pendant la pause.
 	animation = create_tween()
 	animation.tween_property(menu, "modulate:a", 1.0, 0.2)
-	cartes.get_child(0).grab_focus()
+	# Aucun choix préselectionné : seule la souris permet de choisir une carte.
 
 
 func _choisir(carte: Control) -> void:

@@ -19,13 +19,13 @@ var vie := vie_max
 @export var bonus_degats: bool = false
 
 @export_group("Suivi")
-
 ## Vitesse de déplacement de la victime.
 @export_range(0.0, 20.0, 0.1, "or_greater") var speed: float = 6
 
 # Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance: float = 2.0
 var stop_distance_player = stop_distance
+var arret = true
 
 var follow_target: Node3D = null
 
@@ -79,7 +79,8 @@ func _physics_process(_delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			free_victim()
 
-	if is_freed and follow_target != null:
+	# Une cible supprimée (flèche ou autre victime) n'est pas un nœud utilisable.
+	if is_freed and is_instance_valid(follow_target):
 		follow_target_node()
 
 func free_victim() -> void:
@@ -87,6 +88,7 @@ func free_victim() -> void:
 	if is_freed:
 		return
 	is_freed = true
+	arret = false
 	interaction_label.visible = false
 
 	freed.emit(self)
@@ -106,11 +108,12 @@ func follow_target_node() -> void:
 	velocity.z = 0.0
 	
 	if follow_target.is_in_group("fleche"):
-		stop_distance = 0
+		stop_distance = 0.1
 	else:
 		stop_distance = stop_distance_player
 	
 	if to_target.length() > stop_distance:
+		arret = false
 		# Les points du chemin sont près du sol, mais l'origine de la victime est
 		# au centre de son corps. Aligner leur hauteur permet une petite tolérance
 		# de passage (0,15 m) sans rester bloqué à cause de la distance verticale.
@@ -130,7 +133,9 @@ func follow_target_node() -> void:
 			direction = direction.normalized()
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
-
+	else:
+		if follow_target.is_in_group("fleche"):
+			arret = true
 	move_and_slide()
 
 func prendre_degats(degats: float) -> void:
