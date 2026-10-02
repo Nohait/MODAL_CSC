@@ -3,6 +3,8 @@ extends Node3D
 
 # Une salle conserve ses données ; le RoomManager prend les décisions de jeu.
 signal sortie_franchie(salle: Node3D)
+# Attribué avant le peuplement : les vagues tardives lisent aussi cette valeur.
+var etage := 1
 var points_arrivee: Array[Vector3] = []
 var points_spawn: Array[Vector3] = []
 var remaining_victims := 0
@@ -18,6 +20,7 @@ var apparitions_en_cours := 0
 # de relire toutes ses collisions à chaque apparition d'une flaque.
 var geometrie_decor: NavigationMeshSourceGeometryData3D
 var navigation_a_actualiser := false
+var navigation_active := false
 # Deux cartes distinctes permettent de superposer deux sols navigables sans
 # que Godot relie par erreur le chemin des victimes à celui des ennemis.
 var carte_ennemis: RID
@@ -29,6 +32,8 @@ func _ready() -> void:
 	carte_ennemis = NavigationServer3D.map_create()
 	NavigationServer3D.map_set_cell_size(carte_ennemis, 0.25)
 	NavigationServer3D.map_set_cell_height(carte_ennemis, 0.25)
+	# La carte reste active mais vide tant que la salle n'a pas de maillage.
+	NavigationServer3D.map_set_active(carte_ennemis, true)
 	$NavigationEnnemis.set_navigation_map(carte_ennemis)
 	# Les obstacles initiaux sont dans Ennemis ; ceux des tirs dans FlaquesDeFeu.
 	# Ces signaux signalent un ajout/retrait, sans surveiller la liste à chaque image.
@@ -45,16 +50,19 @@ func _exit_tree() -> void:
 
 
 func activer_navigation(active: bool) -> void:
-	# Le RoomManager active ou désactive toujours les deux parcours ensemble.
-	$Navigation.enabled = active
-	$NavigationEnnemis.enabled = active
-	NavigationServer3D.map_set_active(carte_ennemis, active)
+	# Retirer les maillages de la salle quittée. Ils seront recalculés à l'entrée.
+	# Les régions restent enabled : leur réactivation après un départ sans maillage
+	# ne republie pas correctement les chemins dans notre version de Godot.
+	navigation_active = active
+	if not active:
+		$Navigation.navigation_mesh = null
+		$NavigationEnnemis.navigation_mesh = null
 
 
 func _sur_obstacle_modifie(noeud: Node) -> void:
 	if not noeud.is_in_group("obstacles_navigation") or geometrie_decor == null:
 		return
-	if navigation_a_actualiser or not $Navigation.enabled:
+	if navigation_a_actualiser or not navigation_active:
 		return
 	navigation_a_actualiser = true
 	# Reporter le calcul laisse le projectile terminer le placement et la taille
@@ -64,7 +72,7 @@ func _sur_obstacle_modifie(noeud: Node) -> void:
 
 func _actualiser_navigation() -> void:
 	navigation_a_actualiser = false
-	if is_inside_tree() and $Navigation.enabled:
+	if is_inside_tree() and navigation_active:
 		cuire_navigation()
 
 

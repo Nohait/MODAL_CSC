@@ -1,9 +1,18 @@
 extends Area3D
 
+@export_group("Progression par étage")
+## Pourcentage ajouté à la valeur de base par étage après le premier.
+@export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
+@export_range(0.0, 200.0, 1.0) var degats_par_etage_pourcent := 10.0
+# Fourni par le créateur AVANT add_child, donc avant _ready.
+var etage := 1
+
+
 # Les flaques initiales annoncent leur destruction au RoomManager.
 signal died
 var est_mort := false
 
+@export_group("Statistiques de base")
 @export var degats_flaque := 5.0
 @export var vie_max := 30.0
 var vie = vie_max
@@ -24,6 +33,12 @@ func choisir_taille_aleatoire() -> void:
 	hitbox_radius *= facteur
 	
 func _ready() -> void:
+	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
+	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
+	var paliers := maxi(etage - 1, 0)
+	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
+	vie = vie_max
+	degats_flaque *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 

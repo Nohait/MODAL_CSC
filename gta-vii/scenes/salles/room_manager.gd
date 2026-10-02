@@ -13,7 +13,14 @@ const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuat
 
 @export_group("Parcours")
 ## Chaque nouvelle partie génère de nouvelles salles, sans graine fixe.
-@export_range(1, 6, 1) var nombre_salles := 3
+@export_range(1, 10, 1) var nombre_etages := 3
+const SALLES_PAR_ETAGE := 5
+# Valeur calculée : changer le nombre d'étages ajuste automatiquement le parcours.
+var nombre_salles: int:
+	get:
+		return nombre_etages * SALLES_PAR_ETAGE
+
+
 @export_group("Population des salles")
 @export_range(0, 20, 1) var nombre_min_ennemis := 3
 @export_range(0, 20, 1) var nombre_max_ennemis := 6
@@ -58,6 +65,11 @@ var remaining_enemies := 0
 var is_room_cleared := false
 
 
+func etage_pour_salle(indice: int) -> int:
+	# Les indices commencent à zéro, mais les étages affichés commencent à 1.
+	return floori(float(indice) / SALLES_PAR_ETAGE) + 1
+
+
 func demarrer_partie() -> void:
 	if initialized:
 		return
@@ -67,7 +79,11 @@ func demarrer_partie() -> void:
 	objectifs.text = "Génération des salles…"
 	# Le même joueur et son escorte restent hors de Rooms toute la partie.
 	for i in range(nombre_salles):
-		var salle = generateur.generer_salle(1 + nombre_salles * maxi(nombre_min_victimes, nombre_max_victimes))
+		# % donne le reste de la division : 5, 10 et 15 sont des fins d'étage.
+		var fin_etage := (i + 1) % SALLES_PAR_ETAGE == 0
+		# L'étage est connu avant la génération pour choisir les textures du décor.
+		var salle = generateur.generer_salle(1 + nombre_salles * maxi(nombre_min_victimes, nombre_max_victimes), fin_etage, etage_pour_salle(i))
+		salle.etage = etage_pour_salle(i)
 		salle.name = "Salle%d" % (i + 1)
 		# Salles éloignées pour que leurs collisions ne se superposent jamais.
 		salle.position.x = i * 150.0
@@ -113,12 +129,14 @@ func peupler_salle(salle: Node3D) -> void:
 		var tour = TOUR_ENFLAMMEE_SCENE.instantiate()
 		tour.position = emplacements.pop_back() + Vector3.UP * 0.1
 		tour.projectiles_tour = salle.get_node("ProjectilesTour")
+		tour.etage = salle.etage
 		salle.get_node("Ennemis").add_child(tour)
 		tour.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_enemies += 1
 	var nombre_flaques := mini(randi_range(nombre_min_flaques, maxi(nombre_min_flaques, nombre_max_flaques)), emplacements.size())
 	for i in range(nombre_flaques):
 		var flaque = FLAQUE_SCENE.instantiate()
+		flaque.etage = salle.etage
 		salle.get_node("Ennemis").add_child(flaque)
 		# Choisir la taille avant le calcul de navigation : son empreinte sera exacte.
 		flaque.choisir_taille_aleatoire()
@@ -209,6 +227,7 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 		salle.mobiles_a_creer.append(emplacement)
 	else:
 		var ennemi = ENNEMI_SCENE.instantiate()
+		ennemi.etage = salle.etage
 		ennemi.position = emplacement + Vector3.UP * 0.75
 		salle.get_node("Ennemis").add_child(ennemi)
 		# Les mobiles utilisent le parcours qui autorise le feu, contrairement aux victimes.
@@ -220,6 +239,7 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 
 
 func activer_salle(indice: int) -> void:
+	var ancien_etage := etage_pour_salle(indice_salle)
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
@@ -242,13 +262,12 @@ func activer_salle(indice: int) -> void:
 		animation_message.kill()
 	message_victoire.hide()
 	salle_actuelle.show()
-	# Réactiver la salle avant la synchronisation : une région sous un parent
-	# Disabled n'est pas utilisable par le serveur de navigation.
+	# Réactiver le décor avant de synchroniser ses collisions et calculer les chemins.
 	salle_actuelle.process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.activer_navigation(true)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	# Le décor des trois salles existe déjà. Cuire le chemin de la salle active
+	# Le décor des salles du parcours existe déjà. Cuire le chemin de la salle active
 	# après sa réactivation pour que ses collisions soient prises en compte.
 	salle_actuelle.cuire_navigation()
 	# Téléporter les mêmes personnages conserve leur état et leurs bonus.
@@ -268,10 +287,15 @@ func activer_salle(indice: int) -> void:
 	# Le serveur prépare les chemins en arrière-plan. Deux images ne suffisent
 	# pas toujours : attendre qu'un trajet entre deux places de départ existe.
 	var carte: RID = salle_actuelle.get_world_3d().navigation_map
+	# Valider la nouvelle salle, pas un chemin projeté sur l'ancienne région.
 	var arrivee: Vector3 = salle_actuelle.to_global(salle_actuelle.points_arrivee[1])
 	for tentative in range(300):
 		await get_tree().physics_frame
-		if not NavigationServer3D.map_get_path(carte, joueur.global_position, arrivee, true).is_empty():
+		var point_proche := NavigationServer3D.map_get_closest_point(carte, joueur.global_position)
+		var victimes_pretes := point_proche.distance_to(joueur.global_position) < 3.0 and not NavigationServer3D.map_get_path(carte, joueur.global_position, arrivee, true).is_empty()
+		# Les deux cartes se synchronisent séparément : attendre aussi les ennemis.
+		var ennemis_prets := not NavigationServer3D.map_get_path(salle_actuelle.carte_ennemis, joueur.global_position, arrivee, true).is_empty()
+		if victimes_pretes and ennemis_prets:
 			break
 		if tentative == 299:
 			push_error("La navigation de la salle n'a pas pu être initialisée.")
@@ -287,6 +311,8 @@ func activer_salle(indice: int) -> void:
 	salle_actuelle.temps_avant_vague = delai_vagues
 	transition_en_cours = false
 	actualiser_objectifs()
+	if salle_actuelle.etage != ancien_etage:
+		afficher_message("Étage %d — Salle 1/%d" % [salle_actuelle.etage, SALLES_PAR_ETAGE])
 
 
 func _on_victim_freed(_victime: CharacterBody3D, salle: Node3D) -> void:
@@ -306,7 +332,7 @@ func actualiser_objectifs() -> void:
 	remaining_victims = salle_actuelle.remaining_victims
 	remaining_enemies = salle_actuelle.remaining_enemies
 	is_room_cleared = salle_actuelle.liberee
-	objectifs.text = "Salle %d/%d · Victimes : %d · Ennemis : %d" % [indice_salle + 1, nombre_salles, remaining_victims, remaining_enemies]
+	objectifs.text = "Étage %d/%d · Salle %d/%d · Victimes : %d · Ennemis : %d" % [salle_actuelle.etage, nombre_etages, indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, remaining_victims, remaining_enemies]
 	var a_venir: int = salle_actuelle.mobiles_a_creer.size() + salle_actuelle.apparitions_en_cours
 	if a_venir > 0:
 		objectifs.text += " · À venir : %d" % a_venir
@@ -320,7 +346,15 @@ func actualiser_objectifs() -> void:
 
 
 func afficher_victoire() -> void:
-	objectifs.text = "Salle %d/%d libérée — franchissez une porte pour continuer." % [indice_salle + 1, nombre_salles]
+	objectifs.text = "Étage %d · Salle %d/%d libérée — franchissez une porte pour continuer." % [salle_actuelle.etage, indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE]
+	afficher_message("Salle libérée !")
+
+
+func afficher_message(texte: String) -> void:
+	# Réutiliser le bandeau, en arrêtant son ancien fondu avant une nouvelle annonce.
+	if animation_message:
+		animation_message.kill()
+	message_victoire.get_node("Texte").text = texte
 	message_victoire.modulate.a = 0.0
 	message_victoire.show()
 	animation_message = create_tween()
@@ -352,5 +386,5 @@ func passer_salle_suivante() -> void:
 	if indice_salle + 1 < salles.get_child_count():
 		await activer_salle(indice_salle + 1)
 	else:
-		# Fin explicite du parcours ; aucune quatrième salle ni accès hors du niveau.
+		# La dernière salle du dernier étage termine le parcours.
 		get_tree().change_scene_to_file("res://scenes/interfaces/menus/ecran_victoire.tscn")
