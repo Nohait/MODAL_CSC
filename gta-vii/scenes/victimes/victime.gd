@@ -289,7 +289,8 @@ func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
 	if difference <= 0.0:
 		return
 	degats_sauvetage_appliques = nouveaux_degats_sauvetage
-	vie = maxf(vie - difference, 0.0)
+	# À zéro seconde, éviter un reliquat de PV dû aux arrondis des nombres décimaux.
+	vie = 0.0 if proportion_ecoulee >= 1.0 else maxf(vie - difference, 0.0)
 	actualiser_barre_vie()
 	if vie <= 0.0:
 		mourir()

@@ -16,6 +16,7 @@ var victimes_supplementaires_reserve := 1
 # Indique à l'UpgradeManager combien de victimes vivantes sont actuellement dans l'escorte.
 signal choix_amelioration_demande(nombre_victimes: int)
 
+const GUIDAGE_SORTIE = preload("res://scenes/effets/guidage_sortie/guidage_sortie.gd")
 const SBIRE_SCENE = preload("res://scenes/ennemis/mobiles/sbire.tscn")
 const ANNONCE_SCENE = preload("res://scenes/effets/apparition/annonce_apparition.tscn")
 const TOUR_ENFLAMMEE_SCENE = preload("res://scenes/ennemis/tourelles/tour_enflammee.tscn")
@@ -53,8 +54,9 @@ var nombre_salles: int:
 @export_range(1, 5, 1) var taille_min_vague := 1
 @export_range(1, 5, 1) var taille_max_vague := 3
 
-# Temps entre deux vagues.
-@export_range(0.2, 30.0, 0.1) var delai_vagues := 4.0
+# Durée tirée pour chaque salle ; la dernière vague apparaît à la fin.
+@export_range(15.0, 30.0, 1.0) var duree_min_vagues := 15.0
+@export_range(15.0, 30.0, 1.0) var duree_max_vagues := 30.0
 
 # Durée de l'annonce visuelle avant apparition.
 @export_range(0.2, 3.0, 0.1) var duree_annonce := 1.0
@@ -62,17 +64,10 @@ var nombre_salles: int:
 # Distance horizontale minimale avec le joueur pour une vague normale.
 @export_range(1.5, 10.0, 0.5) var distance_securite_spawn := 3.0
 
-# Sauvetage
-
-@export_group("Sauvetage des victimes")
-
-# Durée pendant laquelle les victimes captives perdent progressivement leurs PV.
-@export_range(1.0, 120.0, 1.0, "or_greater") var duree_sauvetage: float = 30.0
-
 # Victimes
 
 @export_group("Victimes présentes dès le début")
-@export_range(0, 5, 1) var nombre_min_victimes := 0
+@export_range(1, 5, 1) var nombre_min_victimes := 1
 @export_range(0, 5, 1) var nombre_max_victimes := 3
 
 # Ancien système de bonus
@@ -95,6 +90,7 @@ var nombre_salles: int:
 @onready var message_victoire: PanelContainer = $InterfaceSalle/HUD/MessageVictoire
 
 # État global
+var guidage_sortie: Node3D
 var salle_actuelle: Node3D
 var indice_salle := -1
 var transition_en_cours := false
@@ -115,6 +111,8 @@ func demarrer_partie() -> void:
 	if initialized:
 		return
 	initialized = true
+	guidage_sortie = GUIDAGE_SORTIE.new()
+	add_child(guidage_sortie)
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	objectifs.text = "Génération des salles…"
@@ -149,7 +147,7 @@ func peupler_salle(salle: Node3D) -> void:
 	emplacements.shuffle()
 
 	# Victimes
-	var nombre_victimes := randi_range(nombre_min_victimes, maxi(nombre_min_victimes, nombre_max_victimes))
+	var nombre_victimes := randi_range(maxi(1, nombre_min_victimes), maxi(1, maxi(nombre_min_victimes, nombre_max_victimes)))
 	for i in range(mini(nombre_victimes, emplacements.size())):
 		var victime = VICTIME_SCENE.instantiate()
 		victime.name = "Victime%d" % (i + 1)
@@ -229,22 +227,23 @@ func _process(delta: float) -> void:
 	if (transition_en_cours or not is_instance_valid(salle_actuelle)):
 		return
 
-	# Le timer est toujours actualisé, même s'il n'y a plus de mobiles à annoncer.
-	if salle_actuelle.sauvetage_en_cours:
-		actualiser_sauvetage(delta)
-
-	# Le timer a peut-être atteint zéro pendant l'appel précédent.
 	if not salle_actuelle.sauvetage_en_cours:
 		return
-	if salle_actuelle.mobiles_a_creer.is_empty():
+	actualiser_sauvetage(delta)
+	if not salle_actuelle.sauvetage_en_cours:
 		return
-	salle_actuelle.temps_avant_vague -= delta
-	if (salle_actuelle.temps_avant_vague <= 0.0):
-
-		# Ne pas démarrer une nouvelle annonce normale si elle dépasserait la fin du timer.
-		if (salle_actuelle.temps_sauvetage_restant > duree_annonce):
-			creer_vague()
-		salle_actuelle.temps_avant_vague = delai_vagues
+	var restant: float = salle_actuelle.temps_sauvetage_restant
+	# Les annonces commencent avant leur échéance, mais le calendrier décide du spawn.
+	while not salle_actuelle.vagues_planifiees.is_empty():
+		var vague: Dictionary = salle_actuelle.vagues_planifiees[0]
+		if restant > vague.restant + duree_annonce:
+			break
+		salle_actuelle.vagues_planifiees.pop_front()
+		creer_vague(vague.nombre, vague.restant)
+	for apparition in salle_actuelle.apparitions_planifiees.duplicate():
+		if restant <= apparition.restant:
+			salle_actuelle.apparitions_planifiees.erase(apparition)
+			_terminer_apparition(salle_actuelle, apparition.position)
 
 # Timer
 
@@ -254,28 +253,40 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	salle.sauvetage_demarre = true
 	salle.sauvetage_en_cours = true
 	salle.sauvetage_termine = false
-	salle.temps_sauvetage_restant = duree_sauvetage
-	salle.temps_avant_vague = delai_vagues
+	salle.duree_sauvetage = randf_range(clampf(duree_min_vagues, 15.0, 30.0), clampf(maxf(duree_min_vagues, duree_max_vagues), 15.0, 30.0))
+	salle.temps_sauvetage_restant = salle.duree_sauvetage
+	var tailles: Array[int] = []
+	var a_planifier: int = salle.mobiles_a_creer.size()
+	while a_planifier > 0:
+		var taille := mini(a_planifier, randi_range(taille_min_vague, maxi(taille_min_vague, taille_max_vague)))
+		tailles.append(taille)
+		a_planifier -= taille
+	for i in range(tailles.size()):
+		# Échéances espacées régulièrement ; la dernière vaut exactement zéro seconde restante.
+		var restant: float = salle.duree_sauvetage * (1.0 - float(i + 1) / tailles.size())
+		salle.vagues_planifiees.append({"nombre": tailles[i], "restant": restant})
+	informations_salle.demarrer_timer()
 
 	# La ProgressBar représente directement des secondes.
 	timer_bar.min_value = 0.0
-	timer_bar.max_value = duree_sauvetage
-	timer_bar.value = duree_sauvetage
+	timer_bar.max_value = salle.duree_sauvetage
+	timer_bar.value = salle.duree_sauvetage
 	timer_container.show()
 
 func actualiser_sauvetage(delta: float) -> void:
 	var salle := salle_actuelle
+	var temps_precedent: float = salle.temps_sauvetage_restant
 	salle.temps_sauvetage_restant = maxf(salle.temps_sauvetage_restant - delta, 0.0)
 	timer_bar.value = salle.temps_sauvetage_restant
 
 	# Proportion écoulée : 0 au début, 0.5 à mi-parcours, 1 à la fin.
-	var proportion_ecoulee: float = 1.0 - salle.temps_sauvetage_restant / duree_sauvetage
-	
+	var proportion_ecoulee: float = 1.0 - salle.temps_sauvetage_restant / salle.duree_sauvetage
 	for victime in (salle.get_node("Victimes").get_children()):
 		if not is_instance_valid(victime) or victime.is_queued_for_deletion() or victime.est_morte or victime.is_freed:
 			continue
-		#marqueur de son pour l'urgence
-		if abs(proportion_ecoulee-0.5) < delta/ duree_sauvetage:
+		# Un seul cri au passage de la moitié du timer, quelle que soit la durée de la salle.
+		var mi_parcours: float = salle.duree_sauvetage / 2.0
+		if temps_precedent > mi_parcours and salle.temps_sauvetage_restant <= mi_parcours and not victime.cris.is_empty():
 			victime.cris.pick_random().play()
 		victime.actualiser_degats_sauvetage(proportion_ecoulee)
 		
@@ -308,20 +319,16 @@ func terminer_sauvetage(salle: Node3D) -> void:
 	# À zéro seconde, aucun mobile planifié ne doit rester en attente.
 	forcer_spawn_mobiles_restants(salle)
 	if salle == salle_actuelle:
-		afficher_message("Temps écoulé !")
 		actualiser_objectifs()
 
 # Vagues
 
-func creer_vague() -> void:
-	var nombre := mini(
-		randi_range(taille_min_vague, maxi(taille_min_vague, taille_max_vague)),
-		salle_actuelle.mobiles_a_creer.size()
-	)
+func creer_vague(nombre_prevu: int, restant: float) -> void:
+	var nombre := mini(nombre_prevu, salle_actuelle.mobiles_a_creer.size())
 	for i in range(nombre):
 		var indice := trouver_emplacement_eloigne(salle_actuelle)
 		if indice == -1:
-			break
+			indice = 0 # L’annonce prévient le joueur ; ne pas retarder la vague.
 		var emplacement: Vector3 = salle_actuelle.mobiles_a_creer[indice]
 		salle_actuelle.mobiles_a_creer.remove_at(indice)
 		salle_actuelle.mobiles_annonces.append(emplacement)
@@ -330,7 +337,8 @@ func creer_vague() -> void:
 		annonce.position = emplacement + Vector3.UP * 0.13
 		annonce.duree = duree_annonce
 		salle_actuelle.annonces_en_cours.append(annonce)
-		annonce.terminee.connect(_terminer_apparition.bind(salle_actuelle, emplacement, annonce), CONNECT_ONE_SHOT)
+		salle_actuelle.apparitions_planifiees.append({"position": emplacement, "restant": restant})
+		annonce.terminee.connect(salle_actuelle.annonces_en_cours.erase.bind(annonce), CONNECT_ONE_SHOT)
 		salle_actuelle.add_child(annonce)
 	actualiser_objectifs()
 
@@ -347,10 +355,8 @@ func trouver_emplacement_eloigne(salle: Node3D) -> int:
 			return i
 	return -1
 
-func _terminer_apparition(salle: Node3D, emplacement: Vector3, annonce: Node) -> void:
-	salle.annonces_en_cours.erase(annonce)
-
-	# Si la fin du timer a déjà forcé cet ennemi, cette ancienne annonce ne doit créer aucun doublon.
+func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
+	# Une position consommée ne doit jamais créer deux ennemis.
 	if not salle.mobiles_annonces.has(emplacement):
 		return
 	salle.mobiles_annonces.erase(emplacement)
@@ -378,6 +384,8 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 	salle.mobiles_a_creer.clear()
 	salle.mobiles_annonces.clear()
 	salle.apparitions_en_cours = 0
+	salle.vagues_planifiees.clear()
+	salle.apparitions_planifiees.clear()
 	for emplacement in positions:
 		creer_sbire(salle, emplacement)
 
@@ -399,6 +407,7 @@ func activer_salle(indice: int) -> void:
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
+	guidage_sortie.arreter()
 	joueur.annuler_ordre_victimes()
 	if is_instance_valid(salle_actuelle):
 		salle_actuelle.process_mode = Node.PROCESS_MODE_DISABLED
@@ -537,7 +546,8 @@ func actualiser_objectifs() -> void:
 func afficher_victoire() -> void:
 	informations_salle.mettre_a_jour(salle_actuelle.etage,
 		indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, 0, 0, salle_actuelle.remaining_victims)
-	afficher_message("Salle libérée !")
+	informations_salle.afficher_salle_liberee()
+	guidage_sortie.demarrer(joueur, salle_actuelle)
 
 func afficher_message(texte: String) -> void:
 	if animation_message:
@@ -623,3 +633,34 @@ func ajouter_population_defi(salle: Node3D, mobiles: int, victimes: int) -> Vect
 		salle.remaining_enemies += 1
 		ajoutes.x += 1
 	return ajoutes
+
+func liberer_salle_debug() -> void:
+	if transition_en_cours or not is_instance_valid(salle_actuelle) or salle_actuelle.liberee:
+		return
+	var salle := salle_actuelle
+	# Annuler les vagues sans créer des ennemis juste pour les supprimer ensuite.
+	var en_attente: int = salle.mobiles_a_creer.size() + salle.mobiles_annonces.size()
+	salle.remaining_enemies = maxi(salle.remaining_enemies - en_attente, 0)
+	for annonce in salle.annonces_en_cours:
+		if is_instance_valid(annonce):
+			annonce.queue_free()
+	salle.annonces_en_cours.clear()
+	salle.mobiles_a_creer.clear()
+	salle.mobiles_annonces.clear()
+	salle.vagues_planifiees.clear()
+	salle.apparitions_planifiees.clear()
+	salle.apparitions_en_cours = 0
+	# Arrêter le sauvetage sans appliquer ses dégâts de fin aux victimes.
+	salle.sauvetage_en_cours = false
+	salle.sauvetage_termine = true
+	salle.temps_sauvetage_restant = 0.0
+	timer_bar.value = 0.0
+	timer_container.hide()
+	for ennemi in salle.get_node("Ennemis").get_children():
+		if not ennemi.is_queued_for_deletion() and ennemi.has_method("mourir"):
+			ennemi.mourir()
+	for conteneur in ["ProjectilesTour", "FlaquesDeFeu"]:
+		for danger in salle.get_node(conteneur).get_children():
+			danger.queue_free()
+	# Utiliser la fin normale ouvre les portes, actualise le HUD et démarre le guidage.
+	actualiser_objectifs()

@@ -34,7 +34,10 @@ var mobiles_annonces: Array[Vector3] = []
 # Elles permettront de les supprimer proprement si le timer arrive à zéro.
 var annonces_en_cours: Array[Node] = []
 
-var temps_avant_vague := 0.0
+# Le calendrier utilise les secondes restantes du même timer que les captives.
+var duree_sauvetage := 30.0
+var vagues_planifiees: Array[Dictionary] = []
+var apparitions_planifiees: Array[Dictionary] = []
 
 var apparitions_en_cours := 0
 

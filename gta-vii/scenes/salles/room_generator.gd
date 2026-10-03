@@ -215,11 +215,11 @@ func displayBoxes() -> void:
 
 	# Mélanger une liste finie évite la boucle infinie si la salle manque de place.
 	# Garder au moins 12 cases libres pour les personnages et la borne.
-	var nombre := mini(randi_range(5, 10), maxi(0, cellules_disponibles.size() - 12))
+	var nombre := mini(randi_range(2, 5), maxi(0, cellules_disponibles.size() - 12))
 	for i in range(nombre):
 		var cellule: Vector2i = cellules_disponibles.pop_back()
 		var caisse = BOX_SCENE.instantiate()
-		caisse.position = position_cellule(cellule) + Vector3(0, 0.85, 0)
+		caisse.position = position_cellule(cellule) + Vector3(0, 0.6, 0)
 		salle_en_creation.get_node("Navigation/Decor").add_child(caisse)
 
 func displayWalls() -> void:

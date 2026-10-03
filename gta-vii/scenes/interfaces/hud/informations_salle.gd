@@ -5,11 +5,13 @@ const ICONE_VICTIMES = preload("res://assets/textures/interfaces/ameliorations/i
 
 @onready var objectifs: Label = $Objectifs
 @onready var ennemis: Label = $Ennemis
+@onready var encart: Control = $TimerContainer
 @onready var timer: ProgressBar = $TimerContainer/TimerBar
 @onready var texte_timer: RichTextLabel = $TimerContainer/TimerText
 var remplissage: StyleBoxFlat
 var temps := 0.0
 var victimes_a_liberer := 0
+var salle_liberee := false
 
 func _ready() -> void:
 	# Dupliquer le style permet de changer la couleur sans toucher aux autres barres.
@@ -28,6 +30,8 @@ func mettre_a_jour(etage: int, salle: int, total: int, restants: int, a_venir: i
 		ennemis.text += "  ·  %d À VENIR" % a_venir
 
 func _actualiser_timer(secondes: float) -> void:
+	if salle_liberee:
+		return
 	texte_timer.clear()
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
 	if secondes > 0:
@@ -38,11 +42,42 @@ func _actualiser_timer(secondes: float) -> void:
 	else:
 		texte_timer.add_text("SAUVETAGE TERMINÉ")
 	texte_timer.pop()
-	remplissage.bg_color = Color(0.75, 0.23, 0.12) if secondes <= 5 else Color(0.64, 0.37, 0.16)
+	remplissage.bg_color = Color(0.75, 0.23, 0.12) if secondes > 0 and secondes <= 5 and victimes_a_liberer > 0 else Color(0.64, 0.37, 0.16)
+
+func demarrer_timer() -> void:
+	salle_liberee = false
+	temps = 0.0
+	encart.show()
+	timer.show()
+	texte_timer.offset_top = 3.0
+	texte_timer.offset_bottom = 25.0
+	_actualiser_timer(timer.value)
+
+func afficher_salle_liberee() -> void:
+	salle_liberee = true
+	encart.show()
+	timer.hide()
+	texte_timer.offset_top = 8.0
+	texte_timer.offset_bottom = 30.0
+	texte_timer.clear()
+	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
+	texte_timer.add_text("Salle libérée !")
+	texte_timer.pop()
+	_reinitialiser_alerte()
+
+func _reinitialiser_alerte() -> void:
+	temps = 0.0
+	encart.scale = Vector2.ONE
+	encart.modulate.a = 1.0
 
 func _process(delta: float) -> void:
-	temps += delta
-	# Le texte pulse doucement durant les cinq dernières secondes, puis se stabilise.
-	var urgence := timer.value > 0 and timer.value <= 5
-	texte_timer.modulate.a = 0.75 + sin(temps * 6.0) * 0.25 if urgence else 1.0
-
+	var urgence := not salle_liberee and timer.value > 0 and timer.value <= 5 and victimes_a_liberer > 0
+	if urgence:
+		temps += delta
+		# Un cycle par seconde : le panneau grandit, s’éclaircit, puis revient à son état initial.
+		var pulsation := (1.0 - cos(temps * TAU)) / 2.0
+		encart.pivot_offset = encart.size / 2.0
+		encart.scale = Vector2.ONE * (1.0 + pulsation * 0.08)
+		encart.modulate.a = 1.0 - pulsation * 0.45
+	else:
+		_reinitialiser_alerte()
