@@ -14,10 +14,12 @@ signal died(victim: CharacterBody3D)
 @onready var interaction_label: Label3D = $InteractionLabel
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent
 @onready var visuel: MeshInstance3D = $MeshInstance3D
-@onready var cris = $"Sons/cris".get_children()
 @onready var materiau := (visuel.get_active_material(0).duplicate()as StandardMaterial3D)
 
-
+@onready var cris = $"Sons/cris".get_children()
+@onready var victim_death = [
+	 preload("res://assets/sounds/victimes/victim_death2.wav")
+]
 # ------------------------------------------------------------------
 # BARRE DE VIE
 # ------------------------------------------------------------------
@@ -310,6 +312,13 @@ func mourir() -> void:
 	est_morte = true
 	vie = 0.0
 	actualiser_barre_vie()
+	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
+	var victim_death_sound =  AudioStreamPlayer3D.new()
+	get_parent().add_child(victim_death_sound)
+	victim_death_sound.stream = victim_death.pick_random()
+	victim_death_sound.global_position = global_position
+	victim_death_sound.play()
+	
 	died.emit(self)
 	queue_free()
 

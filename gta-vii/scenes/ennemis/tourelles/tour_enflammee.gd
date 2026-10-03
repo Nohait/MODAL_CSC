@@ -35,18 +35,20 @@ var hitbox_radius = 1.5
 @export_range(1.0, 30.0, 0.5) var distance_detection := 10.0
 ## Portée indiquée par le cercle blanc : en sortir interrompt la visée.
 @export_range(1.0, 40.0, 0.5) var distance_attaque := 14.0
+var distance_min = 1000.0
 
 @export_group("Attaque")
 ## Temps sans laser après chaque tir.
 @export_range(0.1, 10.0, 0.1) var cooldown_post_tir := 1.5
 ## Temps pendant lequel le laser annonce le prochain tir.
 @export_range(0.1, 10.0, 0.1) var duree_chargement := 1.5
-# Ancien dégât effectif du projectile : 25. La tourelle le pilote maintenant.
-@export var degats_ennemi = 25.0
-
 # Un temps de repos à zéro signifie que la tourelle peut commencer à viser.
 var repos_restant := 0.0
 var chargement_ecoule := 0.0
+# Ancien dégât effectif du projectile : 25. La tourelle le pilote maintenant.
+@export var degats_ennemi = 25.0
+
+
 @onready var laser: MeshInstance3D = $Laser
 @onready var disque: Node3D = $IndicateurDetection
 var materiau_laser: StandardMaterial3D
@@ -79,23 +81,17 @@ func _physics_process(delta: float) -> void:
 	repos_restant = maxf(0.0, repos_restant - delta)
 	# La détection déclenche la visée ; le disque indique ensuite la zone à quitter.
 	# Une victime seule n'affiche pas l'indicateur et n'est jamais prise pour cible.
-	var joueur_detecte: Node3D = null
-	for corps in SurfaceDetection.get_overlapping_bodies():
-		if corps.is_in_group("player"):
-			joueur_detecte = corps
-			break
-
+	choisir_cible()
+	print("j'ai choisi ma cible:", cible)
 	# La détection acquiert la cible ; la portée d'attaque permet de la conserver
 	# un peu plus loin. Une sortie de portée annule entièrement le chargement.
 	if is_instance_valid(cible):
 		var ecart: Vector3 = cible.global_position - global_position
 		ecart.y = 0.0
-		if not cible.is_in_group("player") or ecart.length() > distance_attaque:
+		if ecart.length() > distance_attaque:
 			cible = null
 	else:
 		cible = null
-	if cible == null:
-		cible = joueur_detecte
 	# Orienter l'œil AVANT de calculer le laser depuis son point de départ.
 	$Visuel.actualiser()
 	# Rester visible entre 10 et 14 m, ainsi que pendant le repos après un tir :
@@ -197,6 +193,29 @@ func tirer_projectile() -> void:
 	# Le tir suit exactement le laser au moment du départ. L'ancienne anticipation
 	# de la vitesse du joueur annoncerait une direction différente du projectile.
 	projectile.direction = (cible.global_position - muzzle.global_position).normalized()
+
+func choisir_cible():
+	var cible_avant = cible #on sauvegardde la cible
+	var bodies = SurfaceDetection.get_overlapping_bodies()
+	if cible != null:
+		distance_min = global_position.distance_to(cible.global_position)
+	else:
+		distance_min = 1000.0
+		
+	for body in bodies:
+		#les cibles ne peuvent etre que des gentils libérés
+		if body.is_in_group("player") or (body.is_in_group("victime") and body.is_freed):
+			var distance_body = global_position.distance_to(body.global_position)
+			print(body, " dbody: ",distance_body," dmin: ", distance_min)
+			
+			#La cible choisie est la plus proche
+			if distance_body <= distance_min:
+				distance_min = distance_body
+				cible = body
+				print(cible)
+	if cible_avant !=null and cible != cible_avant:
+		repos_restant = 0.0
+		chargement_ecoule = duree_chargement/1.2
 
 
 func couleur_degats(degats: float) -> Color:
