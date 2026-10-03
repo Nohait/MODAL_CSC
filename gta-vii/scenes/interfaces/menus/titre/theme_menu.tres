@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="1"]
+
+[resource]
+default_font = ExtResource("1")
+default_font_size = 24
+Label/colors/font_color = Color(0.91, 0.85, 0.73, 1)
+Label/colors/font_shadow_color = Color(0.03, 0.02, 0.02, 0.7)
+Label/constants/shadow_offset_y = 1

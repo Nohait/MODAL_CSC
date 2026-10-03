@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://bfe83qpkk3qk4" path="res://scenes/interfaces/menus/navigation_menus.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://baltyjqiaf6ir" path="res://assets/textures/interfaces/ecran_mort_pompier.png" id="2_illustration"]
 
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/bouton_menu.gd" id="3_button"]
+
 [sub_resource type="StyleBoxFlat" id="Panneau"]
 content_margin_left = 36.0
 content_margin_top = 32.0
@@ -129,6 +131,8 @@ text = "Intervention échouée."
 horizontal_alignment = 1
 
 [node name="NouvellePartie" type="Button" parent="Centre/Panneau/Contenu" unique_id=2021494091]
+script = ExtResource("3_button")
+custom_minimum_size = Vector2(0, 70)
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
@@ -142,6 +146,8 @@ theme_override_styles/focus = SubResource("Focus")
 text = "Nouvelle partie"
 
 [node name="EcranTitre" type="Button" parent="Centre/Panneau/Contenu" unique_id=1238126151]
+script = ExtResource("3_button")
+custom_minimum_size = Vector2(0, 70)
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)

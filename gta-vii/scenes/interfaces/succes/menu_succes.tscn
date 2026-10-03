@@ -1,0 +1,153 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="paper"]
+
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/booster_bonus.gdshader" id="skin"]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
+
+[ext_resource type="Script" path="res://scenes/interfaces/succes/menu_succes.gd" id="script"]
+
+[sub_resource type="ShaderMaterial" id="Skin"]
+shader = ExtResource("skin")
+shader_parameter/largeur_bord = 7.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.4
+shader_parameter/teinte_pochette = Color(0.32, 0.2, 0.16, 1)
+shader_parameter/luminosite_pochette = 1.1
+
+[sub_resource type="StyleBoxFlat" id="BarreVide"]
+bg_color = Color(0.07, 0.055, 0.04, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="BarrePleine"]
+bg_color = Color(0.59, 0.74, 0.43, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[node name="MenuSucces" type="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+theme = ExtResource("theme")
+script = ExtResource("script")
+
+[node name="Voile" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.01, 0.01, 0.015, 0.88)
+
+[node name="Pochette" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.13
+anchor_top = 0.12
+anchor_right = 0.87
+anchor_bottom = 0.88
+
+[node name="Papier" type="TextureRect" parent="Pochette"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("paper")
+expand_mode = 1
+material = SubResource("Skin")
+script = ExtResource("surface")
+
+[node name="Marge" type="MarginContainer" parent="Pochette"]
+layout_mode = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 34
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 34
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Contenu" type="VBoxContainer" parent="Pochette/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Titre" type="Label" parent="Pochette/Marge/Contenu"]
+layout_mode = 2
+text = "CARNET DES SUCCÈS"
+theme_override_font_sizes/font_size = 42
+
+
+[node name="Compteur" type="Label" parent="Pochette/Marge/Contenu"]
+layout_mode = 2
+text = "0 / 2 succès obtenus"
+theme_override_font_sizes/font_size = 22
+unique_name_in_owner = true
+
+[node name="Progression" type="ProgressBar" parent="Pochette/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 8)
+show_percentage = false
+max_value = 2.0
+theme_override_styles/background = SubResource("BarreVide")
+theme_override_styles/fill = SubResource("BarrePleine")
+
+[node name="Note" type="Label" parent="Pochette/Marge/Contenu"]
+layout_mode = 2
+text = "Vos succès sont conservés entre les parties."
+theme_override_font_sizes/font_size = 18
+size_flags_horizontal = 3
+size_flags_vertical = 4
+autowrap_mode = 3
+
+[node name="Defilement" type="ScrollContainer" parent="Pochette/Marge/Contenu"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Liste" type="VBoxContainer" parent="Pochette/Marge/Contenu/Defilement"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Bas" type="HBoxContainer" parent="Pochette/Marge/Contenu"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Reinitialiser" parent="Pochette/Marge/Contenu/Bas" instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(310, 64)
+text = "Debug : réinitialiser les succès"
+taille_police = 20
+
+[node name="Espace" type="Control" parent="Pochette/Marge/Contenu/Bas"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Fermer" parent="Pochette/Marge/Contenu/Bas" instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(220, 64)
+text = "Retour"

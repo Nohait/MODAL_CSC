@@ -589,6 +589,8 @@ func passer_salle_suivante() -> void:
 	if (indice_salle + 1 < salles.get_child_count()):
 		await activer_salle(indice_salle + 1)
 	else:
+		# Compter les victimes encore vivantes avant que la scène du niveau soit détruite.
+		SuccesManager.valider_victoire(compter_victimes_escorte_vivantes())
 		get_tree().change_scene_to_file("res://scenes/interfaces/menus/ecran_victoire.tscn")
 
 # Ajouter les participants du défi dans une salle déjà générée, sur des points libres.

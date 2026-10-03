@@ -1,104 +1,178 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bciys0ip6dqw2"]
 
-[ext_resource type="Script" path="res://scenes/interfaces/menus/navigation_menus.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
+[ext_resource type="Script" uid="uid://baiuejiyyy2ni" path="res://scenes/interfaces/menus/titre/decoration_titre.gd" id="decor"]
+[ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="flames"]
+[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="logo"]
+[ext_resource type="Script" uid="uid://cpqa6nlacutk5" path="res://scenes/interfaces/menus/titre/ecran_titre.gd" id="script"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
+[ext_resource type="Shader" uid="uid://nd3ahv5hag2w" path="res://scenes/interfaces/menus/titre/voile_titre.gdshader" id="voile"]
 
-[sub_resource type="StyleBoxFlat" id="Panneau"]
-bg_color = Color(0.075, 0.085, 0.11, 1)
-border_width_top = 4
-border_color = Color(0.95, 0.6, 0.2, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_left = 16
-corner_radius_bottom_right = 16
-content_margin_left = 36.0
-content_margin_right = 36.0
-content_margin_top = 32.0
-content_margin_bottom = 32.0
+[sub_resource type="Environment" id="Ambiance"]
+background_mode = 1
+background_color = Color(0.045, 0.025, 0.02, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.72, 0.76, 0.88, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.12
 
-[sub_resource type="StyleBoxFlat" id="Bouton"]
-bg_color = Color(0.18, 0.24, 0.3, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
-content_margin_top = 14.0
-content_margin_bottom = 14.0
+[sub_resource type="ShaderMaterial" id="Voile"]
+shader = ExtResource("voile")
 
-[sub_resource type="StyleBoxFlat" id="Survol"]
-bg_color = Color(0.26, 0.34, 0.42, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
+[sub_resource type="FastNoiseLite" id="BruitFeu"]
+noise_type = 3
+frequency = 0.025
+fractal_octaves = 4
 
-[sub_resource type="StyleBoxFlat" id="Focus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.7, 0.35, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
+[sub_resource type="NoiseTexture2D" id="TextureFeu"]
+width = 512
+height = 512
+seamless = true
+noise = SubResource("BruitFeu")
 
-[node name="EcranTitre" type="Control"]
+[sub_resource type="ShaderMaterial" id="Flames"]
+shader = ExtResource("flames")
+shader_parameter/bruit_feu = SubResource("TextureFeu")
+
+[node name="EcranTitre" type="Control" unique_id=1441843544]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource("1")
-editor_description = "Écran autonome : le niveau précédent et toutes ses interfaces ont été retirés."
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+script = ExtResource("script")
 
-[node name="Fond" type="ColorRect" parent="."]
+[node name="Fond" type="ColorRect" parent="." unique_id=1266752762]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.025, 0.035, 0.05, 1)
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.035, 0.025, 0.023, 1)
 
-[node name="Centre" type="CenterContainer" parent="."]
+[node name="Illustration" type="SubViewportContainer" parent="." unique_id=773670470]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.34
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+stretch = true
+
+[node name="Vue3D" type="SubViewport" parent="Illustration" unique_id=908253000]
+own_world_3d = true
+handle_input_locally = false
+msaa_3d = 1
+size = Vector2i(1056, 900)
+render_target_update_mode = 4
+
+[node name="Decor" type="Node3D" parent="Illustration/Vue3D" unique_id=1379178597]
+script = ExtResource("decor")
+
+[node name="Ambiance" type="WorldEnvironment" parent="Illustration/Vue3D/Decor" unique_id=2126671966]
+environment = SubResource("Ambiance")
+
+[node name="Camera" type="Camera3D" parent="Illustration/Vue3D/Decor" unique_id=1373147839]
+transform = Transform3D(0.8869949, -0.0667236, 0.4569332, 0, 0.9895059, 0.14449243, -0.46177918, -0.12816405, 0.8776867, 4.2, 2.5, 6.8)
+current = true
+fov = 42.0
+
+[node name="Lumiere" type="DirectionalLight3D" parent="Illustration/Vue3D/Decor" unique_id=1996917962]
+transform = Transform3D(0.8253356, 0.36375266, -0.4318624, 0, 0.7648422, 0.64421767, 0.5646425, -0.5316958, 0.6312515, 0, 0, 0)
+light_color = Color(0.88, 0.91, 1, 1)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Voile" type="ColorRect" parent="." unique_id=109263559]
+material = SubResource("Voile")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="Panneau" type="PanelContainer" parent="Centre"]
-layout_mode = 2
-custom_minimum_size = Vector2(460, 0)
-theme_override_styles/panel = SubResource("Panneau")
+[node name="Menu" type="Control" parent="." unique_id=551442171]
+layout_mode = 1
+anchor_left = 0.07
+anchor_top = 0.12
+anchor_right = 0.42
+anchor_bottom = 0.9
 
-[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau"]
-layout_mode = 2
-theme_override_constants/separation = 20
+[node name="Flammes" type="ColorRect" parent="Menu" unique_id=362548529]
+material = SubResource("Flames")
+layout_mode = 0
+offset_left = -28.0
+offset_top = -10.0
+offset_right = 570.0
+offset_bottom = 235.0
+mouse_filter = 2
 
-[node name="Surtitre" type="Label" parent="Centre/Panneau/Contenu"]
-layout_mode = 2
-text = "SAUVEZ · ESCORTEZ · ÉVACUEZ"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.85, 0.65, 0.45, 1)
+[node name="Colonne" type="VBoxContainer" parent="Menu" unique_id=1072601953]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
 
-[node name="Titre" type="Label" parent="Centre/Panneau/Contenu"]
+[node name="Surtitre" type="Label" parent="Menu/Colonne" unique_id=587178907]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.61, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="Titre" type="Label" parent="Menu/Colonne" unique_id=1849000450]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.89, 0.64, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.055, 0.025, 1)
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("logo")
+theme_override_font_sizes/font_size = 112
 text = "GTA VII"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 38
 
-[node name="Description" type="Label" parent="Centre/Panneau/Contenu"]
+[node name="Accroche" type="Label" parent="Menu/Colonne" unique_id=1597552697]
 layout_mode = 2
-text = "Entrez dans l’immeuble.\nNe laissez personne derrière vous."
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_colors/font_color = Color(0.83, 0.77, 0.65, 1)
+theme_override_font_sizes/font_size = 26
 
-[node name="NouvellePartie" type="Button" parent="Centre/Panneau/Contenu"]
+[node name="Espace" type="Control" parent="Menu/Colonne" unique_id=2013009356]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="NouvellePartie" parent="Menu/Colonne" unique_id=1299801880 instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Nouvelle partie"
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/hover = SubResource("Survol")
-theme_override_styles/focus = SubResource("Focus")
 
+[node name="Succes" parent="Menu/Colonne" unique_id=1111282242 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Succès"
+
+[node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quitter le jeu"
+
+[node name="Pied" type="Control" parent="Menu/Colonne" unique_id=142293347]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Signature" type="Label" parent="Menu/Colonne" unique_id=266085874]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.47, 0.43, 0.37, 1)
+theme_override_font_sizes/font_size = 16
+text = "GTA VII  /  PROTOTYPE"
+
+[node name="MenuSucces" parent="." unique_id=1377465611 instance=ExtResource("success")]

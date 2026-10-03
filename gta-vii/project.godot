@@ -11,20 +11,23 @@ config_version=5
 [application]
 
 config/name="GTA VII"
-run/main_scene="res://scenes/jeu/main.tscn"
+run/main_scene="res://scenes/interfaces/menus/ecran_titre.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
-[display]
+[autoload]
 
-mouse_cursor/custom_image="res://assets/textures/interfaces/curseurs/curseur_lance.svg"
-mouse_cursor/custom_image_hotspot=Vector2(3, 3)
+SuccesManager="*res://scenes/systemes/succes/succes_manager.gd"
+
+[display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
 window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+mouse_cursor/custom_image="res://assets/textures/interfaces/curseurs/curseur_lance.svg"
+mouse_cursor/custom_image_hotspot=Vector2(3, 3)
 
 [file_customization]
 

@@ -8,6 +8,9 @@ func _ready() -> void:
 	# Le niveau a mis le combat en pause lors de la mort. Ces écrans sont autonomes.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Le même curseur reste visible sur les boutons, dès l'écran titre.
+	var curseur = preload("res://assets/textures/interfaces/curseurs/curseur_lance.svg")
+	Input.set_custom_mouse_cursor(curseur, Input.CURSOR_POINTING_HAND, Vector2(3, 3))
 	%NouvellePartie.pressed.connect(nouvelle_partie)
 	%NouvellePartie.grab_focus()
 	# L'écran titre n'a pas de bouton pour revenir vers lui-même.

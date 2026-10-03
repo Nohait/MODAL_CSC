@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/bouton_menu.gd" id="1"]
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="2"]
+
+[node name="BoutonMenu" type="Button"]
+custom_minimum_size = Vector2(300, 74)
+theme = ExtResource("2")
+text = "Continuer"
+script = ExtResource("1")

@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="paper"]
+
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="skin"]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
+
+[ext_resource type="Script" path="res://scenes/interfaces/succes/notifications_succes.gd" id="script"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/titre/medaille_succes.svg" id="medal"]
+
+[sub_resource type="ShaderMaterial" id="Skin"]
+shader = ExtResource("skin")
+shader_parameter/largeur_bord = 7.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.4
+shader_parameter/rarete_coloree = true
+
+[node name="NotificationsSucces" type="CanvasLayer"]
+layer = 80
+process_mode = 3
+script = ExtResource("script")
+
+[node name="Notification" type="Control" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -386.0
+offset_top = -98.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme = ExtResource("theme")
+
+[node name="Papier" type="TextureRect" parent="Notification"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("paper")
+expand_mode = 1
+material = SubResource("Skin")
+script = ExtResource("surface")
+
+[node name="Marge" type="MarginContainer" parent="Notification"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+
+[node name="Ligne" type="HBoxContainer" parent="Notification/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 12
+mouse_filter = 2
+
+[node name="Medaille" type="TextureRect" parent="Notification/Marge/Ligne"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 40)
+size_flags_vertical = 4
+texture = ExtResource("medal")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Textes" type="VBoxContainer" parent="Notification/Marge/Ligne"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Titre" type="Label" parent="Notification/Marge/Ligne/Textes"]
+layout_mode = 2
+text = "Victoire !"
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.18, 0.12, 0.07, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+

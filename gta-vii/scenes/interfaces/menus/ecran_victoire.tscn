@@ -1,67 +1,45 @@
-[gd_scene format=3 uid="uid://dgoqykl58hnc"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://bfe83qpkk3qk4" path="res://scenes/interfaces/menus/navigation_menus.gd" id="1"]
-[sub_resource type="StyleBoxFlat" id="Panneau"]
-content_margin_left = 36.0
-content_margin_top = 32.0
-content_margin_right = 36.0
-content_margin_bottom = 32.0
-bg_color = Color(0, 0, 0, 0)
-border_width_top = 4
-border_color = Color(0.9, 0.25, 0.16, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 
-[sub_resource type="StyleBoxFlat" id="Bouton"]
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-bg_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
 
-[sub_resource type="StyleBoxFlat" id="Survol"]
-bg_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="paper"]
 
-[sub_resource type="StyleBoxFlat" id="Focus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 1
-border_color = Color(1, 0.7, 0.35, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/booster_bonus.gdshader" id="skin"]
 
-[node name="EcranVictoire" type="Control" unique_id=1972142951]
-editor_description = "Écran autonome : le niveau précédent et toutes ses interfaces ont été retirés."
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1")
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
 
-[node name="Fond" type="ColorRect" parent="." unique_id=697530995]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/navigation_menus.gd" id="script"]
+
+[sub_resource type="ShaderMaterial" id="Skin"]
+shader = ExtResource("skin")
+shader_parameter/largeur_bord = 7.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.4
+shader_parameter/teinte_pochette = Color(0.32, 0.2, 0.16, 1)
+shader_parameter/luminosite_pochette = 1.1
+
+[node name="EcranVictoire" type="Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.025, 0.035, 0.05, 1)
+theme = ExtResource("theme")
+script = ExtResource("script")
 
-[node name="Centre" type="CenterContainer" parent="." unique_id=1626037727]
+[node name="Fond" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.025, 0.023, 1)
+
+[node name="Centre" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,62 +47,70 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panneau" type="PanelContainer" parent="Centre" unique_id=1300091740]
-custom_minimum_size = Vector2(460, 0)
+[node name="Panneau" type="Control" parent="Centre"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("Panneau")
+custom_minimum_size = Vector2(700, 600)
 
-[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau" unique_id=1610622563]
-layout_mode = 2
-theme_override_constants/separation = 20
+[node name="Papier" type="TextureRect" parent="Centre/Panneau"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("paper")
+expand_mode = 1
+material = SubResource("Skin")
+script = ExtResource("surface")
 
-[node name="Surtitre" type="Label" parent="Centre/Panneau/Contenu" unique_id=1425215291]
+[node name="Marge" type="MarginContainer" parent="Centre/Panneau"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.65, 0.45, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 44
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_bottom = 44
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Surtitre" type="Label" parent="Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
 text = "INTERVENTION TERMINÉE"
+theme_override_font_sizes/font_size = 21
 horizontal_alignment = 1
 
-[node name="Titre" type="Label" parent="Centre/Panneau/Contenu" unique_id=1519266384]
+[node name="Titre" type="Label" parent="Centre/Panneau/Marge/Contenu"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.82, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 3
-theme_override_font_sizes/font_size = 38
 text = "IMMEUBLE LIBÉRÉ"
+theme_override_font_sizes/font_size = 52
 horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.87, 0.59, 1)
 
-[node name="Description" type="Label" parent="Centre/Panneau/Contenu" unique_id=1055797651]
+[node name="Description" type="Label" parent="Centre/Panneau/Marge/Contenu"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
-theme_override_font_sizes/font_size = 18
-text = "Toutes les salles ont été libérées."
+text = "Toutes les salles ont été libérées.
+Vos succès sont enregistrés dans le carnet."
+theme_override_font_sizes/font_size = 23
 horizontal_alignment = 1
 
-[node name="NouvellePartie" type="Button" parent="Centre/Panneau/Contenu" unique_id=2021494091]
+[node name="Espace" type="Control" parent="Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NouvellePartie" parent="Centre/Panneau/Marge/Contenu" instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
-theme_override_colors/font_focus_color = Color(1, 0.65, 0.4, 1)
-theme_override_colors/font_hover_color = Color(1, 0.65, 0.4, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/pressed = SubResource("Bouton")
-theme_override_styles/hover = SubResource("Survol")
-theme_override_styles/focus = SubResource("Focus")
 text = "Nouvelle partie"
 
-[node name="EcranTitre" type="Button" parent="Centre/Panneau/Contenu" unique_id=1238126151]
+[node name="EcranTitre" parent="Centre/Panneau/Marge/Contenu" instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 1)
-theme_override_colors/font_focus_color = Color(1, 0.65, 0.4, 1)
-theme_override_colors/font_hover_color = Color(1, 0.65, 0.4, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/pressed = SubResource("Bouton")
-theme_override_styles/hover = SubResource("Survol")
-theme_override_styles/focus = SubResource("Focus")
 text = "Écran titre"
-
