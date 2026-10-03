@@ -41,8 +41,8 @@ var nombre_salles: int:
 # Population
 
 @export_group("Population des salles")
-@export_range(0, 20, 1) var nombre_min_ennemis := 2
-@export_range(0, 20, 1) var nombre_max_ennemis := 3
+@export_range(0, 20, 1) var nombre_min_ennemis_mobiles := 2
+@export_range(0, 20, 1) var nombre_max_ennemis_mobiles := 3
 @export_range(0, 10, 1) var nombre_min_tour_enflammee := 0
 @export_range(0, 10, 1) var nombre_max_tour_enflammee := 1
 @export_range(0, 10, 1) var nombre_min_flaques := 0
@@ -238,7 +238,7 @@ func peupler_salle(salle: Node3D) -> void:
 	# Mobiles à venir
 	var bonus_mobiles := supplement_mobiles(salle)
 	var nombre := mini(
-		randi_range(nombre_min_ennemis + bonus_mobiles, maxi(nombre_min_ennemis, nombre_max_ennemis) + bonus_mobiles),
+		randi_range(nombre_min_ennemis_mobiles + bonus_mobiles, maxi(nombre_min_ennemis_mobiles, nombre_max_ennemis_mobiles) + bonus_mobiles),
 		emplacements.size()
 	)
 	if not ennemi_autorise(SBIRE_SCENE, salle):

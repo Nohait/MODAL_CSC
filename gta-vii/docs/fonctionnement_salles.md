@@ -90,7 +90,7 @@ de feu. Les tours (0 à 2) et les flaques initiales (0 à 3) sont créées penda
 `peupler_salle()`. Les victimes aussi. Les nombres sont tirés séparément pour
 chaque salle, puis limités par les cases libres.
 
-Pour les mobiles, `nombre_min_ennemis` et `nombre_max_ennemis` désignent le TOTAL
+Pour les mobiles, `nombre_min_ennemis_mobiles` et `nombre_max_ennemis_mobiles` désignent le TOTAL
 prévu dans la salle (3 à 6), pas le nombre par vague. `peupler_salle()` réserve
 leurs positions dans `salle.mobiles_a_creer`, sans encore créer les personnages.
 Chaque ennemi prévu est déjà compris dans `remaining_enemies`. Ainsi, une salle

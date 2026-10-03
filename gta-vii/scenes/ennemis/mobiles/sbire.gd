@@ -46,10 +46,18 @@ var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largue
 var distance_min = 1000.0 #Pour définir qui est la cible
 
 @export_group("Attaque")
+## Temps pour sortir de portée avant que le coup soit lancé.
+@export_range(0.1, 1.5, 0.05) var duree_preparation := 0.25
+var preparation_restante := 0.0
+var cible_attaque: Node3D
+var feux_mains: Array[Node3D] = []
+var tailles_feux: Array[Vector3] = []
+var animation_feux: Tween
+var animation_frappe: Tween
 @export var attaque_cooldown = 1.0
 var attaque_timer = 0.0 #temps initialisé à 0
 @export var degats_sbire = 10.0
-@export var repos_apres_attaque := 0.3
+@export var repos_apres_attaque := 0.0
 var timer_apres_attaque := 0.0
 
 @export_group("Idle")
@@ -68,6 +76,7 @@ var chgt_cible_timer = 0.0 #temps initialisé à 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	_preparer_feux_mains()
 	cible_idle.name = "Cible " + self.name
 	get_parent().add_child(cible_idle)
 	
@@ -86,6 +95,27 @@ func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
 	timer_apres_attaque -= delta
 	
+	# La préparation garde sa cible, mais n'empêche plus de la poursuivre.
+	if preparation_restante > 0.0:
+		if not is_instance_valid(cible_attaque) or cible_attaque.is_queued_for_deletion():
+			preparation_restante = 0.0
+			_animer_feux(false, 0.1)
+			velocity = Vector3.ZERO
+			return
+		cible = cible_attaque
+		var direction := global_position.direction_to(cible_attaque.global_position)
+		if Vector2(direction.x, direction.z).length() > 0.001:
+			rotation.y = atan2(direction.x, direction.z)
+		if global_position.distance_to(cible_attaque.global_position) > distance_attaque:
+			suivre_cible_navigation()
+		else:
+			velocity = Vector3.ZERO
+			move_and_slide()
+		preparation_restante = maxf(preparation_restante - delta, 0.0)
+		if preparation_restante == 0.0:
+			attaque()
+		return
+
 	#On définit la cible.
 	#Il y a un timer pour eviter que le sbire soit indécis
 	if cible == null:
@@ -136,7 +166,7 @@ func _physics_process(delta):
 			
 			if attaque_timer < 0.0:
 				if cible.is_in_group("player") or cible.is_in_group("victime"):
-					attaque()
+					commencer_preparation()
 			
 #On detecte pour bypass le cooldown de changer de cible dans choisir_cible() pour sortir instantanément de l'idle
 func _on_surface_detection_body_entered(body: Node3D) -> void:
@@ -257,6 +287,10 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	if animation_feux:
+		animation_feux.kill()
+	if animation_frappe:
+		animation_frappe.kill()
 	
 	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
 	var steam_death=  AudioStreamPlayer3D.new()
@@ -272,16 +306,58 @@ func mourir():
 	print("Bravo, vous avez tué le sbire")
 	queue_free()
 
-func attaque() -> void:
-	if cible != null:
-		var multiplier = randf_range(0.9,1.1)
-		cible.prendre_degats(round(multiplier * degats_sbire *100.0)/100.0)
+func _preparer_feux_mains() -> void:
+	var second_feu: Node3D = $vfx_fire/vfx_fire
+	# Deux frères : grossir une main ne doit pas grossir aussi l'autre.
+	second_feu.reparent(self, true)
+	feux_mains.append($vfx_fire)
+	feux_mains.append(second_feu)
+	for feu in feux_mains:
+		tailles_feux.append(feu.scale)
+		feu.scale *= 0.55
+		var particules: GPUParticles3D = feu.get_node("Flames")
+		particules.process_material = particules.process_material.duplicate()
+		particules.process_material.color = Color(3.0, 1.3, 0.5, 1.0)
 
+func _animer_feux(charger: bool, duree: float) -> void:
+	if animation_feux:
+		animation_feux.kill()
+	animation_feux = create_tween().set_parallel(true)
+	for i in range(feux_mains.size()):
+		var feu := feux_mains[i]
+		var mat: ParticleProcessMaterial = feu.get_node("Flames").process_material
+		# Taille et couleur changent ensemble, progressivement pendant la préparation.
+		animation_feux.tween_property(feu, "scale", tailles_feux[i] * (1.15 if charger else 0.55), duree)
+		animation_feux.tween_property(mat, "color", Color(7.0, 0.7, 0.12, 1.0) if charger else Color(3.0, 1.3, 0.5, 1.0), duree)
+
+func commencer_preparation() -> void:
+	cible_attaque = cible
+	preparation_restante = duree_preparation
+	_animer_feux(true, duree_preparation)
+
+func attaque() -> void:
+	_animer_feux(false, 0.15)
 	attaque_timer = attaque_cooldown
 	timer_apres_attaque = repos_apres_attaque
+	if not is_instance_valid(cible_attaque) or cible_attaque.is_queued_for_deletion():
+		return
+	# L'impulsion se joue aussi si la cible esquive : le sbire frappe dans le vide.
+	_jouer_frappe()
+	if global_position.distance_to(cible_attaque.global_position) > distance_attaque:
+		return
+	# Un seul appel direct : aucune création de projectile, aucun dégât différé.
+	var degats: float = round(randf_range(0.9, 1.1) * degats_sbire * 100.0) / 100.0
+	cible_attaque.prendre_degats(degats)
 
-	
-
+func _jouer_frappe() -> void:
+	var modele: Node3D = $Sketchfab_Scene
+	var origine := modele.position
+	# Le modèle n'a pas d'animation de frappe : une brève impulsion donne le mouvement.
+	var direction := global_position.direction_to(cible_attaque.global_position)
+	var impulsion := global_basis.inverse() * direction * 0.18
+	animation_frappe = create_tween()
+	animation_frappe.tween_property(modele, "position", origine + impulsion, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	animation_frappe.tween_property(modele, "position", origine, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 func couleur_degats(degats: float) -> Color:
 	
