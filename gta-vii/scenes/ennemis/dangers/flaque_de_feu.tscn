@@ -3,27 +3,25 @@
 [ext_resource type="Script" uid="uid://c8qj2u0ap2a3s" path="res://scenes/ennemis/dangers/flaque_de_feu.gd" id="1_rvmi7"]
 [ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_ct53f"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gy6ao"]
-albedo_color = Color(0.3, 0.065, 0.015, 1)
-emission_enabled = true
-emission = Color(1, 0.16, 0.015, 1)
-emission_energy_multiplier = 0.6
+[ext_resource type="Shader" path="res://scenes/ennemis/dangers/visuel_flaque.gdshader" id="visuel"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_htr4c"]
-material = SubResource("StandardMaterial3D_gy6ao")
-height = 0.1
+[sub_resource type="FastNoiseLite" id="BruitSurface"]
+noise_type = 3
+frequency = 0.025
+fractal_octaves = 3
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_55v34"]
+[sub_resource type="NoiseTexture2D" id="TextureSurface"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("BruitSurface")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j5pqn"]
-noise = SubResource("FastNoiseLite_55v34")
+[sub_resource type="ShaderMaterial" id="MateriauFlaque"]
+shader = ExtResource("visuel")
+shader_parameter/bruit_surface = SubResource("TextureSurface")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jm2kg"]
-transparency = 1
-albedo_color = Color(0.9996286, 0.47905082, 0, 1)
-albedo_texture = SubResource("NoiseTexture2D_j5pqn")
-backlight_enabled = true
-backlight = Color(7.0353584, 5.854986, 3.1007845, 1)
+[sub_resource type="PlaneMesh" id="SurfaceFlaque"]
+size = Vector2(1, 1)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_htr4c"]
 
@@ -33,8 +31,10 @@ collision_mask = 26
 script = ExtResource("1_rvmi7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1562902493]
-mesh = SubResource("CylinderMesh_htr4c")
-surface_material_override/0 = SubResource("StandardMaterial3D_jm2kg")
+position = Vector3(0, 0.015, 0)
+cast_shadow = 0
+mesh = SubResource("SurfaceFlaque")
+material_override = SubResource("MateriauFlaque")
 
 [node name="LumiereFeu" type="OmniLight3D" parent="." unique_id=483842965]
 editor_description = "Lueur chaude sur le sol. Portée courte et pas d'ombres pour limiter le coût des nombreuses flaques."
@@ -56,4 +56,4 @@ font_size = 50
 outline_size = 20
 
 [node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_ct53f")]
-transform = Transform3D(4.3285146, 0, 0, 0, 1, 0, 0, 0, 5.0291886, -0.008569062, 0.06868073, 0.053449154)
+transform = Transform3D(1, 0, 0, 0, 0.8, 0, 0, 0, 1, -0.008569062, 0.06868073, 0.053449154)

@@ -41,18 +41,33 @@ var nombre_salles: int:
 # Population
 
 @export_group("Population des salles")
-@export_range(0, 20, 1) var nombre_min_ennemis := 3
-@export_range(0, 20, 1) var nombre_max_ennemis := 6
+@export_range(0, 20, 1) var nombre_min_ennemis := 2
+@export_range(0, 20, 1) var nombre_max_ennemis := 3
 @export_range(0, 10, 1) var nombre_min_tour_enflammee := 0
-@export_range(0, 10, 1) var nombre_max_tour_enflammee := 2
+@export_range(0, 10, 1) var nombre_max_tour_enflammee := 1
 @export_range(0, 10, 1) var nombre_min_flaques := 0
-@export_range(0, 10, 1) var nombre_max_flaques := 3
+@export_range(0, 10, 1) var nombre_max_flaques := 2
+
+@export_group("Progression de la population")
+# Les nombres ci-dessus sont ceux de départ, au premier étage.
+@export_range(0, 5, 1) var mobiles_ajoutes_par_salle := 1
+@export_range(0, 10, 1) var mobiles_ajoutes_par_etage := 3
+@export_range(0, 3, 1) var tours_ajoutees_par_etage := 1
+@export_range(0, 3, 1) var flaques_ajoutees_par_etage := 1
+## Nombre de salles entre deux augmentations de 1 du maximum d’ennemis par vague.
+## Exemple : 2 donne un maximum de 1 en salles 1–2, puis 2 en salles 3–4.
+@export_range(1, 5, 1) var nombre_salles_entre_augmentations_taille_vague := 2
+@export_range(0, 3, 1) var vague_ajout_par_etage := 1
+@export_range(1, 10, 1) var limite_taille_vague := 5
+
+# Seuils lus une fois dans les scènes d'ennemis, sans les ajouter au niveau.
+var seuils_apparition: Dictionary = {}
 
 # Vagues
 
 @export_group("Vagues des ennemis mobiles")
 @export_range(1, 5, 1) var taille_min_vague := 1
-@export_range(1, 5, 1) var taille_max_vague := 3
+@export_range(1, 5, 1) var taille_max_vague := 1
 
 # Durée tirée pour chaque salle ; la dernière vague apparaît à la fin.
 @export_range(15.0, 30.0, 1.0) var duree_min_vagues := 15.0
@@ -129,6 +144,7 @@ func demarrer_partie() -> void:
 			i > 0 and i % SALLES_PAR_ETAGE == 0
 		)
 		salle.etage = etage_pour_salle(i)
+		salle.numero_dans_etage = i % SALLES_PAR_ETAGE + 1
 		salle.name = "Salle%d" % (i + 1)
 		salle.position.x = i * 150.0
 		salle.process_mode = Node.PROCESS_MODE_DISABLED
@@ -142,6 +158,25 @@ func demarrer_partie() -> void:
 	partie_prete.emit()
 
 # Population
+
+func ennemi_autorise(scene: PackedScene, salle: Node3D) -> bool:
+	if not seuils_apparition.has(scene):
+		var modele = scene.instantiate()
+		seuils_apparition[scene] = Vector2i(modele.premier_etage, modele.premiere_salle)
+		modele.free()
+	var seuil: Vector2i = seuils_apparition[scene]
+	# Exemple : étage 1, salle 3 autorise toutes les salles des étages 2 et 3.
+	return salle.etage > seuil.x or (salle.etage == seuil.x and salle.numero_dans_etage >= seuil.y)
+
+func supplement_mobiles(salle: Node3D) -> int:
+	# Les salles ajoutent une pression progressive ; l'étage ajoute un saut net.
+	var progression_etage := (SALLES_PAR_ETAGE - 1) * mobiles_ajoutes_par_salle + mobiles_ajoutes_par_etage
+	return (salle.etage - 1) * progression_etage + (salle.numero_dans_etage - 1) * mobiles_ajoutes_par_salle
+
+func maximum_vague(salle: Node3D) -> int:
+	var progression_salles: int = floori(float(salle.numero_dans_etage - 1) / maxi(1, nombre_salles_entre_augmentations_taille_vague))
+	var progression_etage := floori(float(SALLES_PAR_ETAGE - 1) / maxi(1, nombre_salles_entre_augmentations_taille_vague)) + vague_ajout_par_etage
+	return clampi(taille_max_vague + progression_salles + (salle.etage - 1) * progression_etage, 1, limite_taille_vague)
 
 func peupler_salle(salle: Node3D) -> void:
 	var emplacements: Array[Vector3] = salle.points_spawn.duplicate()
@@ -166,11 +201,14 @@ func peupler_salle(salle: Node3D) -> void:
 		victime.died.connect(_on_victim_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
 
-	# Tourelles
+	# Tourelles : leur seuil doit être atteint avant de tirer une quantité.
+	var bonus_tours: int = (salle.etage - 1) * tours_ajoutees_par_etage
 	var nombre_tours := mini(
-		randi_range(nombre_min_tour_enflammee, maxi(nombre_min_tour_enflammee, nombre_max_tour_enflammee)),
+		randi_range(nombre_min_tour_enflammee + bonus_tours, maxi(nombre_min_tour_enflammee, nombre_max_tour_enflammee) + bonus_tours),
 		emplacements.size()
 	)
+	if not ennemi_autorise(TOUR_ENFLAMMEE_SCENE, salle):
+		nombre_tours = 0
 	for i in range(nombre_tours):
 		var tour = TOUR_ENFLAMMEE_SCENE.instantiate()
 		tour.position = emplacements.pop_back() + Vector3.UP * 0.1
@@ -181,10 +219,13 @@ func peupler_salle(salle: Node3D) -> void:
 		salle.remaining_enemies += 1
 
 	# Flaques initiales
+	var bonus_flaques: int = (salle.etage - 1) * flaques_ajoutees_par_etage
 	var nombre_flaques := mini(
-		randi_range(nombre_min_flaques, maxi(nombre_min_flaques, nombre_max_flaques)),
+		randi_range(nombre_min_flaques + bonus_flaques, maxi(nombre_min_flaques, nombre_max_flaques) + bonus_flaques),
 		emplacements.size()
 	)
+	if not ennemi_autorise(FLAQUE_SCENE, salle):
+		nombre_flaques = 0
 	for i in range(nombre_flaques):
 		var flaque = FLAQUE_SCENE.instantiate()
 		flaque.etage = salle.etage
@@ -195,10 +236,13 @@ func peupler_salle(salle: Node3D) -> void:
 		salle.remaining_enemies += 1
 
 	# Mobiles à venir
+	var bonus_mobiles := supplement_mobiles(salle)
 	var nombre := mini(
-		randi_range(nombre_min_ennemis, maxi(nombre_min_ennemis, nombre_max_ennemis)),
+		randi_range(nombre_min_ennemis + bonus_mobiles, maxi(nombre_min_ennemis, nombre_max_ennemis) + bonus_mobiles),
 		emplacements.size()
 	)
+	if not ennemi_autorise(SBIRE_SCENE, salle):
+		nombre = 0
 	for i in range(nombre):
 		salle.mobiles_a_creer.append(emplacements.pop_back())
 
@@ -258,8 +302,10 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	salle.temps_sauvetage_restant = salle.duree_sauvetage
 	var tailles: Array[int] = []
 	var a_planifier: int = salle.mobiles_a_creer.size()
+	var maximum := maximum_vague(salle)
+	var minimum := clampi(taille_min_vague, 1, maximum)
 	while a_planifier > 0:
-		var taille := mini(a_planifier, randi_range(taille_min_vague, maxi(taille_min_vague, taille_max_vague)))
+		var taille := mini(a_planifier, randi_range(minimum, maximum))
 		tailles.append(taille)
 		a_planifier -= taille
 	for i in range(tailles.size()):

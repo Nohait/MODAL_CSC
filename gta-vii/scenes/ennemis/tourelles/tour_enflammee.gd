@@ -5,9 +5,13 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @export var afficher_cendres := true
 @export_range(0.2, 2.0, 0.05) var duree_cendres := 0.7
 
+@export_group("Apparition")
+# Seuil dans le parcours : une salle plus tardive reste autorisée aux étages suivants.
+@export_range(1, 10, 1) var premier_etage := 1
+@export_range(1, 5, 1) var premiere_salle := 3
+
 @export_group("Progression par étage")
 ## Pourcentage ajouté à la valeur de base par étage après le premier.
-@export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
 @export_range(0.0, 200.0, 1.0) var degats_par_etage_pourcent := 10.0
 # Fourni par le créateur AVANT add_child, donc avant _ready.
 var etage := 1
@@ -59,10 +63,8 @@ var projectile_scene = preload("res://scenes/ennemis/tourelles/projectile_tour.t
 
 
 func _ready() -> void:
-	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
-	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
+	# Les PV restent ceux de l’Inspecteur ; seuls les dégâts progressent par étage.
 	var paliers := maxi(etage - 1, 0)
-	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
 	vie = vie_max
 	degats_ennemi *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	# Dupliquer la forme et le matériau évite qu'une tourelle modifie ses voisines.

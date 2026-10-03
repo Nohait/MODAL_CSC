@@ -7,6 +7,7 @@ signal sortie_franchie(salle: Node3D)
 
 # Attribué avant le peuplement.
 var etage := 1
+var numero_dans_etage := 1
 var entree: Node3D
 
 

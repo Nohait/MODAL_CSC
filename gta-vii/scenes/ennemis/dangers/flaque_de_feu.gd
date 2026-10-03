@@ -1,8 +1,12 @@
 extends Area3D
 
+@export_group("Apparition")
+# Seuil dans le parcours : une salle plus tardive reste autorisée aux étages suivants.
+@export_range(1, 10, 1) var premier_etage := 1
+@export_range(1, 5, 1) var premiere_salle := 1
+
 @export_group("Progression par étage")
 ## Pourcentage ajouté à la valeur de base par étage après le premier.
-@export_range(0.0, 200.0, 1.0) var pv_par_etage_pourcent := 20.0
 @export_range(0.0, 200.0, 1.0) var degats_par_etage_pourcent := 10.0
 # Fourni par le créateur AVANT add_child, donc avant _ready.
 var etage := 1
@@ -33,10 +37,20 @@ func choisir_taille_aleatoire() -> void:
 	hitbox_radius *= facteur
 	
 func _ready() -> void:
-	# Appliquer une seule fois à l'apparition, à partir des valeurs de l'Inspecteur.
-	# Étage 1 = base ; étage 3 avec +20 % = base × 1.4 (progression linéaire).
+	# Chaque flaque reçoit un contour différent, sans dupliquer le matériau partagé.
+	$MeshInstance3D.set_instance_shader_parameter("variation", randf_range(0.0, TAU))
+	# Répartir de petites flammes sur la flaque, plutôt qu'étirer un feu central.
+	var flammes: GPUParticles3D = $vfx_fire/Flames
+	flammes.amount = 30
+	var particules := flammes.process_material.duplicate() as ParticleProcessMaterial
+	particules.emission_sphere_radius = 0.55
+	particules.gravity = Vector3(0, 2, 0)
+	particules.scale_min = 0.4
+	particules.scale_max = 0.75
+	particules.color = Color(2.5, 1.15, 0.4, 1.0)
+	flammes.process_material = particules
+	# Les PV restent ceux de l’Inspecteur ; seuls les dégâts progressent par étage.
 	var paliers := maxi(etage - 1, 0)
-	vie_max *= 1.0 + paliers * pv_par_etage_pourcent / 100.0
 	vie = vie_max
 	degats_flaque *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	body_entered.connect(_on_body_entered)
