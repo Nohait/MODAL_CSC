@@ -73,6 +73,13 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	
+	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
+	var steam_death=  AudioStreamPlayer3D.new()
+	get_parent().add_child(steam_death)
+	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
+	steam_death.global_position = global_position
+	steam_death.play()
 	died.emit()
 	queue_free()
 

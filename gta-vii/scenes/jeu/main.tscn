@@ -9,9 +9,9 @@
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/salles/room_manager.gd" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/interfaces/menus/menu_bonus.tscn" id="11_bonus"]
 [ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/salles/room_generator.gd" id="12_generateur"]
+[ext_resource type="AudioStream" uid="uid://cssgp6f2wnlpl" path="res://assets/sounds/ennemis/steam_death.wav" id="13_hscm2"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
-
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
 
 [ext_resource type="PackedScene" path="res://scenes/interfaces/hud/informations_salle.tscn" id="16_salle"]
@@ -150,4 +150,9 @@ autowrap_mode = 2
 
 [node name="MenuDebug" parent="." unique_id=1775271064 instance=ExtResource("14_debug")]
 
-[node name="TransitionEtage" parent="." instance=ExtResource("15_transition")]
+[node name="TransitionEtage" parent="." unique_id=225848205 instance=ExtResource("15_transition")]
+
+[node name="Sons" type="Node3D" parent="." unique_id=1826293685]
+
+[node name="steam_death" type="AudioStreamPlayer3D" parent="Sons" unique_id=422388062]
+stream = ExtResource("13_hscm2")
