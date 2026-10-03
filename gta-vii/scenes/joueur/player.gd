@@ -9,7 +9,6 @@ var est_mort := false
 # Mode de test : activé depuis main.gd avec la touche I.
 var invincible: bool = false
 
-
 @export var camera : Camera3D 
 @onready var visual: Node3D = $visual
 @onready var extincteur = $visual/weapon_holder/Extincteur

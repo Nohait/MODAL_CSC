@@ -7,8 +7,10 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @onready var muzzle: Node3D = $AttaquePrincipale
 @onready var direction_marker: Marker3D = $AttaquePrincipale/DirectionMarker
 @onready var indicateur_attaque = $IndicateurAttaque
+
 @onready var steam_damage = $"Sons/steam_damage".get_children()
 @onready var steam_damage_sound = $"Sons/steam_damage/steam_damage2"
+
 
 @export_group("Jet")
 ## Distance maximale, en mètres depuis le départ du jet.

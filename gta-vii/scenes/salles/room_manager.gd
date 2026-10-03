@@ -295,14 +295,15 @@ func terminer_sauvetage(salle: Node3D) -> void:
 
 	# Sécurité mathématique : imposer exactement 100 % des dégâts du timer aux victimes encore captives.
 	for victime in (salle.get_node("Victimes").get_children() .duplicate()):
-		if (
-			not is_instance_valid(victime)
-			or victime.is_queued_for_deletion()
-			or victime.is_freed
-			or victime.est_morte
-		):
-			continue
-		victime.actualiser_degats_sauvetage(1.0)
+		if victime.is_in_group("victime"):
+			if (
+				not is_instance_valid(victime)
+				or victime.is_queued_for_deletion()
+				or victime.is_freed
+				or victime.est_morte
+			):
+				continue
+			victime.actualiser_degats_sauvetage(1.0)
 
 	# À zéro seconde, aucun mobile planifié ne doit rester en attente.
 	forcer_spawn_mobiles_restants(salle)

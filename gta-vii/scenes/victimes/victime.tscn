@@ -102,6 +102,7 @@ stream = ExtResource("2_ovwgb")
 
 [node name="man_helpme1" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=203652440]
 stream = ExtResource("3_feqff")
+unit_size = 5.0
 
 [node name="man_helpme2" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=573838042]
 stream = ExtResource("4_m8bqf")
