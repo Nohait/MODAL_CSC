@@ -24,7 +24,7 @@ var flash_tween: Tween
 @onready var fleche_victime_scene = preload("res://scenes/effets/fleche_victime/fleche.tscn")
 var fleche_victime = null
 var fleche_tween = null
-var clic_milieu_deja_fait := false
+var input_victim_control_fait := false
 
 @export_group("Déplacement")
 ## Vitesse de marche, en unités par seconde.
@@ -182,14 +182,14 @@ func _physics_process(delta: float) -> void:
 		#On s'oriente vers ce point, en gardant y comme verticale
 		visual.look_at(target_position, Vector3.UP)
 	
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
-			if not clic_milieu_deja_fait:
-				clic_milieu_deja_fait = true
+		if Input.is_action_just_pressed("victim_control"):
+			if not input_victim_control_fait:
+				input_victim_control_fait = true
 				bouger_victime(target_position)
 		else:
-			clic_milieu_deja_fait = false
+			input_victim_control_fait = false
 				
-		if Input.is_key_pressed(KEY_A):
+		if Input.is_action_just_pressed("victime_nav_auto"):
 			victim_manager.retour_nav_auto()
 	
 	if Input.is_action_pressed("primary_attack"):
@@ -285,7 +285,7 @@ func annuler_ordre_victimes() -> void:
 	if is_instance_valid(fleche_victime):
 		fleche_victime.queue_free()
 	fleche_victime = null
-	clic_milieu_deja_fait = false
+	input_victim_control_fait = false
 	
 func bouger_victime(position):
 	animation_fleche(position)

@@ -9,6 +9,7 @@ var animation: Tween
 
 func _ready() -> void:
 	# Le Button garde ses clics et son texte ; une plaque dessinée remplace son fond.
+	custom_minimum_size = Vector2(100,74)
 	for etat in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(etat, StyleBoxEmpty.new())
 	add_theme_font_override("font", POLICE)
