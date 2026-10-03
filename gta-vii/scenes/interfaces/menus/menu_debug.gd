@@ -18,11 +18,12 @@ var souris_avant: int
 func _ready() -> void:
 	menu.hide()
 	# Un fond doré distingue le survol et les options activées du fond sombre.
-	for bouton in [invincibilite, degats, points_boutique, suivant, %Fermer]:
+	for bouton in [invincibilite, degats, points_boutique, suivant, %LibererSalle, %Fermer]:
 		_styliser_selection(bouton)
 	invincibilite.toggled.connect(_changer_invincibilite)
 	degats.toggled.connect(_changer_degats)
 	points_boutique.toggled.connect(_changer_points_boutique)
+	%LibererSalle.pressed.connect(_liberer_salle)
 	suivant.pressed.connect(_etage_suivant)
 	%Fermer.pressed.connect(fermer)
 	# Les boutons correspondent au nombre d'étages réglé dans le RoomManager.
@@ -61,6 +62,7 @@ func ouvrir() -> void:
 	var etage: int = salles.salle_actuelle.etage
 	situation.text = "Étage %d/%d — Salle %d/%d" % [etage, salles.nombre_etages,
 		salles.indice_salle % salles.SALLES_PAR_ETAGE + 1, salles.SALLES_PAR_ETAGE]
+	%LibererSalle.disabled = salles.salle_actuelle.liberee
 	suivant.disabled = etage >= salles.nombre_etages
 	for i in range(etages.get_child_count()):
 		etages.get_child(i).disabled = i + 1 == etage
@@ -134,3 +136,8 @@ func _styliser_selection(bouton: Button) -> void:
 	for etat in ["hover", "pressed", "hover_pressed", "focus"]:
 		bouton.add_theme_stylebox_override(etat, accent)
 	bouton.add_theme_color_override("font_pressed_color", Color("ffe2a4"))
+
+func _liberer_salle() -> void:
+	# Reprendre le jeu permet aussi à l’animation des portes de se terminer.
+	fermer()
+	salles.liberer_salle_debug()

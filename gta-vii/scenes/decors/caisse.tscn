@@ -1,21 +1,123 @@
 [gd_scene format=3 uid="uid://c1amk27paihww"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_caisse"]
-size = Vector3(1.5, 1.5, 1.5)
+[ext_resource type="Material" path="res://assets/materiaux/caisse_bois.tres" id="1_bois"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_afuq2"]
-albedo_color = Color(0.6831784, 0.45842946, 0.12967837, 1)
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flames.tscn" id="2_feu"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_caisse"]
+size = Vector3(0.84, 0.84, 0.84)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_caisse"]
-size = Vector3(1.5, 1.5, 1.5)
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxMesh" id="TraverseX"]
+size = Vector3(1, 0.14, 0.14)
+
+[sub_resource type="BoxMesh" id="TraverseZ"]
+size = Vector3(0.14, 0.14, 0.72)
+
+[sub_resource type="BoxMesh" id="Montant"]
+size = Vector3(0.14, 0.72, 0.14)
+
+[sub_resource type="BoxMesh" id="Diagonale"]
+size = Vector3(1.02, 0.09, 0.09)
 
 [node name="caisse" type="StaticBody3D" unique_id=1680142350]
-editor_description = "Modèle de caisse réutilisable. Le visuel et la collision sont centrés sur ce parent. Dans un niveau, déplacer l'instance entière pour placer la caisse. Pour une hauteur de 1.5 et un sol à Y = 0.1, placer son centre à Y = 0.85."
+editor_description = "Modèle de caisse réutilisable. Le visuel et la collision sont centrés sur ce parent. Dans un niveau, déplacer l'instance entière pour placer la caisse. Pour une hauteur de 1 et un sol à Y = 0.1, placer son centre à Y = 0.6."
 collision_mask = 31
 
 [node name="visuel" type="MeshInstance3D" parent="." unique_id=1729457687]
 mesh = SubResource("BoxMesh_caisse")
-surface_material_override/0 = SubResource("StandardMaterial3D_afuq2")
+surface_material_override/0 = ExtResource("1_bois")
 
 [node name="collisions" type="CollisionShape3D" parent="." unique_id=1149175343]
 shape = SubResource("BoxShape3D_caisse")
+
+[node name="Renforts" type="Node3D" parent="."]
+editor_description = "Traverses et montants en relief, contenus dans la collision de la caisse. Les diagonales renforcent sa silhouette."
+
+[node name="Traverse1" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, -0.43, -0.43)
+mesh = SubResource("TraverseX")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse2" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, -0.43, 0.43)
+mesh = SubResource("TraverseX")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse3" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(-0.43, -0.43, 0)
+mesh = SubResource("TraverseZ")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse4" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0.43, -0.43, 0)
+mesh = SubResource("TraverseZ")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse5" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, 0.43, -0.43)
+mesh = SubResource("TraverseX")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse6" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, 0.43, 0.43)
+mesh = SubResource("TraverseX")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse7" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(-0.43, 0.43, 0)
+mesh = SubResource("TraverseZ")
+material_override = ExtResource("1_bois")
+
+[node name="Traverse8" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0.43, 0.43, 0)
+mesh = SubResource("TraverseZ")
+material_override = ExtResource("1_bois")
+
+[node name="Montant9" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(-0.43, 0, -0.43)
+mesh = SubResource("Montant")
+material_override = ExtResource("1_bois")
+
+[node name="Montant10" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(-0.43, 0, 0.43)
+mesh = SubResource("Montant")
+material_override = ExtResource("1_bois")
+
+[node name="Montant11" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0.43, 0, -0.43)
+mesh = SubResource("Montant")
+material_override = ExtResource("1_bois")
+
+[node name="Montant12" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0.43, 0, 0.43)
+mesh = SubResource("Montant")
+material_override = ExtResource("1_bois")
+
+[node name="Diagonale0" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, 0, -0.455)
+rotation = Vector3(0, 0, 0.785398)
+mesh = SubResource("Diagonale")
+material_override = ExtResource("1_bois")
+
+[node name="Diagonale1" type="MeshInstance3D" parent="Renforts"]
+position = Vector3(0, 0, 0.455)
+rotation = Vector3(0, 0, 0.785398)
+mesh = SubResource("Diagonale")
+material_override = ExtResource("1_bois")
+
+[node name="FeuGauche" parent="." instance=ExtResource("2_feu")]
+position = Vector3(-0.35, 0.42, -0.2)
+scale = Vector3(0.5, 0.5, 0.5)
+
+[node name="FeuDroite" parent="." instance=ExtResource("2_feu")]
+position = Vector3(0.32, 0.42, 0.25)
+scale = Vector3(0.45, 0.45, 0.45)
+
+[node name="Lueur" type="OmniLight3D" parent="."]
+position = Vector3(0, 0.65, 0)
+light_color = Color(1, 0.24, 0.025, 1)
+light_energy = 0.5
+omni_range = 2.0

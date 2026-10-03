@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/caisses/wooden_planks_diff_2k.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/caisses/wooden_planks_nor_gl_2k.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/caisses/wooden_planks_rough_2k.png" id="3"]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/caisse_embrasee.gdshader" id="4"]
+
+[resource]
+resource_name = "Bois carbonisé et braises des caisses"
+shader = ExtResource("4")
+shader_parameter/bois = ExtResource("1")
+shader_parameter/normale = ExtResource("2")
+shader_parameter/rugosite = ExtResource("3")
+shader_parameter/relief = 0.7
+shader_parameter/brulure = 0.75
+shader_parameter/intensite_braises = 1.8
