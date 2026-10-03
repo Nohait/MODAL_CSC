@@ -23,14 +23,14 @@ func _process(delta: float) -> void:
 	papier.material.set_shader_parameter("taille", papier.size)
 
 
-func masquer() -> void:
+func masquer(rapide: bool = false) -> void:
 	# Le RoomManager a déjà gelé le combat ; ce menu ne met pas l'arbre en pause.
 	# La physique doit continuer pour préparer la navigation sous le voile noir.
 	menu.show()
 	panneau.modulate.a = 0.0
 	voile.color.a = 0.0
 	var fondu := create_tween()
-	fondu.tween_property(voile, "color:a", 1.0, duree_noir)
+	fondu.tween_property(voile, "color:a", 1.0, 0.12 if rapide else duree_noir)
 	await fondu.finished # Le RoomManager peut maintenant masquer l'ancienne salle.
 
 
@@ -53,3 +53,11 @@ func reveler(numero: int) -> void:
 	await sortie.finished
 	menu.hide()
 	# À cet instant seulement, le RoomManager rend le contrôle et lance le timer.
+
+func reveler_salle() -> void:
+	# Transition courte entre deux salles ; seul le changement d’étage affiche un titre.
+	panneau.modulate.a = 0.0
+	var fondu := create_tween()
+	fondu.tween_property(voile, "color:a", 0.0, 0.16)
+	await fondu.finished
+	menu.hide()

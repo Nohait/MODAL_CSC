@@ -125,7 +125,8 @@ func demarrer_partie() -> void:
 			+ nombre_salles
 			* (victimes_supplementaires_reserve + maxi(nombre_min_victimes, nombre_max_victimes)),
 			fin_etage,
-			etage_pour_salle(i)
+			etage_pour_salle(i),
+			i > 0 and i % SALLES_PAR_ETAGE == 0
 		)
 		salle.etage = etage_pour_salle(i)
 		salle.name = "Salle%d" % (i + 1)
@@ -401,17 +402,19 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
 func activer_salle(indice: int) -> void:
 	var ancien_etage := etage_pour_salle(indice_salle)
 
-	# Première salle et passages dans un même étage gardent leur comportement habituel.
+	# Seul un nouvel étage ajoute son titre au fondu rapide de chaque salle.
 	var changer_etage := is_instance_valid(salle_actuelle) and etage_pour_salle(indice) != ancien_etage
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
 	guidage_sortie.arreter()
 	joueur.annuler_ordre_victimes()
+	joueur.entree_automatique = false
+	timer_container.hide()
+	await transition_etage.masquer(true)
 	if is_instance_valid(salle_actuelle):
+		salle_actuelle.entree.arreter()
 		salle_actuelle.process_mode = Node.PROCESS_MODE_DISABLED
-		if changer_etage:
-			await transition_etage.masquer()
 		salle_actuelle.hide()
 		salle_actuelle.activer_navigation(false)
 	indice_salle = indice
@@ -435,32 +438,21 @@ func activer_salle(indice: int) -> void:
 
 	# Joueur
 	joueur.extincteur.vider_jet()
-	joueur.global_position = salle_actuelle.to_global(salle_actuelle.points_arrivee[0]) + Vector3.UP * 1.1
+	joueur.global_position = salle_actuelle.entree.to_global(Vector3(0, 1.1, 1.6))
 	joueur.velocity = Vector3.ZERO
 	joueur.is_dashing = false
 	joueur.dash_time_left = 0.0
 
-	# Escorte
-	var indice_arrivee := 1
+	# La file attend dans le couloir ; son excédent émergera du noir progressivement.
+	salle_actuelle.entree.preparer(victim_manager.freed_victims)
 	for victime in victim_manager.freed_victims:
-		if (not is_instance_valid(victime) or victime.is_queued_for_deletion()):
-			continue
-		victime.global_position = (
-			salle_actuelle.to_global(salle_actuelle.points_arrivee[indice_arrivee])
-			+ Vector3.UP * 0.75
-		)
-		indice_arrivee += 1
-		victime.velocity = Vector3.ZERO
-		victime.player_nearby = false
-		victime.navigation_agent.target_position = victime.global_position
-
-		# Très important : la victime doit désormais examiner les ennemis de cette nouvelle salle.
-		victime.set_ennemis_container(salle_actuelle.get_node("Ennemis"))
+		if is_instance_valid(victime) and not victime.is_queued_for_deletion():
+			victime.set_ennemis_container(salle_actuelle.get_node("Ennemis"))
 	camera_rig.recentrer()
 
 	# Attendre la navigation
 	var carte: RID = salle_actuelle .get_world_3d() .navigation_map
-	var arrivee: Vector3 = salle_actuelle.to_global(salle_actuelle.points_arrivee[1])
+	var arrivee: Vector3 = salle_actuelle.entree.to_global(Vector3(0, 1.1, -1.4))
 	for tentative in range(300):
 		await get_tree().physics_frame
 		var point_proche := NavigationServer3D.map_get_closest_point(carte, joueur.global_position)
@@ -484,12 +476,16 @@ func activer_salle(indice: int) -> void:
 			objectifs.text = "Navigation indisponible — R pour relancer."
 			return
 
-	# Réactivation
-	# La salle et ses chemins sont prêts, mais le combat et le timer restent gelés.
+	# Révéler la nouvelle pièce avant la course ; le combat et son timer restent gelés.
 	if changer_etage:
 		await transition_etage.reveler(salle_actuelle.etage)
-	joueur.set_physics_process(true)
+	else:
+		await transition_etage.reveler_salle()
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_INHERIT
+	salle_actuelle.entree.commencer()
+	joueur.commencer_entree(arrivee)
+	joueur.set_physics_process(true)
+	await joueur.entree_terminee
 	salle_actuelle.get_node("Ennemis").process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.get_node("Victimes").process_mode = Node.PROCESS_MODE_INHERIT
 	transition_en_cours = false

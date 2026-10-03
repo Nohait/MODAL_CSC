@@ -11,6 +11,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _ready() -> void:
+	# Garder la lance aussi sur les boutons qui demandent un curseur en forme de main.
+	var curseur = preload("res://assets/textures/interfaces/curseurs/curseur_lance.svg")
+	Input.set_custom_mouse_cursor(curseur, Input.CURSOR_POINTING_HAND, Vector2(3, 3))
 	# main ne gère plus les apparitions : il relie seulement les systèmes du jeu.
 	$player.died.connect(_on_player_died, CONNECT_ONE_SHOT)
 	# Tous les enfants doivent avoir terminé leur _ready avant de générer les salles.

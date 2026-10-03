@@ -29,7 +29,10 @@ extends Node3D
 const TROUS_PLANCHER = preload("res://scenes/decors/trous_plancher.gd")
 const TILE_SIZE = 5.0
 const BOX_SCENE = preload("res://scenes/decors/caisse.tscn")
-const DOOR_SCENE = preload("res://scenes/decors/porte.tscn")
+const PORTE_ENTREE = preload("res://scenes/decors/porte_entree.tscn")
+const ENTREE = preload("res://scenes/salles/entree_salle.gd")
+const OBSCURITE = preload("res://assets/shaders/decors/obscurite_entree.gdshader")
+const DOOR_SCENE = preload("res://scenes/decors/porte_sortie.tscn")
 const ROOM_SCENE = preload("res://scenes/salles/salle.tscn")
 const DIRECTIONS = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 var grid = []
@@ -62,9 +65,11 @@ func regenerer_apercu() -> void:
 
 # Vrai uniquement pour la cinquième salle de chaque étage.
 var sortie_avec_escalier := false
+var entree_avec_escalier := false
 
-func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1) -> Node3D:
+func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1, debut_etage: bool = false) -> Node3D:
 	sortie_avec_escalier = fin_etage
+	entree_avec_escalier = debut_etage
 
 	# L'aperçu utilise l'étage 1 par défaut ; le RoomManager fournit l'étage en jeu.
 	# Au-delà de 3, conserver le béton en attendant de nouveaux décors.
@@ -246,6 +251,10 @@ func displayWalls() -> void:
 		var direction: Vector2i = bord[1]
 		if (direction.x == -1 and cellule.x == minimum.x) or (direction.x == 1 and cellule.x == maximum.x) or (direction.y == -1 and cellule.y == minimum.y) or (direction.y == 1 and cellule.y == maximum.y):
 			sorties_possibles.append(bord)
+	# Ces deux côtés montrent mieux la course depuis la caméra du jeu.
+	var entree_possibles: Array = sorties_possibles.filter(func(bord): return bord[1] == Vector2i.LEFT or bord[1] == Vector2i.UP)
+	var bord_entree: Array = entree_possibles[0] if not entree_possibles.is_empty() else sorties_possibles[0]
+	sorties_possibles = sorties_possibles.filter(func(bord): return bord[0] != bord_entree[0])
 	var portes: Array = sorties_possibles.slice(0, mini(randi_range(1, 2), sorties_possibles.size()))
 	for bord in bords:
 		if cellules_trous.has(bord[0] + bord[1]):
@@ -253,11 +262,15 @@ func displayWalls() -> void:
 			# La barrière garde les dimensions du mur, mais n'a aucun visuel.
 			# Sous Navigation/Decor, elle est prise en compte par les deux maillages.
 			createWall(bord[0], bord[1], true)
+		elif bord == bord_entree:
+			creer_entree(bord[0], bord[1])
 		elif bord in portes:
 			createDoor(bord[0], bord[1])
 		else:
 			createWall(bord[0], bord[1])
 
+	# Le seuil d’entrée et le couloir ne sont jamais des points de spawn.
+	cellules_disponibles.erase(bord_entree[0])
 	# Aucune caisse ni apparition au milieu du passage d'une porte.
 	for bord in portes:
 		cellules_disponibles.erase(bord[0])
@@ -289,7 +302,7 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	# Le côté +Z (voyant et poignée) doit regarder vers l’intérieur de la salle.
 	porte.rotation.y = atan2(-normale.x, -normale.z)
 
-	# Le cadre est légèrement reculé dans porte.tscn (Z = -0.12).
+	# Le cadre est légèrement reculé dans porte_sortie.tscn (Z = -0.12).
 	# Compenser le recul du cadre après rotation pour l’aligner avec le mur.
 	var decalage_cadre: float = porte.get_node("Encadrement/MontantGauche").position.z
 	porte.position = centre + normale * decalage_cadre + Vector3.UP * 0.1
@@ -318,7 +331,8 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 		var palier := Vector3(2.5, 0.2, 6)
 		if direction.x != 0:
 			palier = Vector3(6, 0.2, 2.5)
-		creer_bloc(centre + normale * 3.0, palier, Color(0.24, 0.28, 0.3))
+		creer_bloc(centre + normale * 3.0, palier, Color.WHITE, sol_actuel)
+		creer_murs_sortie(centre, normale, direction, 6.0, 3.0)
 	var zone := Area3D.new()
 	zone.name = "Passage"
 	zone.set_collision_layer_value(5, true)
@@ -388,7 +402,8 @@ func creer_escalier(centre: Vector3, normale: Vector3, direction: Vector2i) -> v
 	var palier := Vector3(2.5, 0.2, 1.6)
 	if direction.x != 0:
 		palier = Vector3(1.6, 0.2, 2.5)
-	creer_bloc(centre + normale * 0.8, palier, Color(0.24, 0.28, 0.3))
+	creer_bloc(centre + normale * 0.8, palier, Color.WHITE, sol_actuel)
+	creer_murs_sortie(centre, normale, direction, 1.6, 3.0)
 	for i in range(8):
 		var hauteur := 0.2 + (i + 1) * 0.22
 		var taille := Vector3(2.5, hauteur, 0.5)
@@ -398,5 +413,96 @@ func creer_escalier(centre: Vector3, normale: Vector3, direction: Vector2i) -> v
 		# Chaque bloc part du même niveau de base ; seule sa face supérieure monte.
 		var position_marche := centre + normale * (1.85 + i * 0.5)
 		position_marche.y += hauteur / 2.0 - 0.1
-		creer_bloc(position_marche, taille, Color(0.32, 0.34, 0.37))
+		creer_bloc(position_marche, taille, Color.WHITE, sol_actuel)
 		salle_en_creation.get_node("Navigation/Decor").get_child(-1).name = "MarcheEscalier%d" % (i + 1)
+		# Les murs montent avec les marches, en gardant leur base sous l’escalier.
+		creer_murs_sortie(centre + normale * (1.6 + i * 0.5), normale, direction, 0.5, 3.0 + (i + 1) * 0.22)
+
+func creer_murs_sortie(depart: Vector3, normale: Vector3, direction: Vector2i, longueur: float, hauteur: float) -> void:
+	var tangente := Vector3(normale.z, 0, -normale.x)
+	var taille := Vector3(0.2, hauteur, longueur)
+	if direction.x != 0:
+		taille = Vector3(longueur, hauteur, 0.2)
+	for cote in [-1, 1]:
+		# L’intérieur des murs longe le sol de 2,5 m, sans rétrécir le passage.
+		var position_mur: Vector3 = depart + normale * longueur / 2.0 + tangente * cote * 1.35
+		position_mur.y += 0.1 + hauteur / 2.0
+		creer_bloc(position_mur, taille, Color.WHITE, murs_actuels)
+
+func creer_entree(cellule: Vector2i, direction: Vector2i) -> void:
+	var normale := Vector3(direction.x, 0, direction.y)
+	var centre := position_cellule(cellule) + normale * TILE_SIZE / 2.0
+	var entree = ENTREE.new()
+	entree.name = "Entree"
+	entree.position = centre
+	entree.rotation.y = atan2(normale.x, normale.z)
+	salle_en_creation.add_child(entree)
+	salle_en_creation.entree = entree
+	var porte_cassee = PORTE_ENTREE.instantiate()
+	entree.add_child(porte_cassee)
+	# Une teinte assombrie garde le bois en relief, sans attirer autant que les sorties.
+	var bois = porte_cassee.get_node("BattantCasse").mesh.material.duplicate()
+	bois.albedo_color = Color(0.32, 0.29, 0.25)
+	porte_cassee.get_node("BattantCasse").material_override = bois
+	porte_cassee.get_node("Fragment").material_override = bois
+	# Refermer les côtés de l’ancien mur, en laissant un passage de 2,5 mètres.
+	var tangente := Vector3(normale.z, 0, -normale.x)
+	var taille_cote := Vector3(1.25, 3, 0.2) if direction.x == 0 else Vector3(0.2, 3, 1.25)
+	for cote in [-1, 1]:
+		creer_bloc(centre + tangente * cote * 1.875 + Vector3.UP * 1.6, taille_cote, Color.WHITE, murs_actuels)
+	var longueur := 4.5 if entree_avec_escalier else 6.0
+	var taille_sol := Vector3(2.5, 0.2, longueur) if direction.x == 0 else Vector3(longueur, 0.2, 2.5)
+	creer_bloc(centre + normale * longueur / 2.0, taille_sol, Color.WHITE, sol_actuel)
+	creer_murs_sortie(centre, normale, direction, longueur, 3.0)
+	if entree_avec_escalier:
+		for i in range(6):
+			var marche := centre + normale * (4.75 + i * 0.5) - Vector3.UP * (i + 1) * 0.22
+			var taille := Vector3(2.5, 0.2, 0.5) if direction.x == 0 else Vector3(0.5, 0.2, 2.5)
+			creer_bloc(marche, taille, Color.WHITE, sol_actuel)
+			creer_murs_sortie(centre + normale * (4.5 + i * 0.5) - Vector3.UP * (i + 1) * 0.22, normale, direction, 0.5, 3.0)
+	# Le noir suit la hauteur des marches, sans plans flottants.
+	var fin_noir := 7.5 if entree_avec_escalier else 6.0
+	creer_ombre_entree(entree, 3.0, longueur - 3.0, 0.0, 0.0, (longueur - 3.0) / (fin_noir - 3.0))
+	if entree_avec_escalier:
+		for i in range(6):
+			var debut_marche := 4.5 + i * 0.5
+			creer_ombre_entree(entree, debut_marche, 0.5, -(i + 1) * 0.22,
+				(debut_marche - 3.0) / 4.5, (debut_marche + 0.5 - 3.0) / 4.5)
+	var fond := MeshInstance3D.new()
+	var fermeture := QuadMesh.new()
+	fermeture.size = Vector2(2.5, 3.0)
+	fond.mesh = fermeture
+	var noir := StandardMaterial3D.new()
+	noir.albedo_color = Color.BLACK
+	noir.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	noir.cull_mode = BaseMaterial3D.CULL_DISABLED
+	fond.material_override = noir
+	fond.position = Vector3(0, 0.28 if entree_avec_escalier else 1.6, 7.5 if entree_avec_escalier else 6.0)
+	entree.add_child(fond)
+	# Une butée invisible empêche de sortir du niveau derrière le rideau noir.
+	var fin := 7.5 if entree_avec_escalier else 6.0
+	var hauteur := -1.32 if entree_avec_escalier else 0.0
+	var taille_fond := Vector3(2.5, 3.0, 0.2) if direction.x == 0 else Vector3(0.2, 3.0, 2.5)
+	creer_bloc(centre + normale * fin + Vector3.UP * (hauteur + 1.6), taille_fond, Color.BLACK, null, true)
+
+func creer_ombre_entree(entree: Node3D, depart: float, longueur: float, hauteur: float, debut: float, fin: float) -> void:
+	# Trois plans fins : le sol puis les deux murs, avec un fondu continu.
+	for cote in [0, -1, 1]:
+		var ombre := MeshInstance3D.new()
+		var plan := QuadMesh.new()
+		plan.size = Vector2(2.5, longueur) if cote == 0 else Vector2(longueur, 3.0)
+		ombre.mesh = plan
+		var mat := ShaderMaterial.new()
+		mat.shader = OBSCURITE
+		mat.set_shader_parameter("debut", debut)
+		mat.set_shader_parameter("fin", fin)
+		mat.set_shader_parameter("horizontal", cote != 0)
+		mat.set_shader_parameter("inverser", cote == -1)
+		ombre.material_override = mat
+		ombre.position = Vector3(cote * 1.24, hauteur + (0.115 if cote == 0 else 1.6), depart + longueur / 2.0)
+		if cote == 0:
+			ombre.rotation.x = -PI / 2.0
+		else:
+			ombre.rotation.y = -cote * PI / 2.0
+		ombre.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		entree.add_child(ombre)

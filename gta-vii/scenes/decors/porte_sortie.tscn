@@ -1,0 +1,149 @@
+[gd_scene format=3 uid="uid://dtvrjfbrfls11"]
+
+[ext_resource type="Script" uid="uid://csxw2bycubox2" path="res://scenes/decors/porte_sortie.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://bhlrjecqdgqno" path="res://assets/materiaux/porte_bois_peint.tres" id="2_fuwwc"]
+[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="3_cadre"]
+[ext_resource type="Material" path="res://assets/materiaux/poignee_porte.tres" id="4_poignee"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/portes/ISO_7010_E001.svg" id="5_sortie"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/panneau_sortie.gdshader" id="6_panneau"]
+
+[sub_resource type="ShaderMaterial" id="Pictogramme"]
+shader = ExtResource("6_panneau")
+shader_parameter/pictogramme = ExtResource("5_sortie")
+shader_parameter/couleur = Color(0.7, 0.035, 0.02, 1)
+
+[sub_resource type="QuadMesh" id="ImageSortie"]
+size = Vector2(0.085, 0.085)
+material = SubResource("Pictogramme")
+
+[sub_resource type="BoxMesh" id="BoitierMesh"]
+size = Vector3(0.64, 0.13, 0.1)
+material = ExtResource("3_cadre")
+
+[sub_resource type="BoxMesh" id="MontantMesh"]
+material = ExtResource("3_cadre")
+size = Vector3(0.15, 3, 0.3)
+
+[sub_resource type="BoxShape3D" id="MontantShape"]
+size = Vector3(0.15, 3, 0.3)
+
+[sub_resource type="BoxMesh" id="TraverseMesh"]
+material = ExtResource("3_cadre")
+size = Vector3(2.5, 0.2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="Rouge"]
+albedo_color = Color(0.7, 0.035, 0.02, 1)
+emission_enabled = true
+emission = Color(0.7, 0.035, 0.02, 1)
+emission_energy_multiplier = 0.6
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="VoyantMesh"]
+material = SubResource("Rouge")
+size = Vector3(0.6, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BattantMesh"]
+material = ExtResource("2_fuwwc")
+size = Vector3(2.2, 2.8, 0.18)
+
+[sub_resource type="BoxShape3D" id="BattantShape"]
+size = Vector3(2.2, 2.8, 0.18)
+
+[sub_resource type="BoxMesh" id="PoigneeMesh"]
+material = ExtResource("4_poignee")
+size = Vector3(0.38, 0.07, 0.08)
+
+[sub_resource type="BoxMesh" id="PlaquePoigneeMesh"]
+material = ExtResource("4_poignee")
+size = Vector3(0.13, 0.3, 0.025)
+
+[sub_resource type="BoxMesh" id="SupportPoigneeMesh"]
+material = ExtResource("4_poignee")
+size = Vector3(0.07, 0.07, 0.12)
+
+[node name="PorteSortie" type="Node3D" unique_id=1670415283]
+editor_description = "Origine au sol, au centre du passage. Le signal room_cleared appelle ouvrir()."
+script = ExtResource("1_script")
+
+[node name="Encadrement" type="StaticBody3D" parent="." unique_id=1296170403]
+editor_description = "Corps fixe nécessaire pour que les collisions des montants bloquent les personnages. Les deux montants et la traverse partagent le matériau encadrement_porte : le modifier ajuste tout le cadre."
+collision_layer = 16
+collision_mask = 31
+
+[node name="MontantGauche" type="MeshInstance3D" parent="Encadrement" unique_id=395491851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.5, -0.12)
+mesh = SubResource("MontantMesh")
+
+[node name="CollisionMontantGauche" type="CollisionShape3D" parent="Encadrement" unique_id=2010530190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.5, -0.12)
+shape = SubResource("MontantShape")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="Encadrement" unique_id=1545599288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.5, -0.12)
+mesh = SubResource("MontantMesh")
+
+[node name="Traverse" type="MeshInstance3D" parent="Encadrement" unique_id=1761098343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -0.12)
+mesh = SubResource("TraverseMesh")
+
+[node name="CollisionMontantDroit" type="CollisionShape3D" parent="Encadrement" unique_id=577901753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.5, -0.12)
+shape = SubResource("MontantShape")
+
+[node name="Voyant" type="MeshInstance3D" parent="." unique_id=1443244705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0.09)
+mesh = SubResource("VoyantMesh")
+
+[node name="Charniere" type="Node3D" parent="." unique_id=2032921023]
+editor_description = "Pivot au bord gauche. Tourner Y pour ouvrir. Le battant est décalé de sa demi-largeur."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0, 0)
+
+[node name="Battant" type="AnimatableBody3D" parent="Charniere" unique_id=1312956028]
+editor_description = "Collision mobile animée par son parent au rythme physique. Synchronisation automatique désactivée car le Tween est déjà en mode physique."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.4, 0)
+sync_to_physics = false
+
+[node name="Visuel" type="MeshInstance3D" parent="Charniere/Battant" unique_id=158729063]
+mesh = SubResource("BattantMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Charniere/Battant" unique_id=400794447]
+shape = SubResource("BattantShape")
+
+[node name="Poignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1278190910]
+editor_description = "Levier tourné vers le centre de la porte. Comme la plaque et le support, il est enfant du battant : il suit automatiquement son ouverture. Les trois pièces partagent le matériau poignee_porte."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.66, -0.15, 0.23)
+mesh = SubResource("PoigneeMesh")
+
+[node name="PlaquePoignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1315517512]
+editor_description = "Petite plaque métallique posée sur la face intérieure du battant (côté +Z). Ces pièces sont décoratives : la collision du battant suffit."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.2, 0.1025)
+mesh = SubResource("PlaquePoigneeMesh")
+
+[node name="SupportPoignee" type="MeshInstance3D" parent="Charniere/Battant" unique_id=1498149952]
+editor_description = "Relie la plaque au levier en le décollant de la porte pour donner du relief à la poignée."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.15, 0.16)
+mesh = SubResource("SupportPoigneeMesh")
+
+[node name="BoitierSortie" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.9, 0.065)
+mesh = SubResource("BoitierMesh")
+
+[node name="Pictogramme" type="MeshInstance3D" parent="Voyant"]
+position = Vector3(-0.245, 0, 0.051)
+mesh = SubResource("ImageSortie")
+cast_shadow = 0
+
+[node name="Texte" type="Label3D" parent="Voyant"]
+position = Vector3(0.05, 0, 0.052)
+pixel_size = 0.00095
+text = "SORTIE"
+font_size = 64
+outline_size = 0
+no_depth_test = false
+
+[node name="LumiereSortie" type="OmniLight3D" parent="Voyant"]
+position = Vector3(0, 0, 0.15)
+light_color = Color(0.7, 0.035, 0.02, 1)
+light_energy = 0.3
+omni_range = 1.8

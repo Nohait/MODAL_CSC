@@ -5,6 +5,9 @@ extends CharacterBody3D
 signal degats_recus(quantite: float)
 signal died
 var est_mort := false
+signal entree_terminee
+var entree_automatique := false
+var cible_entree := Vector3.ZERO
 
 # Mode de test : activé depuis main.gd avec la touche I.
 var invincible: bool = false
@@ -70,6 +73,9 @@ func get_dash_cooldown() -> float:
 
 
 func _physics_process(delta: float) -> void:
+	if entree_automatique:
+		_avancer_entree(delta)
+		return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
@@ -288,3 +294,28 @@ func bouger_victime(position):
 	
 	
 	
+
+func commencer_entree(cible: Vector3) -> void:
+	cible_entree = cible
+	entree_automatique = true
+	extincteur.stop_primary_attack()
+
+func _avancer_entree(delta: float) -> void:
+	var direction := cible_entree - global_position
+	direction.y = 0.0
+	if direction.length() <= 0.04:
+		entree_automatique = false
+		velocity = Vector3.ZERO
+		animate(delta)
+		entree_terminee.emit()
+		return
+	# Même vitesse et même animation que le déplacement normal, sans lire les inputs.
+	var vitesse := minf(speed, direction.length() / delta)
+	direction = direction.normalized()
+	velocity.x = direction.x * vitesse
+	velocity.z = direction.z * vitesse
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+	visual.look_at(visual.global_position + direction, Vector3.UP)
+	animate(delta)
+	move_and_slide()

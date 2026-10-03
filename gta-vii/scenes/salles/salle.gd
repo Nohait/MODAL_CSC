@@ -7,6 +7,7 @@ signal sortie_franchie(salle: Node3D)
 
 # Attribué avant le peuplement.
 var etage := 1
+var entree: Node3D
 
 
 var points_arrivee: Array[Vector3] = []
