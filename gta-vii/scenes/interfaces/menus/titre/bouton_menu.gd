@@ -6,10 +6,13 @@ const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
 @export var taille_police := 28
 var fond: TextureRect
 var animation: Tween
+var icone: TextureRect
+
+@export var taille_minimale := Vector2(300, 74)
 
 func _ready() -> void:
+	custom_minimum_size = taille_minimale
 	# Le Button garde ses clics et son texte ; une plaque dessinée remplace son fond.
-	custom_minimum_size = Vector2(100,74)
 	for etat in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(etat, StyleBoxEmpty.new())
 	add_theme_font_override("font", POLICE)
@@ -17,21 +20,40 @@ func _ready() -> void:
 	add_theme_color_override("font_color", Color("e9d8b4"))
 	add_theme_color_override("font_hover_color", Color("fff2cc"))
 	add_theme_color_override("font_pressed_color", Color("e8b37d"))
+	
 	fond = TextureRect.new()
 	fond.texture = PLAQUE
 	fond.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fond.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fond.show_behind_parent = true
+	
 	var mat := ShaderMaterial.new()
 	mat.shader = REFLET
 	mat.set_shader_parameter("survol", 0.0)
 	fond.material = mat
 	add_child(fond)
+	
+	icone = TextureRect.new()
+	icone.name = "Icone"
+	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icone.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	icone.custom_minimum_size = Vector2(50, 50)
+	icone.size = Vector2(50, 50)
+
+	icone.set_anchors_preset(Control.PRESET_CENTER)
+	icone.position = -icone.size / 2.0
+	add_child(icone)
+	
 	mouse_entered.connect(_animer.bind(true))
+	mouse_entered.connect(grab_focus)
 	mouse_exited.connect(_animer.bind(false))
 	focus_entered.connect(_animer.bind(true))
 	focus_exited.connect(_animer.bind(false))
+	
+	
 
 func _animer(survole: bool) -> void:
 	if animation:

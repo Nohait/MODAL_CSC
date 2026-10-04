@@ -159,7 +159,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Nouvelle partie"
 
-[node name="ModeZombie" parent="Menu/Colonne" instance=ExtResource("button")]
+[node name="ModeZombie" parent="Menu/Colonne" unique_id=1743227809 instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Mode zombie"

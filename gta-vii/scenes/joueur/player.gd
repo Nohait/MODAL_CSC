@@ -159,7 +159,7 @@ func _physics_process(delta: float) -> void:
 	#Recuperation de la position de la souris
 	#Le viewport est la zone dans laquelle le jeu est rendu 
 	#On récupère donc le vecteur position de la souris en 2D, sur l'écran.
-	var mouse_position := get_viewport().get_mouse_position()
+	var mouse_position = CursorManager.position_curseur
 	
 	#Pour passer de la position 2D de la souris à une position en 3D dans le monde
 	#On veut créer un vecteur qui passe par la caméra et le point de l'écran désigné par la souris

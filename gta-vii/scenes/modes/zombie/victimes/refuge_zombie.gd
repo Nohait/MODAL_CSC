@@ -112,7 +112,7 @@ func _physics_process(delta: float) -> void:
 	# Le survol utilise le vrai volume 3D, même quand la caméra est inclinée.
 	var camera := get_viewport().get_camera_3d()
 	if camera == null: return
-	var souris := get_viewport().get_mouse_position()
+	var souris = CursorManager.position_curseur
 	var origine := camera.project_ray_origin(souris)
 	var requete := PhysicsRayQueryParameters3D.create(origine, origine + camera.project_ray_normal(souris) * 200, 8)
 	var resultat := get_world_3d().direct_space_state.intersect_ray(requete)
