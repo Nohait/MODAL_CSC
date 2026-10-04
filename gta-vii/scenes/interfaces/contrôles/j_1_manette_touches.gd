@@ -18,7 +18,7 @@ func _ready() -> void:
 	
 	#On attend que tout soit prêt, et on récupère l'ensemble des paires actions/boutons
 	await menu_controles.ready
-	boutons_actions = menu_controles.boutons_actions["clavier"]
+	boutons_actions = menu_controles.boutons_actions["manette"]
 	
 	#On relie les boutons à l'activation de la fonction rebind
 	for action in boutons_actions:
@@ -26,25 +26,25 @@ func _ready() -> void:
 
 func commencer_rebind(action: String) -> void:
 	#en attendant que le joueur choisisse, on affiche '...'
+	boutons_actions[action].get_node("Icone").texture = null
 	boutons_actions[action].text = "..."
 	
 	action_a_modifier = action
 	en_attente = true
-	boutons_actions[action].focus_mode = Control.FOCUS_NONE
-	boutons_actions[action].button_mask = 0
+
 
 func changer_touche(event: InputEvent) -> void:
 	InputMap.action_erase_events(action_a_modifier)
 	InputMap.action_add_event(action_a_modifier, event)
 	
-	#On renomme le bouton après avoir changer de touche
-	if event is InputEventMouseButton:
-		boutons_actions[action_a_modifier].text = menu_controles.noms_souris[event.button_index]
-	else:
-		boutons_actions[action_a_modifier].text = menu_controles.en_francais(OS.get_keycode_string(event.keycode))
+	#On change l'image du bouton après avoir changé de touche
+	if event is InputEventJoypadMotion:
+		menu_controles.afficher_image_manette_motion(boutons_actions[action_a_modifier],event.axis,event.axis_value)
+	elif event is InputEventJoypadButton:
+		menu_controles.afficher_image_manette_bouton(boutons_actions[action_a_modifier],event.button_index)
 	
-	boutons_actions[action_a_modifier].button_mask = MOUSE_BUTTON_MASK_LEFT
 	boutons_actions[action_a_modifier].focus_mode = Control.FOCUS_ALL
+	
 	
 	en_attente = false
 	action_a_modifier = ""
@@ -59,9 +59,10 @@ func mettre_a_jour_boutons() -> void:
 func _input(event: InputEvent) -> void:
 	if not en_attente:
 		return
-	if event is InputEventKey and event.pressed and not event.echo:
-		changer_touche(event)
-		get_viewport().set_input_as_handled()
-	elif event is InputEventMouseButton and event.pressed:
+	if event is InputEventJoypadMotion:
+		if abs(event.axis_value) > 0.5:
+			changer_touche(event)
+			get_viewport().set_input_as_handled()
+	elif event is InputEventJoypadButton and event.pressed:
 		changer_touche(event)
 		get_viewport().set_input_as_handled()
