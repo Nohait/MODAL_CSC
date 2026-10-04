@@ -48,6 +48,7 @@ func _ready() -> void:
 	add_child(icone)
 	
 	mouse_entered.connect(_animer.bind(true))
+	mouse_entered.connect(grab_focus)
 	mouse_exited.connect(_animer.bind(false))
 	focus_entered.connect(_animer.bind(true))
 	focus_exited.connect(_animer.bind(false))

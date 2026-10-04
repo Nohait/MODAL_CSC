@@ -34,7 +34,13 @@ func commencer_rebind(action: String) -> void:
 
 
 func changer_touche(event: InputEvent) -> void:
-	InputMap.action_erase_events(action_a_modifier)
+	#On supprime l'ancien controle manette
+	var evenements_og := InputMap.action_get_events(action_a_modifier)
+	for evenement in evenements_og:
+		if evenement is InputEventJoypadButton or evenement is InputEventJoypadMotion:
+			InputMap.action_erase_event(action_a_modifier, evenement)
+	
+	#On rajoute le nouveau controle manette
 	InputMap.action_add_event(action_a_modifier, event)
 	
 	#On change l'image du bouton après avoir changé de touche
@@ -42,10 +48,7 @@ func changer_touche(event: InputEvent) -> void:
 		menu_controles.afficher_image_manette_motion(boutons_actions[action_a_modifier],event.axis,event.axis_value)
 	elif event is InputEventJoypadButton:
 		menu_controles.afficher_image_manette_bouton(boutons_actions[action_a_modifier],event.button_index)
-	
-	boutons_actions[action_a_modifier].focus_mode = Control.FOCUS_ALL
-	
-	
+		
 	en_attente = false
 	action_a_modifier = ""
 	

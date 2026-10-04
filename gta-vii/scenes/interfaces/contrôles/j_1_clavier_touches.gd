@@ -34,7 +34,11 @@ func commencer_rebind(action: String) -> void:
 	boutons_actions[action].button_mask = 0
 
 func changer_touche(event: InputEvent) -> void:
-	InputMap.action_erase_events(action_a_modifier)
+	#On supprime l'ancien controle clavier
+	var evenements_og := InputMap.action_get_events(action_a_modifier)
+	for evenement in evenements_og:
+		if evenement is InputEventMouseButton or evenement is InputEventKey:
+			InputMap.action_erase_event(action_a_modifier, evenement)
 	InputMap.action_add_event(action_a_modifier, event)
 	
 	#On renomme le bouton après avoir changer de touche
