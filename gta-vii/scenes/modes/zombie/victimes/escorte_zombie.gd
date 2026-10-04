@@ -6,6 +6,7 @@ var ordre_liberation := 0
 func diriger_victime(fleche) -> void:
 	if is_instance_valid(refuge) and refuge.survole:
 		refuge.depot_demande = true
+		cible_deplacement = refuge
 		# Chaque membre vise le refuge : toute la file peut y entrer.
 		for victime in freed_victims:
 			victime.follow_target = refuge
@@ -15,7 +16,7 @@ func diriger_victime(fleche) -> void:
 
 func retour_nav_auto() -> void:
 	if is_instance_valid(refuge): refuge.depot_demande = false
-	reorganiser_file()
+	super.retour_nav_auto()
 
 func register_victim(victim: CharacterBody3D) -> void:
 	if not freed_victims.has(victim):
@@ -24,3 +25,12 @@ func register_victim(victim: CharacterBody3D) -> void:
 	super.register_victim(victim)
 	if is_instance_valid(refuge) and refuge.depot_demande:
 		victim.follow_target = refuge
+
+func reorganiser_file() -> void:
+	if is_instance_valid(refuge) and refuge.depot_demande:
+		# Le dépôt concerne toute l'escorte, même si une victime meurt en chemin.
+		cible_deplacement = refuge
+		for victime in freed_victims:
+			if is_instance_valid(victime): victime.follow_target = refuge
+	else:
+		super.reorganiser_file()

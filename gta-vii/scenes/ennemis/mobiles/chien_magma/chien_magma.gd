@@ -5,7 +5,8 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 @export_group("Course et bond")
 @export var vitesse_course := 7.0
 @export_range(0.5, 2.0, 0.05) var taille_modele := 1.25
-@export var distance_declenchement_bond := 5.0
+# Déclencher assez tôt : la course continue pendant les 0,3 s de préparation.
+@export var distance_declenchement_bond := 8.0
 @export var distance_minimum_bond := 2.0
 @export_range(0.05, 10.0, 0.05) var duree_preparation_bond := 0.3
 @export_range(0.05, 10.0, 0.05) var duree_bond := 0.45

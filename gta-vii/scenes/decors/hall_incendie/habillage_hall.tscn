@@ -47,66 +47,6 @@ roughness = 1.0
 shader = ExtResource("suie")
 shader_parameter/graine = 3.2
 
-[sub_resource type="BoxMesh" id="mesh1"]
-size = Vector3(39.945, 0.68, 0.025)
-
-[sub_resource type="BoxMesh" id="mesh4"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh5"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh6"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh7"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh8"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh9"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh10"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh11"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh12"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh13"]
-size = Vector3(40, 0.68, 0.025)
-
-[sub_resource type="BoxMesh" id="mesh16"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh17"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh18"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh19"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh20"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh21"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh22"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh23"]
-size = Vector3(0.028, 2.26, 0.018)
-
-[sub_resource type="BoxMesh" id="mesh24"]
-size = Vector3(0.028, 2.26, 0.018)
-
 [sub_resource type="BoxMesh" id="mesh25"]
 size = Vector3(40, 0.68, 0.025)
 
@@ -195,48 +135,6 @@ size = Vector2(2.5, 1.0)
 
 
 
-[sub_resource type="BoxMesh" id="PlintheNord0Partie0"]
-size = Vector3(9.695, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheNord1Partie0"]
-size = Vector3(8.775, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheNord1Partie1"]
-size = Vector3(8.775, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheNord2Partie0"]
-size = Vector3(9.695, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteNord0Partie0"]
-size = Vector3(9.695, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteNord1Partie0"]
-size = Vector3(8.775, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteNord1Partie1"]
-size = Vector3(8.775, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteNord2Partie0"]
-size = Vector3(9.695, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheGauche0Partie0"]
-size = Vector3(16.88, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheGauche0Partie1"]
-size = Vector3(0.7750000000000017, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="PlintheGauche1Partie0"]
-size = Vector3(19.695, 0.14, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteGauche0Partie0"]
-size = Vector3(16.88, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteGauche0Partie1"]
-size = Vector3(0.7750000000000017, 0.05, 0.035)
-
-[sub_resource type="BoxMesh" id="BaguetteGauche1Partie0"]
-size = Vector3(19.695, 0.05, 0.035)
-
 [sub_resource type="BoxMesh" id="PlintheDroit0Partie0"]
 size = Vector3(17.88, 0.14, 0.035)
 
@@ -279,6 +177,120 @@ size = Vector3(9.695, 0.05, 0.035)
 [sub_resource type="BoxMesh" id="BaguetteSudDroit1Partie0"]
 size = Vector3(8.545, 0.05, 0.035)
 
+[sub_resource type="BoxMesh" id="OuvertureNordPartieBasse0"]
+size = Vector3(17.6725, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="OuvertureNordPartieBasse1"]
+size = Vector3(17.6725, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint00"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint10"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint20"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint30"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint50"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint60"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint70"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordJoint80"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePartieBasse0"]
+size = Vector3(0.7, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePartieBasse1"]
+size = Vector3(15.4, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePartieBasse2"]
+size = Vector3(14.7, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint10"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint20"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint30"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint40"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint60"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint70"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheJoint80"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="OuvertureNordPlinthe0Partie00"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordPlinthe1Partie00"]
+size = Vector3(7.495, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordPlinthe1Partie10"]
+size = Vector3(7.495, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordPlinthe2Partie00"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordBaguette0Partie00"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordBaguette1Partie00"]
+size = Vector3(7.495, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordBaguette1Partie10"]
+size = Vector3(7.495, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureNordBaguette2Partie00"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePlinthe0Partie00"]
+size = Vector3(0.6, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePlinthe0Partie01"]
+size = Vector3(11.68, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePlinthe0Partie10"]
+size = Vector3(0.775, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePlinthe1Partie00"]
+size = Vector3(0.495, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGauchePlinthe1Partie01"]
+size = Vector3(14.6, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheBaguette0Partie00"]
+size = Vector3(0.6, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheBaguette0Partie01"]
+size = Vector3(11.68, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheBaguette0Partie10"]
+size = Vector3(0.775, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheBaguette1Partie00"]
+size = Vector3(0.495, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="OuvertureGaucheBaguette1Partie01"]
+size = Vector3(14.6, 0.05, 0.035)
+
 [node name="HabillageHall" type="Node3D"]
 editor_description = "Décor du hall : plinthes, soubassement, fenêtres à vitrage sombre, portes condamnées, appliques et mobilier. Les instances peuvent être déplacées dans l'éditeur."
 
@@ -287,108 +299,108 @@ editor_description = "Décor du hall : plinthes, soubassement, fenêtres à vitr
 position = Vector3(0, 0, -20)
 rotation = Vector3(0, 0, 0)
 
-[node name="PartieBasse" type="MeshInstance3D" parent="Nord"]
-position = Vector3(0, 0.34, 0.015)
-mesh = SubResource("mesh1")
+[node name="PartieBasseAcces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-11.1363, 0.34, 0.015)
+mesh = SubResource("OuvertureNordPartieBasse0")
 material_override = SubResource("soubassement")
 
-[node name="Joint0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-16, 1.84, 0.01)
-mesh = SubResource("mesh4")
+[node name="PartieBasseAcces1" type="MeshInstance3D" parent="Nord"]
+position = Vector3(11.1363, 0.34, 0.015)
+mesh = SubResource("OuvertureNordPartieBasse1")
+material_override = SubResource("soubassement")
+
+[node name="Joint0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-16.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint00")
 material_override = SubResource("joints")
 
-[node name="Joint1" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-12, 1.84, 0.01)
-mesh = SubResource("mesh5")
+[node name="Joint1Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-12.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint10")
 material_override = SubResource("joints")
 
-[node name="Joint2" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-8, 1.84, 0.01)
-mesh = SubResource("mesh6")
+[node name="Joint2Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-8.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint20")
 material_override = SubResource("joints")
 
-[node name="Joint3" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-4, 1.84, 0.01)
-mesh = SubResource("mesh7")
+[node name="Joint3Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-4.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint30")
 material_override = SubResource("joints")
 
-[node name="Joint4" type="MeshInstance3D" parent="Nord"]
-position = Vector3(0, 1.84, 0.01)
-mesh = SubResource("mesh8")
+[node name="Joint5Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(4.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint50")
 material_override = SubResource("joints")
 
-[node name="Joint5" type="MeshInstance3D" parent="Nord"]
-position = Vector3(4, 1.84, 0.01)
-mesh = SubResource("mesh9")
+[node name="Joint6Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(8.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint60")
 material_override = SubResource("joints")
 
-[node name="Joint6" type="MeshInstance3D" parent="Nord"]
-position = Vector3(8, 1.84, 0.01)
-mesh = SubResource("mesh10")
+[node name="Joint7Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(12.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint70")
 material_override = SubResource("joints")
 
-[node name="Joint7" type="MeshInstance3D" parent="Nord"]
-position = Vector3(12, 1.84, 0.01)
-mesh = SubResource("mesh11")
-material_override = SubResource("joints")
-
-[node name="Joint8" type="MeshInstance3D" parent="Nord"]
-position = Vector3(16, 1.84, 0.01)
-mesh = SubResource("mesh12")
+[node name="Joint8Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(16.0, 1.84, 0.01)
+mesh = SubResource("OuvertureNordJoint80")
 material_override = SubResource("joints")
 
 [node name="Gauche" type="Node3D" parent="."]
 position = Vector3(-20, 0, 0)
 rotation = Vector3(0, 1.5707963267948966, 0)
 
-[node name="PartieBasse" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(0, 0.34, 0.015)
-mesh = SubResource("mesh13")
+[node name="PartieBasseAcces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-19.65, 0.34, 0.015)
+mesh = SubResource("OuvertureGauchePartieBasse0")
 material_override = SubResource("soubassement")
 
-[node name="Joint0" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-16, 1.84, 0.01)
-mesh = SubResource("mesh16")
+[node name="PartieBasseAcces1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-7.0, 0.34, 0.015)
+mesh = SubResource("OuvertureGauchePartieBasse1")
+material_override = SubResource("soubassement")
+
+[node name="PartieBasseAcces2" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(12.65, 0.34, 0.015)
+mesh = SubResource("OuvertureGauchePartieBasse2")
+material_override = SubResource("soubassement")
+
+[node name="Joint1Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-12.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint10")
 material_override = SubResource("joints")
 
-[node name="Joint1" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-12, 1.84, 0.01)
-mesh = SubResource("mesh17")
+[node name="Joint2Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-8.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint20")
 material_override = SubResource("joints")
 
-[node name="Joint2" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-8, 1.84, 0.01)
-mesh = SubResource("mesh18")
+[node name="Joint3Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-4.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint30")
 material_override = SubResource("joints")
 
-[node name="Joint3" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-4, 1.84, 0.01)
-mesh = SubResource("mesh19")
+[node name="Joint4Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(0.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint40")
 material_override = SubResource("joints")
 
-[node name="Joint4" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(0, 1.84, 0.01)
-mesh = SubResource("mesh20")
+[node name="Joint6Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(8.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint60")
 material_override = SubResource("joints")
 
-[node name="Joint5" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(4, 1.84, 0.01)
-mesh = SubResource("mesh21")
+[node name="Joint7Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(12.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint70")
 material_override = SubResource("joints")
 
-[node name="Joint6" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(8, 1.84, 0.01)
-mesh = SubResource("mesh22")
-material_override = SubResource("joints")
-
-[node name="Joint7" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(12, 1.84, 0.01)
-mesh = SubResource("mesh23")
-material_override = SubResource("joints")
-
-[node name="Joint8" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(16, 1.84, 0.01)
-mesh = SubResource("mesh24")
+[node name="Joint8Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(16.0, 1.84, 0.01)
+mesh = SubResource("OuvertureGaucheJoint80")
 material_override = SubResource("joints")
 
 [node name="Droit" type="Node3D" parent="."]
@@ -533,11 +545,6 @@ rotation = Vector3(0, -1.5707963267948966, 0)
 vitre_cassee = true
 
 
-[node name="PorteNord" parent="." instance=ExtResource("porte")]
-position = Vector3(0, 0, -19.96)
-rotation = Vector3(0, 0, 0)
-
-
 [node name="SuieNord" type="Node3D" parent="."]
 position = Vector3(0, 0, -19.96)
 rotation = Vector3(0, 0, 0)
@@ -611,7 +618,7 @@ rotation = Vector3(0, 3.141592653589793, 0)
 allumee = true
 
 [node name="BoitesAuxLettres" parent="." instance=ExtResource("boites")]
-position = Vector3(-19.95, 0, 17)
+position = Vector3(-19.95, 0, 5)
 rotation = Vector3(0, 1.5707963267948966, 0)
 
 
@@ -747,74 +754,94 @@ rotation = Vector3(0, 0, 0)
 
 
 
-[node name="Plinthe0Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-15.052499999999998, 0.085, 0.0175)
-mesh = SubResource("PlintheNord0Partie0")
+[node name="Plinthe0Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-15.0525, 0.085, 0.0175)
+mesh = SubResource("OuvertureNordPlinthe0Partie00")
 material_override = ExtResource("metal")
 
-[node name="Plinthe1Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-5.4075, 0.085, 0.0175)
-mesh = SubResource("PlintheNord1Partie0")
+[node name="Plinthe1Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-6.0475, 0.085, 0.0175)
+mesh = SubResource("OuvertureNordPlinthe1Partie00")
 material_override = ExtResource("metal")
 
-[node name="Plinthe1Partie1" type="MeshInstance3D" parent="Nord"]
-position = Vector3(5.4075, 0.085, 0.0175)
-mesh = SubResource("PlintheNord1Partie1")
+[node name="Plinthe1Partie1Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(6.0475, 0.085, 0.0175)
+mesh = SubResource("OuvertureNordPlinthe1Partie10")
 material_override = ExtResource("metal")
 
-[node name="Plinthe2Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(15.052499999999998, 0.085, 0.0175)
-mesh = SubResource("PlintheNord2Partie0")
+[node name="Plinthe2Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(15.0525, 0.085, 0.0175)
+mesh = SubResource("OuvertureNordPlinthe2Partie00")
 material_override = ExtResource("metal")
 
-[node name="Baguette0Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-15.052499999999998, 0.7, 0.0175)
-mesh = SubResource("BaguetteNord0Partie0")
+[node name="Baguette0Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-15.0525, 0.7, 0.0175)
+mesh = SubResource("OuvertureNordBaguette0Partie00")
 material_override = ExtResource("metal")
 
-[node name="Baguette1Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(-5.4075, 0.7, 0.0175)
-mesh = SubResource("BaguetteNord1Partie0")
+[node name="Baguette1Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-6.0475, 0.7, 0.0175)
+mesh = SubResource("OuvertureNordBaguette1Partie00")
 material_override = ExtResource("metal")
 
-[node name="Baguette1Partie1" type="MeshInstance3D" parent="Nord"]
-position = Vector3(5.4075, 0.7, 0.0175)
-mesh = SubResource("BaguetteNord1Partie1")
+[node name="Baguette1Partie1Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(6.0475, 0.7, 0.0175)
+mesh = SubResource("OuvertureNordBaguette1Partie10")
 material_override = ExtResource("metal")
 
-[node name="Baguette2Partie0" type="MeshInstance3D" parent="Nord"]
-position = Vector3(15.052499999999998, 0.7, 0.0175)
-mesh = SubResource("BaguetteNord2Partie0")
+[node name="Baguette2Partie0Acces0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(15.0525, 0.7, 0.0175)
+mesh = SubResource("OuvertureNordBaguette2Partie00")
 material_override = ExtResource("metal")
 
-[node name="Plinthe0Partie0" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-11.459999999999999, 0.085, 0.0175)
-mesh = SubResource("PlintheGauche0Partie0")
+[node name="Plinthe0Partie0Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-19.6, 0.085, 0.0175)
+mesh = SubResource("OuvertureGauchePlinthe0Partie00")
 material_override = ExtResource("metal")
 
-[node name="Plinthe0Partie1" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-0.5924999999999991, 0.085, 0.0175)
-mesh = SubResource("PlintheGauche0Partie1")
+[node name="Plinthe0Partie0Acces1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-8.86, 0.085, 0.0175)
+mesh = SubResource("OuvertureGauchePlinthe0Partie01")
 material_override = ExtResource("metal")
 
-[node name="Plinthe1Partie0" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(10.052499999999998, 0.085, 0.0175)
-mesh = SubResource("PlintheGauche1Partie0")
+[node name="Plinthe0Partie1Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-0.5925, 0.085, 0.0175)
+mesh = SubResource("OuvertureGauchePlinthe0Partie10")
 material_override = ExtResource("metal")
 
-[node name="Baguette0Partie0" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-11.459999999999999, 0.7, 0.0175)
-mesh = SubResource("BaguetteGauche0Partie0")
+[node name="Plinthe1Partie0Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(0.4525, 0.085, 0.0175)
+mesh = SubResource("OuvertureGauchePlinthe1Partie00")
 material_override = ExtResource("metal")
 
-[node name="Baguette0Partie1" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(-0.5924999999999991, 0.7, 0.0175)
-mesh = SubResource("BaguetteGauche0Partie1")
+[node name="Plinthe1Partie0Acces1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(12.6, 0.085, 0.0175)
+mesh = SubResource("OuvertureGauchePlinthe1Partie01")
 material_override = ExtResource("metal")
 
-[node name="Baguette1Partie0" type="MeshInstance3D" parent="Gauche"]
-position = Vector3(10.052499999999998, 0.7, 0.0175)
-mesh = SubResource("BaguetteGauche1Partie0")
+[node name="Baguette0Partie0Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-19.6, 0.7, 0.0175)
+mesh = SubResource("OuvertureGaucheBaguette0Partie00")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0Acces1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-8.86, 0.7, 0.0175)
+mesh = SubResource("OuvertureGaucheBaguette0Partie01")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie1Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-0.5925, 0.7, 0.0175)
+mesh = SubResource("OuvertureGaucheBaguette0Partie10")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0Acces0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(0.4525, 0.7, 0.0175)
+mesh = SubResource("OuvertureGaucheBaguette1Partie00")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0Acces1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(12.6, 0.7, 0.0175)
+mesh = SubResource("OuvertureGaucheBaguette1Partie01")
 material_override = ExtResource("metal")
 
 [node name="Plinthe0Partie0" type="MeshInstance3D" parent="Droit"]

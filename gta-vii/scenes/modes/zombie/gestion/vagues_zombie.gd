@@ -13,6 +13,10 @@ var calendrier: Array[Dictionary] = []
 var composition_actuelle: CompositionVague
 # Les annonces gardent leurs positions habituelles ; ce tableau leur associe un type.
 var types_planifies: Dictionary = {}
+# Les positions réservées restent des identifiants uniques du calendrier.
+var entrees_planifiees: Dictionary = {}
+var entrees: Array[EntreeEnnemisZombie] = []
+var visuels_types: Dictionary = {}
 @onready var boutique = get_node("../../UpgradeManager")
 
 func demarrer_partie() -> void:
@@ -34,6 +38,11 @@ func demarrer_partie() -> void:
 	refuge.victime_perdue.connect(boutique.retours_bonus.afficher_victime_perdue)
 	victim_manager.refuge = refuge
 	boutique.boutique_fermee.connect(_apres_boutique)
+	var acces: Node = salle.get_node_or_null("Navigation/Decor/EntreesEnnemis")
+	if acces != null:
+		for entree_mob in acces.get_children():
+			if entree_mob is EntreeEnnemisZombie:
+				entrees.append(entree_mob)
 	await activer_salle(0)
 	partie_prete.emit()
 
@@ -48,6 +57,9 @@ func _demarrer_vague() -> void:
 	temps_vague = 0.0
 	vague_en_cours = true
 	types_planifies.clear()
+	entrees_planifiees.clear()
+	for entree_mob in entrees:
+		entree_mob.reinitialiser()
 	composition_actuelle = difficulte.choisir_composition(vague_actuelle)
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
 	positions.shuffle()
@@ -105,7 +117,7 @@ func _demarrer_vague() -> void:
 	var groupes := ceili(float(salle_actuelle.mobiles_a_creer.size()) / difficulte.taille_groupe(vague_actuelle))
 	for i in range(groupes):
 		var echeance := duree * float(i + 1) / groupes
-		calendrier.append({"annonce": maxf(0, echeance - duree_annonce), "apparition": echeance})
+		calendrier.append({"annonce": maxf(0, echeance - minf(_duree_entrees(), duree / groupes * 0.85)), "apparition": echeance})
 	informations_salle.demarrer_timer()
 	timer_bar.max_value = duree
 	timer_bar.value = duree
@@ -186,7 +198,30 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 	if types_planifies.has(emplacement):
 		var type: TypeEnnemiVague = types_planifies[emplacement]
 		types_planifies.erase(emplacement)
-		_creer_type(salle, emplacement, type)
+		if entrees_planifiees.has(emplacement):
+			var arrivee: Dictionary = entrees_planifiees[emplacement]
+			entrees_planifiees.erase(emplacement)
+			# Le vrai ennemi prend la place du figurant seulement une fois dans la salle.
+			emplacement = salle.to_local(arrivee.destination) - Vector3.UP * type.hauteur
+			var ennemi := _creer_type(salle, emplacement, type)
+			ennemi.rotation.y = arrivee.entree.global_rotation.y
+			var entree_mob: EntreeEnnemisZombie = arrivee.entree
+			var encore_utilisee := false
+			for autre in entrees_planifiees.values():
+				if autre.entree == entree_mob: encore_utilisee = true
+			if not encore_utilisee: entree_mob.terminer()
+		elif not salle.sauvetage_en_cours:
+			# Premier adversaire : déjà au seuil dès que la vague commence.
+			var entree_mob := _choisir_entree(type, entrees.filter(func(entree_mob): return entree_mob.type_entree == "ascenseur"))
+			if entree_mob != null:
+				entree_mob.terminer()
+				var destination := entree_mob.to_global(Vector3(0, type.hauteur, entree_mob.distance_sortie))
+				destination = _destination_libre(type, entree_mob, destination)
+				emplacement = salle.to_local(destination) - Vector3.UP * type.hauteur
+			var ennemi := _creer_type(salle, emplacement, type)
+			if entree_mob != null: ennemi.rotation.y = entree_mob.global_rotation.y
+		else:
+			_creer_type(salle, emplacement, type)
 		return
 	super.creer_mobile(salle, emplacement)
 
@@ -203,13 +238,14 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
 func peut_creer_ennemi_debug() -> bool:
 	return is_instance_valid(salle_actuelle) and not transition_en_cours and vague_en_cours
 
-func _trouver_position_type(type: TypeEnnemiVague, positions: Array[Vector3]) -> int:
+func _trouver_position_type(type: TypeEnnemiVague, positions: Array[Vector3], orientation := 0.0) -> int:
 	var modele = type.scene.instantiate()
 	var collision: CollisionShape3D = modele.get_node("CollisionShape3D")
 	var requete := PhysicsShapeQueryParameters3D.new()
 	requete.shape = collision.shape
 	requete.collision_mask = 15
 	var resultat := -1
+	modele.rotation.y = orientation
 	for i in range(positions.size()):
 		if not emplacement_suffisamment_eloigne(salle_actuelle, positions[i]): continue
 		modele.position = positions[i] + Vector3.UP * type.hauteur
@@ -220,7 +256,7 @@ func _trouver_position_type(type: TypeEnnemiVague, positions: Array[Vector3]) ->
 	modele.free()
 	return resultat
 
-func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> void:
+func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> Node3D:
 	var ennemi = type.scene.instantiate()
 	if type.script_zombie != null: ennemi.set_script(type.script_zombie)
 	# La difficulté augmente le nombre d'ennemis, pas leurs PV ni leurs dégâts.
@@ -230,3 +266,112 @@ func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> 
 	salle.get_node("Ennemis").add_child(ennemi)
 	var agent = ennemi.get_node_or_null("NavigationAgent")
 	if agent != null: agent.set_navigation_map(salle.carte_ennemis)
+	return ennemi
+
+func _duree_entrees() -> float:
+	var duree := duree_annonce
+	for entree_mob in entrees:
+		duree = maxf(duree, entree_mob.duree_arrivee)
+	return duree
+
+func _choisir_entree(type: TypeEnnemiVague, exclues: Array) -> EntreeEnnemisZombie:
+	var possibles: Array[EntreeEnnemisZombie] = []
+	for entree_mob in entrees:
+		if entree_mob.type_entree == "ascenseur" and (entree_mob.fermeture_restante > 0.0 or entree_mob.remontee_restante > 0.0):
+			continue # Laisser la cabine vide repartir avant d'y charger le groupe suivant.
+		if entree_mob.accepte(type) and not entree_mob.occupee and not exclues.has(entree_mob):
+			possibles.append(entree_mob)
+	if possibles.is_empty(): return null
+	# Préférer une entrée éloignée du joueur, sans rendre la vague dépendante de lui.
+	var eloignees := possibles.filter(func(entree_mob): return entree_mob.global_position.distance_to(joueur.global_position) >= distance_securite_spawn)
+	return possibles.pick_random() if eloignees.is_empty() else eloignees.pick_random()
+
+func creer_vague(nombre_prevu: int, echeance: float) -> void:
+	if entrees.is_empty():
+		super.creer_vague(nombre_prevu, echeance)
+		return
+	var groupes: Dictionary = {}
+	for i in range(mini(nombre_prevu, salle_actuelle.mobiles_a_creer.size())):
+		var emplacement: Vector3 = salle_actuelle.mobiles_a_creer.pop_front()
+		var type: TypeEnnemiVague = types_planifies[emplacement]
+		var entree_mob: EntreeEnnemisZombie
+		# Compléter une cabine ou une porte déjà choisie pour ce même groupe.
+		for candidate in groupes:
+			if candidate.accepte(type) and groupes[candidate] < candidate.capacite:
+				entree_mob = candidate
+				break
+		if entree_mob == null:
+			entree_mob = _choisir_entree(type, groupes.keys())
+			if entree_mob != null:
+				groupes[entree_mob] = 0
+				entree_mob.preparer(echeance - temps_vague)
+		if entree_mob != null:
+			var visuel := _visuel_type(type)
+			var destination := entree_mob.ajouter_visuel(visuel, type.hauteur, groupes[entree_mob])
+			destination = _destination_libre(type, entree_mob, destination)
+			entree_mob.passages.back().destination = entree_mob.to_local(destination)
+			groupes[entree_mob] += 1
+			entrees_planifiees[emplacement] = {"entree": entree_mob, "destination": destination}
+		else:
+			# Une map sans entrée compatible conserve l'annonce classique, jamais un ennemi perdu.
+			var annonce = ANNONCE_SCENE.instantiate()
+			annonce.position = emplacement + Vector3.UP * 0.13
+			annonce.duree = maxf(0.01, echeance - temps_vague)
+			salle_actuelle.annonces_en_cours.append(annonce)
+			annonce.terminee.connect(salle_actuelle.annonces_en_cours.erase.bind(annonce), CONNECT_ONE_SHOT)
+			salle_actuelle.add_child(annonce)
+		salle_actuelle.mobiles_annonces.append(emplacement)
+		salle_actuelle.apparitions_en_cours += 1
+		salle_actuelle.apparitions_planifiees.append({"position": emplacement, "restant": echeance})
+	actualiser_objectifs()
+
+func _visuel_type(type: TypeEnnemiVague) -> Node3D:
+	if not visuels_types.has(type.scene):
+		# _ready ajuste les modèles importés : le laisser préparer une instance inerte.
+		var modele = type.scene.instantiate()
+		modele.process_mode = Node.PROCESS_MODE_DISABLED
+		modele.hide()
+		for noeud in [modele] + modele.find_children("*", "", true, false):
+			for groupe in noeud.get_groups(): noeud.remove_from_group(groupe)
+			if noeud is CollisionShape3D: noeud.disabled = true
+		add_child(modele)
+		var visuel := Node3D.new()
+		for nom in ["Sketchfab_Scene", "Flammes"]:
+			var partie = modele.get_node_or_null(nom)
+			if partie != null:
+				# Sans scripts ni groupes, la copie n'est qu'une présentation du modèle.
+				visuel.add_child(partie.duplicate(0))
+		if is_instance_valid(modele.get("cible_idle")): modele.cible_idle.queue_free()
+		modele.queue_free()
+		visuels_types[type.scene] = visuel
+	return visuels_types[type.scene].duplicate(0)
+
+func liberer_salle_debug() -> void:
+	if transition_en_cours or not is_instance_valid(salle_actuelle) or salle_actuelle.liberee:
+		return
+	for entree_mob in entrees:
+		entree_mob.reinitialiser()
+	entrees_planifiees.clear()
+	types_planifies.clear()
+	calendrier.clear()
+	super.liberer_salle_debug()
+
+func _destination_libre(type: TypeEnnemiVague, entree_mob: EntreeEnnemisZombie, destination: Vector3) -> Vector3:
+	var candidats: Array[Vector3] = []
+	# Chercher près du seuil, en tenant compte des captives, tourelles et autres arrivées.
+	for avance in [0.0, 1.8, 3.6]:
+		for cote in [0.0, -1.8, 1.8]:
+			var position_monde := destination + entree_mob.global_basis * Vector3(cote, 0, avance)
+			var trop_proche := false
+			for arrivee in entrees_planifiees.values():
+				if position_monde.distance_to(arrivee.destination) < 2.3:
+					trop_proche = true
+			if not trop_proche:
+				candidats.append(salle_actuelle.to_local(position_monde) - Vector3.UP * type.hauteur)
+	var indice := _trouver_position_type(type, candidats, entree_mob.global_rotation.y)
+	return destination if indice == -1 else salle_actuelle.to_global(candidats[indice] + Vector3.UP * type.hauteur)
+
+func _exit_tree() -> void:
+	# Les modèles de présentation conservés hors de l'arbre doivent aussi être libérés.
+	for visuel in visuels_types.values():
+		visuel.free()

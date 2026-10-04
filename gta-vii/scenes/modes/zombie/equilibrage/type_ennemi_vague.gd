@@ -3,6 +3,8 @@ extends Resource
 
 @export var scene: PackedScene
 @export var hauteur := 0.85
+# Les volants peuvent entrer par une fenêtre ; les autres restent au sol.
+@export var volant := false
 @export_range(1, 100, 1) var premiere_vague := 1
 # Un ennemi difficile consomme plusieurs points du budget de la vague.
 @export_range(1, 30, 1) var cout_difficulte := 1

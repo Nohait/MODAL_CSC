@@ -159,3 +159,8 @@ Pour équilibrer dans Godot :
 `composition_vague.gd` construit la liste selon le budget. `difficulte_zombie.gd` choisit la composition. `vagues_zombie.gd` associe chaque position réservée à son type ; `creer_mobile` est appelé par le calendrier commun pour créer le bon ennemi. La navigation, les annonces, le comptage des morts, le sauvetage et les pauses de boutique restent communs. Un ennemi apparaît immédiatement ; les suivants sont répartis jusqu'à la fin du timer. Le mode classique conserve ses propres règles de population.
 
 Le traitement du sauvetage ignore désormais les enfants qui ne sont pas dans le groupe victime : les sons de mort peuvent rester dans le conteneur sans provoquer d'erreur à la vague suivante.
+
+
+## Arrivées par les accès de la map
+
+Les mobiles entrent désormais par les portes, brèches, fenêtres et l’ascenseur de MapTest. Les volants utilisent les fenêtres ; les tourelles restent générées sur leurs emplacements fixes. Le calendrier conserve sa durée et le premier mobile immédiat. Voir [arrivees_ennemis_zombie.md](arrivees_ennemis_zombie.md) pour les scènes, l’animation et les réglages.

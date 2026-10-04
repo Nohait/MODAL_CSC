@@ -287,7 +287,7 @@ func cacher_fleche():
 
 func annuler_ordre_victimes() -> void:
 	# Reconnecter d'abord la file : aucune victime ne doit suivre la flèche supprimée.
-	victim_manager.reorganiser_file()
+	victim_manager.retour_nav_auto()
 	# Arrêter aussi son animation pour qu'elle ne rappelle pas cacher_fleche plus tard.
 	if fleche_tween:
 		fleche_tween.kill()

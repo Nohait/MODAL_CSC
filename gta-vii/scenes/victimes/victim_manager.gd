@@ -6,9 +6,8 @@ extends Node
 # Tableau ordonné : indice 0 = première victime, indice -1 = dernière victime.
 var freed_victims: Array[CharacterBody3D] = []
 var evacuated_count: int = 0
-var mode_suivi = true
-@export_range(0.0, 20.0, 0.1, "or_greater") var suivi_cooldown = 3.0
-var suivi_timer = suivi_cooldown #Une fois à l'arret, elles retournent vers le joueur apres un certain cooldown
+# null signifie suivre le joueur ; sinon conserver la destination donnée.
+var cible_deplacement: Node3D = null
 
 # Les menus peuvent écouter ce signal pour actualiser leur liste.
 signal escort_changed
@@ -22,27 +21,19 @@ func _ready() -> void:
 		# On connecte le signal freed à la fonction qui enregistre une victime libérée
 		surveiller_victime(victim)
 
-func _physics_process(delta: float) -> void:
-	if freed_victims != []:
-		if freed_victims[0].arret:
-			suivi_timer -=delta
-			if suivi_timer <0.0:
-				suivi_timer = suivi_cooldown
-				freed_victims[0].follow_target = player
-
 func surveiller_victime(victim: CharacterBody3D) -> void:
 
 	# Fonction également appelée pour les victimes créées pendant la génération.
 	if not victim.freed.is_connected(register_victim):
 		victim.freed.connect(register_victim)
 
-func diriger_victime(fleche):
-	if freed_victims != []:
-		freed_victims[0].follow_target = fleche
+func diriger_victime(fleche) -> void:
+	cible_deplacement = fleche
+	reorganiser_file()
 
-func retour_nav_auto():
-	if freed_victims != []:
-		freed_victims[0].follow_target = player
+func retour_nav_auto() -> void:
+	cible_deplacement = null
+	reorganiser_file()
 
 func register_victim(victim: CharacterBody3D) -> void:
 
@@ -54,7 +45,7 @@ func register_victim(victim: CharacterBody3D) -> void:
 	# Elle continuera à suivre le joueur quand l'ancienne salle sera désactivée.
 	victim.reparent(get_node("../Escorte"), true)
 	if freed_victims.is_empty():
-		victim.follow_target = player
+		victim.follow_target = cible_deplacement if is_instance_valid(cible_deplacement) else player
 	else:
 		victim.follow_target = freed_victims[-1]
 	freed_victims.append(victim)
@@ -87,7 +78,8 @@ func reorganiser_file() -> void:
 		return
 
 	# Reconnecter la file AVANT de supprimer la cible que d'autres suivaient.
-	var cible: Node3D = player
+	# Un décès ou une évacuation ne doit pas annuler l'ordre du joueur.
+	var cible: Node3D = cible_deplacement if is_instance_valid(cible_deplacement) else player
 	for suivante in freed_victims:
 		if is_instance_valid(suivante):
 			suivante.follow_target = cible
