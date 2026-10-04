@@ -5,6 +5,7 @@ const CARTE = preload("res://scenes/modes/zombie/interfaces/selection_maps/carte
 var changement_en_cours := false
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	%Retour.pressed.connect(_retour)
@@ -33,5 +34,6 @@ func _changer_scene(chemin: String) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		_retour()
+		# Consommer B avant de quitter la scène : elle perd ensuite son viewport.
 		get_viewport().set_input_as_handled()
+		_retour()

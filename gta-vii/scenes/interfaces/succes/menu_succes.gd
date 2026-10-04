@@ -4,6 +4,7 @@ const LIGNE = preload("res://scenes/interfaces/succes/ligne_succes.tscn")
 var animation: Tween
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	%Fermer.pressed.connect(fermer)
 	%Reinitialiser.visible = OS.is_debug_build()
 	%Reinitialiser.pressed.connect(_reinitialiser)
@@ -32,7 +33,6 @@ func ouvrir() -> void:
 	# Fondu court : le catalogue arrive sans déplacer ni déformer ses textes.
 	animation = create_tween()
 	animation.tween_property(self, "modulate:a", 1.0, 0.2)
-	%Fermer.grab_focus()
 
 func fermer() -> void:
 	if animation:

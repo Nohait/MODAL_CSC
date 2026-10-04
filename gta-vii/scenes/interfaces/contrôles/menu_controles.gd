@@ -90,6 +90,7 @@ var boutons_actions = {"clavier":{}, "manette":{}}
 
 	
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	
 	boutons_actions["clavier"] = {
 		"move_forward": $"Menu/MenuTouches/J1ClavierTouches/Haut",
@@ -122,7 +123,6 @@ func _ready() -> void:
 
 func ouvrir() -> void:
 	show()
-	%Fermer.grab_focus()
 
 func fermer() -> void:
 	hide()

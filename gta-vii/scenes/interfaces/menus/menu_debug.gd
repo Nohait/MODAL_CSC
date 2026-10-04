@@ -21,6 +21,8 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug
 
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(choix_ennemis)
 	menu.hide()
 	_preparer_choix_ennemis()
 	# Un fond doré distingue le survol et les options activées du fond sombre.

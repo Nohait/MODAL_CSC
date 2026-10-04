@@ -26,6 +26,7 @@ var temps_booster := 0.0
 
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	# Process Mode = Always dans la scène : le menu et son animation vivent en pause.
 	raccourci.get_node("Fond").material = raccourci.get_node("Fond").material.duplicate()
 	raccourci.pressed.connect(ouvrir_menu)
@@ -100,7 +101,6 @@ func ouvrir_menu() -> void:
 	# Le menu apparaît après le début de la déchirure, sans attendre la fin du fondu.
 	animation.tween_property(menu, "modulate:a", 1.0, 0.18).set_delay(0.22)
 	animation.tween_property(panneau, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).set_delay(0.22)
-	fermer.grab_focus()
 
 
 func fermer_menu() -> void:

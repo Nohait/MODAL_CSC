@@ -64,6 +64,7 @@ var retours_bonus: CanvasLayer
 
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	menu.hide()
 	joueur.ameliorations = self
 	escorte.escort_changed.connect(_actualiser_vitesse_escorte)

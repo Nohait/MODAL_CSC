@@ -31,6 +31,12 @@ func _ready() -> void:
 		fond.content_margin_bottom = 8
 		theme.set_stylebox(etat, "Button", fond)
 		theme.set_color("font_" + etat + "_color" if etat != "normal" else "font_color", "Button", Color("78674f") if etat == "disabled" else Color("38291d"))
+	var contour := StyleBoxFlat.new()
+	contour.bg_color = Color(0, 0, 0, 0)
+	contour.border_color = Color("79562d")
+	contour.set_border_width_all(2)
+	contour.set_corner_radius_all(4)
+	theme.set_stylebox("focus", "Button", contour)
 	entete = Button.new()
 	entete.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	entete.focus_mode = Control.FOCUS_NONE

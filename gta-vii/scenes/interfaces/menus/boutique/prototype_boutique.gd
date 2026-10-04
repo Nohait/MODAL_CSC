@@ -38,6 +38,7 @@ var panneau_defis: Control
 
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	# Garder une bordure brûlée de la même épaisseur lorsque la fenêtre change.
 	$Fond.resized.connect(_ajuster_parchemin)

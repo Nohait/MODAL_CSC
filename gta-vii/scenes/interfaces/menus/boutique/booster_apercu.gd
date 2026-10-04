@@ -36,6 +36,8 @@ func _ready() -> void:
 	mouse_entered.connect(_survol.bind(true))
 	mouse_exited.connect(_survol.bind(false))
 	gui_input.connect(_cliquer)
+	focus_entered.connect(_survol.bind(true))
+	focus_exited.connect(_survol.bind(false))
 
 
 func _process(delta: float) -> void:
@@ -50,6 +52,7 @@ func _process(delta: float) -> void:
 
 
 func _survol(active: bool) -> void:
+	active = active or has_focus()
 	# Arrêter le Tween conserve la valeur actuelle : même si la souris entre et
 	# ressort vite, le reflet repart de sa position présente, sans se téléporter.
 	if animation:
@@ -64,5 +67,8 @@ func _survol(active: bool) -> void:
 
 func _cliquer(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		selectionne.emit()
 		accept_event()
+		selectionne.emit()
+	elif event.is_action_pressed("ui_accept") and not event.is_echo():
+		accept_event()
+		selectionne.emit()

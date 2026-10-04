@@ -14,6 +14,8 @@ func _ready() -> void:
 	_actualiser_taille()
 	mouse_entered.connect(_animer.bind(true))
 	mouse_exited.connect(_animer.bind(false))
+	focus_entered.connect(_animer.bind(true))
+	focus_exited.connect(_animer.bind(false))
 	focus_mode = Control.FOCUS_NONE
 
 func afficher(definition: Dictionary) -> void:
@@ -26,6 +28,7 @@ func _actualiser_taille() -> void:
 	image.material.set_shader_parameter("taille", size)
 
 func _animer(survole: bool) -> void:
+	survole = survole or has_focus()
 	if animation:
 		animation.kill()
 	animation = create_tween().set_parallel(true)

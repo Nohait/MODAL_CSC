@@ -89,6 +89,8 @@ func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
+	focus_entered.connect(actualiser_survol)
+	focus_exited.connect(actualiser_survol)
 
 
 # L’affichage lit les exports ; les effets appartiennent au gestionnaire.
@@ -151,7 +153,7 @@ func _process(delta: float) -> void:
 	materiau_papier.set_shader_parameter("intensite_braises", intensite_braises)
 
 
-## Seul le survol souris met la carte en évidence.
+## Le survol souris et le focus manette partagent la même mise en évidence.
 func _on_mouse_entered() -> void:
 	souris_dessus = true
 	actualiser_survol()
@@ -164,7 +166,7 @@ func _on_mouse_exited() -> void:
 
 ## Anime le visuel et les braises ensemble, sans agrandir la zone qui reçoit la souris.
 func actualiser_survol() -> void:
-	var actif := souris_dessus
+	var actif := souris_dessus or has_focus()
 	if not lecture_seule:
 		invitation.text = "CHOISIR CETTE AMÉLIORATION" if actif else "CLIQUER POUR CHOISIR"
 	if hover_tween:
@@ -178,11 +180,11 @@ func actualiser_survol() -> void:
 	hover_tween.tween_property(self, "accent", 1.0 if actif else 0.0, hover_duration)
 
 
-## Seul un clic gauche valide le choix ; les touches du clavier sont ignorées.
+## Le clic ou la validation de la manette confirme la carte qui possède le focus.
 func _on_gui_input(event: InputEvent) -> void:
 	if lecture_seule or event.is_echo():
 		return
 	var clic: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
-	if clic:
+	if clic or event.is_action_pressed("ui_accept"):
 		accept_event()
 		selected.emit()

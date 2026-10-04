@@ -5,13 +5,13 @@ var changement_en_cours := false
 
 
 func _ready() -> void:
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	# Le niveau a mis le combat en pause lors de la mort. Ces écrans sont autonomes.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	# Le même curseur reste visible sur les boutons, dès l'écran titre.
 	
 	%NouvellePartie.pressed.connect(nouvelle_partie)
-	%NouvellePartie.grab_focus()
 	# L'écran titre n'a pas de bouton pour revenir vers lui-même.
 	var retour_titre := get_node_or_null("%EcranTitre")
 	if retour_titre != null:
