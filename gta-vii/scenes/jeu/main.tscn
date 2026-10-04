@@ -13,7 +13,6 @@
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
-
 [ext_resource type="PackedScene" path="res://scenes/interfaces/hud/informations_salle.tscn" id="16_salle"]
 
 [sub_resource type="Environment" id="Environment_test"]
@@ -111,8 +110,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InformationsSalle" parent="Salles/RoomManager/InterfaceSalle/HUD" instance=ExtResource("16_salle")]
+[node name="InformationsSalle" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=965713719 instance=ExtResource("16_salle")]
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -210.0

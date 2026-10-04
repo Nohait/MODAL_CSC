@@ -1,0 +1,229 @@
+[gd_scene format=3 uid="uid://cj0jpr12jqcwc"]
+
+[ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="1_0tgcp"]
+[ext_resource type="Script" uid="uid://cn4v8t5wx1t4l" path="res://scenes/interfaces/contrôles/menu_controles.gd" id="1_yyvv7"]
+[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="2_b6nf5"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="3_bm73f"]
+[ext_resource type="Script" uid="uid://tvvahyuhbk7s" path="res://scenes/interfaces/contrôles/j_1_clavier_touches.gd" id="4_tkrf5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xuack"]
+noise_type = 3
+frequency = 0.025
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="TextureFeu"]
+noise = SubResource("FastNoiseLite_xuack")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0quqa"]
+shader = ExtResource("1_0tgcp")
+shader_parameter/bruit_feu = SubResource("TextureFeu")
+shader_parameter/couleur_coeur = Color(1, 0.88, 0.42, 1)
+shader_parameter/couleur_flame = Color(1, 0.36, 0.045, 1)
+shader_parameter/couleur_bord = Color(0.65, 0.065, 0.015, 1)
+shader_parameter/vitesse = 0.55
+shader_parameter/opacite = 0.8
+
+[node name="MenuControles" type="Control" unique_id=1597530792]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yyvv7")
+
+[node name="Fond" type="ColorRect" parent="." unique_id=1804383347]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.035, 0.025, 0.023, 1)
+
+[node name="Menu" type="Control" parent="." unique_id=1845981936]
+layout_mode = 1
+anchor_left = 0.07
+anchor_top = 0.12
+anchor_right = 0.42
+anchor_bottom = 0.9
+
+[node name="Flammes" type="ColorRect" parent="Menu" unique_id=2005086480]
+material = SubResource("ShaderMaterial_0quqa")
+layout_mode = 0
+offset_top = -104.0
+offset_right = 598.0
+offset_bottom = 141.0
+mouse_filter = 2
+
+[node name="Surtitre" type="Label" parent="Menu" unique_id=36226150]
+layout_mode = 0
+offset_right = 463.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.76, 0.61, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="Titre" type="Label" parent="Menu" unique_id=1832473877]
+layout_mode = 0
+offset_top = -22.0
+offset_right = 463.0
+offset_bottom = 124.0
+theme_override_colors/font_color = Color(1, 0.89, 0.64, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.055, 0.025, 1)
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_b6nf5")
+theme_override_font_sizes/font_size = 112
+text = "Contrôles"
+
+[node name="Accroche" type="Label" parent="Menu" unique_id=714687725]
+layout_mode = 0
+offset_right = 463.0
+offset_bottom = 36.0
+theme_override_colors/font_color = Color(0.83, 0.77, 0.65, 1)
+theme_override_font_sizes/font_size = 26
+
+[node name="ColonneNoms" type="VBoxContainer" parent="Menu" unique_id=2086344847]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.29900002
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -89.89801
+offset_right = -300.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Espace" type="Control" parent="Menu/ColonneNoms" unique_id=1598828753]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="Haut" parent="Menu/ColonneNoms" unique_id=497006986 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Haut"
+
+[node name="Bas" parent="Menu/ColonneNoms" unique_id=182148269 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Bas"
+
+[node name="Gauche" parent="Menu/ColonneNoms" unique_id=883859393 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Gauche"
+
+[node name="Droite" parent="Menu/ColonneNoms" unique_id=345497066 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Droite"
+
+[node name="AttaquePrimaire" parent="Menu/ColonneNoms" unique_id=513581776 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Attaque Primaire"
+
+[node name="Dash" parent="Menu/ColonneNoms" unique_id=1459278100 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Dash
+"
+
+[node name="Pied" type="Control" parent="Menu/ColonneNoms" unique_id=1641799762]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Signature" type="Label" parent="Menu/ColonneNoms" unique_id=751578700]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.47, 0.43, 0.37, 1)
+theme_override_font_sizes/font_size = 16
+text = "GTA VII  /  PROTOTYPE"
+
+[node name="J1ClavierTouches" type="VBoxContainer" parent="Menu" unique_id=235180507]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.29900002
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 295.0
+offset_top = -89.89801
+offset_right = -95.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+script = ExtResource("4_tkrf5")
+
+[node name="Espace" type="Control" parent="Menu/J1ClavierTouches" unique_id=1898184373]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="ClavierJ1Haut" parent="Menu/J1ClavierTouches" unique_id=1002378404 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Z"
+
+[node name="ClavierJ1Bas" parent="Menu/J1ClavierTouches" unique_id=797368899 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "S"
+
+[node name="ClavierJ1Gauche" parent="Menu/J1ClavierTouches" unique_id=1247074854 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Q"
+
+[node name="ClavierJ1Droit" parent="Menu/J1ClavierTouches" unique_id=1029876691 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "D"
+
+[node name="AttaquePrimaire" parent="Menu/J1ClavierTouches" unique_id=1533229251 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Clic Gauche"
+
+[node name="Dash" parent="Menu/J1ClavierTouches" unique_id=56777466 instance=ExtResource("3_bm73f")]
+custom_minimum_size = Vector2(100, 74)
+layout_mode = 2
+text = "Espace
+"
+
+[node name="Pied" type="Control" parent="Menu/J1ClavierTouches" unique_id=1609127733]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Bas" type="HBoxContainer" parent="." unique_id=637787395]
+layout_mode = 0
+offset_left = 1011.0
+offset_top = 825.0
+offset_right = 1589.0
+offset_bottom = 889.0
+theme_override_constants/separation = 24
+
+[node name="Reinitialiser" parent="Bas" unique_id=756087415 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(310, 64)
+layout_mode = 2
+text = "Reinitialiser"
+taille_police = 20
+
+[node name="Espace" type="Control" parent="Bas" unique_id=278815860]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Fermer" parent="Bas" unique_id=1554661099 instance=ExtResource("3_bm73f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 64)
+layout_mode = 2
+text = "Retour"

@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://bciys0ip6dqw2"]
 
+[ext_resource type="PackedScene" uid="uid://cj0jpr12jqcwc" path="res://scenes/interfaces/contrôles/menu_controles.tscn" id="9_gp83s"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
 [ext_resource type="Script" uid="uid://baiuejiyyy2ni" path="res://scenes/interfaces/menus/titre/decoration_titre.gd" id="decor"]
 [ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="flames"]
 [ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="logo"]
 [ext_resource type="Script" uid="uid://cpqa6nlacutk5" path="res://scenes/interfaces/menus/titre/ecran_titre.gd" id="script"]
-[ext_resource type="PackedScene" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
+[ext_resource type="PackedScene" uid="uid://c2jaba7e5anb" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
 [ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 [ext_resource type="Shader" uid="uid://nd3ahv5hag2w" path="res://scenes/interfaces/menus/titre/voile_titre.gdshader" id="voile"]
 
@@ -28,15 +29,18 @@ noise_type = 3
 frequency = 0.025
 fractal_octaves = 4
 
-[sub_resource type="NoiseTexture2D" id="TextureFeu"]
-width = 512
-height = 512
-seamless = true
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jrpa2"]
 noise = SubResource("BruitFeu")
+seamless = true
 
 [sub_resource type="ShaderMaterial" id="Flames"]
 shader = ExtResource("flames")
-shader_parameter/bruit_feu = SubResource("TextureFeu")
+shader_parameter/bruit_feu = SubResource("NoiseTexture2D_jrpa2")
+shader_parameter/couleur_coeur = Color(1, 0.88, 0.42, 1)
+shader_parameter/couleur_flame = Color(1, 0.36, 0.045, 1)
+shader_parameter/couleur_bord = Color(0.65, 0.065, 0.015, 1)
+shader_parameter/vitesse = 0.55
+shader_parameter/opacite = 0.8
 
 [node name="EcranTitre" type="Control" unique_id=1441843544]
 layout_mode = 3
@@ -165,6 +169,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Succès"
 
+[node name="Controles" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Contrôles	"
+
 [node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -181,3 +190,11 @@ theme_override_font_sizes/font_size = 16
 text = "GTA VII  /  PROTOTYPE"
 
 [node name="MenuSucces" parent="." unique_id=1377465611 instance=ExtResource("success")]
+layout_mode = 1
+
+[node name="MenuControles" parent="." unique_id=1597530792 instance=ExtResource("9_gp83s")]
+layout_mode = 1
+offset_left = 2.0
+offset_top = -1.0
+offset_right = 2.0
+offset_bottom = -1.0
