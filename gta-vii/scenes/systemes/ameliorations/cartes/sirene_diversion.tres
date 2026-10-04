@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/sirene_diversion.svg" id="icone"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"sirene_diversion"
+titre = "Sirène de diversion"
+description = "Le camion attire périodiquement les ennemis proches, même lorsqu’il est vide."
+pictogramme = ExtResource("icone")
+modes = 2
+type_bonus = "permanent"
+effet = "sirene"
+valeur = 12.0
+duree = 0
+texte_effet = "Rayon : %s mètres"
+duree_effet = 3.0

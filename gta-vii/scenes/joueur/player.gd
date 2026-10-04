@@ -5,6 +5,8 @@ extends CharacterBody3D
 signal degats_recus(quantite: float)
 signal died
 var est_mort := false
+var ameliorations: Node
+var protection_secours := 0.0
 signal entree_terminee
 var entree_automatique := false
 var cible_entree := Vector3.ZERO
@@ -72,6 +74,7 @@ func get_dash_cooldown() -> float:
 
 
 func _physics_process(delta: float) -> void:
+	protection_secours = maxf(0.0, protection_secours - delta)
 	if entree_automatique:
 		_avancer_entree(delta)
 		return
@@ -228,9 +231,12 @@ func flash_degats() -> void:
 
 func prendre_degats(degats: float) -> void:
 	# Quitter la fonction avant de retirer de la vie si le mode est actif.
-	if invincible or est_mort:
+	if invincible or est_mort or protection_secours > 0.0:
 		return
 		
+	if is_instance_valid(ameliorations):
+		degats = ameliorations.absorber_degats_joueur(maxf(degats, 0.0))
+	if degats <= 0.0: return
 	flash_degats()
 	secouer_camera()
 	var vie_avant: float = BarreDeVie.value
@@ -241,6 +247,10 @@ func prendre_degats(degats: float) -> void:
 	print( self.name, " Touché : -", degats)
 	
 	if BarreDeVie.value <= 0:
+		if is_instance_valid(ameliorations) and ameliorations.utiliser_secours():
+			# Une seconde évite qu'une salve simultanée annule immédiatement le secours.
+			protection_secours = 1.0
+			return
 		mourir()
 
 func mourir():

@@ -78,6 +78,8 @@ var force_fuite_max: float = 2.5
 ## Vitesse de déplacement de la victime.
 @export_range(0.0, 20.0, 0.1, "or_greater")
 var speed: float = 6.0
+# Le bonus multiplie la vitesse de base, sans la modifier à chaque recalcul.
+var multiplicateur_vitesse := 1.0
 ## Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater")
 var stop_distance: float = 2.0
@@ -251,8 +253,8 @@ func follow_target_node() -> void:
 			direction = direction.normalized()
 			direction += vecteur_fuite()
 			direction = direction.normalized()
-			velocity.x = direction.x* speed
-			velocity.z = direction.z* speed
+			velocity.x = direction.x * speed * multiplicateur_vitesse
+			velocity.z = direction.z * speed * multiplicateur_vitesse
 
 	else:
 		if follow_target.is_in_group("fleche"):

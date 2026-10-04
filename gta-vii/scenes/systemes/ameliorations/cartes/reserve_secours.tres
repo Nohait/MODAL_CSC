@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/reserve_secours.svg" id="icone"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"reserve_secours"
+titre = "Réserve de secours"
+description = "Empêche une mort et rend une partie de la vie. Se consomme après utilisation."
+pictogramme = ExtResource("icone")
+modes = 3
+type_bonus = "permanent"
+effet = "reserve_secours"
+valeur = 30.0
+duree = 0
+texte_effet = "Rend %s %% de vie"

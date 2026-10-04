@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/victimes/refuge_zombie.gd" id="script"]
+[ext_resource type="PackedScene" path="res://assets/modeles/camion_pompier/camion_pompier.glb" id="camion"]
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(1.47, 1.96, 4.06)
+
+[node name="Refuge" type="StaticBody3D"]
+script = ExtResource("script")
+collision_layer = 9
+collision_mask = 0
+
+[node name="Modele" parent="." instance=ExtResource("camion")]
+scale = Vector3(5.8282, 5.8282, 5.8282)
+position = Vector3(0, 0, -0.17997)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.98, 0)
+shape = SubResource("collision")

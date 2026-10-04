@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/interfaces/selection_maps/carte_map.gd" id="script"]
+[ext_resource type="Shader" path="res://scenes/modes/zombie/interfaces/selection_maps/carte_map.gdshader" id="shader"]
+
+[sub_resource type="ShaderMaterial" id="Cadre"]
+shader = ExtResource("shader")
+shader_parameter/taille = Vector2(560, 315)
+shader_parameter/survol = 0.0
+shader_parameter/largeur_bord = 11.0
+shader_parameter/intensite_braises = 0.65
+
+[node name="CarteMap" type="Button"]
+custom_minimum_size = Vector2(560, 315)
+mouse_default_cursor_shape = 2
+script = ExtResource("script")
+
+[node name="Visuel" type="Control" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Image" type="TextureRect" parent="Visuel"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+material = SubResource("Cadre")
+
+[node name="Titre" type="Label" parent="Visuel"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -64.0
+offset_right = -24.0
+offset_bottom = -18.0
+mouse_filter = 2
+text = "MapTest"
+theme_override_font_sizes/font_size = 34
+theme_override_constants/outline_size = 7
+theme_override_colors/font_outline_color = Color(0.025, 0.015, 0.01, 1)

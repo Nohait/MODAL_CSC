@@ -2,38 +2,33 @@ extends CanvasLayer
 
 signal ameliorations_changees
 
-@export_group("Équilibrage — bonus de base à puissance 100 %")
-@export_range(0.0, 200.0, 1.0) var bonus_degats_pourcent := 20.0
-@export_range(0.0, 200.0, 1.0) var bonus_charge_pourcent := 25.0
-@export_range(0.0, 200.0, 1.0) var bonus_recharge_pourcent := 20.0
+@export_enum("classique", "zombie") var mode_jeu := "classique"
+@export var catalogue_ameliorations: CatalogueAmeliorations = preload("res://scenes/systemes/ameliorations/catalogue_ameliorations.tres")
 @export_group("Boutique — prix")
 @export_range(1, 20) var prix_commun := 1
 @export_range(1, 20) var prix_rare := 2
 @export_range(1, 20) var prix_epique := 3
+@export_range(1, 20) var prix_temporaire := 1
 @export_group("Boutique — puissance des raretés")
 # 50 % donne la moitié du bonus de base ; une carte dégâts à +20 % donne +10 %.
 @export_range(0.0, 300.0, 10.0) var puissance_commune := 50.0
 @export_range(0.0, 300.0, 10.0) var puissance_rare := 100.0
 @export_range(0.0, 300.0, 10.0) var puissance_epique := 150.0
+@export_range(0.0, 300.0, 10.0) var puissance_temporaire := 100.0
 
 const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
 const BOUTIQUE = preload("res://scenes/interfaces/menus/boutique/prototype_boutique.tscn")
 const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_boutique.gd")
-const POOL = [
-	{"id": &"pression", "titre": "Sous pression", "description": "Un jet plus puissant pour repousser les flammes."},
-	{"id": &"reserve", "titre": "Grande réserve", "description": "Plus de charge pour tenir face à l'incendie."},
-	{"id": &"recharge", "titre": "Second souffle", "description": "Reprendre l'avantage avant que le feu ne gagne."}
-]
-
 @onready var room_manager = $"../Salles/RoomManager"
+@onready var joueur = $"../player"
 @onready var extincteur = $"../player".extincteur
 @onready var escorte = $"../VictimManager"
 @onready var defis = $DefiManager
 @onready var menu: Control = $Menu
-@onready var cartes: HBoxContainer = $Menu/Defilement/Centre/Marge/Contenu/Cartes
+@onready var cartes: GridContainer = $Menu/Defilement/Centre/Marge/Contenu/Cartes
 var boutique: Control
-var niveaux := {&"pression": 0, &"reserve": 0, &"recharge": 0}
-var bonus_cumules_pourcent := {&"pression": 0.0, &"reserve": 0.0, &"recharge": 0.0}
+var niveaux: Dictionary = {}
+var bonus_cumules_pourcent: Dictionary = {}
 # Le récapitulatif garde la rareté et le gain réel de chaque acquisition.
 var acquisitions: Array[Dictionary] = []
 var points := 0
@@ -46,14 +41,39 @@ var souris_avant: int
 var animation: Tween
 var charge_de_base: float
 var recharge_de_base: float
+var vie_de_base: float
+var catalogue_debug := false
+var retour_debug: Button
 var multiplicateur_choix_courant := 1.0
 var rarete_courante: StringName = &"commun"
+var boucliers_joueur: Array[Dictionary] = []
+var jauge_bouclier: ProgressBar
+var bonus_vitesse_escorte := 1.0
+var etape_en_cours := false
+var sirene_timer := 0.0
+var sirene_definition: Amelioration
+var rayon_sirene := 0.0
 
 
 func _ready() -> void:
 	menu.hide()
+	joueur.ameliorations = self
+	escorte.escort_changed.connect(_actualiser_vitesse_escorte)
+	_creer_jauge_bouclier()
 	charge_de_base = extincteur.max_charge
 	recharge_de_base = extincteur.reload_rate
+	vie_de_base = joueur.BarreDeVie.max_value
+	room_manager.salle_commencee.connect(_commencer_etape)
+	room_manager.salle_terminee.connect(_terminer_etape)
+	retour_debug = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
+	retour_debug.set("taille_police", 20)
+	retour_debug.custom_minimum_size = Vector2(300, 40)
+	retour_debug.text = "Retour à la boutique"
+	retour_debug.focus_mode = Control.FOCUS_NONE
+	retour_debug.pressed.connect(_retour_boutique)
+	cartes.get_parent().add_child(retour_debug)
+	cartes.get_parent().move_child(retour_debug, 1)
+	retour_debug.hide()
 	# Le défi doit toujours coûter moins cher que le booster rare.
 	defis.prix_sans_degats = mini(defis.prix_sans_degats, prix_rare - 1)
 	room_manager.victimes_supplementaires_reserve = defis.victimes_supplementaires
@@ -63,6 +83,7 @@ func _ready() -> void:
 	add_child(boutique)
 	boutique.hide()
 	boutique.achat_demande.connect(_acheter_booster)
+	boutique.catalogue_debug_demande.connect(ouvrir_catalogue_debug)
 	boutique.defi_demande.connect(_acheter_defi)
 	boutique.continuer_demande.connect(_continuer)
 	room_manager.choix_amelioration_demande.connect(ouvrir_choix)
@@ -70,9 +91,10 @@ func _ready() -> void:
 
 func offres_boosters() -> Array[Dictionary]:
 	return [
-		{"id": &"commun", "titre": "Commun", "couleur": CATALOGUE.COULEURS[&"commun"], "prix": prix_commun, "puissance": puissance_commune, "symbole": "I"},
-		{"id": &"rare", "titre": "Rare", "couleur": CATALOGUE.COULEURS[&"rare"], "prix": prix_rare, "puissance": puissance_rare, "symbole": "II"},
-		{"id": &"epique", "titre": "Épique", "couleur": CATALOGUE.COULEURS[&"epique"], "prix": prix_epique, "puissance": puissance_epique, "symbole": "III"}
+		{"id": &"commun", "titre": "Commun", "couleur": CATALOGUE.COULEURS[&"commun"], "prix": prix_commun, "puissance": puissance_commune, "symbole": "I", "categorie": "permanent"},
+		{"id": &"rare", "titre": "Rare", "couleur": CATALOGUE.COULEURS[&"rare"], "prix": prix_rare, "puissance": puissance_rare, "symbole": "II", "categorie": "permanent"},
+		{"id": &"epique", "titre": "Épique", "couleur": CATALOGUE.COULEURS[&"epique"], "prix": prix_epique, "puissance": puissance_epique, "symbole": "III", "categorie": "permanent"},
+		{"id": &"temporaire", "titre": "Intervention", "couleur": CATALOGUE.COULEURS[&"temporaire"], "prix": prix_temporaire, "puissance": puissance_temporaire, "symbole": "+", "categorie": "temporaire", "contenu": "%d choix · soins et protection" % mini(3, catalogue_ameliorations.disponibles(mode_jeu, "temporaire").size())}
 	]
 
 
@@ -119,57 +141,80 @@ func _acheter_defi(id: StringName) -> void:
 func _acheter_booster(rarete: StringName) -> void:
 	if not boutique_ouverte or choix_ouverts:
 		return
+	var type_bonus := "temporaire" if rarete == &"temporaire" else "permanent"
+	var propositions := catalogue_ameliorations.disponibles(mode_jeu, type_bonus)
+	# Vérifier le pool avant de dépenser : un catalogue désactivé ne piège pas le joueur.
+	if propositions.is_empty():
+		_actualiser_boutique("Aucune carte disponible dans cette catégorie.")
+		return
 	if rarete == &"rare_gratuit":
-		if defis.boosters_rares_gratuits <= 0:
-			return
+		if defis.boosters_rares_gratuits <= 0: return
 		defis.boosters_rares_gratuits -= 1
 		rarete = &"rare"
 	else:
 		var offre: Dictionary = {}
 		for proposition in offres_boosters():
-			if proposition.id == rarete:
-				offre = proposition
+			if proposition.id == rarete: offre = proposition
 		if offre.is_empty() or points < offre.prix:
-			_actualiser_boutique("Vous n'avez pas assez de points pour ce booster.")
+			_actualiser_boutique("Vous n’avez pas assez de points pour ce booster.")
 			return
 		points -= offre.prix
-	# Verrouiller avant de construire les cartes évite un double achat.
 	choix_ouverts = true
+	catalogue_debug = false
+	retour_debug.hide()
 	rarete_courante = rarete
+	multiplicateur_choix_courant = 1.0
 	match rarete:
 		&"commun": multiplicateur_choix_courant = puissance_commune / 100.0
 		&"rare": multiplicateur_choix_courant = puissance_rare / 100.0
 		&"epique": multiplicateur_choix_courant = puissance_epique / 100.0
-	# Le verrou d’achat est déjà actif : aucun second clic ne dépense de points.
+		&"temporaire": multiplicateur_choix_courant = puissance_temporaire / 100.0
 	await boutique.animer_ouverture(rarete)
-	boutique.hide()
-	var propositions: Array = POOL.duplicate()
 	propositions.shuffle()
-	for proposition in propositions.slice(0, 3):
+	_afficher_cartes(propositions.slice(0, 3))
+
+func _afficher_cartes(propositions: Array) -> void:
+	boutique.hide()
+	for definition in propositions:
 		var carte = CARTE.instantiate()
-		carte.identifiant = proposition.id
-		carte.titre = proposition.titre
-		carte.description = proposition.description
-		carte.rarete = rarete
-		carte.categorie = "EXTINCTEUR · " + CATALOGUE.NOMS[rarete].to_upper()
-		carte.effet_affiche = texte_effet_choix(proposition.id)
+		carte.identifiant = definition.identifiant
+		carte.titre = definition.titre
+		carte.description = definition.description
+		carte.illustration = definition.pictogramme
+		carte.rarete = &"temporaire" if definition.type_bonus == "temporaire" else rarete_courante
+		carte.categorie = definition.type_bonus.to_upper()
+		carte.effet_affiche = formater_effet(definition.identifiant, definition.valeur * multiplicateur_choix_courant)
+		carte.duree_affichee = texte_duree(definition.duree) if definition.type_bonus == "temporaire" else ""
 		carte.selected.connect(_choisir.bind(carte))
 		cartes.add_child(carte)
+	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "DEBUG · Toutes les cartes du mode · Choix gratuit à puissance 100 %." if catalogue_debug else "Choisissez une carte. Les soins sont immédiats ; les autres effets indiquent leur durée."
 	menu.show()
 
+func ouvrir_catalogue_debug() -> void:
+	if not boutique_ouverte or choix_ouverts: return
+	catalogue_debug = true
+	choix_ouverts = true
+	rarete_courante = &"rare"
+	multiplicateur_choix_courant = 1.0
+	retour_debug.show()
+	_afficher_cartes(catalogue_ameliorations.disponibles(mode_jeu))
 
 func _choisir(carte: Control) -> void:
-	if not choix_ouverts or carte.get_parent() != cartes:
-		return
-	choix_ouverts = false
+	if not choix_ouverts or carte.get_parent() != cartes: return
 	appliquer_amelioration(carte.identifiant)
+	_retour_boutique()
+	_actualiser_boutique("Carte appliquée. Vous pouvez acheter autre chose ou continuer.")
+
+func _retour_boutique() -> void:
+	choix_ouverts = false
+	catalogue_debug = false
+	retour_debug.hide()
 	menu.hide()
 	for enfant in cartes.get_children():
 		cartes.remove_child(enfant)
 		enfant.queue_free()
-	_actualiser_boutique("Amélioration acquise. Vous pouvez acheter autre chose ou continuer.")
+	_actualiser_boutique()
 	boutique.show()
-
 
 func _continuer() -> void:
 	if not boutique_ouverte or choix_ouverts:
@@ -185,58 +230,174 @@ func _continuer() -> void:
 
 
 func valeur_base(identifiant: StringName) -> float:
-	match identifiant:
-		&"pression": return bonus_degats_pourcent
-		&"reserve": return bonus_charge_pourcent
-		&"recharge": return bonus_recharge_pourcent
-	return 0.0
-
+	var definition := catalogue_ameliorations.trouver(identifiant)
+	return definition.valeur if definition != null else 0.0
 
 func appliquer_amelioration(identifiant: StringName) -> void:
-	if not niveaux.has(identifiant):
-		return
-	niveaux[identifiant] += 1
-	var gain: float = valeur_base(identifiant) * multiplicateur_choix_courant
-	bonus_cumules_pourcent[identifiant] += gain
-	acquisitions.append({"id": identifiant, "rarete": rarete_courante, "gain": gain})
-	match identifiant:
-		&"pression":
-			extincteur.multiplicateur_degats_ameliorations = 1.0 + bonus_cumules_pourcent[identifiant] / 100.0
-		&"reserve":
-			var ancien_max: float = extincteur.max_charge
-			extincteur.max_charge = charge_de_base * (1.0 + bonus_cumules_pourcent[identifiant] / 100.0)
-			# Remplir uniquement la capacité nouvellement ajoutée.
-			extincteur.charge += extincteur.max_charge - ancien_max
-		&"recharge":
-			extincteur.reload_rate = recharge_de_base * (1.0 + bonus_cumules_pourcent[identifiant] / 100.0)
+	var definition := catalogue_ameliorations.trouver(identifiant)
+	if definition == null or not catalogue_ameliorations.disponibles(mode_jeu).has(definition): return
+	var gain := definition.valeur * multiplicateur_choix_courant
+	if definition.type_bonus == "temporaire" and definition.duree == 0:
+		# Un soin n’est pas un bonus actif : son effet est appliqué une seule fois.
+		_appliquer_soin(definition.effet, gain)
+	else:
+		var acquisition := {"id": identifiant, "definition": definition, "rarete": rarete_courante,
+			"gain": gain, "restant": definition.duree, "commence": false}
+		if definition.effet in ["bouclier_camion", "bouclier_joueur"]: acquisition.bouclier_restant = gain
+		acquisitions.append(acquisition)
+		recalculer_effets()
 	ameliorations_changees.emit()
 
+func _appliquer_soin(effet: String, gain: float) -> void:
+	if effet == "soin_joueur":
+		joueur.BarreDeVie.value = minf(joueur.BarreDeVie.value + gain, joueur.BarreDeVie.max_value)
+	elif effet == "soin_victimes":
+		if mode_jeu == "zombie":
+			room_manager.refuge.soigner_victimes(gain)
+		else:
+			for victime in escorte.freed_victims:
+				if is_instance_valid(victime) and not victime.est_morte:
+					victime.vie = minf(victime.vie + gain, victime.vie_max)
+					victime.actualiser_barre_vie()
+
+func recalculer_effets() -> void:
+	var totaux: Dictionary = {}
+	niveaux.clear()
+	bonus_cumules_pourcent.clear()
+	var protections: Array[Dictionary] = []
+	boucliers_joueur.clear()
+	sirene_definition = null
+	rayon_sirene = 0.0
+	extincteur.seuil_dernier_souffle = 25.0
+	extincteur.duree_gel = 1.0
+	for acquisition in acquisitions:
+		var definition: Amelioration = acquisition.definition
+		niveaux[acquisition.id] = niveaux.get(acquisition.id, 0) + 1
+		bonus_cumules_pourcent[acquisition.id] = bonus_cumules_pourcent.get(acquisition.id, 0.0) + acquisition.gain
+		totaux[definition.effet] = totaux.get(definition.effet, 0.0) + acquisition.gain
+		if definition.effet == "bouclier_camion": protections.append(acquisition)
+		if definition.effet == "bouclier_joueur": boucliers_joueur.append(acquisition)
+		if definition.effet == "jet_givre": extincteur.duree_gel = definition.duree_effet
+		if definition.effet == "dernier_souffle": extincteur.seuil_dernier_souffle = definition.seuil_vie
+		if definition.effet == "sirene":
+			sirene_definition = definition
+			# Plusieurs sirènes élargissent le rayon, sans multiplier les appels.
+			rayon_sirene = maxf(rayon_sirene, acquisition.gain)
+	extincteur.ralentissement_jet = minf(80.0, totaux.get("jet_givre", 0.0))
+	extincteur.bonus_dernier_souffle = totaux.get("dernier_souffle", 0.0)
+	extincteur.particles.process_material.color = Color(0.4, 0.8, 1.0) if extincteur.ralentissement_jet > 0.0 else extincteur.couleur_jet_initiale
+	bonus_vitesse_escorte = 1.0 + totaux.get("escorte_agile", 0.0) / 100.0
+	_actualiser_vitesse_escorte()
+	_actualiser_bouclier_joueur()
+	if sirene_definition == null and mode_jeu == "zombie" and is_instance_valid(room_manager.refuge):
+		room_manager.refuge.sirene_restante = 0.0
+	extincteur.multiplicateur_degats_ameliorations = 1.0 + totaux.get("degats", 0.0) / 100.0
+	var ancien_max: float = extincteur.max_charge
+	extincteur.max_charge = charge_de_base * (1.0 + totaux.get("charge", 0.0) / 100.0)
+	extincteur.charge = minf(extincteur.max_charge, extincteur.charge + maxf(0, extincteur.max_charge - ancien_max))
+	extincteur.reload_rate = recharge_de_base * (1.0 + totaux.get("recharge", 0.0) / 100.0)
+	var ancienne_vie_max: float = joueur.BarreDeVie.max_value
+	joueur.BarreDeVie.max_value = vie_de_base + totaux.get("vie_max", 0.0)
+	joueur.BarreDeVie.value = minf(joueur.BarreDeVie.max_value, joueur.BarreDeVie.value + maxf(0, joueur.BarreDeVie.max_value - ancienne_vie_max))
+	if mode_jeu == "zombie" and is_instance_valid(room_manager.refuge):
+		room_manager.refuge.reduction_degats = minf(80.0, totaux.get("blindage_camion", 0.0)) / 100.0
+		# Les dictionnaires sont partagés : les coups diminuent la vraie réserve de chaque carte.
+		room_manager.refuge.boucliers = protections
+		room_manager.refuge.actualiser()
+
+func _commencer_etape(_salle: Node3D) -> void:
+	etape_en_cours = true
+	sirene_timer = sirene_definition.intervalle if sirene_definition != null else 0.0
+	for acquisition in acquisitions:
+		acquisition.commence = true
+
+func _terminer_etape(_salle: Node3D) -> void:
+	etape_en_cours = false
+	if mode_jeu == "zombie" and is_instance_valid(room_manager.refuge):
+		room_manager.refuge.sirene_restante = 0.0
+	for acquisition in acquisitions.duplicate():
+		if acquisition.definition.type_bonus != "temporaire" or not acquisition.commence: continue
+		acquisition.commence = false
+		acquisition.restant -= 1
+		if acquisition.restant <= 0: acquisitions.erase(acquisition)
+	recalculer_effets()
+	ameliorations_changees.emit()
+
+func texte_duree(restant: int) -> String:
+	if restant == 0: return "EFFET IMMÉDIAT"
+	var unite := "VAGUE" if mode_jeu == "zombie" else "SALLE"
+	return "%d %s%s RESTANTE%s" % [restant, unite, "S" if restant > 1 else "", "S" if restant > 1 else ""]
 
 func formater_pourcentage(valeur: float) -> String:
 	return String.num(valeur, 2).trim_suffix(".0")
 
-
-func formater_effet(identifiant: StringName, pourcentage: float) -> String:
-	var nombre := formater_pourcentage(pourcentage)
-	match identifiant:
-		&"pression": return "+%s %% de dégâts" % nombre
-		&"reserve": return "+%s %% de charge maximale" % nombre
-		&"recharge": return "+%s %% de vitesse de recharge" % nombre
-	return ""
-
+func formater_effet(identifiant: StringName, gain: float) -> String:
+	var definition := catalogue_ameliorations.trouver(identifiant)
+	return definition.texte_effet % formater_pourcentage(gain) if definition != null else ""
 
 func texte_effet(identifiant: StringName, _nombre: int = 1) -> String:
-	# Le récapitulatif lit les vrais gains cumulés, qui dépendent désormais des raretés.
-	return formater_effet(identifiant, bonus_cumules_pourcent[identifiant])
-
+	return formater_effet(identifiant, bonus_cumules_pourcent.get(identifiant, 0.0))
 
 func texte_effet_choix(identifiant: StringName) -> String:
 	return formater_effet(identifiant, valeur_base(identifiant) * multiplicateur_choix_courant)
 
-
 func get_resume() -> String:
 	var lignes := PackedStringArray()
-	for proposition in POOL:
-		if niveaux[proposition.id] > 0:
-			lignes.append("%s : %s" % [proposition.titre, texte_effet(proposition.id)])
-	return "Aucune amélioration acquise." if lignes.is_empty() else "\n".join(lignes)
+	for acquisition in acquisitions:
+		lignes.append("%s : %s" % [acquisition.definition.titre, formater_effet(acquisition.id, acquisition.gain)])
+	return "Aucune amélioration active." if lignes.is_empty() else "\n".join(lignes)
+
+func _actualiser_vitesse_escorte() -> void:
+	# Le signal couvre aussi les victimes libérées après l'achat de la carte.
+	for victime in escorte.freed_victims:
+		if is_instance_valid(victime): victime.multiplicateur_vitesse = bonus_vitesse_escorte
+
+func _creer_jauge_bouclier() -> void:
+	jauge_bouclier = preload("res://scenes/interfaces/hud/jauge_equipement.tscn").instantiate()
+	jauge_bouclier.titre = "BOUCLIER"
+	jauge_bouclier.couleur = Color("75c8eb")
+	jauge_bouclier.pictogramme = preload("res://assets/textures/interfaces/ameliorations/pictogrammes/mousse_protectrice.svg")
+	# Sous la mousse : réutiliser la jauge existante conserve l'habillage du jeu.
+	joueur.get_node("Interface").add_child(jauge_bouclier)
+	jauge_bouclier.position = Vector2(20, 194)
+	jauge_bouclier.size.x = 320
+	jauge_bouclier.hide()
+
+func _actualiser_bouclier_joueur() -> void:
+	var maximum := 0.0
+	var restant := 0.0
+	for protection in boucliers_joueur:
+		maximum += protection.gain
+		restant += protection.bouclier_restant
+	jauge_bouclier.max_value = maxf(1.0, maximum)
+	jauge_bouclier.value = restant
+	jauge_bouclier.visible = restant > 0.0
+
+func absorber_degats_joueur(degats: float) -> float:
+	# Dépenser les réserves les plus anciennes d'abord ; seul l'excédent touche les PV.
+	for protection in boucliers_joueur:
+		var absorption := minf(degats, protection.bouclier_restant)
+		protection.bouclier_restant -= absorption
+		degats -= absorption
+		if degats <= 0.0: break
+	_actualiser_bouclier_joueur()
+	return degats
+
+func utiliser_secours() -> bool:
+	for acquisition in acquisitions:
+		if acquisition.definition.effet != "reserve_secours": continue
+		joueur.BarreDeVie.value = joueur.BarreDeVie.max_value * clampf(acquisition.gain, 1.0, 100.0) / 100.0
+		acquisitions.erase(acquisition)
+		recalculer_effets()
+		ameliorations_changees.emit()
+		return true
+	return false
+
+func _process(delta: float) -> void:
+	# Ce CanvasLayer fonctionne en pause pour les menus, mais la sirène attend le combat.
+	if get_tree().paused or not etape_en_cours or sirene_definition == null: return
+	if mode_jeu != "zombie" or not is_instance_valid(room_manager.refuge): return
+	sirene_timer -= delta
+	if sirene_timer <= 0.0:
+		sirene_timer = sirene_definition.intervalle
+		room_manager.refuge.declencher_sirene(rayon_sirene, sirene_definition.duree_effet)

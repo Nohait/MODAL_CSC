@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="CatalogueAmeliorations" format=3 uid="uid://c830qx2eeuyuj"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/blindage_camion.tres" id="blindage_camion"]
+[ext_resource type="Resource" uid="uid://ct3slyn0akktf" path="res://scenes/systemes/ameliorations/cartes/bouclier_camion.tres" id="bouclier_camion"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="definition"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/dernier_souffle.tres" id="dernier_souffle"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/escorte_agile.tres" id="escorte_agile"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/jet_givre.tres" id="jet_givre"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/mousse_protectrice.tres" id="mousse_protectrice"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/pression.tres" id="pression"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/recharge.tres" id="recharge"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/reserve.tres" id="reserve"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/reserve_secours.tres" id="reserve_secours"]
+[ext_resource type="Script" uid="uid://c7lxfmixecexa" path="res://scenes/systemes/ameliorations/catalogue_ameliorations.gd" id="script"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/sirene_diversion.tres" id="sirene_diversion"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/soin_joueur.tres" id="soin_joueur"]
+[ext_resource type="Resource" uid="uid://c4ii74fsodhfp" path="res://scenes/systemes/ameliorations/cartes/soin_victimes.tres" id="soin_victimes"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/soin_victimes_camion.tres" id="soin_victimes_camion"]
+[ext_resource type="Resource" uid="uid://b5751ndc827g3" path="res://scenes/systemes/ameliorations/cartes/vitalite.tres" id="vitalite"]
+
+[resource]
+script = ExtResource("script")
+cartes = Array[ExtResource("definition")]([ExtResource("pression"), ExtResource("reserve"), ExtResource("recharge"), ExtResource("vitalite"), ExtResource("soin_joueur"), ExtResource("soin_victimes"), ExtResource("soin_victimes_camion"), ExtResource("blindage_camion"), ExtResource("bouclier_camion"), ExtResource("jet_givre"), ExtResource("dernier_souffle"), ExtResource("mousse_protectrice"), ExtResource("reserve_secours"), ExtResource("escorte_agile"), ExtResource("sirene_diversion")])

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/recharge.svg" id="icone"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"recharge"
+titre = "Second souffle"
+description = "La réserve de mousse se recharge plus vite."
+pictogramme = ExtResource("icone")
+modes = 3
+type_bonus = "permanent"
+effet = "recharge"
+valeur = 20.0
+duree = 0
+texte_effet = "+%s %% de vitesse de recharge"

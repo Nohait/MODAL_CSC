@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/blindage_camion.svg" id="icone"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"blindage_camion"
+titre = "Carrosserie renforcée"
+description = "Le camion réduit durablement les dégâts subis par ses occupants."
+pictogramme = ExtResource("icone")
+modes = 2
+type_bonus = "permanent"
+effet = "blindage_camion"
+valeur = 10.0
+duree = 0
+texte_effet = "−%s %% de dégâts aux victimes abritées"

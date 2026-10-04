@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://ct3slyn0akktf"]
+
+[ext_resource type="Texture2D" uid="uid://2tinmhfoxvr7" path="res://assets/textures/interfaces/ameliorations/pictogrammes/bouclier_camion.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"bouclier_camion"
+titre = "Protection d’urgence"
+description = "Un bouclier absorbe les coups reçus par le camion."
+pictogramme = ExtResource("icone")
+modes = 2
+type_bonus = "temporaire"
+effet = "bouclier_camion"
+valeur = 60.0
+duree = 2
+texte_effet = "Bouclier : %s PV"

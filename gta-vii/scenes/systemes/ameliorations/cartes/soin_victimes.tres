@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://c4ii74fsodhfp"]
+
+[ext_resource type="Texture2D" uid="uid://c8i0k2h42i65j" path="res://assets/textures/interfaces/ameliorations/pictogrammes/soin_victimes.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"soin_victimes"
+titre = "Prendre soin des autres"
+description = "Soigne chaque victime qui suit le pompier."
+pictogramme = ExtResource("icone")
+modes = 1
+type_bonus = "temporaire"
+effet = "soin_victimes"
+valeur = 25.0
+texte_effet = "Restaure %s PV par victime"

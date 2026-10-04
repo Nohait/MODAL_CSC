@@ -3,8 +3,10 @@ extends Control
 # Interface réutilisée en jeu. F6 conserve un mode de démonstration indépendant.
 signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
+signal catalogue_debug_demande
 signal continuer_demande
 
+const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
 const OUVERTURE = preload("res://scenes/interfaces/menus/ouverture_booster.tscn")
 const BOOSTER = preload("res://scenes/interfaces/menus/boutique/booster_apercu.tscn")
 const DEFI = preload("res://scenes/interfaces/menus/boutique/ligne_defi_apercu.gd")
@@ -31,6 +33,7 @@ var proposes: VBoxContainer
 var vide: Label
 var boosters: Array[Control] = []
 var ouverture: Control
+var panneau_defis: Control
 
 
 func _ready() -> void:
@@ -75,7 +78,7 @@ func _ready() -> void:
 	gauche.size_flags_stretch_ratio = 1.6
 	gauche.add_theme_constant_override("separation", 18)
 	colonnes.add_child(gauche)
-	var renforts := _panneau(gauche, "Améliorations")
+	var renforts := _panneau(gauche, "BONUS PERMANENTS")
 	var pochettes := HBoxContainer.new()
 	pochettes.alignment = BoxContainer.ALIGNMENT_CENTER
 	pochettes.add_theme_constant_override("separation", 22)
@@ -88,23 +91,29 @@ func _ready() -> void:
 	if not catalogue.is_empty():
 		propositions = catalogue
 	for proposition in propositions:
-		_ajouter_booster(pochettes, proposition)
+		if proposition.get("categorie", "permanent") == "permanent":
+			_ajouter_booster(pochettes, proposition)
 	bouton_gratuit = Button.new()
 	bouton_gratuit.text = "Ouvrir le booster rare offert"
 	bouton_gratuit.focus_mode = Control.FOCUS_NONE
 	bouton_gratuit.hide()
 	bouton_gratuit.pressed.connect(func(): achat_demande.emit(&"rare_gratuit"))
 	renforts.add_child(bouton_gratuit)
-	var speciaux := _panneau(gauche, "Boosters spéciaux")
-	var attente := _texte("De nouveaux équipements arriveront ici.", 16)
-	attente.custom_minimum_size.y = 70
-	attente.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	speciaux.add_child(attente)
+	var temporaires := _panneau(gauche, "SOINS ET BONUS TEMPORAIRES")
+	var interventions := HBoxContainer.new()
+	interventions.alignment = BoxContainer.ALIGNMENT_CENTER
+	temporaires.add_child(interventions)
+	for proposition in propositions:
+		if proposition.get("categorie", "permanent") == "temporaire":
+			_ajouter_booster(interventions, proposition)
+	if interventions.get_child_count() == 0:
+		_ajouter_booster(interventions, {"id": &"temporaire", "titre": "Intervention", "couleur": Color("55b5a5"), "prix": 1, "puissance": 100, "symbole": "+", "contenu": "Soins et protection"})
 
 	var droite := VBoxContainer.new()
 	droite.custom_minimum_size.x = 380
 	droite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	colonnes.add_child(droite)
+	panneau_defis = droite
 	var paris := _panneau(droite, "Défis et paris", true)
 	paris.add_child(_texte("EN COURS", 14))
 	actifs = VBoxContainer.new()
@@ -126,27 +135,38 @@ func _ready() -> void:
 	retour.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(retour)
 	if not mode_demonstration:
-		var continuer := Button.new()
+		var continuer = BOUTON.instantiate()
+		continuer.taille_police = 18
+		continuer.custom_minimum_size = Vector2(300, 40)
 		continuer.text = "Continuer vers la prochaine salle"
 		continuer.focus_mode = Control.FOCUS_NONE
 		continuer.custom_minimum_size.y = 40
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
+	if not mode_demonstration and OS.is_debug_build():
+		var debug = BOUTON.instantiate()
+		debug.taille_police = 16
+		debug.custom_minimum_size = Vector2(300, 40)
+		debug.name = "DebugCartes"
+		debug.text = "Debug : toutes les cartes du mode"
+		debug.focus_mode = Control.FOCUS_NONE
+		debug.pressed.connect(func(): catalogue_debug_demande.emit())
+		contenu.add_child(debug)
 	_actualiser_budget()
 
 
 func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
 	# Un conteneur réserve la petite taille ; le dessin conserve ses proportions.
 	var emplacement := Control.new()
-	emplacement.custom_minimum_size = Vector2(180, 280)
+	emplacement.custom_minimum_size = Vector2(135, 210)
 	parent.add_child(emplacement)
 	var booster = BOOSTER.instantiate()
 	booster.titre = proposition.titre
 	booster.couleur = proposition.couleur
 	booster.prix = proposition.prix
-	booster.contenu = "3 choix · puissance %d %%" % proposition.puissance
+	booster.contenu = proposition.get("contenu", "3 choix · puissance %d %%" % proposition.puissance)
 	booster.symbole = proposition.symbole
-	booster.scale = Vector2.ONE * (2.0 / 3.0)
+	booster.scale = Vector2.ONE * 0.5
 	booster.selectionne.connect(_selectionner.bind(proposition))
 	emplacement.add_child(booster)
 	booster.set_meta("rarete", proposition.id)

@@ -1,0 +1,392 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/salles/salle.tscn" id="salle"]
+[ext_resource type="Script" path="res://scenes/modes/zombie/maps/map_test.gd" id="map"]
+[ext_resource type="Script" path="res://scenes/salles/entree_salle.gd" id="entree"]
+[ext_resource type="PackedScene" path="res://scenes/decors/porte_entree.tscn" id="porte"]
+[ext_resource type="Material" path="res://assets/materiaux/sol_carbonise.tres" id="sol"]
+[ext_resource type="Material" path="res://assets/materiaux/mur_abime.tres" id="mur"]
+
+[sub_resource type="BoxMesh" id="MeshSol"]
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="BoxShape3D" id="CollisionSol"]
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="BoxMesh" id="MeshMurNord"]
+size = Vector3(40.5, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="CollisionMurNord"]
+size = Vector3(40.5, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshMurGauche"]
+size = Vector3(0.5, 3, 40)
+
+[sub_resource type="BoxShape3D" id="CollisionMurGauche"]
+size = Vector3(0.5, 3, 40)
+
+[sub_resource type="BoxMesh" id="MeshMurDroit"]
+size = Vector3(0.5, 3, 40)
+
+[sub_resource type="BoxShape3D" id="CollisionMurDroit"]
+size = Vector3(0.5, 3, 40)
+
+[sub_resource type="BoxMesh" id="MeshMurSudGauche"]
+size = Vector3(18.75, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="CollisionMurSudGauche"]
+size = Vector3(18.75, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshMurSudDroit"]
+size = Vector3(18.75, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="CollisionMurSudDroit"]
+size = Vector3(18.75, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MeshSolEntree"]
+size = Vector3(2.5, 0.2, 4)
+
+[sub_resource type="BoxShape3D" id="CollisionSolEntree"]
+size = Vector3(2.5, 0.2, 4)
+
+[sub_resource type="BoxMesh" id="MeshCouloirGauche"]
+size = Vector3(0.5, 3, 4)
+
+[sub_resource type="BoxShape3D" id="CollisionCouloirGauche"]
+size = Vector3(0.5, 3, 4)
+
+[sub_resource type="BoxMesh" id="MeshCouloirDroit"]
+size = Vector3(0.5, 3, 4)
+
+[sub_resource type="BoxShape3D" id="CollisionCouloirDroit"]
+size = Vector3(0.5, 3, 4)
+
+[sub_resource type="BoxMesh" id="MeshFondCouloir"]
+size = Vector3(2.5, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="CollisionFondCouloir"]
+size = Vector3(2.5, 3, 0.5)
+
+[node name="MapTest" instance=ExtResource("salle")]
+script = ExtResource("map")
+
+[node name="Sol" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(0, -0.1, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Sol"]
+mesh = SubResource("MeshSol")
+material_override = ExtResource("sol")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/Sol"]
+shape = SubResource("CollisionSol")
+
+[node name="MurNord" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(0, 1.5, -20.25)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
+mesh = SubResource("MeshMurNord")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
+shape = SubResource("CollisionMurNord")
+
+[node name="MurGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(-20.25, 1.5, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
+mesh = SubResource("MeshMurGauche")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurGauche"]
+shape = SubResource("CollisionMurGauche")
+
+[node name="MurDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(20.25, 1.5, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
+mesh = SubResource("MeshMurDroit")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
+shape = SubResource("CollisionMurDroit")
+
+[node name="MurSudGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(-10.625, 1.5, 20.25)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudGauche"]
+mesh = SubResource("MeshMurSudGauche")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudGauche"]
+shape = SubResource("CollisionMurSudGauche")
+
+[node name="MurSudDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(10.625, 1.5, 20.25)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudDroit"]
+mesh = SubResource("MeshMurSudDroit")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudDroit"]
+shape = SubResource("CollisionMurSudDroit")
+
+[node name="SolEntree" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(0, -0.1, 22)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/SolEntree"]
+mesh = SubResource("MeshSolEntree")
+material_override = ExtResource("sol")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/SolEntree"]
+shape = SubResource("CollisionSolEntree")
+
+[node name="CouloirGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(-1.5, 1.5, 22)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirGauche"]
+mesh = SubResource("MeshCouloirGauche")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirGauche"]
+shape = SubResource("CollisionCouloirGauche")
+
+[node name="CouloirDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(1.5, 1.5, 22)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirDroit"]
+mesh = SubResource("MeshCouloirDroit")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirDroit"]
+shape = SubResource("CollisionCouloirDroit")
+
+[node name="FondCouloir" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+position = Vector3(0, 1.5, 24.25)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/FondCouloir"]
+mesh = SubResource("MeshFondCouloir")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/FondCouloir"]
+shape = SubResource("CollisionFondCouloir")
+
+[node name="Entree" type="Node3D" parent="."]
+position = Vector3(0, 0, 20)
+script = ExtResource("entree")
+
+[node name="PorteCassee" parent="Entree" instance=ExtResource("porte")]
+
+[node name="PointsApparition" type="Node3D" parent="."]
+
+[node name="Point0_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, -14)
+
+[node name="Point2_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, -14)
+
+[node name="Point4_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, -14)
+
+[node name="Point6_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, -14)
+
+[node name="Point8_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, -14)
+
+[node name="Point10_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, -14)
+
+[node name="Point12_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, -14)
+
+[node name="Point14_0" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, -14)
+
+[node name="Point0_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, -10)
+
+[node name="Point2_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, -10)
+
+[node name="Point4_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, -10)
+
+[node name="Point6_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, -10)
+
+[node name="Point8_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, -10)
+
+[node name="Point10_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, -10)
+
+[node name="Point12_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, -10)
+
+[node name="Point14_2" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, -10)
+
+[node name="Point0_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, -6)
+
+[node name="Point2_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, -6)
+
+[node name="Point4_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, -6)
+
+[node name="Point6_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, -6)
+
+[node name="Point8_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, -6)
+
+[node name="Point10_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, -6)
+
+[node name="Point12_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, -6)
+
+[node name="Point14_4" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, -6)
+
+[node name="Point0_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, -2)
+
+[node name="Point2_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, -2)
+
+[node name="Point4_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, -2)
+
+[node name="Point6_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, -2)
+
+[node name="Point8_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, -2)
+
+[node name="Point10_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, -2)
+
+[node name="Point12_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, -2)
+
+[node name="Point14_6" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, -2)
+
+[node name="Point0_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, 2)
+
+[node name="Point2_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, 2)
+
+[node name="Point4_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, 2)
+
+[node name="Point6_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, 2)
+
+[node name="Point8_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, 2)
+
+[node name="Point10_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, 2)
+
+[node name="Point12_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, 2)
+
+[node name="Point14_8" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, 2)
+
+[node name="Point0_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, 6)
+
+[node name="Point2_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, 6)
+
+[node name="Point4_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, 6)
+
+[node name="Point6_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, 6)
+
+[node name="Point8_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, 6)
+
+[node name="Point10_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, 6)
+
+[node name="Point12_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, 6)
+
+[node name="Point14_10" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, 6)
+
+[node name="Point0_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, 10)
+
+[node name="Point2_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, 10)
+
+[node name="Point4_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, 10)
+
+[node name="Point6_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, 10)
+
+[node name="Point8_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, 10)
+
+[node name="Point10_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, 10)
+
+[node name="Point12_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, 10)
+
+[node name="Point14_12" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, 10)
+
+[node name="Point0_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-14, 0, 14)
+
+[node name="Point2_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-10, 0, 14)
+
+[node name="Point4_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-6, 0, 14)
+
+[node name="Point6_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(-2, 0, 14)
+
+[node name="Point8_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(2, 0, 14)
+
+[node name="Point10_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(6, 0, 14)
+
+[node name="Point12_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(10, 0, 14)
+
+[node name="Point14_14" type="Marker3D" parent="PointsApparition"]
+position = Vector3(14, 0, 14)
+

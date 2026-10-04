@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ecran_mort.tscn" id="mort"]
+[ext_resource type="Script" path="res://scenes/modes/zombie/interfaces/fin/fin_zombie.gd" id="fin"]
+
+[node name="FinZombie" instance=ExtResource("mort")]
+script = ExtResource("fin")

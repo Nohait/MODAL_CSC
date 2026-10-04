@@ -47,6 +47,12 @@ var delais_impacts: Dictionary = {}
 var bonus_degats_actif := false
 # Indépendant de l'escorte : reste actif quand une victime est évacuée.
 var multiplicateur_degats_ameliorations := 1.0
+var bonus_dernier_souffle := 0.0
+var seuil_dernier_souffle := 25.0
+var ralentissement_jet := 0.0
+var duree_gel := 1.0
+var couleur_jet_initiale: Color
+var porteur: Node
 # Option de test indépendante des statistiques et des améliorations acquises.
 var degats_colossaux_test := false
 const AUGMENTATION_DEGATS_ESCORTE: float = 0.25
@@ -67,6 +73,8 @@ func _ready() -> void:
 	particles.top_level = true
 	damage_area.top_level = true
 	damage_area.get_node("CollisionShape3D").shape = damage_area.get_node("CollisionShape3D").shape.duplicate()
+	couleur_jet_initiale = particles.process_material.color
+	porteur = get_tree().get_first_node_in_group("player")
 	configurer_jet()
 	actualiser_position_jet()
 
@@ -193,10 +201,14 @@ func cible_dans_jet(position_cible: Vector3, rayon_cible: float) -> bool:
 func get_degats() -> float:
 	if degats_colossaux_test:
 		return 100000.0
+	var puissance := multiplicateur_degats_ameliorations
+	# Lire les PV au moment du coup prend aussi en compte les soins et la vie maximale.
+	if is_instance_valid(porteur) and porteur.BarreDeVie.value <= porteur.BarreDeVie.max_value * seuil_dernier_souffle / 100.0:
+		puissance *= 1.0 + bonus_dernier_souffle / 100.0
 	# Ne jamais modifier degats1 : le bonus doit pouvoir disparaître sans dérive.
 	if bonus_degats_actif:
-		return degats1 * multiplicateur_degats_ameliorations * (1.0 + AUGMENTATION_DEGATS_ESCORTE)
-	return degats1 * multiplicateur_degats_ameliorations
+		return degats1 * puissance * (1.0 + AUGMENTATION_DEGATS_ESCORTE)
+	return degats1 * puissance
 
 
 func attaque_1(cible):
@@ -209,6 +221,8 @@ func attaque_1(cible):
 				RETOUR_COMBAT.creer_impact(cible, muzzle.global_position)
 				delais_impacts[id] = intervalle_impacts
 		var multiplier = randf_range(0.9,1.1)
+		if ralentissement_jet > 0.0 and cible.has_method("appliquer_gel"):
+			cible.appliquer_gel(ralentissement_jet, duree_gel)
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
 		# Colorer la zone uniquement après un impact, y compris sur les flaques.
 		indicateur_attaque.signaler_impact()

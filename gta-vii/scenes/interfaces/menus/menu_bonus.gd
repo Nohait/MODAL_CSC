@@ -11,6 +11,8 @@ const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelior
 @onready var upgrades = get_parent().get_node("UpgradeManager")
 @onready var cartes_permanents: HFlowContainer = %CartesPermanents
 @onready var vide_permanents: Label = %VidePermanents
+@onready var cartes_temporaires: HFlowContainer = %CartesTemporaires
+@onready var vide_temporaires: Label = %VideTemporaires
 @onready var papier: TextureRect = $Menu/Panneau/Papier
 var temps_braises := 0.0
 var souris_avant: int
@@ -126,16 +128,27 @@ func actualiser_affichage() -> void:
 	raccourci.tooltip_text = "Ouvrir les bonus (%s)" % touche
 
 	_vider_cartes(cartes_permanents)
-	# Chaque carte acquise conserve sa rareté et le gain réellement obtenu.
+	_vider_cartes(cartes_temporaires)
 	for acquisition in upgrades.acquisitions:
-		for proposition in upgrades.POOL:
-			if proposition.id != acquisition.id:
-				continue
-			_ajouter_carte(cartes_permanents, proposition.id, proposition.titre,
-				proposition.description, upgrades.formater_effet(proposition.id, acquisition.gain),
-				"EXTINCTEUR · " + upgrades.CATALOGUE.NOMS[acquisition.rarete].to_upper(),
-				"ACQUISE POUR CETTE PARTIE", null, acquisition.rarete)
+		var definition: Amelioration = acquisition.definition
+		var temporaire := definition.type_bonus == "temporaire"
+		var carte = CARTE.instantiate()
+		carte.lecture_seule = true
+		carte.identifiant = definition.identifiant
+		carte.titre = definition.titre
+		carte.description = definition.description
+		carte.illustration = definition.pictogramme
+		carte.rarete = &"temporaire" if temporaire else acquisition.rarete
+		carte.categorie = definition.type_bonus.to_upper()
+		carte.effet_affiche = upgrades.formater_effet(definition.identifiant, acquisition.gain)
+		if definition.effet in ["bouclier_camion", "bouclier_joueur"]:
+			carte.effet_affiche = "Bouclier : %d / %d PV" % [ceili(acquisition.bouclier_restant), ceili(acquisition.gain)]
+		carte.duree_affichee = upgrades.texte_duree(acquisition.restant) if temporaire else ""
+		carte.statut = "1 SECOURS DISPONIBLE" if definition.effet == "reserve_secours" else ("ACTIF" if temporaire else "ACQUIS POUR CETTE PARTIE")
+		var destination := cartes_temporaires if temporaire else cartes_permanents
+		destination.add_child(carte)
 	vide_permanents.visible = cartes_permanents.get_child_count() == 0
+	vide_temporaires.visible = cartes_temporaires.get_child_count() == 0
 
 
 func _vider_cartes(conteneur: Container) -> void:
@@ -144,23 +157,6 @@ func _vider_cartes(conteneur: Container) -> void:
 		conteneur.remove_child(carte)
 		carte.queue_free()
 
-
-func _ajouter_carte(conteneur: Container, identifiant: StringName, titre: String,
-		description: String, effet: String, categorie: String, statut: String,
-		illustration: Texture2D = null, rarete: StringName = &"aucune") -> void:
-	var carte = CARTE.instantiate()
-	carte.lecture_seule = true
-	carte.rarete = rarete
-	carte.identifiant = identifiant
-	carte.titre = titre
-	carte.description = description
-	carte.effet_affiche = effet
-	carte.categorie = categorie
-	carte.statut = statut
-	if illustration != null:
-		carte.illustration = illustration
-	# Aucun signal selected connecté : consulter une carte n'octroie rien.
-	conteneur.add_child(carte)
 
 func _animer_raccourci(survole: bool) -> void:
 	if animation_raccourci:

@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bvpfbruarcplu" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gd" id="1"]
 [ext_resource type="Shader" uid="uid://bmg8kmi14kviw" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="2"]
-[ext_resource type="Shader" uid="uid://qmjoijs84hak" path="res://scenes/interfaces/menus/ameliorations/carte_illustration.gdshader" id="3"]
 [ext_resource type="Texture2D" uid="uid://dpc6hyifmn5ke" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://dly5ursde0wfw" path="res://assets/textures/interfaces/ameliorations/test_illustration.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg" id="5"]
 [ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="Ombre"]
@@ -21,16 +20,6 @@ shader = ExtResource("2")
 shader_parameter/taille = Vector2(320, 500)
 shader_parameter/largeur_bord = 13.0
 shader_parameter/rayon_coin = 15.0
-shader_parameter/survol = 0.0
-shader_parameter/horloge = 152.5917991111433
-shader_parameter/point_lumiere = Vector2(0.25, 0.15)
-shader_parameter/intensite_braises = 0.8
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mol8f"]
-shader = ExtResource("3")
-shader_parameter/taille = Vector2(274, 237)
-shader_parameter/largeur_bord = 8.0
-shader_parameter/rayon_coin = 9.0
 shader_parameter/survol = 0.0
 shader_parameter/horloge = 152.5917991111433
 shader_parameter/point_lumiere = Vector2(0.25, 0.15)
@@ -127,14 +116,13 @@ theme_override_font_sizes/font_size = 14
 text = "✦"
 
 [node name="Illustration" type="Control" parent="Visuel/Contenu/Organisation" unique_id=2038948273]
-editor_description = "Image recadrée par son shader, avec le même charbon et les mêmes braises que la carte."
-custom_minimum_size = Vector2(0, 195)
+editor_description = "Pictogramme vectoriel centré, sans déformation."
+custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="Image" type="TextureRect" parent="Visuel/Contenu/Organisation/Illustration" unique_id=369160520]
-material = SubResource("ShaderMaterial_mol8f")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,6 +132,14 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5")
 expand_mode = 1
+
+[node name="Duree" type="Label" parent="Visuel/Contenu/Organisation"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.3, 0.26, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="Titre" type="Label" parent="Visuel/Contenu/Organisation" unique_id=1147516186]
 layout_mode = 2

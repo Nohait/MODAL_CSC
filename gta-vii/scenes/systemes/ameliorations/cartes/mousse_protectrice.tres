@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/mousse_protectrice.svg" id="icone"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"mousse_protectrice"
+titre = "Mousse protectrice"
+description = "Un bouclier de mousse absorbe les coups reçus par le pompier."
+pictogramme = ExtResource("icone")
+modes = 3
+type_bonus = "temporaire"
+effet = "bouclier_joueur"
+valeur = 40.0
+duree = 1
+texte_effet = "Bouclier : %s PV"

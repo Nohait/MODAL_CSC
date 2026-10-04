@@ -56,9 +56,11 @@ theme_override_font_sizes/font_size = 26
 text = "DANS LES CENDRES, UNE CHANCE"
 horizontal_alignment = 1
 
-[node name="Cartes" type="HBoxContainer" parent="Menu/Defilement/Centre/Marge/Contenu"]
+[node name="Cartes" type="GridContainer" parent="Menu/Defilement/Centre/Marge/Contenu"]
 layout_mode = 2
-theme_override_constants/separation = 30
+columns = 3
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 24
 
 [node name="Note" type="Label" parent="Menu/Defilement/Centre/Marge/Contenu"]
 layout_mode = 2

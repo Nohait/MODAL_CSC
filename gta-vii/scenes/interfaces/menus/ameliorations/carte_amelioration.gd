@@ -12,7 +12,7 @@ signal selected
 
 @export_group("Contenu")
 const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_boutique.gd")
-@export_enum("aucune", "commun", "rare", "epique") var rarete: String = "aucune":
+@export_enum("aucune", "commun", "rare", "epique", "temporaire") var rarete: String = "aucune":
 	set(valeur):
 		rarete = valeur
 		if is_node_ready():
@@ -39,11 +39,17 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_bout
 		categorie = valeur
 		if is_node_ready():
 			actualiser_contenu()
-@export var illustration: Texture2D = preload("res://assets/textures/interfaces/ameliorations/test_illustration.png"):
+@export var illustration: Texture2D = preload("res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg"):
 	set(valeur):
 		illustration = valeur
 		if is_node_ready():
 			actualiser_contenu()
+
+# Texte visible en grand pour distinguer une durée d’un soin instantané.
+@export var duree_affichee := "":
+	set(valeur):
+		duree_affichee = valeur
+		if is_node_ready(): actualiser_contenu()
 
 @export_group("Animation")
 ## Agrandissement du visuel seulement : le rectangle cliquable et les containers restent stables.
@@ -57,20 +63,21 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_bout
 @onready var image: TextureRect = $Visuel/Contenu/Organisation/Illustration/Image
 @onready var invitation: Label = $Visuel/Contenu/Organisation/Invitation
 var materiau_papier: ShaderMaterial
-var materiau_image: ShaderMaterial
 var hover_tween: Tween
 var souris_dessus := false
 var accent := 0.0
 var temps_animation := 0.0
 
 
-## Prépare une copie des matériaux par carte et connecte la souris.
+# Chaque carte possède son matériau et ses interactions.
 func _ready() -> void:
 	# Sans duplicate(), survoler une carte changerait aussi ses voisines.
 	materiau_papier = papier.material.duplicate() as ShaderMaterial
-	materiau_image = image.material.duplicate() as ShaderMaterial
+	# Les pictogrammes gardent leur transparence et leurs proportions.
+	image.material = null
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	papier.material = materiau_papier
-	image.material = materiau_image
+
 	if lecture_seule:
 		preparer_consultation()
 	resized.connect(actualiser_dimensions)
@@ -84,37 +91,38 @@ func _ready() -> void:
 	gui_input.connect(_on_gui_input)
 
 
-## Met à jour l'affichage à partir des exports, sans modifier les statistiques du joueur.
+# L’affichage lit les exports ; les effets appartiennent au gestionnaire.
 func actualiser_contenu() -> void:
 	var coloree := CATALOGUE.COULEURS.has(StringName(rarete))
 	var teinte: Color = CATALOGUE.COULEURS.get(StringName(rarete), Color.WHITE)
 	materiau_papier.set_shader_parameter("rarete_coloree", coloree)
 	materiau_papier.set_shader_parameter("teinte_rarete", teinte)
-	for materiau in [materiau_papier, materiau_image]:
-		materiau.set_shader_parameter("braises_personnalisees", coloree)
-		materiau.set_shader_parameter("teinte_braises", teinte)
+	materiau_papier.set_shader_parameter("braises_personnalisees", coloree)
+	materiau_papier.set_shader_parameter("teinte_braises", teinte)
 	$Visuel/Contenu/Organisation/Titre.text = titre
 	$Visuel/Contenu/Organisation/Description.text = description
 	$Visuel/Contenu/Organisation/Effet.text = effet_affiche
 	$Visuel/Contenu/Organisation/Entete/Categorie.text = categorie
 	image.texture = illustration
+	$Visuel/Contenu/Organisation/Duree.text = duree_affichee
+	$Visuel/Contenu/Organisation/Duree.visible = not duree_affichee.is_empty()
 	if lecture_seule:
 		invitation.text = statut
 
 
 # Même carte et mêmes shaders, dans un format plus compact pour le récapitulatif.
 func preparer_consultation() -> void:
-	custom_minimum_size = Vector2(240, 365)
+	custom_minimum_size = Vector2(240, 365 if duree_affichee.is_empty() else 430)
 	size = custom_minimum_size
 	focus_mode = Control.FOCUS_NONE
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	hover_scale = 1.0 # Éviter de déborder sur les voisines dans le défilement.
-	$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 112
+	$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 80
 	$Visuel/Contenu/Organisation.add_theme_constant_override("separation", 8)
 	for cote in ["left", "top", "right", "bottom"]:
 		$Visuel/Contenu.add_theme_constant_override("margin_" + cote, 18)
-	$Visuel/Contenu/Organisation/Titre.add_theme_font_size_override("font_size", 24)
+	$Visuel/Contenu/Organisation/Titre.add_theme_font_size_override("font_size", 22)
 	$Visuel/Contenu/Organisation/Description.add_theme_font_size_override("font_size", 13)
 	$Visuel/Contenu/Organisation/Effet.add_theme_font_size_override("font_size", 15)
 	# Réserver deux lignes même pour un effet court garde les illustrations alignées.
@@ -126,7 +134,6 @@ func preparer_consultation() -> void:
 func actualiser_dimensions() -> void:
 	visuel.pivot_offset = size / 2.0
 	materiau_papier.set_shader_parameter("taille", papier.size)
-	materiau_image.set_shader_parameter("taille", image.size)
 
 
 ## Anime les braises même si le jeu est en pause : la scène est en mode Always.
@@ -138,11 +145,10 @@ func _process(delta: float) -> void:
 	if souris_dessus and size.x > 0.0 and size.y > 0.0:
 		# Position relative dans la carte : déplace le reflet simulé sous la souris.
 		lumiere = get_local_mouse_position() / size
-	for materiau in [materiau_papier, materiau_image]:
-		materiau.set_shader_parameter("horloge", temps_animation)
-		materiau.set_shader_parameter("survol", accent)
-		materiau.set_shader_parameter("point_lumiere", lumiere)
-		materiau.set_shader_parameter("intensite_braises", intensite_braises)
+	materiau_papier.set_shader_parameter("horloge", temps_animation)
+	materiau_papier.set_shader_parameter("survol", accent)
+	materiau_papier.set_shader_parameter("point_lumiere", lumiere)
+	materiau_papier.set_shader_parameter("intensite_braises", intensite_braises)
 
 
 ## Seul le survol souris met la carte en évidence.

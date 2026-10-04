@@ -7,7 +7,7 @@ extends CanvasLayer
 @onready var invincibilite: CheckButton = %Invincibilite
 @onready var degats: CheckButton = %Degats
 @onready var points_boutique: CheckButton = %PointsBoutique
-@onready var ameliorations = $"../UpgradeManager"
+@onready var ameliorations = get_node_or_null("../UpgradeManager")
 @onready var etages: HBoxContainer = %Etages
 @onready var suivant: Button = %Suivant
 @onready var situation: Label = %Situation

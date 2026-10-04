@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b2xg0gef2a67i"]
+
+[ext_resource type="Script" uid="uid://dt8c2rdobv6gr" path="res://scenes/modes/zombie/mode_zombie.gd" id="mode"]
+
+[node name="ModeZombie" type="Node3D" unique_id=1312412869]
+script = ExtResource("mode")

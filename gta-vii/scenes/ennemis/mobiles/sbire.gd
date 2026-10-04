@@ -214,7 +214,7 @@ func suivre_cible_navigation() -> void:
 	direction.y = 0.0 # Déplacement horizontal
 	if direction.length() > 0.01:
 		# Normaliser conserve uniquement la direction.
-		velocity = direction.normalized() * vitesse_sbire
+		velocity = direction.normalized() * vitesse_sbire * multiplicateur_vitesse()
 	
 	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
 	
@@ -396,3 +396,16 @@ func afficher_degats(degats: float) -> void:
 	await popup_tween.finished
 
 	$PopUpDegats.visible = false
+
+func appliquer_gel(pourcentage: float, duree: float) -> void:
+	if est_mort: return
+	var gel = get_node_or_null("Ralentissement")
+	if gel == null:
+		gel = preload("res://scenes/effets/combat/ralentissement.gd").new()
+		gel.name = "Ralentissement"
+		add_child(gel)
+	gel.appliquer(pourcentage, duree)
+
+func multiplicateur_vitesse() -> float:
+	var gel = get_node_or_null("Ralentissement")
+	return gel.multiplicateur if gel != null else 1.0
