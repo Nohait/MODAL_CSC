@@ -1,6 +1,6 @@
 extends RefCounted
 
-# Palette partagée : un booster et les cartes qu'il contient ont la même rareté.
+# Palette partagée : les cartes tirées peuvent avoir une autre rareté que le booster.
 const COULEURS = {
 	&"commun": Color("c6ac86"),
 	&"rare": Color("569ccb"),

@@ -12,6 +12,10 @@ pictogramme = ExtResource("icone")
 modes = 3
 type_bonus = "permanent"
 effet = "jet_givre"
-valeur = 30.0
+valeur = 20.0
 duree = 0
 texte_effet = "Ralentit de %s %%"
+
+puissance_variable = false
+rarete = "epique"
+obtention_unique = true

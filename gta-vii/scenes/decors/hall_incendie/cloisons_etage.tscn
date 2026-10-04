@@ -1,0 +1,482 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/applique_murale.tscn" id="lampe"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.13, 0.15, 0.14, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(0.35, 1.4, 8)
+
+[sub_resource type="BoxShape3D" id="r3"]
+size = Vector3(0.35, 3.0, 8)
+
+[sub_resource type="BoxMesh" id="r5"]
+size = Vector3(0.4, 0.04, 8)
+
+[sub_resource type="BoxMesh" id="r6"]
+size = Vector3(0.35, 1.4, 16)
+
+[sub_resource type="BoxShape3D" id="r7"]
+size = Vector3(0.35, 3.0, 16)
+
+[sub_resource type="BoxMesh" id="r9"]
+size = Vector3(0.4, 0.04, 16)
+
+[sub_resource type="BoxMesh" id="r10"]
+size = Vector3(0.35, 1.4, 8)
+
+[sub_resource type="BoxShape3D" id="r11"]
+size = Vector3(0.35, 3.0, 8)
+
+[sub_resource type="BoxMesh" id="r13"]
+size = Vector3(0.4, 0.04, 8)
+
+[sub_resource type="BoxMesh" id="r14"]
+size = Vector3(2.795, 1.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="r15"]
+size = Vector3(3, 3.0, 0.35)
+
+[sub_resource type="BoxMesh" id="r17"]
+size = Vector3(2.795, 0.04, 0.4)
+
+[sub_resource type="BoxMesh" id="r18"]
+size = Vector3(3, 1.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="r19"]
+size = Vector3(3, 3.0, 0.35)
+
+[sub_resource type="BoxMesh" id="r21"]
+size = Vector3(3, 0.04, 0.4)
+
+[sub_resource type="BoxMesh" id="r22"]
+size = Vector3(0.35, 1.4, 8)
+
+[sub_resource type="BoxShape3D" id="r23"]
+size = Vector3(0.35, 3.0, 8)
+
+[sub_resource type="BoxMesh" id="r25"]
+size = Vector3(0.4, 0.04, 8)
+
+[sub_resource type="BoxMesh" id="r26"]
+size = Vector3(0.35, 1.4, 16)
+
+[sub_resource type="BoxShape3D" id="r27"]
+size = Vector3(0.35, 3.0, 16)
+
+[sub_resource type="BoxMesh" id="r29"]
+size = Vector3(0.4, 0.04, 16)
+
+[sub_resource type="BoxMesh" id="r30"]
+size = Vector3(0.35, 1.4, 8)
+
+[sub_resource type="BoxShape3D" id="r31"]
+size = Vector3(0.35, 3.0, 8)
+
+[sub_resource type="BoxMesh" id="r33"]
+size = Vector3(0.4, 0.04, 8)
+
+[sub_resource type="BoxMesh" id="r34"]
+size = Vector3(2.795, 1.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="r35"]
+size = Vector3(3, 3.0, 0.35)
+
+[sub_resource type="BoxMesh" id="r37"]
+size = Vector3(2.795, 0.04, 0.4)
+
+[sub_resource type="BoxMesh" id="r38"]
+size = Vector3(3, 1.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="r39"]
+size = Vector3(3, 3.0, 0.35)
+
+[sub_resource type="BoxMesh" id="r41"]
+size = Vector3(3, 0.04, 0.4)
+
+[sub_resource type="BoxMesh" id="PlintheGaucheMoins0"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheGaucheMoins1"]
+size = Vector3(0.025, 0.18, 7.795)
+
+[sub_resource type="BoxMesh" id="PlintheGaucheMoins2"]
+size = Vector3(0.025, 0.18, 7.795)
+
+[sub_resource type="BoxMesh" id="PlintheGaucheMoins3"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheGauchePlus0"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheGauchePlus1"]
+size = Vector3(0.025, 0.18, 16)
+
+[sub_resource type="BoxMesh" id="PlintheGauchePlus2"]
+size = Vector3(0.025, 0.18, 7.72)
+
+[sub_resource type="BoxMesh" id="PlintheDroiteMoins0"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheDroiteMoins1"]
+size = Vector3(0.025, 0.18, 16)
+
+[sub_resource type="BoxMesh" id="PlintheDroiteMoins2"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheDroitePlus0"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheDroitePlus1"]
+size = Vector3(0.025, 0.18, 7.795)
+
+[sub_resource type="BoxMesh" id="PlintheDroitePlus2"]
+size = Vector3(0.025, 0.18, 7.795)
+
+[sub_resource type="BoxMesh" id="PlintheDroitePlus3"]
+size = Vector3(0.025, 0.18, 7.895)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseGauche0Avant"]
+size = Vector3(2.795, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseGauche0Arriere"]
+size = Vector3(2.795, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseGauche1Avant"]
+size = Vector3(2.8949999999999996, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseGauche1Arriere"]
+size = Vector3(2.8949999999999996, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseDroite0Avant"]
+size = Vector3(2.795, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseDroite0Arriere"]
+size = Vector3(2.795, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseDroite1Avant"]
+size = Vector3(2.72, 0.18, 0.025)
+
+[sub_resource type="BoxMesh" id="PlintheTraverseDroite1Arriere"]
+size = Vector3(2.8949999999999996, 0.18, 0.025)
+
+[node name="CloisonsEtage" type="Node3D"]
+editor_description = "Hall central et quatre pièces latérales, reliées par des ouvertures de quatre mètres. Cloisons montrées en coupe pour la lisibilité de la caméra."
+
+[node name="Gauche0" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(-10, 0.7, -16.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Gauche0"]
+mesh = SubResource("r2")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Gauche0"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r3")
+
+[node name="CoupeGauche0" type="MeshInstance3D" parent="."]
+position = Vector3(-10, 1.41, -16.0)
+mesh = SubResource("r5")
+material_override = ExtResource("bois")
+
+[node name="Gauche1" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(-10, 0.7, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Gauche1"]
+mesh = SubResource("r6")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Gauche1"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r7")
+
+[node name="CoupeGauche1" type="MeshInstance3D" parent="."]
+position = Vector3(-10, 1.41, 0.0)
+mesh = SubResource("r9")
+material_override = ExtResource("bois")
+
+[node name="Gauche2" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(-10, 0.7, 16.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Gauche2"]
+mesh = SubResource("r10")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Gauche2"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r11")
+
+[node name="CoupeGauche2" type="MeshInstance3D" parent="."]
+position = Vector3(-10, 1.41, 16.0)
+mesh = SubResource("r13")
+material_override = ExtResource("bois")
+
+[node name="SeparationGauche0" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(-11.6025, 0.7, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SeparationGauche0"]
+mesh = SubResource("r14")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="SeparationGauche0"]
+position = Vector3(0.1025, 0.8, 0)
+shape = SubResource("r15")
+
+[node name="CoupeSeparationGauche0" type="MeshInstance3D" parent="."]
+position = Vector3(-11.6025, 1.41, 0)
+mesh = SubResource("r17")
+material_override = ExtResource("bois")
+
+[node name="SeparationGauche1" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(-18.5, 0.7, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SeparationGauche1"]
+mesh = SubResource("r18")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="SeparationGauche1"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r19")
+
+[node name="CoupeSeparationGauche1" type="MeshInstance3D" parent="."]
+position = Vector3(-18.5, 1.41, 0)
+mesh = SubResource("r21")
+material_override = ExtResource("bois")
+
+[node name="AppliqueGaucheFond" parent="." instance=ExtResource("lampe")]
+position = Vector3(-10.25, 1.2, -5)
+rotation = Vector3(0, -1.5707963267948966, 0)
+energie = 1.1
+
+[node name="AppliqueGaucheAvant" parent="." instance=ExtResource("lampe")]
+position = Vector3(-10.25, 1.2, 5)
+rotation = Vector3(0, -1.5707963267948966, 0)
+energie = 1.1
+
+[node name="Droite0" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(10, 0.7, -16.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Droite0"]
+mesh = SubResource("r22")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Droite0"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r23")
+
+[node name="CoupeDroite0" type="MeshInstance3D" parent="."]
+position = Vector3(10, 1.41, -16.0)
+mesh = SubResource("r25")
+material_override = ExtResource("bois")
+
+[node name="Droite1" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(10, 0.7, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Droite1"]
+mesh = SubResource("r26")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Droite1"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r27")
+
+[node name="CoupeDroite1" type="MeshInstance3D" parent="."]
+position = Vector3(10, 1.41, 0.0)
+mesh = SubResource("r29")
+material_override = ExtResource("bois")
+
+[node name="Droite2" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(10, 0.7, 16.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="Droite2"]
+mesh = SubResource("r30")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="Droite2"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r31")
+
+[node name="CoupeDroite2" type="MeshInstance3D" parent="."]
+position = Vector3(10, 1.41, 16.0)
+mesh = SubResource("r33")
+material_override = ExtResource("bois")
+
+[node name="SeparationDroite0" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(11.6025, 0.7, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SeparationDroite0"]
+mesh = SubResource("r34")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="SeparationDroite0"]
+position = Vector3(-0.1025, 0.8, 0)
+shape = SubResource("r35")
+
+[node name="CoupeSeparationDroite0" type="MeshInstance3D" parent="."]
+position = Vector3(11.6025, 1.41, 0)
+mesh = SubResource("r37")
+material_override = ExtResource("bois")
+
+[node name="SeparationDroite1" type="StaticBody3D" parent="." groups=["collider"]]
+position = Vector3(18.5, 0.7, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SeparationDroite1"]
+mesh = SubResource("r38")
+material_override = ExtResource("mur")
+
+[node name="Collision" type="CollisionShape3D" parent="SeparationDroite1"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("r39")
+
+[node name="CoupeSeparationDroite1" type="MeshInstance3D" parent="."]
+position = Vector3(18.5, 1.41, 0)
+mesh = SubResource("r41")
+material_override = ExtResource("bois")
+
+[node name="AppliqueDroiteFond" parent="." instance=ExtResource("lampe")]
+position = Vector3(10.25, 1.2, -5)
+rotation = Vector3(0, 1.5707963267948966, 0)
+energie = 1.1
+
+[node name="AppliqueDroiteAvant" parent="." instance=ExtResource("lampe")]
+position = Vector3(10.25, 1.2, 5)
+rotation = Vector3(0, 1.5707963267948966, 0)
+energie = 1.1
+
+[node name="PlintheGaucheMoins0" type="MeshInstance3D" parent="."]
+position = Vector3(-10.1925, 0.105, -15.9475)
+mesh = SubResource("PlintheGaucheMoins0")
+material_override = SubResource("r1")
+
+[node name="PlintheGaucheMoins1" type="MeshInstance3D" parent="."]
+position = Vector3(-10.1925, 0.105, -4.1025)
+mesh = SubResource("PlintheGaucheMoins1")
+material_override = SubResource("r1")
+
+[node name="PlintheGaucheMoins2" type="MeshInstance3D" parent="."]
+position = Vector3(-10.1925, 0.105, 4.1025)
+mesh = SubResource("PlintheGaucheMoins2")
+material_override = SubResource("r1")
+
+[node name="PlintheGaucheMoins3" type="MeshInstance3D" parent="."]
+position = Vector3(-10.1925, 0.105, 15.9475)
+mesh = SubResource("PlintheGaucheMoins3")
+material_override = SubResource("r1")
+
+[node name="PlintheGauchePlus0" type="MeshInstance3D" parent="."]
+position = Vector3(-9.8075, 0.105, -15.9475)
+mesh = SubResource("PlintheGauchePlus0")
+material_override = SubResource("r1")
+
+[node name="PlintheGauchePlus1" type="MeshInstance3D" parent="."]
+position = Vector3(-9.8075, 0.105, 0.0)
+mesh = SubResource("PlintheGauchePlus1")
+material_override = SubResource("r1")
+
+[node name="PlintheGauchePlus2" type="MeshInstance3D" parent="."]
+position = Vector3(-9.8075, 0.105, 15.86)
+mesh = SubResource("PlintheGauchePlus2")
+material_override = SubResource("r1")
+
+[node name="PlintheDroiteMoins0" type="MeshInstance3D" parent="."]
+position = Vector3(9.8075, 0.105, -15.9475)
+mesh = SubResource("PlintheDroiteMoins0")
+material_override = SubResource("r1")
+
+[node name="PlintheDroiteMoins1" type="MeshInstance3D" parent="."]
+position = Vector3(9.8075, 0.105, 0.0)
+mesh = SubResource("PlintheDroiteMoins1")
+material_override = SubResource("r1")
+
+[node name="PlintheDroiteMoins2" type="MeshInstance3D" parent="."]
+position = Vector3(9.8075, 0.105, 15.9475)
+mesh = SubResource("PlintheDroiteMoins2")
+material_override = SubResource("r1")
+
+[node name="PlintheDroitePlus0" type="MeshInstance3D" parent="."]
+position = Vector3(10.1925, 0.105, -15.9475)
+mesh = SubResource("PlintheDroitePlus0")
+material_override = SubResource("r1")
+
+[node name="PlintheDroitePlus1" type="MeshInstance3D" parent="."]
+position = Vector3(10.1925, 0.105, -4.1025)
+mesh = SubResource("PlintheDroitePlus1")
+material_override = SubResource("r1")
+
+[node name="PlintheDroitePlus2" type="MeshInstance3D" parent="."]
+position = Vector3(10.1925, 0.105, 4.1025)
+mesh = SubResource("PlintheDroitePlus2")
+material_override = SubResource("r1")
+
+[node name="PlintheDroitePlus3" type="MeshInstance3D" parent="."]
+position = Vector3(10.1925, 0.105, 15.9475)
+mesh = SubResource("PlintheDroitePlus3")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseGauche0Avant" type="MeshInstance3D" parent="."]
+position = Vector3(-11.6025, 0.105, -0.1925)
+mesh = SubResource("PlintheTraverseGauche0Avant")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseGauche0Arriere" type="MeshInstance3D" parent="."]
+position = Vector3(-11.6025, 0.105, 0.1925)
+mesh = SubResource("PlintheTraverseGauche0Arriere")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseGauche1Avant" type="MeshInstance3D" parent="."]
+position = Vector3(-18.447499999999998, 0.105, -0.1925)
+mesh = SubResource("PlintheTraverseGauche1Avant")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseGauche1Arriere" type="MeshInstance3D" parent="."]
+position = Vector3(-18.447499999999998, 0.105, 0.1925)
+mesh = SubResource("PlintheTraverseGauche1Arriere")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseDroite0Avant" type="MeshInstance3D" parent="."]
+position = Vector3(11.6025, 0.105, -0.1925)
+mesh = SubResource("PlintheTraverseDroite0Avant")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseDroite0Arriere" type="MeshInstance3D" parent="."]
+position = Vector3(11.6025, 0.105, 0.1925)
+mesh = SubResource("PlintheTraverseDroite0Arriere")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseDroite1Avant" type="MeshInstance3D" parent="."]
+position = Vector3(18.36, 0.105, -0.1925)
+mesh = SubResource("PlintheTraverseDroite1Avant")
+material_override = SubResource("r1")
+
+[node name="PlintheTraverseDroite1Arriere" type="MeshInstance3D" parent="."]
+position = Vector3(18.447499999999998, 0.105, 0.1925)
+mesh = SubResource("PlintheTraverseDroite1Arriere")
+material_override = SubResource("r1")

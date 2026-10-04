@@ -22,6 +22,7 @@ func _ready() -> void:
 		bouton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bouton.pressed.connect(_aller_etage.bind(numero))
 		etages.add_child(bouton)
+	_preparer_choix_ennemis()
 	_actualiser_raccourci()
 
 func ouvrir() -> void:
@@ -32,6 +33,7 @@ func ouvrir() -> void:
 	points_boutique.set_pressed_no_signal(ameliorations.points_abondants_test)
 	situation.text = "Mode zombie · Vague %d · %d ennemis restants" % [salles.vague_actuelle, salles.remaining_enemies]
 	%LibererSalle.disabled = not salles.vague_en_cours
+	_actualiser_choix_ennemis()
 	joueur.extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

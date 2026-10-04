@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/sol_beton.gdshader" id="shader"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_couleur.jpg" id="couleur"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_normal.png" id="normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_rugosite.png" id="rugosite"]
+
+[resource]
+shader = ExtResource("shader")
+shader_parameter/texture_couleur = ExtResource("couleur")
+shader_parameter/texture_normal = ExtResource("normal")
+shader_parameter/texture_rugosite = ExtResource("rugosite")
+shader_parameter/teinte = Color(0.78, 0.77, 0.74, 1)
+shader_parameter/taille_texture = 4.0
+shader_parameter/taille_variations = 5.0
+shader_parameter/intensite_relief = 0.8

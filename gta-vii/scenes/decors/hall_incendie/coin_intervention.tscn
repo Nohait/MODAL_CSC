@@ -1,0 +1,344 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/extincteur/extincteur0.blend" id="extincteur"]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.82, 0.23, 0.035, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="r2"]
+albedo_color = Color(0.76, 0.75, 0.63, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="r3"]
+albedo_color = Color(0.12, 0.11, 0.07, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r4"]
+albedo_color = Color(0.35, 0.38, 0.37, 1)
+metallic = 0.7
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="r5"]
+top_radius = 0.045
+bottom_radius = 0.22
+height = 0.65
+radial_segments = 16
+
+[sub_resource type="CylinderMesh" id="r6"]
+top_radius = 0.102
+bottom_radius = 0.145
+height = 0.14
+radial_segments = 16
+
+[sub_resource type="CylinderMesh" id="r7"]
+top_radius = 0.045
+bottom_radius = 0.045
+height = 1.0
+radial_segments = 10
+
+[sub_resource type="CylinderMesh" id="r8"]
+top_radius = 0.06
+bottom_radius = 0.045
+height = 0.45
+radial_segments = 12
+
+[sub_resource type="BoxMesh" id="r9"]
+size = Vector3(0.5, 0.08, 0.5)
+
+[sub_resource type="BoxMesh" id="r10"]
+size = Vector3(0.5, 0.08, 0.5)
+
+[sub_resource type="BoxMesh" id="r11"]
+size = Vector3(0.5, 0.08, 0.5)
+
+[node name="CoinIntervention" type="Node3D"]
+editor_description = "Matériel posé près du camion. Décor uniquement, sans interaction ni collision."
+
+[node name="Cone0" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+
+[node name="Base" type="MeshInstance3D" parent="Cone0"]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("r9")
+material_override = SubResource("r3")
+
+[node name="Corps" type="MeshInstance3D" parent="Cone0"]
+position = Vector3(0, 0.405, 0)
+mesh = SubResource("r5")
+material_override = SubResource("r1")
+
+[node name="Bande" type="MeshInstance3D" parent="Cone0"]
+position = Vector3(0, 0.465, 0)
+mesh = SubResource("r6")
+material_override = SubResource("r2")
+
+[node name="Cone1" type="Node3D" parent="."]
+position = Vector3(1.5, 0, 0.5)
+
+[node name="Base" type="MeshInstance3D" parent="Cone1"]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("r10")
+material_override = SubResource("r3")
+
+[node name="Corps" type="MeshInstance3D" parent="Cone1"]
+position = Vector3(0, 0.405, 0)
+mesh = SubResource("r5")
+material_override = SubResource("r1")
+
+[node name="Bande" type="MeshInstance3D" parent="Cone1"]
+position = Vector3(0, 0.465, 0)
+mesh = SubResource("r6")
+material_override = SubResource("r2")
+
+[node name="Cone2" type="Node3D" parent="."]
+position = Vector3(3, 0, 1)
+
+[node name="Base" type="MeshInstance3D" parent="Cone2"]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("r11")
+material_override = SubResource("r3")
+
+[node name="Corps" type="MeshInstance3D" parent="Cone2"]
+position = Vector3(0, 0.405, 0)
+mesh = SubResource("r5")
+material_override = SubResource("r1")
+
+[node name="Bande" type="MeshInstance3D" parent="Cone2"]
+position = Vector3(0, 0.465, 0)
+mesh = SubResource("r6")
+material_override = SubResource("r2")
+
+[node name="ExtincteurPose" parent="." instance=ExtResource("extincteur")]
+position = Vector3(0.8, 0.5, -0.8)
+scale = Vector3(0.6, 0.6, 0.6)
+
+[node name="Tuyau0" type="MeshInstance3D" parent="."]
+position = Vector3(0.3625, 0.065, -1.4365956453447584)
+rotation = Vector3(0, -0.7925809102152265, 1.5707963)
+scale = Vector3(1, 0.18162144390675092, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau1" type="MeshInstance3D" parent="."]
+position = Vector3(0.48750000000000004, 0.065, -1.3122235298261042)
+rotation = Vector3(0, -0.7729887662104599, 1.5707963)
+scale = Vector3(1, 0.17811569168865574, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau2" type="MeshInstance3D" parent="."]
+position = Vector3(0.6125, 0.065, -1.195067558749975)
+rotation = Vector3(0, -0.732268625135537, 1.5707963)
+scale = Vector3(1, 0.17144940841626172, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau3" type="MeshInstance3D" parent="."]
+position = Vector3(0.7375, 0.065, -1.0896299703830015)
+rotation = Vector3(0, -0.6673747799678785, 1.5707963)
+scale = Vector3(1, 0.16232749611847896, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau4" type="MeshInstance3D" parent="."]
+position = Vector3(0.8625, 0.065, -0.9999626721160448)
+rotation = Vector3(0, -0.5740424993205908, 1.5707963)
+scale = Vector3(1, 0.15183765725527376, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau5" type="MeshInstance3D" parent="."]
+position = Vector3(0.9875, 0.065, -0.9295115279355046)
+rotation = Vector3(0, -0.44795192804641853, 1.5707963)
+scale = Vector3(1, 0.1414566736162656, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau6" type="MeshInstance3D" parent="."]
+position = Vector3(1.1125, 0.065, -0.8809839358027819)
+rotation = Vector3(0, -0.28770018786940255, 1.5707963)
+scale = Vector3(1, 0.13296499739080414, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau7" type="MeshInstance3D" parent="."]
+position = Vector3(1.2375, 0.065, -0.8562447838689501)
+rotation = Vector3(0, -0.09958602002953522, 1.5707963)
+scale = Vector3(1, 0.12813485579689743, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau8" type="MeshInstance3D" parent="."]
+position = Vector3(1.3625, 0.065, -0.8562447838689501)
+rotation = Vector3(0, 0.09958602002953522, 1.5707963)
+scale = Vector3(1, 0.12813485579689743, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau9" type="MeshInstance3D" parent="."]
+position = Vector3(1.4875, 0.065, -0.8809839358027819)
+rotation = Vector3(0, 0.28770018786940255, 1.5707963)
+scale = Vector3(1, 0.13296499739080414, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau10" type="MeshInstance3D" parent="."]
+position = Vector3(1.6125, 0.065, -0.9295115279355046)
+rotation = Vector3(0, 0.44795192804641853, 1.5707963)
+scale = Vector3(1, 0.1414566736162656, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau11" type="MeshInstance3D" parent="."]
+position = Vector3(1.7375, 0.065, -0.9999626721160448)
+rotation = Vector3(0, 0.5740424993205908, 1.5707963)
+scale = Vector3(1, 0.15183765725527376, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau12" type="MeshInstance3D" parent="."]
+position = Vector3(1.8625, 0.065, -1.0896299703830015)
+rotation = Vector3(0, 0.6673747799678785, 1.5707963)
+scale = Vector3(1, 0.16232749611847896, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau13" type="MeshInstance3D" parent="."]
+position = Vector3(1.9874999999999998, 0.065, -1.195067558749975)
+rotation = Vector3(0, 0.7322686251355369, 1.5707963)
+scale = Vector3(1, 0.1714494084162614, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau14" type="MeshInstance3D" parent="."]
+position = Vector3(2.1125, 0.065, -1.3122235298261038)
+rotation = Vector3(0, 0.7729887662104592, 1.5707963)
+scale = Vector3(1, 0.17811569168865551, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau15" type="MeshInstance3D" parent="."]
+position = Vector3(2.2375, 0.065, -1.4365956453447581)
+rotation = Vector3(0, 0.7925809102152281, 1.5707963)
+scale = Vector3(1, 0.18162144390675122, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau16" type="MeshInstance3D" parent="."]
+position = Vector3(2.3625, 0.065, -1.5634043546552419)
+rotation = Vector3(0, 0.7925809102152274, 1.5707963)
+scale = Vector3(1, 0.18162144390675106, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau17" type="MeshInstance3D" parent="."]
+position = Vector3(2.4875, 0.065, -1.6877764701738958)
+rotation = Vector3(0, 0.7729887662104592, 1.5707963)
+scale = Vector3(1, 0.17811569168865551, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau18" type="MeshInstance3D" parent="."]
+position = Vector3(2.6125, 0.065, -1.8049324412500247)
+rotation = Vector3(0, 0.732268625135536, 1.5707963)
+scale = Vector3(1, 0.17144940841626158, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau19" type="MeshInstance3D" parent="."]
+position = Vector3(2.7375, 0.065, -1.9103700296169985)
+rotation = Vector3(0, 0.6673747799678796, 1.5707963)
+scale = Vector3(1, 0.16232749611847913, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau20" type="MeshInstance3D" parent="."]
+position = Vector3(2.8625, 0.065, -2.0000373278839554)
+rotation = Vector3(0, 0.5740424993205908, 1.5707963)
+scale = Vector3(1, 0.15183765725527376, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau21" type="MeshInstance3D" parent="."]
+position = Vector3(2.9875, 0.065, -2.070488472064495)
+rotation = Vector3(0, 0.4479519280464178, 1.5707963)
+scale = Vector3(1, 0.14145667361626554, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau22" type="MeshInstance3D" parent="."]
+position = Vector3(3.1125, 0.065, -2.119016064197218)
+rotation = Vector3(0, 0.28770018786940255, 1.5707963)
+scale = Vector3(1, 0.13296499739080414, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau23" type="MeshInstance3D" parent="."]
+position = Vector3(3.2375, 0.065, -2.1437552161310496)
+rotation = Vector3(0, 0.09958602002953522, 1.5707963)
+scale = Vector3(1, 0.12813485579689743, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau24" type="MeshInstance3D" parent="."]
+position = Vector3(3.3625, 0.065, -2.1437552161310496)
+rotation = Vector3(0, -0.09958602002953522, 1.5707963)
+scale = Vector3(1, 0.12813485579689743, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau25" type="MeshInstance3D" parent="."]
+position = Vector3(3.4875, 0.065, -2.119016064197218)
+rotation = Vector3(0, -0.28770018786940255, 1.5707963)
+scale = Vector3(1, 0.13296499739080414, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau26" type="MeshInstance3D" parent="."]
+position = Vector3(3.6125, 0.065, -2.070488472064495)
+rotation = Vector3(0, -0.4479519280464178, 1.5707963)
+scale = Vector3(1, 0.14145667361626554, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau27" type="MeshInstance3D" parent="."]
+position = Vector3(3.7375, 0.065, -2.0000373278839554)
+rotation = Vector3(0, -0.5740424993205908, 1.5707963)
+scale = Vector3(1, 0.15183765725527376, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau28" type="MeshInstance3D" parent="."]
+position = Vector3(3.8625, 0.065, -1.9103700296169985)
+rotation = Vector3(0, -0.6673747799678785, 1.5707963)
+scale = Vector3(1, 0.16232749611847896, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau29" type="MeshInstance3D" parent="."]
+position = Vector3(3.9875, 0.065, -1.804932441250025)
+rotation = Vector3(0, -0.732268625135535, 1.5707963)
+scale = Vector3(1, 0.1714494084162614, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau30" type="MeshInstance3D" parent="."]
+position = Vector3(4.1125, 0.065, -1.6877764701738962)
+rotation = Vector3(0, -0.7729887662104601, 1.5707963)
+scale = Vector3(1, 0.17811569168865568, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Tuyau31" type="MeshInstance3D" parent="."]
+position = Vector3(4.2375, 0.065, -1.5634043546552419)
+rotation = Vector3(0, -0.7925809102152274, 1.5707963)
+scale = Vector3(1, 0.18162144390675106, 1)
+mesh = SubResource("r7")
+material_override = SubResource("r3")
+
+[node name="Lance" type="MeshInstance3D" parent="."]
+position = Vector3(4.5, 0.08, -1.5)
+rotation = Vector3(0, 0, 1.5707963)
+mesh = SubResource("r8")
+material_override = SubResource("r4")

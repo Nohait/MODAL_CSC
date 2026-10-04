@@ -7,9 +7,16 @@ const DEBUG = preload("res://scenes/modes/zombie/interfaces/debug/debug_zombie.g
 @export var map: PackedScene = preload("res://scenes/modes/zombie/maps/map_test.tscn")
 const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 
+@export_group("Éclairage")
+@export var ambiance: Environment = preload("res://assets/materiaux/hall_incendie/ambiance_hall.tres")
+@export_range(0.0, 1.0, 0.05) var energie_soleil := 0.3
+
 func _ready() -> void:
 	# Reprendre main sans copier le joueur, le décor, les lumières ni leurs scripts.
 	var niveau = NIVEAU.instantiate()
+	# Le mode zombie garde ses réglages lumineux sans modifier ceux du jeu classique.
+	niveau.get_node("Eclairage/Ambiance").environment = ambiance
+	niveau.get_node("Eclairage/Soleil").light_energy = energie_soleil
 	# Spécialiser les systèmes communs avant leur initialisation.
 	niveau.get_node("VictimManager").set_script(preload("res://scenes/modes/zombie/victimes/escorte_zombie.gd"))
 	niveau.get_node("UpgradeManager").set_script(preload("res://scenes/modes/zombie/interfaces/boutique/boutique_zombie.gd"))

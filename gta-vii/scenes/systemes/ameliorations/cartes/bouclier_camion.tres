@@ -15,3 +15,6 @@ effet = "bouclier_camion"
 valeur = 60.0
 duree = 2
 texte_effet = "Bouclier : %s PV"
+
+puissance_variable = false
+rarete = "rare"

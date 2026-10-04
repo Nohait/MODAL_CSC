@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/traces_ecoulement.gdshader" id="shader"]
+
+[sub_resource type="ShaderMaterial" id="traces"]
+shader = ExtResource("shader")
+
+[sub_resource type="QuadMesh" id="surface"]
+size = Vector2(1.4, 0.65)
+
+[node name="TracesEcoulement" type="MeshInstance3D"]
+editor_description = "Coulures discrètes sous une fenêtre, face vers +Z. Surface sans collision."
+mesh = SubResource("surface")
+material_override = SubResource("traces")
+cast_shadow = 0

@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/mobilier/cartons.glb" id="modele"]
+
+[ext_resource type="Script" path="res://scenes/decors/hall_incendie/mobilier/cartons_noircis.gd" id="teinte"]
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(1.8464, 0.85, 1.3124)
+
+[node name="Cartons" type="StaticBody3D" groups=["collider"]]
+editor_description = "ModÃ¨le PBR importÃ©, Ã  l'Ã©chelle du joueur. La boÃ®te de collision bloque les personnages et participe au calcul de la navigation."
+script = ExtResource("teinte")
+collision_layer = 1
+collision_mask = 0
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.425, 0)
+shape = SubResource("collision")

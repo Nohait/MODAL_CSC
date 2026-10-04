@@ -13,10 +13,16 @@ extends CanvasLayer
 @onready var situation: Label = %Situation
 @onready var raccourci: Label = $"../InterfaceTest/EtatInvincibilite"
 var souris_avant: int
+const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug.gd")
+@onready var choix_ennemis: Control = $ChoixEnnemis
+@onready var bouton_ennemis: Button = %ChoisirEnnemi
+@onready var retour_ennemis: Label = %RetourEnnemis
+
 
 
 func _ready() -> void:
 	menu.hide()
+	_preparer_choix_ennemis()
 	# Un fond doré distingue le survol et les options activées du fond sombre.
 	for bouton in [invincibilite, degats, points_boutique, suivant, %LibererSalle, %Fermer]:
 		_styliser_selection(bouton)
@@ -47,7 +53,8 @@ func _input(event: InputEvent) -> void:
 			ouvrir()
 		get_viewport().set_input_as_handled()
 	elif menu.visible and event.is_action_pressed("ui_cancel"):
-		fermer()
+		if choix_ennemis.visible: _retour_debug()
+		else: fermer()
 		get_viewport().set_input_as_handled()
 
 
@@ -70,6 +77,7 @@ func ouvrir() -> void:
 	joueur.extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_actualiser_choix_ennemis()
 	menu.show()
 	get_tree().paused = true
 
@@ -78,6 +86,8 @@ func fermer() -> void:
 	if not menu.visible:
 		return
 	menu.hide()
+	choix_ennemis.hide()
+	$Menu/Centre.show()
 	Input.mouse_mode = souris_avant
 	get_tree().paused = false
 
@@ -141,3 +151,50 @@ func _liberer_salle() -> void:
 	# Reprendre le jeu permet aussi à l’animation des portes de se terminer.
 	fermer()
 	salles.liberer_salle_debug()
+
+func _preparer_choix_ennemis() -> void:
+	choix_ennemis.hide()
+	_styliser_selection(bouton_ennemis)
+	_styliser_selection(%RetourDebug)
+	bouton_ennemis.pressed.connect(_ouvrir_choix_ennemis)
+	%RetourDebug.pressed.connect(_retour_debug)
+	for categorie in ["Mobiles", "Immobiles", "Mini-boss"]:
+		var titre := Label.new()
+		titre.text = categorie.to_upper()
+		titre.add_theme_color_override("font_color", Color("e7b968"))
+		%ListeEnnemis.add_child(titre)
+		var grille := GridContainer.new()
+		grille.columns = 2
+		grille.add_theme_constant_override("h_separation", 10)
+		grille.add_theme_constant_override("v_separation", 8)
+		%ListeEnnemis.add_child(grille)
+		for ennemi in CATALOGUE.ENNEMIS:
+			if ennemi.categorie != categorie: continue
+			var bouton := Button.new()
+			bouton.text = ennemi.nom
+			bouton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			_styliser_selection(bouton)
+			# Chaque bouton garde l'identifiant du type qu'il doit créer.
+			bouton.pressed.connect(_faire_apparaitre.bind(ennemi.id, ennemi.nom))
+			grille.add_child(bouton)
+
+func _actualiser_choix_ennemis() -> void:
+	bouton_ennemis.disabled = not salles.peut_creer_ennemi_debug()
+
+func _ouvrir_choix_ennemis() -> void:
+	retour_ennemis.text = "Choisissez un ennemi. Vous pouvez en ajouter plusieurs."
+	$Menu/Centre.hide()
+	choix_ennemis.show()
+
+func _retour_debug() -> void:
+	choix_ennemis.hide()
+	$Menu/Centre.show()
+
+func _faire_apparaitre(identifiant: String, nom: String) -> void:
+	# Garder la pause pour pouvoir composer un groupe d'ennemis avant de reprendre.
+	# Différer l'ajout évite de modifier les collisions pendant le traitement du clic.
+	_ajouter_ennemi.call_deferred(identifiant, nom)
+
+func _ajouter_ennemi(identifiant: String, nom: String) -> void:
+	var succes: bool = salles.creer_ennemi_debug(identifiant)
+	retour_ennemis.text = "%s ajouté. Fermez le menu pour reprendre." % nom if succes else "Aucun emplacement libre pour cet ennemi."

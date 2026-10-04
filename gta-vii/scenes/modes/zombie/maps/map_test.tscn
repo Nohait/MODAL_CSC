@@ -1,11 +1,28 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier_pieces.tscn" id="mobilier"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/debris_etage.tscn" id="debris"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/signaletique_etage.tscn" id="signalisation"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_intervention.tscn" id="intervention"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/cloisons_etage.tscn" id="cloisons"]
+
 [ext_resource type="PackedScene" path="res://scenes/salles/salle.tscn" id="salle"]
 [ext_resource type="Script" path="res://scenes/modes/zombie/maps/map_test.gd" id="map"]
 [ext_resource type="Script" path="res://scenes/salles/entree_salle.gd" id="entree"]
 [ext_resource type="PackedScene" path="res://scenes/decors/porte_entree.tscn" id="porte"]
-[ext_resource type="Material" path="res://assets/materiaux/sol_carbonise.tres" id="sol"]
-[ext_resource type="Material" path="res://assets/materiaux/mur_abime.tres" id="mur"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_hall.tscn" id="hall"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/piliers_hall.tscn" id="piliers"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/habillage_hall.tscn" id="habillage"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/atmosphere_hall.tscn" id="atmosphere"]
 
 [sub_resource type="BoxMesh" id="MeshSol"]
 size = Vector3(40, 0.2, 40)
@@ -69,6 +86,16 @@ size = Vector3(2.5, 3, 0.5)
 
 [node name="MapTest" instance=ExtResource("salle")]
 script = ExtResource("map")
+
+[node name="CoinHall" parent="Navigation/Decor" instance=ExtResource("hall")]
+position = Vector3(-19.8, 0, 12)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="PiliersHall" parent="Navigation/Decor" instance=ExtResource("piliers")]
+
+[node name="HabillageHall" parent="Navigation/Decor" instance=ExtResource("habillage")]
+
+[node name="Atmosphere" parent="." instance=ExtResource("atmosphere")]
 
 [node name="Sol" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
 position = Vector3(0, -0.1, 0)
@@ -201,9 +228,6 @@ script = ExtResource("entree")
 [node name="Point0_0" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, -14)
 
-[node name="Point2_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, -14)
-
 [node name="Point4_0" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, -14)
 
@@ -216,17 +240,11 @@ position = Vector3(2, 0, -14)
 [node name="Point10_0" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, -14)
 
-[node name="Point12_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, -14)
-
 [node name="Point14_0" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, -14)
 
 [node name="Point0_2" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, -10)
-
-[node name="Point2_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, -10)
 
 [node name="Point4_2" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, -10)
@@ -240,17 +258,11 @@ position = Vector3(2, 0, -10)
 [node name="Point10_2" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, -10)
 
-[node name="Point12_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, -10)
-
 [node name="Point14_2" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, -10)
 
 [node name="Point0_4" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, -6)
-
-[node name="Point2_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, -6)
 
 [node name="Point4_4" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, -6)
@@ -264,32 +276,17 @@ position = Vector3(2, 0, -6)
 [node name="Point10_4" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, -6)
 
-[node name="Point12_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, -6)
-
 [node name="Point14_4" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, -6)
 
 [node name="Point0_6" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, -2)
 
-[node name="Point2_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, -2)
-
 [node name="Point4_6" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, -2)
 
-[node name="Point6_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, -2)
-
-[node name="Point8_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, -2)
-
 [node name="Point10_6" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, -2)
-
-[node name="Point12_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, -2)
 
 [node name="Point14_6" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, -2)
@@ -297,32 +294,17 @@ position = Vector3(14, 0, -2)
 [node name="Point0_8" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, 2)
 
-[node name="Point2_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, 2)
-
 [node name="Point4_8" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, 2)
 
-[node name="Point6_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, 2)
-
-[node name="Point8_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, 2)
-
 [node name="Point10_8" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, 2)
-
-[node name="Point12_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, 2)
 
 [node name="Point14_8" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, 2)
 
 [node name="Point0_10" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, 6)
-
-[node name="Point2_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, 6)
 
 [node name="Point4_10" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, 6)
@@ -336,17 +318,11 @@ position = Vector3(2, 0, 6)
 [node name="Point10_10" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, 6)
 
-[node name="Point12_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, 6)
-
 [node name="Point14_10" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, 6)
 
 [node name="Point0_12" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, 10)
-
-[node name="Point2_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, 10)
 
 [node name="Point4_12" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, 10)
@@ -360,17 +336,11 @@ position = Vector3(2, 0, 10)
 [node name="Point10_12" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, 10)
 
-[node name="Point12_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, 10)
-
 [node name="Point14_12" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, 10)
 
 [node name="Point0_14" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-14, 0, 14)
-
-[node name="Point2_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-10, 0, 14)
 
 [node name="Point4_14" type="Marker3D" parent="PointsApparition"]
 position = Vector3(-6, 0, 14)
@@ -384,9 +354,25 @@ position = Vector3(2, 0, 14)
 [node name="Point10_14" type="Marker3D" parent="PointsApparition"]
 position = Vector3(6, 0, 14)
 
-[node name="Point12_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(10, 0, 14)
-
 [node name="Point14_14" type="Marker3D" parent="PointsApparition"]
 position = Vector3(14, 0, 14)
 
+
+[node name="CloisonsEtage" parent="Navigation/Decor" instance=ExtResource("cloisons")]
+position = Vector3(0, 0, 0)
+
+[node name="CoinIntervention" parent="Navigation/Decor" instance=ExtResource("intervention")]
+position = Vector3(2.7, 0, 4.8)
+
+[node name="SignaletiqueEtage" parent="Navigation/Decor" instance=ExtResource("signalisation")]
+position = Vector3(0, 0, 0)
+
+[node name="DebrisEtage" parent="Navigation/Decor" instance=ExtResource("debris")]
+position = Vector3(0, 0, 0)
+
+[node name="MobilierPieces" parent="Navigation/Decor" instance=ExtResource("mobilier")]
+
+[node name="FeuGravatsRepos" parent="Navigation/Decor" instance=ExtResource("foyer")]
+position = Vector3(18, 0.25, 3)
+taille = 0.65
+energie = 1.5

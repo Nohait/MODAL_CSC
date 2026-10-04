@@ -1,0 +1,76 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/hud/retours_bonus.gd" id="script"]
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="papier"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="shader"]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/reserve_secours.svg" id="icone"]
+
+[sub_resource type="ShaderMaterial" id="Papier"]
+shader = ExtResource("shader")
+shader_parameter/largeur_bord = 5.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.35
+shader_parameter/rarete_coloree = true
+
+[node name="RetoursBonus" type="CanvasLayer"]
+layer = 25
+script = ExtResource("script")
+
+[node name="FlashSecours" type="ColorRect" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.2, 0.6, 1, 0)
+
+[node name="Message" type="Control" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -266.0
+offset_right = -26.0
+offset_top = 82.0
+offset_bottom = 126.0
+mouse_filter = 2
+theme = ExtResource("theme")
+
+[node name="Papier" type="TextureRect" parent="Message"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("papier")
+expand_mode = 1
+material = SubResource("Papier")
+script = ExtResource("surface")
+
+[node name="Marge" type="MarginContainer" parent="Message"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Ligne" type="HBoxContainer" parent="Message/Marge"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Icone" type="TextureRect" parent="Message/Marge/Ligne"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+texture = ExtResource("icone")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Texte" type="Label" parent="Message/Marge/Ligne"]
+layout_mode = 2
+text = "Secours utilisé"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.2, 0.12, 0.08, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+mouse_filter = 2

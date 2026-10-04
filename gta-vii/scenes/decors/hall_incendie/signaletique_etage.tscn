@@ -1,0 +1,155 @@
+[gd_scene format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.16, 0.21, 0.19, 1)
+metallic = 0.25
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="r2"]
+albedo_color = Color(0.6, 0.56, 0.43, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="r3"]
+size = Vector3(1.7, 0.27, 0.025)
+
+[sub_resource type="BoxMesh" id="r4"]
+size = Vector3(1.7, 0.27, 0.025)
+
+[sub_resource type="BoxMesh" id="r5"]
+size = Vector3(1.7, 0.27, 0.025)
+
+[sub_resource type="BoxMesh" id="r6"]
+size = Vector3(1.7, 0.27, 0.025)
+
+[sub_resource type="BoxMesh" id="r7"]
+size = Vector3(1.7, 0.27, 0.025)
+
+[sub_resource type="BoxMesh" id="r8"]
+size = Vector3(0.9, 0.65, 0.02)
+
+[sub_resource type="BoxMesh" id="r9"]
+size = Vector3(0.9, 0.65, 0.02)
+
+[node name="SignaletiqueEtage" type="Node3D"]
+
+
+[node name="Accueil" type="Node3D" parent="."]
+position = Vector3(-9.818, 1.0, -1.8)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="Support" type="MeshInstance3D" parent="Accueil"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r3")
+material_override = SubResource("r1")
+
+[node name="Titre" type="Label3D" parent="Accueil"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 26
+pixel_size = 0.0028
+text = "ACCUEIL · HALL"
+modulate = Color(0.86, 0.81, 0.64, 1)
+
+[node name="Archives" type="Node3D" parent="."]
+position = Vector3(-9.818, 1.0, -13.2)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="Support" type="MeshInstance3D" parent="Archives"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r4")
+material_override = SubResource("r1")
+
+[node name="Titre" type="Label3D" parent="Archives"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 26
+pixel_size = 0.0028
+text = "01 · ARCHIVES"
+modulate = Color(0.86, 0.81, 0.64, 1)
+
+[node name="Technique" type="Node3D" parent="."]
+position = Vector3(9.818, 1.0, -13.2)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+[node name="Support" type="MeshInstance3D" parent="Technique"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r5")
+material_override = SubResource("r1")
+
+[node name="Titre" type="Label3D" parent="Technique"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 26
+pixel_size = 0.0028
+text = "02 · LOCAL TECHNIQUE"
+modulate = Color(0.86, 0.81, 0.64, 1)
+
+[node name="Bureaux" type="Node3D" parent="."]
+position = Vector3(-9.818, 1.0, 13.2)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="Support" type="MeshInstance3D" parent="Bureaux"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r6")
+material_override = SubResource("r1")
+
+[node name="Titre" type="Label3D" parent="Bureaux"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 26
+pixel_size = 0.0028
+text = "03 · BUREAUX"
+modulate = Color(0.86, 0.81, 0.64, 1)
+
+[node name="Repos" type="Node3D" parent="."]
+position = Vector3(9.818, 1.0, 13.2)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+[node name="Support" type="MeshInstance3D" parent="Repos"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r7")
+material_override = SubResource("r1")
+
+[node name="Titre" type="Label3D" parent="Repos"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 26
+pixel_size = 0.0028
+text = "04 · SALLE DE REPOS"
+modulate = Color(0.86, 0.81, 0.64, 1)
+
+[node name="Consignes0" type="Node3D" parent="."]
+position = Vector3(-19.995, 1.8, 4)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="Affiche" type="MeshInstance3D" parent="Consignes0"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r8")
+material_override = SubResource("r2")
+
+[node name="Texte" type="Label3D" parent="Consignes0"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 24
+pixel_size = 0.002
+text = "EN CAS D’INCENDIE\nN’UTILISEZ PAS L’ASCENSEUR"
+modulate = Color(0.14, 0.17, 0.15, 1)
+
+[node name="Consignes1" type="Node3D" parent="."]
+position = Vector3(19.995, 1.8, -4)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+[node name="Affiche" type="MeshInstance3D" parent="Consignes1"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("r9")
+material_override = SubResource("r2")
+
+[node name="Texte" type="Label3D" parent="Consignes1"]
+position = Vector3(0, 0, 0.02)
+font = ExtResource("font")
+font_size = 24
+pixel_size = 0.002
+text = "ÉTAGE 01\nACCUEIL · HALL CENTRAL"
+modulate = Color(0.14, 0.17, 0.15, 1)

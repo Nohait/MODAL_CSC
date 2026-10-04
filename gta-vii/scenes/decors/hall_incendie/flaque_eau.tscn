@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/flaque_eau.gdshader" id="shader"]
+
+[sub_resource type="ShaderMaterial" id="eau"]
+shader = ExtResource("shader")
+
+[sub_resource type="QuadMesh" id="surface"]
+size = Vector2(3.6, 2.4)
+
+[node name="FlaqueEau" type="Node3D"]
+editor_description = "Eau résiduelle au sol : reflets des lumières locales, sans collision ni effet sur les déplacements."
+
+[node name="Eau" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.035, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+mesh = SubResource("surface")
+material_override = SubResource("eau")
+cast_shadow = 0

@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+
+[ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="BoxMesh" id="mesh1"]
+size = Vector3(1.6, 2.4, 0.13)
+
+[sub_resource type="BoxShape3D" id="shape1"]
+size = Vector3(1.6, 2.4, 0.13)
+
+[sub_resource type="BoxMesh" id="mesh2"]
+size = Vector3(0.16, 2.5, 0.25)
+
+[sub_resource type="BoxMesh" id="mesh3"]
+size = Vector3(0.16, 2.5, 0.25)
+
+[sub_resource type="BoxMesh" id="mesh4"]
+size = Vector3(1.9, 0.14, 0.25)
+
+[sub_resource type="BoxMesh" id="mesh5"]
+size = Vector3(1.28, 0.7, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh6"]
+size = Vector3(1.28, 0.7, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh7"]
+size = Vector3(2.05, 0.2, 0.12)
+
+[sub_resource type="BoxMesh" id="mesh8"]
+size = Vector3(2.05, 0.19, 0.12)
+
+[sub_resource type="BoxMesh" id="mesh9"]
+size = Vector3(0.22, 0.035, 0.045)
+
+[node name="PorteCondamnee" type="StaticBody3D" groups=["collider"]]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Battant" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.2, 0.08)
+mesh = SubResource("mesh1")
+material_override = ExtResource("peinture")
+
+[node name="CollisionBattant" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.2, 0.08)
+shape = SubResource("shape1")
+
+[node name="MontantGauche" type="MeshInstance3D" parent="."]
+position = Vector3(-0.88, 1.25, 0.12)
+mesh = SubResource("mesh2")
+material_override = ExtResource("metal")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="."]
+position = Vector3(0.88, 1.25, 0.12)
+mesh = SubResource("mesh3")
+material_override = ExtResource("metal")
+
+[node name="Linteau" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.48, 0.12)
+mesh = SubResource("mesh4")
+material_override = ExtResource("metal")
+
+[node name="Panneau0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.55, 0.165)
+mesh = SubResource("mesh5")
+material_override = ExtResource("peinture")
+
+[node name="Panneau1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.55, 0.165)
+mesh = SubResource("mesh6")
+material_override = ExtResource("peinture")
+
+[node name="PlancheMontante" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.25, 0.25)
+mesh = SubResource("mesh7")
+material_override = ExtResource("bois")
+rotation = Vector3(0, 0, 0.55)
+
+[node name="PlancheDescendante" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.3, 0.32)
+mesh = SubResource("mesh8")
+material_override = ExtResource("bois")
+rotation = Vector3(0, 0, -0.55)
+
+[node name="Poignee" type="MeshInstance3D" parent="."]
+position = Vector3(0.6, 1.12, 0.24)
+mesh = SubResource("mesh9")
+material_override = ExtResource("metal")
+
+[node name="Condamnation" type="Label3D" parent="."]
+position = Vector3(0, 2.72, 0.18)
+text = "ACCÈS CONDAMNÉ"
+font = ExtResource("font")
+font_size = 24
+pixel_size = 0.003
+modulate = Color(0.8, 0.72, 0.58, 1)
+outline_size = 4
+no_depth_test = false

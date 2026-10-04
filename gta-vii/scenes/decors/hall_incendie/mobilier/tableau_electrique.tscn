@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/mobilier/tableau_electrique.glb" id="modele"]
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(1.0598, 1.5, 1.2499)
+
+[node name="TableauElectrique" type="StaticBody3D" groups=["collider"]]
+editor_description = "Modèle PBR importé, à l'échelle du joueur. La boîte de collision bloque les personnages et participe au calcul de la navigation."
+collision_layer = 1
+collision_mask = 0
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.75, 0)
+shape = SubResource("collision")

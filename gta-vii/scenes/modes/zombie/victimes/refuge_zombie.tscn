@@ -4,7 +4,24 @@
 [ext_resource type="PackedScene" path="res://assets/modeles/camion_pompier/camion_pompier.glb" id="camion"]
 
 [sub_resource type="BoxShape3D" id="collision"]
-size = Vector3(1.47, 1.96, 4.06)
+size = Vector3(2.4255, 3.234, 6.699)
+
+[sub_resource type="StandardMaterial3D" id="GyroBleu"]
+albedo_color = Color(0.04, 0.2, 0.5, 1)
+emission_enabled = true
+emission = Color(0.08, 0.4, 1, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="StandardMaterial3D" id="GyroRouge"]
+albedo_color = Color(0.5, 0.04, 0.02, 1)
+emission_enabled = true
+emission = Color(1, 0.06, 0.02, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="CylinderMesh" id="GyroMesh"]
+top_radius = 0.13
+bottom_radius = 0.13
+height = 0.18
 
 [node name="Refuge" type="StaticBody3D"]
 script = ExtResource("script")
@@ -12,9 +29,40 @@ collision_layer = 9
 collision_mask = 0
 
 [node name="Modele" parent="." instance=ExtResource("camion")]
-scale = Vector3(5.8282, 5.8282, 5.8282)
-position = Vector3(0, 0, -0.17997)
+scale = Vector3(9.61653, 9.61653, 9.61653)
+position = Vector3(0, 0, -0.29695)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, 0.98, 0)
+position = Vector3(0, 1.617, 0)
 shape = SubResource("collision")
+
+[node name="Gyrophares" type="Node3D" parent="."]
+position = Vector3(0, 2.706, 2.145)
+
+[node name="Bleu" type="MeshInstance3D" parent="Gyrophares"]
+position = Vector3(-0.7095, 0, 0)
+mesh = SubResource("GyroMesh")
+material_override = SubResource("GyroBleu")
+
+[node name="Lumiere" type="OmniLight3D" parent="Gyrophares/Bleu"]
+visible = false
+light_color = Color(0.08, 0.4, 1, 1)
+light_energy = 2.5
+omni_range = 3.5
+
+[node name="Rouge" type="MeshInstance3D" parent="Gyrophares"]
+position = Vector3(0.7095, 0, 0)
+mesh = SubResource("GyroMesh")
+material_override = SubResource("GyroRouge")
+
+[node name="Lumiere" type="OmniLight3D" parent="Gyrophares/Rouge"]
+visible = false
+light_color = Color(1, 0.06, 0.02, 1)
+light_energy = 2.5
+omni_range = 3.5
+
+[node name="EclairageRefuge" type="OmniLight3D" parent="."]
+position = Vector3(1.8, 3.8, 2.2)
+light_color = Color(1, 0.87, 0.69, 1)
+light_energy = 0.4
+omni_range = 4.5

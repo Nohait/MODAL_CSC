@@ -1,0 +1,117 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/hall_incendie/foyer_incendie.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/feu/kenney/flame_01.png" id="flamme"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/fumee_hall.gdshader" id="fumee"]
+
+[sub_resource type="StandardMaterial3D" id="feu"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 1
+albedo_texture = ExtResource("flamme")
+emission_enabled = true
+emission = Color(1, 0.32, 0.035, 1)
+emission_texture = ExtResource("flamme")
+emission_energy_multiplier = 1.8
+
+[sub_resource type="QuadMesh" id="langue"]
+size = Vector2(0.38, 0.65)
+material = SubResource("feu")
+
+[sub_resource type="Gradient" id="fondu_feu"]
+offsets = PackedFloat32Array(0, 0.15, 0.55, 1)
+colors = PackedColorArray(1, 0.7, 0.2, 0, 1, 0.65, 0.12, 0.85, 1, 0.24, 0.025, 0.6, 0.4, 0.045, 0.01, 0)
+
+[sub_resource type="ShaderMaterial" id="nuage"]
+shader = ExtResource("fumee")
+
+[sub_resource type="QuadMesh" id="voile"]
+size = Vector2(0.9, 0.9)
+material = SubResource("nuage")
+
+[sub_resource type="Gradient" id="fondu_fumee"]
+offsets = PackedFloat32Array(0, 0.18, 0.65, 1)
+colors = PackedColorArray(0.12, 0.1, 0.09, 0, 0.12, 0.1, 0.09, 0.24, 0.17, 0.15, 0.13, 0.13, 0.2, 0.18, 0.16, 0)
+
+[sub_resource type="StandardMaterial3D" id="braise"]
+shading_mode = 0
+transparency = 1
+vertex_color_use_as_albedo = true
+billboard_mode = 1
+albedo_color = Color(1, 0.3, 0.025, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.015, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="QuadMesh" id="grain"]
+size = Vector2(0.025, 0.035)
+material = SubResource("braise")
+
+[sub_resource type="Gradient" id="fondu_braises"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 0.6, 0.1, 0, 1, 0.5, 0.05, 0.8, 1, 0.15, 0.01, 0.5, 1, 0.1, 0.01, 0)
+
+[node name="FoyerIncendie" type="Node3D"]
+editor_description = "Incendie dÃ©coratif : flammes, fumÃ©e ascendante, braises et Ã©clairage local. Aucun dÃ©gÃ¢t ni obstacle de navigation. Taille et lumiÃ¨re se rÃ¨glent indÃ©pendamment."
+script = ExtResource("script")
+
+[node name="Flammes" type="CPUParticles3D" parent="."]
+position = Vector3(0, 0.15, 0)
+amount = 24
+lifetime = 1.0
+preprocess = 1.0
+mesh = SubResource("langue")
+emission_shape = 3
+emission_box_extents = Vector3(0.42, 0.04, 0.25)
+direction = Vector3(0, 1, 0)
+spread = 12.0
+gravity = Vector3(0, 0.15, 0)
+initial_velocity_min = 0.45
+initial_velocity_max = 0.8
+scale_amount_min = 0.6
+scale_amount_max = 1.1
+color_ramp = SubResource("fondu_feu")
+cast_shadow = 0
+
+[node name="Fumee" type="CPUParticles3D" parent="."]
+position = Vector3(0, 0.5, 0)
+amount = 10
+lifetime = 3.5
+preprocess = 2.0
+mesh = SubResource("voile")
+emission_shape = 3
+emission_box_extents = Vector3(0.3, 0.1, 0.2)
+direction = Vector3(0.08, 1, 0)
+spread = 14.0
+gravity = Vector3(0.025, 0.06, 0)
+initial_velocity_min = 0.35
+initial_velocity_max = 0.55
+scale_amount_min = 0.6
+scale_amount_max = 1.3
+color_ramp = SubResource("fondu_fumee")
+cast_shadow = 0
+
+[node name="Braises" type="CPUParticles3D" parent="."]
+position = Vector3(0, 0.2, 0)
+amount = 12
+lifetime = 2.0
+preprocess = 1.0
+mesh = SubResource("grain")
+emission_shape = 3
+emission_box_extents = Vector3(0.35, 0.1, 0.2)
+direction = Vector3(0, 1, 0)
+spread = 25.0
+gravity = Vector3(0.03, 0.05, 0)
+initial_velocity_min = 0.35
+initial_velocity_max = 0.8
+color_ramp = SubResource("fondu_braises")
+cast_shadow = 0
+
+[node name="Lumiere" type="OmniLight3D" parent="."]
+position = Vector3(0, 0.45, 0)
+light_color = Color(1, 0.38, 0.09, 1)
+light_energy = 1.8
+shadow_enabled = true
+omni_range = 5.0
+omni_attenuation = 1.5

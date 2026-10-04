@@ -9,7 +9,13 @@ extends Resource
 @export var active := true
 @export_enum("permanent", "temporaire") var type_bonus := "permanent"
 @export_enum("degats", "charge", "recharge", "vie_max", "soin_joueur", "soin_victimes", "blindage_camion", "bouclier_camion", "jet_givre", "dernier_souffle", "bouclier_joueur", "reserve_secours", "escorte_agile", "sirene") var effet := "degats"
-# Valeur à puissance 100 %. Les raretés multiplient ce nombre.
+@export_group("Obtention et rareté")
+@export var obtention_unique := false
+# Les statistiques existent en trois versions ; les autres cartes gardent leur effet fixe.
+@export var puissance_variable := true
+@export_enum("commun", "rare", "epique") var rarete := "rare"
+@export_group("Puissance")
+# Valeur à 100 %, ou effet exact si Puissance variable est décoché.
 @export_range(0.0, 1000.0, 1.0) var valeur := 20.0
 # Zéro pour un soin immédiat ; sinon nombre de prochaines salles/vagues.
 @export_range(0, 20) var duree := 0

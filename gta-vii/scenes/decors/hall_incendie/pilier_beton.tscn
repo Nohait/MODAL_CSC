@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/pilier_beton.glb" id="modele"]
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(0.32, 2.9, 0.32)
+
+[node name="PilierBeton" type="StaticBody3D" groups=["collider"]]
+editor_description = "Colonne de béton de 2,9 m, isolée du scan : aucun plafond ne masque le joueur. La collision simple est aussi utilisée lors de la cuisson du navmesh."
+collision_layer = 1
+collision_mask = 0
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.45, 0)
+shape = SubResource("collision")

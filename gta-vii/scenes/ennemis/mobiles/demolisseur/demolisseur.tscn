@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mobiles/demolisseur/golem_lave_jeu.glb" id="2"]
+[sub_resource type="CapsuleShape3D" id="Corps"]
+radius = 0.8
+height = 2.6
+[sub_resource type="SphereShape3D" id="Detection"]
+radius = 20.0
+[sub_resource type="CylinderMesh" id="Disque"]
+top_radius = 1.6
+bottom_radius = 1.6
+height = 0.015
+radial_segments = 48
+[sub_resource type="StandardMaterial3D" id="Annonce"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.28, 0.04, 0.12)
+
+[node name="Demolisseur" type="CharacterBody3D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+vie_max = 200.0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Corps")
+[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
+path_desired_distance = 1.5
+target_desired_distance = 0.7
+radius = 0.8
+[node name="Sketchfab_Scene" type="Node3D" parent="."]
+[node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
+[node name="droplet" type="Node3D" parent="."]
+[node name="SurfaceDetection" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection"]
+shape = SubResource("Detection")
+[node name="PointExclamationRouge" type="Node3D" parent="."]
+[node name="PopUpDegats" type="Label3D" parent="."]
+visible = false
+billboard = 1
+no_depth_test = true
+[node name="ZoneImpact" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("Disque")
+material_override = SubResource("Annonce")
+cast_shadow = 0

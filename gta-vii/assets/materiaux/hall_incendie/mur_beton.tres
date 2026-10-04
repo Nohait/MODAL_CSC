@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_3/concrete_wall_009_diff_2k.jpg" id="couleur"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_3/concrete_wall_009_nor_gl_2k.png" id="normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_3/concrete_wall_009_rough_2k.png" id="rugosite"]
+
+[resource]
+albedo_color = Color(0.83, 0.82, 0.79, 1)
+albedo_texture = ExtResource("couleur")
+roughness = 1.0
+roughness_texture = ExtResource("rugosite")
+roughness_texture_channel = 0
+normal_enabled = true
+normal_texture = ExtResource("normal")
+uv1_scale = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true

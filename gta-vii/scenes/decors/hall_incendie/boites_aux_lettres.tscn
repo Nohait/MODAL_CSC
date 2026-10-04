@@ -1,0 +1,323 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+
+[ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="StandardMaterial3D" id="peinture_sombre"]
+albedo_color = Color(0.23, 0.25, 0.22, 1)
+metallic = 0.4
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="mesh1"]
+size = Vector3(2.6, 1.35, 0.28)
+
+[sub_resource type="BoxMesh" id="mesh2"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh3"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh4"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh5"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh6"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh7"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh8"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh9"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh10"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh11"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh12"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh13"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh14"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh15"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh16"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh17"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh18"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh19"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh20"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh21"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh22"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh23"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh24"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh25"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh26"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh27"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh28"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh29"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh30"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh31"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh32"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh33"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh34"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[sub_resource type="BoxMesh" id="mesh35"]
+size = Vector3(0.6, 0.39, 0.035)
+
+[sub_resource type="BoxMesh" id="mesh36"]
+size = Vector3(0.42, 0.025, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh37"]
+size = Vector3(0.24, 0.055, 0.008)
+
+[node name="BoitesAuxLettres" type="Node3D"]
+
+
+[node name="Coffret" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.48, 0.14)
+mesh = SubResource("mesh1")
+material_override = ExtResource("metal")
+
+[node name="Boite00" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.05, 0.295)
+mesh = SubResource("mesh2")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente00" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.13, 0.32)
+mesh = SubResource("mesh3")
+material_override = ExtResource("bois")
+
+[node name="Etiquette00" type="MeshInstance3D" parent="."]
+position = Vector3(-0.99, 0.985, 0.322)
+mesh = SubResource("mesh4")
+material_override = ExtResource("peinture")
+
+[node name="Boite01" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.05, 0.295)
+mesh = SubResource("mesh5")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente01" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.13, 0.32)
+mesh = SubResource("mesh6")
+material_override = ExtResource("bois")
+
+[node name="Etiquette01" type="MeshInstance3D" parent="."]
+position = Vector3(-0.35, 0.985, 0.322)
+mesh = SubResource("mesh7")
+material_override = ExtResource("peinture")
+
+[node name="Boite02" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.05, 0.295)
+mesh = SubResource("mesh8")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente02" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.13, 0.32)
+mesh = SubResource("mesh9")
+material_override = ExtResource("bois")
+
+[node name="Etiquette02" type="MeshInstance3D" parent="."]
+position = Vector3(0.29, 0.985, 0.322)
+mesh = SubResource("mesh10")
+material_override = ExtResource("peinture")
+
+[node name="Boite03" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.05, 0.295)
+mesh = SubResource("mesh11")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente03" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.13, 0.32)
+mesh = SubResource("mesh12")
+material_override = ExtResource("bois")
+
+[node name="Etiquette03" type="MeshInstance3D" parent="."]
+position = Vector3(0.93, 0.985, 0.322)
+mesh = SubResource("mesh13")
+material_override = ExtResource("peinture")
+
+[node name="Boite10" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.48, 0.295)
+mesh = SubResource("mesh14")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente10" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.56, 0.32)
+mesh = SubResource("mesh15")
+material_override = ExtResource("bois")
+
+[node name="Etiquette10" type="MeshInstance3D" parent="."]
+position = Vector3(-0.99, 1.415, 0.322)
+mesh = SubResource("mesh16")
+material_override = ExtResource("peinture")
+
+[node name="Boite11" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.48, 0.295)
+mesh = SubResource("mesh17")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente11" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.56, 0.32)
+mesh = SubResource("mesh18")
+material_override = ExtResource("bois")
+
+[node name="Etiquette11" type="MeshInstance3D" parent="."]
+position = Vector3(-0.35, 1.415, 0.322)
+mesh = SubResource("mesh19")
+material_override = ExtResource("peinture")
+
+[node name="Boite12" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.48, 0.295)
+mesh = SubResource("mesh20")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente12" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.56, 0.32)
+mesh = SubResource("mesh21")
+material_override = ExtResource("bois")
+
+[node name="Etiquette12" type="MeshInstance3D" parent="."]
+position = Vector3(0.29, 1.415, 0.322)
+mesh = SubResource("mesh22")
+material_override = ExtResource("peinture")
+
+[node name="Boite13" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.48, 0.295)
+mesh = SubResource("mesh23")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente13" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.56, 0.32)
+mesh = SubResource("mesh24")
+material_override = ExtResource("bois")
+
+[node name="Etiquette13" type="MeshInstance3D" parent="."]
+position = Vector3(0.93, 1.415, 0.322)
+mesh = SubResource("mesh25")
+material_override = ExtResource("peinture")
+
+[node name="Boite20" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.91, 0.295)
+mesh = SubResource("mesh26")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente20" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 1.99, 0.32)
+mesh = SubResource("mesh27")
+material_override = ExtResource("bois")
+
+[node name="Etiquette20" type="MeshInstance3D" parent="."]
+position = Vector3(-0.99, 1.845, 0.322)
+mesh = SubResource("mesh28")
+material_override = ExtResource("peinture")
+
+[node name="Boite21" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.91, 0.295)
+mesh = SubResource("mesh29")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente21" type="MeshInstance3D" parent="."]
+position = Vector3(-0.32, 1.99, 0.32)
+mesh = SubResource("mesh30")
+material_override = ExtResource("bois")
+
+[node name="Etiquette21" type="MeshInstance3D" parent="."]
+position = Vector3(-0.35, 1.845, 0.322)
+mesh = SubResource("mesh31")
+material_override = ExtResource("peinture")
+
+[node name="Boite22" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.91, 0.295)
+mesh = SubResource("mesh32")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente22" type="MeshInstance3D" parent="."]
+position = Vector3(0.32, 1.99, 0.32)
+mesh = SubResource("mesh33")
+material_override = ExtResource("bois")
+
+[node name="Etiquette22" type="MeshInstance3D" parent="."]
+position = Vector3(0.29, 1.845, 0.322)
+mesh = SubResource("mesh34")
+material_override = ExtResource("peinture")
+
+[node name="Boite23" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.91, 0.295)
+mesh = SubResource("mesh35")
+material_override = SubResource("peinture_sombre")
+
+[node name="Fente23" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 1.99, 0.32)
+mesh = SubResource("mesh36")
+material_override = ExtResource("bois")
+
+[node name="Etiquette23" type="MeshInstance3D" parent="."]
+position = Vector3(0.93, 1.845, 0.322)
+mesh = SubResource("mesh37")
+material_override = ExtResource("peinture")
+
+[node name="Titre" type="Label3D" parent="."]
+position = Vector3(0, 2.35, 0.2)
+text = "RÉSIDENCE · HALL"
+font = ExtResource("font")
+font_size = 28
+pixel_size = 0.003
+modulate = Color(0.8, 0.72, 0.58, 1)
+outline_size = 4
+no_depth_test = false

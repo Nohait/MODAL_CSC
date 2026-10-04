@@ -13,6 +13,8 @@ extends ProgressBar
 @onready var remplissage: TextureRect = $Remplissage
 @onready var texte_valeur: Label = $Valeur
 var animation_degats: Tween
+var bouclier := 0.0
+var couche_bouclier: TextureRect
 
 func _ready() -> void:
 	# Chaque jauge a son matériau : rougir la vie ne doit pas rougir la mousse.
@@ -28,6 +30,12 @@ func actualiser_valeur(_nouvelle_valeur: float = 0.0) -> void:
 	remplissage.material.set_shader_parameter("proportion", proportion)
 	remplissage.material.set_shader_parameter("teinte", couleur)
 	texte_valeur.text = "%d / %d" % [ceili(value), ceili(max_value)]
+	if bouclier > 0.0:
+		texte_valeur.text += " (+%d)" % ceili(bouclier)
+	if is_instance_valid(couche_bouclier):
+		# 40 PV de bouclier couvrent 40 % d'une barre de 100 PV, même à vie réduite.
+		couche_bouclier.material.set_shader_parameter("proportion", clampf(bouclier / maxf(max_value, 1.0), 0.0, 1.0))
+		couche_bouclier.visible = bouclier > 0.0
 
 func afficher_recharge(active: bool) -> void:
 	remplissage.material.set_shader_parameter("recharge", active)
@@ -43,3 +51,19 @@ func reagir_aux_degats(_degats: float) -> void:
 
 func _regler_impact(intensite: float) -> void:
 	remplissage.material.set_shader_parameter("impact", intensite)
+
+func afficher_bouclier(reserve: float) -> void:
+	bouclier = maxf(0.0, reserve)
+	if couche_bouclier == null and bouclier > 0.0:
+		# Dupliquer seulement le remplissage garde exactement sa position et son relief.
+		couche_bouclier = remplissage.duplicate()
+		couche_bouclier.name = "CoucheBouclier"
+		couche_bouclier.material = remplissage.material.duplicate()
+		couche_bouclier.material.set_shader_parameter("teinte", Color("59bde8"))
+		couche_bouclier.material.set_shader_parameter("impact", 0.0)
+		couche_bouclier.material.set_shader_parameter("recharge", false)
+		add_child(couche_bouclier)
+		move_child(couche_bouclier, remplissage.get_index() + 1)
+		# L'espace réservé au nombre accueille aussi les PV de protection.
+		texte_valeur.offset_left = -190.0
+	actualiser_valeur()

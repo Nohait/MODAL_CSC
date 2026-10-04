@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/pilier_beton.tscn" id="pilier"]
+
+[node name="PiliersHall" type="Node3D"]
+editor_description = "Deux rangées de trois colonnes alignées. L'allée centrale reste dégagée entre l'entrée et le camion ; les allées latérales permettent de contourner les ennemis."
+
+[node name="GaucheAvant" parent="." instance=ExtResource("pilier")]
+position = Vector3(-6, 0, 8)
+
+[node name="GaucheCentre" parent="." instance=ExtResource("pilier")]
+position = Vector3(-6, 0, 0)
+
+[node name="GaucheFond" parent="." instance=ExtResource("pilier")]
+position = Vector3(-6, 0, -8)
+
+[node name="DroiteAvant" parent="." instance=ExtResource("pilier")]
+position = Vector3(6, 0, 8)
+
+[node name="DroiteCentre" parent="." instance=ExtResource("pilier")]
+position = Vector3(6, 0, 0)
+
+[node name="DroiteFond" parent="." instance=ExtResource("pilier")]
+position = Vector3(6, 0, -8)

@@ -11,3 +11,7 @@ description = "Augmente la vie maximale du pompier."
 pictogramme = ExtResource("icone")
 effet = "vie_max"
 texte_effet = "+%s PV maximum"
+
+puissance_variable = false
+rarete = "rare"
+obtention_unique = true

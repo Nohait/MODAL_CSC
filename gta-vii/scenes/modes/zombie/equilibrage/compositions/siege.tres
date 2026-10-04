@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3 uid="uid://cff8pe5wjghiq"]
+
+[ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
+[ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
+[ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]
+[ext_resource type="Script" uid="uid://c27ul18w1nbp2" path="res://scenes/modes/zombie/equilibrage/type_ennemi_vague.gd" id="type"]
+
+[sub_resource type="Resource" id="Type_demolisseur"]
+script = ExtResource("type")
+scene = ExtResource("demolisseur")
+hauteur = 1.45
+premiere_vague = 5
+cout_difficulte = 3
+poids_tirage = 20.0
+minimum = 1
+maximum = 2
+
+[sub_resource type="Resource" id="Type_artilleur"]
+script = ExtResource("type")
+scene = ExtResource("artilleur")
+hauteur = 1.45
+premiere_vague = 5
+cout_difficulte = 2
+poids_tirage = 20.0
+minimum = 1
+maximum = 3
+
+[sub_resource type="Resource" id="Type_sbire"]
+script = ExtResource("type")
+scene = ExtResource("sbire")
+poids_tirage = 60.0
+minimum = 1
+script_zombie = ExtResource("aggro_sbire")
+
+[resource]
+script = ExtResource("composition")
+titre = "Siège"
+premiere_vague = 5
+poids = 3.0
+ennemis = Array[ExtResource("type")]([SubResource("Type_demolisseur"), SubResource("Type_artilleur"), SubResource("Type_sbire")])

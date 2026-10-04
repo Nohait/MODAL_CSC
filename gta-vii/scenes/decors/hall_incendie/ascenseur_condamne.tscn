@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/ascenseur.glb" id="modele"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="BoxMesh" id="planche"]
+size = Vector3(2.1, 0.2, 0.1)
+
+[node name="AscenseurCondamne" type="Node3D"]
+editor_description = "Façade d'ascenseur importée. Une planche et l'inscription signalent qu'il est condamné. Aucune interaction ni cabine derrière le mur."
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+
+[node name="Planche" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.25, 0.29)
+rotation = Vector3(0, 0, -0.25)
+mesh = SubResource("planche")
+material_override = ExtResource("bois")
+
+[node name="HorsService" type="Label3D" parent="."]
+position = Vector3(0, 2.86, 0.22)
+text = "ASCENSEUR · HORS SERVICE"
+font = ExtResource("font")
+font_size = 24
+pixel_size = 0.003
+modulate = Color(0.8, 0.72, 0.58, 1)
+outline_size = 4
+no_depth_test = false

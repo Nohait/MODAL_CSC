@@ -329,7 +329,7 @@ func actualiser_sauvetage(delta: float) -> void:
 	# Proportion écoulée : 0 au début, 0.5 à mi-parcours, 1 à la fin.
 	var proportion_ecoulee: float = 1.0 - salle.temps_sauvetage_restant / salle.duree_sauvetage
 	for victime in (salle.get_node("Victimes").get_children()):
-		if not is_instance_valid(victime) or victime.is_queued_for_deletion() or victime.est_morte or victime.is_freed:
+		if not is_instance_valid(victime) or victime.is_queued_for_deletion() or not victime.is_in_group("victime") or victime.est_morte or victime.is_freed:
 			continue
 		# Un seul cri au passage de la moitié du timer, quelle que soit la durée de la salle.
 		var mi_parcours: float = salle.duree_sauvetage / 2.0
@@ -411,7 +411,7 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 	if (salle != salle_actuelle or transition_en_cours):
 		salle.mobiles_a_creer.append(emplacement)
 	else:
-		creer_sbire(salle, emplacement)
+		creer_mobile(salle, emplacement)
 	if salle == salle_actuelle:
 		actualiser_objectifs()
 
@@ -434,7 +434,11 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 	salle.vagues_planifiees.clear()
 	salle.apparitions_planifiees.clear()
 	for emplacement in positions:
-		creer_sbire(salle, emplacement)
+		creer_mobile(salle, emplacement)
+
+func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
+	# Le mode classique conserve ses sbires ; le mode zombie spécialise ce choix.
+	creer_sbire(salle, emplacement)
 
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
 	var sbire = SBIRE_SCENE.instantiate()
@@ -708,3 +712,53 @@ func liberer_salle_debug() -> void:
 			danger.queue_free()
 	# Utiliser la fin normale ouvre les portes, actualise le HUD et démarre le guidage.
 	actualiser_objectifs()
+
+func peut_creer_ennemi_debug() -> bool:
+	return is_instance_valid(salle_actuelle) and not transition_en_cours and not salle_actuelle.liberee
+
+func creer_ennemi_debug(identifiant: String) -> bool:
+	if not peut_creer_ennemi_debug(): return false
+	var description: Dictionary = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug.gd").trouver(identifiant)
+	if description.is_empty(): return false
+	var ennemi = description.scene.instantiate()
+	if identifiant == "flaque": ennemi.choisir_taille_aleatoire()
+	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
+	positions.sort_custom(func(a: Vector3, b: Vector3):
+		return salle_actuelle.to_global(a).distance_squared_to(joueur.global_position) < salle_actuelle.to_global(b).distance_squared_to(joueur.global_position))
+	# Tester la vraie collision du modèle, avec son éventuel décalage et sa taille.
+	var collision: CollisionShape3D = ennemi.get_node("CollisionShape3D")
+	var requete := PhysicsShapeQueryParameters3D.new()
+	requete.shape = collision.shape
+	requete.collision_mask = 15
+	for emplacement in positions:
+		# Ne pas occuper la place d'une apparition déjà prévue par une vague.
+		if salle_actuelle.mobiles_a_creer.has(emplacement) or salle_actuelle.mobiles_annonces.has(emplacement): continue
+		if not emplacement_suffisamment_eloigne(salle_actuelle, emplacement): continue
+		ennemi.position = emplacement + Vector3.UP * description.hauteur
+		requete.transform = salle_actuelle.global_transform * ennemi.transform * collision.transform
+		if not salle_actuelle.get_world_3d().direct_space_state.intersect_shape(requete, 1).is_empty(): continue
+		# Les zones de détection utilisent aussi la couche 16 : ne pas les confondre
+		# avec les flaques lorsqu'on cherche un emplacement sans danger.
+		var dans_flaque := false
+		for flaque in get_tree().get_nodes_in_group("flaque"):
+			if flaque.is_queued_for_deletion() or not salle_actuelle.is_ancestor_of(flaque): continue
+			if flaque.global_position.distance_to(salle_actuelle.to_global(emplacement)) < flaque.hitbox_radius + 1.2:
+				dans_flaque = true
+				break
+		if dans_flaque: continue
+		salle_actuelle.remaining_enemies += 1
+		if identifiant == "sbire":
+			# Cette fonction est spécialisée dans le mode zombie pour l'aggro du camion.
+			ennemi.free()
+			creer_sbire(salle_actuelle, emplacement)
+		else:
+			ennemi.etage = salle_actuelle.etage
+			if identifiant == "tourelle": ennemi.projectiles_tour = salle_actuelle.get_node("ProjectilesTour")
+			ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
+			salle_actuelle.get_node("Ennemis").add_child(ennemi)
+			var agent = ennemi.get_node_or_null("NavigationAgent")
+			if agent: agent.set_navigation_map(salle_actuelle.carte_ennemis)
+		actualiser_objectifs()
+		return true
+	ennemi.free()
+	return false

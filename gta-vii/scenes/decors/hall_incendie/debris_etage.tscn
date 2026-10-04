@@ -1,0 +1,107 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/gravats_beton.tscn" id="gravats"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+
+[ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+
+[sub_resource type="BoxMesh" id="r1"]
+size = Vector3(1.3, 0.08, 0.09)
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(1.3, 0.08, 0.09)
+
+[sub_resource type="BoxMesh" id="r3"]
+size = Vector3(0.09, 0.08, 1)
+
+[sub_resource type="BoxMesh" id="r4"]
+size = Vector3(0.09, 0.08, 1)
+
+[sub_resource type="BoxMesh" id="r5"]
+size = Vector3(1.3, 0.4, 0.7)
+
+[sub_resource type="BoxShape3D" id="r6"]
+size = Vector3(1.3, 0.4, 0.7)
+
+[sub_resource type="BoxMesh" id="r7"]
+size = Vector3(0.35, 0.29, 0.04)
+
+[sub_resource type="BoxMesh" id="r8"]
+size = Vector3(0.35, 0.29, 0.04)
+
+[sub_resource type="BoxMesh" id="r9"]
+size = Vector3(0.35, 0.29, 0.04)
+
+[node name="DebrisEtage" type="Node3D"]
+
+
+[node name="GravatsArchives" parent="." instance=ExtResource("gravats")]
+position = Vector3(-17.5, 0, -3)
+scale = Vector3(0.65, 0.65, 0.65)
+rotation = Vector3(0, 0.4, 0)
+
+[node name="GravatsTechnique" parent="." instance=ExtResource("gravats")]
+position = Vector3(17.5, 0, -16)
+scale = Vector3(0.9, 0.7, 0.8)
+rotation = Vector3(0, 1.3, 0)
+
+[node name="GravatsRepos" parent="." instance=ExtResource("gravats")]
+position = Vector3(18, 0, 3)
+scale = Vector3(0.6, 0.6, 0.6)
+rotation = Vector3(0, 2.1, 0)
+
+[node name="CadreTombe" type="Node3D" parent="."]
+position = Vector3(-17.5, 0.06, -4.5)
+rotation = Vector3(0, 0.45, 0)
+
+[node name="Haut" type="MeshInstance3D" parent="CadreTombe"]
+position = Vector3(0, 0, -0.5)
+mesh = SubResource("r1")
+material_override = ExtResource("bois")
+
+[node name="Bas" type="MeshInstance3D" parent="CadreTombe"]
+position = Vector3(0, 0, 0.5)
+mesh = SubResource("r2")
+material_override = ExtResource("bois")
+
+[node name="Gauche" type="MeshInstance3D" parent="CadreTombe"]
+position = Vector3(-0.605, 0, 0)
+mesh = SubResource("r3")
+material_override = ExtResource("bois")
+
+[node name="Droite" type="MeshInstance3D" parent="CadreTombe"]
+position = Vector3(0.605, 0, 0)
+mesh = SubResource("r4")
+material_override = ExtResource("bois")
+
+[node name="MeubleRenverse" type="Node3D" parent="."]
+position = Vector3(17.5, 0.25, -17.8)
+rotation = Vector3(0.12, -0.4, 0.1)
+
+[node name="Corps" type="StaticBody3D" parent="MeubleRenverse" groups=["collider"]]
+position = Vector3(0, 0, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="MeubleRenverse/Corps"]
+mesh = SubResource("r5")
+material_override = ExtResource("peinture")
+
+[node name="Collision" type="CollisionShape3D" parent="MeubleRenverse/Corps"]
+shape = SubResource("r6")
+
+[node name="Tiroir0" type="MeshInstance3D" parent="MeubleRenverse"]
+position = Vector3(-0.4, 0.03, 0.37)
+mesh = SubResource("r7")
+material_override = ExtResource("bois")
+
+[node name="Tiroir1" type="MeshInstance3D" parent="MeubleRenverse"]
+position = Vector3(0, 0.03, 0.37)
+mesh = SubResource("r8")
+material_override = ExtResource("bois")
+
+[node name="Tiroir2" type="MeshInstance3D" parent="MeubleRenverse"]
+position = Vector3(0.4, 0.03, 0.37)
+mesh = SubResource("r9")
+material_override = ExtResource("bois")

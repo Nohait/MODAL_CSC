@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/carreau_manquant.gdshader" id="shader"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_couleur.jpg" id="beton"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_normal.png" id="normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/hall_incendie/sol_beton_rugosite.png" id="rugosite"]
+
+[sub_resource type="ShaderMaterial" id="materiau"]
+shader = ExtResource("shader")
+shader_parameter/beton = ExtResource("beton")
+shader_parameter/normale = ExtResource("normal")
+shader_parameter/rugosite = ExtResource("rugosite")
+
+[sub_resource type="QuadMesh" id="surface"]
+size = Vector2(0.5, 0.5)
+
+[node name="CarreauManquant" type="Node3D"]
+editor_description = "Béton apparent à la place d'un carreau de 50 cm. Centrer sur la grille du sol (0,25 + multiples de 0,5), sans changer l'échelle. Aucun trou physique."
+
+[node name="BetonApparent" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.018, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+mesh = SubResource("surface")
+material_override = SubResource("materiau")
+cast_shadow = 0

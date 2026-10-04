@@ -16,3 +16,6 @@ valeur = 12.0
 duree = 0
 texte_effet = "Rayon : %s mètres"
 duree_effet = 3.0
+
+puissance_variable = false
+rarete = "epique"

@@ -15,3 +15,6 @@ effet = "escorte_agile"
 valeur = 20.0
 duree = 0
 texte_effet = "+%s %% de vitesse"
+
+puissance_variable = false
+rarete = "commun"

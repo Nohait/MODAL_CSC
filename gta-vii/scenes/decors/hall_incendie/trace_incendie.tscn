@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/trace_incendie.gdshader" id="shader"]
+
+[sub_resource type="ShaderMaterial" id="trace"]
+shader = ExtResource("shader")
+resource_local_to_scene = true
+
+[sub_resource type="QuadMesh" id="mesh1"]
+size = Vector2(3.8, 3.0)
+
+[node name="TraceIncendie" type="Node3D"]
+
+
+[node name="Suie" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.014, 0)
+mesh = SubResource("mesh1")
+material_override = SubResource("trace")
+cast_shadow = 0
+rotation = Vector3(-1.570796, 0, 0)

@@ -107,7 +107,59 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Passer à l'étage suivant"
 
+[node name="ChoisirEnnemi" type="Button" parent="Menu/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Faire apparaître un ennemi…"
+
 [node name="Fermer" type="Button" parent="Menu/Centre/Panneau/Marge/Contenu"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reprendre — I / Échap"
+
+[node name="ChoixEnnemis" type="Control" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+[node name="Centre" type="CenterContainer" parent="ChoixEnnemis"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+[node name="Panneau" type="PanelContainer" parent="ChoixEnnemis/Centre"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Fond")
+[node name="Marge" type="MarginContainer" parent="ChoixEnnemis/Centre/Panneau"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_bottom = 20
+[node name="Contenu" type="VBoxContainer" parent="ChoixEnnemis/Centre/Panneau/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 14
+[node name="Titre" type="Label" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+text = "CHOISIR UN ENNEMI"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.88, 0.65, 1)
+[node name="ListeEnnemis" type="VBoxContainer" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+[node name="RetourEnnemis" type="Label" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 42)
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 15
+[node name="RetourDebug" type="Button" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Retour au menu de test"

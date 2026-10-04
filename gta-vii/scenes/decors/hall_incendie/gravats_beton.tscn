@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/gravats_beton.glb" id="modele"]
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(1.65, 0.52, 1.8)
+
+[node name="GravatsBeton" type="StaticBody3D" groups=["collider"]]
+editor_description = "Trois fragments couchés au sol, avec leurs textures PBR d'origine. Une seule boîte de collision évite de calculer la physique de chaque triangle."
+collision_layer = 1
+collision_mask = 0
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0.05, 0.26, -0.05)
+shape = SubResource("collision")

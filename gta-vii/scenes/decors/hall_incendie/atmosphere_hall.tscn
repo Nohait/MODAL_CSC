@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/fumee_hall.gdshader" id="fumee"]
+
+[sub_resource type="StandardMaterial3D" id="cendre"]
+shading_mode = 0
+transparency = 1
+billboard_mode = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.67, 0.56, 0.4, 0.5)
+
+[sub_resource type="QuadMesh" id="grain"]
+size = Vector2(0.025, 0.018)
+material = SubResource("cendre")
+
+[sub_resource type="Gradient" id="fondu_cendres"]
+offsets = PackedFloat32Array(0, 0.2, 0.8, 1)
+colors = PackedColorArray(0.5, 0.45, 0.37, 0, 0.7, 0.6, 0.44, 0.6, 0.55, 0.5, 0.4, 0.4, 0.5, 0.45, 0.37, 0)
+
+[sub_resource type="ShaderMaterial" id="nuage"]
+shader = ExtResource("fumee")
+
+[sub_resource type="QuadMesh" id="voile"]
+size = Vector2(1.2, 1.2)
+material = SubResource("nuage")
+
+[sub_resource type="Gradient" id="fondu_fumee"]
+offsets = PackedFloat32Array(0, 0.25, 0.75, 1)
+colors = PackedColorArray(0.42, 0.43, 0.43, 0, 0.42, 0.43, 0.43, 0.1, 0.42, 0.43, 0.43, 0.07, 0.42, 0.43, 0.43, 0)
+
+[node name="AtmosphereHall" type="Node3D"]
+editor_description = "Quelques cendres et deux sources de fumée très légère. Effets visuels seulement, sans collisions ni dégâts."
+
+[node name="Cendres" type="CPUParticles3D" parent="."]
+position = Vector3(0, 1, 0)
+amount = 48
+lifetime = 12.0
+preprocess = 4.0
+mesh = SubResource("grain")
+emission_shape = 3
+emission_box_extents = Vector3(18, 1.5, 18)
+direction = Vector3(0.3, 1, 0.1)
+spread = 35.0
+gravity = Vector3(0.02, 0.015, 0)
+initial_velocity_min = 0.08
+initial_velocity_max = 0.22
+color_ramp = SubResource("fondu_cendres")
+cast_shadow = 0
+
+[node name="FumeeGravats" type="CPUParticles3D" parent="."]
+position = Vector3(-18, 0.25, 11)
+amount = 8
+lifetime = 7.0
+preprocess = 2.0
+mesh = SubResource("voile")
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.1, 0.6)
+direction = Vector3(0.12, 1, 0)
+spread = 15.0
+gravity = Vector3(0.01, 0.02, 0)
+initial_velocity_min = 0.12
+initial_velocity_max = 0.2
+scale_amount_min = 0.5
+scale_amount_max = 1.1
+color_ramp = SubResource("fondu_fumee")
+cast_shadow = 0
+
+[node name="FumeeFond" type="CPUParticles3D" parent="."]
+position = Vector3(0.4, 0.2, -18.2)
+amount = 6
+lifetime = 8.0
+preprocess = 3.0
+mesh = SubResource("voile")
+emission_shape = 3
+emission_box_extents = Vector3(0.45, 0.1, 0.4)
+direction = Vector3(-0.1, 1, 0)
+spread = 15.0
+gravity = Vector3(0.01, 0.01, 0)
+initial_velocity_min = 0.1
+initial_velocity_max = 0.2
+scale_amount_min = 0.4
+scale_amount_max = 0.9
+color_ramp = SubResource("fondu_fumee")
+cast_shadow = 0

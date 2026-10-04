@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/ennemis/mobiles/kamikaze/kamikaze.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mobiles/kamikaze/crane_demoniaque.glb" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flames.tscn" id="3"]
+[sub_resource type="SphereShape3D" id="Corps"]
+radius = 0.36
+[sub_resource type="SphereShape3D" id="Detection"]
+radius = 20.0
+[node name="Kamikaze" type="CharacterBody3D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 15
+script = ExtResource("1")
+vie_max = 35.0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Corps")
+[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
+path_desired_distance = 1.5
+target_desired_distance = 0.7
+radius = 0.36
+[node name="Sketchfab_Scene" type="Node3D" parent="."]
+[node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
+[node name="droplet" type="Node3D" parent="."]
+[node name="SurfaceDetection" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection"]
+shape = SubResource("Detection")
+[node name="PointExclamationRouge" type="Node3D" parent="."]
+[node name="PopUpDegats" type="Label3D" parent="."]
+visible = false
+billboard = 1
+no_depth_test = true
+
+[node name="Flammes" parent="." instance=ExtResource("3")]
+position = Vector3(0, 0.05, 0)
+scale = Vector3(0.36, 0.36, 0.36)
+
+[node name="Lueur" type="OmniLight3D" parent="Flammes"]
+light_color = Color(1, 0.25, 0.04, 1)
+light_energy = 2.0
+omni_range = 3.0
+shadow_enabled = false

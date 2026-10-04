@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/fenetre_usee.glb" id="modele"]
+[ext_resource type="Script" path="res://scenes/decors/hall_incendie/fenetre_hall.gd" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="fond"]
+albedo_color = Color(0.035, 0.055, 0.075, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="renfoncement"]
+size = Vector3(1.41, 1.79, 0.06)
+
+[node name="FenetreHall" type="Node3D"]
+script = ExtResource("script")
+editor_description = "Fenêtre usée importée, avec son vitrage texturé. Le fond sombre masque le mur sous les parties transparentes du verre."
+
+[node name="FondSombre" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.725, 0.03)
+mesh = SubResource("renfoncement")
+material_override = SubResource("fond")
+
+[node name="Modele" parent="." instance=ExtResource("modele")]
+position = Vector3(0, 0.8, 0)
+
+[node name="LumiereExterieure" type="SpotLight3D" parent="."]
+position = Vector3(0, 2.35, 0.4)
+rotation = Vector3(-0.4, 3.1415927, 0)
+light_color = Color(0.58, 0.72, 1, 1)
+light_energy = 3.0
+shadow_enabled = true
+spot_range = 13.0
+spot_angle = 32.0
+spot_attenuation = 1.2

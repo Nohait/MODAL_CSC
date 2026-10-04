@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/caisses/wooden_planks_diff_2k.png" id="couleur"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/caisses/wooden_planks_nor_gl_2k.png" id="normal"]
+
+[resource]
+albedo_color = Color(0.35, 0.29, 0.22, 1)
+albedo_texture = ExtResource("couleur")
+roughness = 0.95
+normal_enabled = true
+normal_texture = ExtResource("normal")
+normal_scale = 0.5
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv1_scale = Vector3(0.8, 0.8, 0.8)

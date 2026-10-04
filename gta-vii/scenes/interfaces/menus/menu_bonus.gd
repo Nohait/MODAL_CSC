@@ -16,6 +16,8 @@ const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelior
 @onready var papier: TextureRect = $Menu/Panneau/Papier
 var temps_braises := 0.0
 var souris_avant: int
+var pause_avant := false
+@onready var statistiques = %Statistiques
 var animation: Tween
 var animation_raccourci: Tween
 var accent_survol := 0.0
@@ -61,18 +63,24 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed("menu_bonus") or event.is_action_pressed("ui_cancel"):
 			fermer_menu()
 			get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("menu_bonus") and not get_tree().paused:
+	elif event.is_action_pressed("menu_bonus") and peut_ouvrir():
 		ouvrir_menu()
 		get_viewport().set_input_as_handled()
 
 
+func peut_ouvrir() -> bool:
+	if menu.visible or not is_instance_valid(gestionnaire.player) or gestionnaire.player.est_mort:
+		return false
+	# La boutique permet la consultation, mais pas pendant l'ouverture d'un booster.
+	var en_boutique: bool = upgrades.boutique_ouverte and not upgrades.choix_ouverts and upgrades.boutique.visible
+	if get_tree().paused: return en_boutique
+	return not get_parent().get_node("Salles/RoomManager").transition_en_cours
+
 func ouvrir_menu() -> void:
-	# Ne pas suspendre la préparation de la navigation pendant un changement de salle.
-	if get_parent().get_node("Salles/RoomManager").transition_en_cours:
-		return
-	# Ne pas superposer ce menu à celui d'évacuation, qui possède déjà la pause.
-	if menu.visible or get_tree().paused or not is_instance_valid(gestionnaire.player):
-		return
+	if not peut_ouvrir(): return
+	pause_avant = get_tree().paused
+	fermer.text = "Retour à la boutique" if pause_avant else "Reprendre"
+	gestionnaire.player.extincteur.stop_primary_attack()
 	actualiser_affichage()
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -96,7 +104,7 @@ func ouvrir_menu() -> void:
 
 
 func fermer_menu() -> void:
-	# Seul le menu qui a ouvert la pause a le droit de la retirer.
+	# Restaurer la pause précédente : la boutique doit rester en pause au retour.
 	if not menu.visible:
 		return
 	if animation:
@@ -106,7 +114,7 @@ func fermer_menu() -> void:
 	raccourci.show()
 	fermer.release_focus()
 	Input.mouse_mode = souris_avant
-	get_tree().paused = false
+	get_tree().paused = pause_avant
 
 
 func actualiser_affichage() -> void:
@@ -114,6 +122,7 @@ func actualiser_affichage() -> void:
 	var joueur = gestionnaire.player
 	if not is_instance_valid(joueur):
 		return
+	statistiques.actualiser(joueur, upgrades)
 	# Compter seulement les améliorations acquises pour cette partie.
 	var nombre := 0
 	for niveau in upgrades.niveaux.values():
@@ -138,7 +147,7 @@ func actualiser_affichage() -> void:
 		carte.titre = definition.titre
 		carte.description = definition.description
 		carte.illustration = definition.pictogramme
-		carte.rarete = &"temporaire" if temporaire else acquisition.rarete
+		carte.rarete = acquisition.rarete
 		carte.categorie = definition.type_bonus.to_upper()
 		carte.effet_affiche = upgrades.formater_effet(definition.identifiant, acquisition.gain)
 		if definition.effet in ["bouclier_camion", "bouclier_joueur"]:

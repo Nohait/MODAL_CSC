@@ -38,7 +38,11 @@ var delais_impacts: Dictionary = {}
 ## Quantité de charge consommée par seconde de tir.
 @export_range(0.0, 100.0, 0.1, "or_greater") var consumption_rate: float = 25.0
 ## Quantité récupérée par seconde, réglable indépendamment de la consommation.
-@export_range(0.1, 100.0, 0.1, "or_greater") var reload_rate: float = 50.0
+@export_range(0.1, 100.0, 0.1, "or_greater") var reload_rate: float = 20.0
+
+## Une courte attente après le tir empêche de recharger entre deux clics rapides.
+@export_range(0.0, 2.0, 0.05) var delai_avant_recharge := 0.25
+var attente_recharge := 0.0
 
 @export_group("Attaque")
 ## Dégâts de base par impact, avant le bonus d'escorte et la variation aléatoire.
@@ -69,6 +73,8 @@ func _ready() -> void:
 	particles.process_material = particles.process_material.duplicate()
 	particles.draw_pass_1 = particles.draw_pass_1.duplicate()
 	particles.draw_pass_1.material = particles.draw_pass_1.material.duplicate()
+	# La couleur des particules doit être lue par le matériau de leur mesh.
+	particles.draw_pass_1.material.vertex_color_use_as_albedo = true
 	# Travailler en mètres, sans subir l'échelle 0.11 du parent AttaquePrincipale.
 	particles.top_level = true
 	damage_area.top_level = true
@@ -107,6 +113,7 @@ func start_primary_attack() -> void:
 	if not is_overheated and not is_attacking:
 		portions_jet.append(Vector2.ZERO)
 		is_attacking = true
+		attente_recharge = delai_avant_recharge
 		particles.emitting = true
 
 
@@ -137,13 +144,17 @@ func _physics_process(delta: float) -> void:
 	if Input.is_key_label_pressed(KEY_M):
 		modifier(15,2.8)
 	if is_attacking:
+		attente_recharge = delai_avant_recharge
 		charge -= consumption_rate * delta
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true
 			stop_primary_attack()
 	else:
-		charge += reload_rate * delta
+		# Recharger uniquement la portion de cette frame située après l'attente.
+		var temps_recharge := maxf(0.0, delta - attente_recharge)
+		attente_recharge = maxf(0.0, attente_recharge - delta)
+		charge += reload_rate * temps_recharge
 		if charge >= max_charge:
 			charge = max_charge
 			is_overheated = false

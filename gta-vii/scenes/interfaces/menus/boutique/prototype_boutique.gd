@@ -5,6 +5,7 @@ signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
 signal catalogue_debug_demande
 signal continuer_demande
+signal bonus_demandes
 
 const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
 const OUVERTURE = preload("res://scenes/interfaces/menus/ouverture_booster.tscn")
@@ -18,7 +19,7 @@ const POLICE_ITALIQUE = preload("res://assets/fonts/Almendra-BoldItalic.ttf")
 # Pourcentage du bonus de base, et non un ajout direct de 50 % aux dégâts.
 @export_range(0, 300, 10) var puissance_commune := 50.0
 @export_range(0, 300, 10) var puissance_rare := 100.0
-@export_range(0, 300, 10) var puissance_epique := 150.0
+@export_range(0, 300, 10) var puissance_epique := 200.0
 @export var points_demo := 3
 @export var mode_demonstration := true
 # Fourni par l’UpgradeManager avant l’ajout à l’arbre, dans la vraie boutique.
@@ -135,6 +136,14 @@ func _ready() -> void:
 	retour.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(retour)
 	if not mode_demonstration:
+		var bonus = BOUTON.instantiate()
+		bonus.name = "ConsulterBonus"
+		bonus.taille_police = 18
+		bonus.custom_minimum_size = Vector2(300, 40)
+		bonus.text = "Mes bonus et statistiques [B]"
+		bonus.focus_mode = Control.FOCUS_NONE
+		bonus.pressed.connect(func(): bonus_demandes.emit())
+		contenu.add_child(bonus)
 		var continuer = BOUTON.instantiate()
 		continuer.taille_police = 18
 		continuer.custom_minimum_size = Vector2(300, 40)

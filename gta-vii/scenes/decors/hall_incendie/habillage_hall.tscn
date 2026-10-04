@@ -1,0 +1,888 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/traces_ecoulement.tscn" id="ecoulement"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/carreau_manquant.tscn" id="carreau"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/flaque_eau.tscn" id="eau"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/eclats_verre.tscn" id="verre"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/tuyaux_muraux.tscn" id="tuyaux"]
+
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
+
+[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="bois"]
+
+[ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/applique_murale.tscn" id="lampe"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/fenetre_hall.tscn" id="fenetre"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/porte_condamnee.tscn" id="porte"]
+
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/boites_aux_lettres.tscn" id="boites"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/ascenseur_condamne.tscn" id="ascenseur"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/trace_incendie.tscn" id="trace"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/fissures_beton.tscn" id="fissures"]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/trace_incendie.gdshader" id="suie"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
+
+[sub_resource type="StandardMaterial3D" id="soubassement"]
+albedo_color = Color(0.23, 0.245, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="joints"]
+albedo_color = Color(0.1, 0.1, 0.085, 1)
+roughness = 1.0
+
+[sub_resource type="ShaderMaterial" id="suie_verticale"]
+shader = ExtResource("suie")
+shader_parameter/graine = 3.2
+
+[sub_resource type="BoxMesh" id="mesh1"]
+size = Vector3(39.945, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="mesh4"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh5"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh6"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh7"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh8"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh9"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh10"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh11"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh12"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh13"]
+size = Vector3(40, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="mesh16"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh17"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh18"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh19"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh20"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh21"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh22"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh23"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh24"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh25"]
+size = Vector3(40, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="mesh28"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh29"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh30"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh31"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh32"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh33"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh34"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh35"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh36"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh37"]
+size = Vector3(18.7225, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="mesh40"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh41"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh42"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh43"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh44"]
+size = Vector3(18.7225, 0.68, 0.025)
+
+[sub_resource type="BoxMesh" id="mesh47"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh48"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh49"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="BoxMesh" id="mesh50"]
+size = Vector3(0.028, 2.26, 0.018)
+
+[sub_resource type="QuadMesh" id="mesh51"]
+size = Vector2(2.5, 1.0)
+
+[sub_resource type="QuadMesh" id="mesh52"]
+size = Vector2(2.5, 1.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[sub_resource type="BoxMesh" id="PlintheNord0Partie0"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheNord1Partie0"]
+size = Vector3(8.775, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheNord1Partie1"]
+size = Vector3(8.775, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheNord2Partie0"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteNord0Partie0"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteNord1Partie0"]
+size = Vector3(8.775, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteNord1Partie1"]
+size = Vector3(8.775, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteNord2Partie0"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheGauche0Partie0"]
+size = Vector3(16.88, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheGauche0Partie1"]
+size = Vector3(0.7750000000000017, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheGauche1Partie0"]
+size = Vector3(19.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteGauche0Partie0"]
+size = Vector3(16.88, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteGauche0Partie1"]
+size = Vector3(0.7750000000000017, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteGauche1Partie0"]
+size = Vector3(19.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheDroit0Partie0"]
+size = Vector3(17.88, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheDroit1Partie0"]
+size = Vector3(14.745000000000001, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheDroit1Partie1"]
+size = Vector3(2.849999999999998, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteDroit0Partie0"]
+size = Vector3(17.88, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteDroit1Partie0"]
+size = Vector3(14.745000000000001, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteDroit1Partie1"]
+size = Vector3(2.849999999999998, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheSudGauche0Partie0"]
+size = Vector3(6.73, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheSudGauche1Partie0"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteSudGauche0Partie0"]
+size = Vector3(6.73, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteSudGauche1Partie0"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheSudDroit0Partie0"]
+size = Vector3(9.695, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="PlintheSudDroit1Partie0"]
+size = Vector3(8.545, 0.14, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteSudDroit0Partie0"]
+size = Vector3(9.695, 0.05, 0.035)
+
+[sub_resource type="BoxMesh" id="BaguetteSudDroit1Partie0"]
+size = Vector3(8.545, 0.05, 0.035)
+
+[node name="HabillageHall" type="Node3D"]
+editor_description = "Décor du hall : plinthes, soubassement, fenêtres à vitrage sombre, portes condamnées, appliques et mobilier. Les instances peuvent être déplacées dans l'éditeur."
+
+
+[node name="Nord" type="Node3D" parent="."]
+position = Vector3(0, 0, -20)
+rotation = Vector3(0, 0, 0)
+
+[node name="PartieBasse" type="MeshInstance3D" parent="Nord"]
+position = Vector3(0, 0.34, 0.015)
+mesh = SubResource("mesh1")
+material_override = SubResource("soubassement")
+
+[node name="Joint0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-16, 1.84, 0.01)
+mesh = SubResource("mesh4")
+material_override = SubResource("joints")
+
+[node name="Joint1" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-12, 1.84, 0.01)
+mesh = SubResource("mesh5")
+material_override = SubResource("joints")
+
+[node name="Joint2" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-8, 1.84, 0.01)
+mesh = SubResource("mesh6")
+material_override = SubResource("joints")
+
+[node name="Joint3" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-4, 1.84, 0.01)
+mesh = SubResource("mesh7")
+material_override = SubResource("joints")
+
+[node name="Joint4" type="MeshInstance3D" parent="Nord"]
+position = Vector3(0, 1.84, 0.01)
+mesh = SubResource("mesh8")
+material_override = SubResource("joints")
+
+[node name="Joint5" type="MeshInstance3D" parent="Nord"]
+position = Vector3(4, 1.84, 0.01)
+mesh = SubResource("mesh9")
+material_override = SubResource("joints")
+
+[node name="Joint6" type="MeshInstance3D" parent="Nord"]
+position = Vector3(8, 1.84, 0.01)
+mesh = SubResource("mesh10")
+material_override = SubResource("joints")
+
+[node name="Joint7" type="MeshInstance3D" parent="Nord"]
+position = Vector3(12, 1.84, 0.01)
+mesh = SubResource("mesh11")
+material_override = SubResource("joints")
+
+[node name="Joint8" type="MeshInstance3D" parent="Nord"]
+position = Vector3(16, 1.84, 0.01)
+mesh = SubResource("mesh12")
+material_override = SubResource("joints")
+
+[node name="Gauche" type="Node3D" parent="."]
+position = Vector3(-20, 0, 0)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="PartieBasse" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(0, 0.34, 0.015)
+mesh = SubResource("mesh13")
+material_override = SubResource("soubassement")
+
+[node name="Joint0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-16, 1.84, 0.01)
+mesh = SubResource("mesh16")
+material_override = SubResource("joints")
+
+[node name="Joint1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-12, 1.84, 0.01)
+mesh = SubResource("mesh17")
+material_override = SubResource("joints")
+
+[node name="Joint2" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-8, 1.84, 0.01)
+mesh = SubResource("mesh18")
+material_override = SubResource("joints")
+
+[node name="Joint3" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-4, 1.84, 0.01)
+mesh = SubResource("mesh19")
+material_override = SubResource("joints")
+
+[node name="Joint4" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(0, 1.84, 0.01)
+mesh = SubResource("mesh20")
+material_override = SubResource("joints")
+
+[node name="Joint5" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(4, 1.84, 0.01)
+mesh = SubResource("mesh21")
+material_override = SubResource("joints")
+
+[node name="Joint6" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(8, 1.84, 0.01)
+mesh = SubResource("mesh22")
+material_override = SubResource("joints")
+
+[node name="Joint7" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(12, 1.84, 0.01)
+mesh = SubResource("mesh23")
+material_override = SubResource("joints")
+
+[node name="Joint8" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(16, 1.84, 0.01)
+mesh = SubResource("mesh24")
+material_override = SubResource("joints")
+
+[node name="Droit" type="Node3D" parent="."]
+position = Vector3(20, 0, 0)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+[node name="PartieBasse" type="MeshInstance3D" parent="Droit"]
+position = Vector3(0, 0.34, 0.015)
+mesh = SubResource("mesh25")
+material_override = SubResource("soubassement")
+
+[node name="Joint0" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-16, 1.84, 0.01)
+mesh = SubResource("mesh28")
+material_override = SubResource("joints")
+
+[node name="Joint1" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-12, 1.84, 0.01)
+mesh = SubResource("mesh29")
+material_override = SubResource("joints")
+
+[node name="Joint2" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-8, 1.84, 0.01)
+mesh = SubResource("mesh30")
+material_override = SubResource("joints")
+
+[node name="Joint3" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-4, 1.84, 0.01)
+mesh = SubResource("mesh31")
+material_override = SubResource("joints")
+
+[node name="Joint4" type="MeshInstance3D" parent="Droit"]
+position = Vector3(0, 1.84, 0.01)
+mesh = SubResource("mesh32")
+material_override = SubResource("joints")
+
+[node name="Joint5" type="MeshInstance3D" parent="Droit"]
+position = Vector3(4, 1.84, 0.01)
+mesh = SubResource("mesh33")
+material_override = SubResource("joints")
+
+[node name="Joint6" type="MeshInstance3D" parent="Droit"]
+position = Vector3(8, 1.84, 0.01)
+mesh = SubResource("mesh34")
+material_override = SubResource("joints")
+
+[node name="Joint7" type="MeshInstance3D" parent="Droit"]
+position = Vector3(12, 1.84, 0.01)
+mesh = SubResource("mesh35")
+material_override = SubResource("joints")
+
+[node name="Joint8" type="MeshInstance3D" parent="Droit"]
+position = Vector3(16, 1.84, 0.01)
+mesh = SubResource("mesh36")
+material_override = SubResource("joints")
+
+[node name="SudGauche" type="Node3D" parent="."]
+position = Vector3(-10.625, 0, 20)
+rotation = Vector3(0, 3.141592653589793, 0)
+
+[node name="PartieBasse" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(-0.01375, 0.34, 0.015)
+mesh = SubResource("mesh37")
+material_override = SubResource("soubassement")
+
+[node name="Joint0" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(-5, 1.84, 0.01)
+mesh = SubResource("mesh40")
+material_override = SubResource("joints")
+
+[node name="Joint1" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(-1, 1.84, 0.01)
+mesh = SubResource("mesh41")
+material_override = SubResource("joints")
+
+[node name="Joint2" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(3, 1.84, 0.01)
+mesh = SubResource("mesh42")
+material_override = SubResource("joints")
+
+[node name="Joint3" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(7, 1.84, 0.01)
+mesh = SubResource("mesh43")
+material_override = SubResource("joints")
+
+[node name="SudDroit" type="Node3D" parent="."]
+position = Vector3(10.625, 0, 20)
+rotation = Vector3(0, 3.141592653589793, 0)
+
+[node name="PartieBasse" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(0.01375, 0.34, 0.015)
+mesh = SubResource("mesh44")
+material_override = SubResource("soubassement")
+
+[node name="Joint0" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(-5, 1.84, 0.01)
+mesh = SubResource("mesh47")
+material_override = SubResource("joints")
+
+[node name="Joint1" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(-1, 1.84, 0.01)
+mesh = SubResource("mesh48")
+material_override = SubResource("joints")
+
+[node name="Joint2" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(3, 1.84, 0.01)
+mesh = SubResource("mesh49")
+material_override = SubResource("joints")
+
+[node name="Joint3" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(7, 1.84, 0.01)
+mesh = SubResource("mesh50")
+material_override = SubResource("joints")
+
+[node name="FenetreNord" parent="." instance=ExtResource("fenetre")]
+position = Vector3(-12, 0, -19.96)
+rotation = Vector3(0, 0, 0)
+vitre_cassee = true
+
+
+[node name="FenetreNord2" parent="." instance=ExtResource("fenetre")]
+position = Vector3(12, 0, -19.96)
+rotation = Vector3(0, 0, 0)
+lumiere_incendie = true
+
+
+[node name="FenetreGauche" parent="." instance=ExtResource("fenetre")]
+position = Vector3(-19.96, 0, -8)
+rotation = Vector3(0, 1.5707963267948966, 0)
+vitre_cassee = true
+
+
+[node name="FenetreDroit" parent="." instance=ExtResource("fenetre")]
+position = Vector3(19.96, 0, -10)
+rotation = Vector3(0, -1.5707963267948966, 0)
+lumiere_incendie = true
+
+
+[node name="FenetreDroit2" parent="." instance=ExtResource("fenetre")]
+position = Vector3(19.96, 0, 8)
+rotation = Vector3(0, -1.5707963267948966, 0)
+vitre_cassee = true
+
+
+[node name="PorteNord" parent="." instance=ExtResource("porte")]
+position = Vector3(0, 0, -19.96)
+rotation = Vector3(0, 0, 0)
+
+
+[node name="SuieNord" type="Node3D" parent="."]
+position = Vector3(0, 0, -19.96)
+rotation = Vector3(0, 0, 0)
+
+[node name="Trace" type="MeshInstance3D" parent="SuieNord"]
+position = Vector3(0, 2.48, 0.035)
+mesh = SubResource("mesh51")
+material_override = SubResource("suie_verticale")
+cast_shadow = 0
+
+[node name="PorteGauche" parent="." instance=ExtResource("porte")]
+position = Vector3(-19.96, 0, 2)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+
+[node name="SuieGauche" type="Node3D" parent="."]
+position = Vector3(-19.96, 0, 2)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+[node name="Trace" type="MeshInstance3D" parent="SuieGauche"]
+position = Vector3(0, 2.48, 0.035)
+mesh = SubResource("mesh52")
+material_override = SubResource("suie_verticale")
+cast_shadow = 0
+
+[node name="PorteDroit" parent="." instance=ExtResource("porte")]
+position = Vector3(19.96, 0, -1)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+
+[node name="PorteSud" parent="." instance=ExtResource("porte")]
+position = Vector3(-9, 0, 19.96)
+rotation = Vector3(0, 3.141592653589793, 0)
+
+
+[node name="Applique0" parent="." instance=ExtResource("lampe")]
+position = Vector3(-19.87, 2.35, -16)
+rotation = Vector3(0, 1.5707963267948966, 0)
+allumee = true
+
+[node name="Applique1" parent="." instance=ExtResource("lampe")]
+position = Vector3(-19.87, 2.35, 4)
+rotation = Vector3(0, 1.5707963267948966, 0)
+allumee = false
+
+[node name="Applique2" parent="." instance=ExtResource("lampe")]
+position = Vector3(19.87, 2.35, -16)
+rotation = Vector3(0, -1.5707963267948966, 0)
+allumee = true
+couleur = Color(0.75, 0.83, 1, 1)
+
+[node name="Applique3" parent="." instance=ExtResource("lampe")]
+position = Vector3(19.87, 2.35, 14)
+rotation = Vector3(0, -1.5707963267948966, 0)
+allumee = true
+vacillante = true
+
+[node name="Applique4" parent="." instance=ExtResource("lampe")]
+position = Vector3(-6, 2.35, -19.87)
+rotation = Vector3(0, 0, 0)
+allumee = true
+
+[node name="Applique5" parent="." instance=ExtResource("lampe")]
+position = Vector3(6, 2.35, -19.87)
+rotation = Vector3(0, 0, 0)
+allumee = false
+
+[node name="Applique6" parent="." instance=ExtResource("lampe")]
+position = Vector3(8, 2.35, 19.87)
+rotation = Vector3(0, 3.141592653589793, 0)
+allumee = true
+
+[node name="BoitesAuxLettres" parent="." instance=ExtResource("boites")]
+position = Vector3(-19.95, 0, 17)
+rotation = Vector3(0, 1.5707963267948966, 0)
+
+
+[node name="Ascenseur" parent="." instance=ExtResource("ascenseur")]
+position = Vector3(19.94, 0, 16)
+rotation = Vector3(0, -1.5707963267948966, 0)
+
+
+[node name="SuieSolEntree" parent="." instance=ExtResource("trace")]
+position = Vector3(-9, 0, 18.6)
+rotation = Vector3(0, 0.4, 0)
+
+
+[node name="SuieSolFond" parent="." instance=ExtResource("trace")]
+position = Vector3(0, 0, -18.2)
+rotation = Vector3(0, -0.3, 0)
+
+
+[node name="SuieSolGravats" parent="." instance=ExtResource("trace")]
+position = Vector3(-18, 0, 11)
+rotation = Vector3(0, 0.7, 0)
+
+
+[node name="Etage" type="Label3D" parent="."]
+position = Vector3(0, 2.5, -19.72)
+text = "HALL · RDC"
+font = ExtResource("font")
+font_size = 42
+pixel_size = 0.003
+modulate = Color(0.8, 0.72, 0.58, 1)
+outline_size = 4
+no_depth_test = false
+
+[node name="FissuresGravats" parent="." instance=ExtResource("fissures")]
+position = Vector3(-18.2, 0, 10.5)
+rotation = Vector3(0, 0.7, 0)
+
+[node name="FissuresFond" parent="." instance=ExtResource("fissures")]
+position = Vector3(1.3, 0, -17.4)
+rotation = Vector3(0, -1.2, 0)
+
+[node name="EauFenetreNord" parent="." instance=ExtResource("eau")]
+position = Vector3(-12, 0, -17)
+rotation = Vector3(0, 0.25, 0)
+
+[node name="EauFenetreDroite" parent="." instance=ExtResource("eau")]
+position = Vector3(17, 0, 8)
+rotation = Vector3(0, 1.1, 0)
+
+[node name="EauEntree" parent="." instance=ExtResource("eau")]
+position = Vector3(-8, 0, 17)
+rotation = Vector3(0, 0.6, 0)
+
+[node name="VerreNord" parent="." instance=ExtResource("verre")]
+position = Vector3(-12, 0, -19.55)
+rotation = Vector3(0, 0, 0)
+
+[node name="VerreGauche" parent="." instance=ExtResource("verre")]
+position = Vector3(-19.55, 0, -8)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="VerreDroite" parent="." instance=ExtResource("verre")]
+position = Vector3(19.55, 0, 8)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="TuyauxFond" parent="." instance=ExtResource("tuyaux")]
+position = Vector3(6, 0, -19.7)
+rotation = Vector3(0, 0, 0)
+
+[node name="TuyauxGauche" parent="." instance=ExtResource("tuyaux")]
+position = Vector3(-19.7, 0, 8)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="CarreauManquant0" parent="." instance=ExtResource("carreau")]
+position = Vector3(-11.75, 0, -18.25)
+
+[node name="CarreauManquant1" parent="." instance=ExtResource("carreau")]
+position = Vector3(-11.25, 0, -18.25)
+
+[node name="CarreauManquant2" parent="." instance=ExtResource("carreau")]
+position = Vector3(-11.25, 0, -17.75)
+
+[node name="CarreauManquant3" parent="." instance=ExtResource("carreau")]
+position = Vector3(-18.25, 0, -7.75)
+
+[node name="CarreauManquant4" parent="." instance=ExtResource("carreau")]
+position = Vector3(-18.25, 0, -7.25)
+
+[node name="CarreauManquant5" parent="." instance=ExtResource("carreau")]
+position = Vector3(17.25, 0, 8.25)
+
+[node name="CarreauManquant6" parent="." instance=ExtResource("carreau")]
+position = Vector3(17.75, 0, 8.25)
+
+[node name="CarreauManquant7" parent="." instance=ExtResource("carreau")]
+position = Vector3(17.75, 0, 8.75)
+
+[node name="Coulures0" parent="." instance=ExtResource("ecoulement")]
+position = Vector3(-12, 0.45, -19.68)
+rotation = Vector3(0, 0, 0)
+
+[node name="Coulures1" parent="." instance=ExtResource("ecoulement")]
+position = Vector3(-19.68, 0.45, -8)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Coulures2" parent="." instance=ExtResource("ecoulement")]
+position = Vector3(19.68, 0.45, 8)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Coulures3" parent="." instance=ExtResource("ecoulement")]
+position = Vector3(12, 0.45, -19.68)
+rotation = Vector3(0, 0, 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[node name="Plinthe0Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-15.052499999999998, 0.085, 0.0175)
+mesh = SubResource("PlintheNord0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-5.4075, 0.085, 0.0175)
+mesh = SubResource("PlintheNord1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie1" type="MeshInstance3D" parent="Nord"]
+position = Vector3(5.4075, 0.085, 0.0175)
+mesh = SubResource("PlintheNord1Partie1")
+material_override = ExtResource("metal")
+
+[node name="Plinthe2Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(15.052499999999998, 0.085, 0.0175)
+mesh = SubResource("PlintheNord2Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-15.052499999999998, 0.7, 0.0175)
+mesh = SubResource("BaguetteNord0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(-5.4075, 0.7, 0.0175)
+mesh = SubResource("BaguetteNord1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie1" type="MeshInstance3D" parent="Nord"]
+position = Vector3(5.4075, 0.7, 0.0175)
+mesh = SubResource("BaguetteNord1Partie1")
+material_override = ExtResource("metal")
+
+[node name="Baguette2Partie0" type="MeshInstance3D" parent="Nord"]
+position = Vector3(15.052499999999998, 0.7, 0.0175)
+mesh = SubResource("BaguetteNord2Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe0Partie0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-11.459999999999999, 0.085, 0.0175)
+mesh = SubResource("PlintheGauche0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe0Partie1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-0.5924999999999991, 0.085, 0.0175)
+mesh = SubResource("PlintheGauche0Partie1")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(10.052499999999998, 0.085, 0.0175)
+mesh = SubResource("PlintheGauche1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-11.459999999999999, 0.7, 0.0175)
+mesh = SubResource("BaguetteGauche0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie1" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(-0.5924999999999991, 0.7, 0.0175)
+mesh = SubResource("BaguetteGauche0Partie1")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0" type="MeshInstance3D" parent="Gauche"]
+position = Vector3(10.052499999999998, 0.7, 0.0175)
+mesh = SubResource("BaguetteGauche1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe0Partie0" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-10.959999999999999, 0.085, 0.0175)
+mesh = SubResource("PlintheDroit0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie0" type="MeshInstance3D" parent="Droit"]
+position = Vector3(7.577499999999999, 0.085, 0.0175)
+mesh = SubResource("PlintheDroit1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie1" type="MeshInstance3D" parent="Droit"]
+position = Vector3(18.475, 0.085, 0.0175)
+mesh = SubResource("PlintheDroit1Partie1")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0" type="MeshInstance3D" parent="Droit"]
+position = Vector3(-10.959999999999999, 0.7, 0.0175)
+mesh = SubResource("BaguetteDroit0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0" type="MeshInstance3D" parent="Droit"]
+position = Vector3(7.577499999999999, 0.7, 0.0175)
+mesh = SubResource("BaguetteDroit1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie1" type="MeshInstance3D" parent="Droit"]
+position = Vector3(18.475, 0.7, 0.0175)
+mesh = SubResource("BaguetteDroit1Partie1")
+material_override = ExtResource("metal")
+
+[node name="Plinthe0Partie0" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(-6.01, 0.085, 0.0175)
+mesh = SubResource("PlintheSudGauche0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie0" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(4.4275, 0.085, 0.0175)
+mesh = SubResource("PlintheSudGauche1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(-6.01, 0.7, 0.0175)
+mesh = SubResource("BaguetteSudGauche0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0" type="MeshInstance3D" parent="SudGauche"]
+position = Vector3(4.4275, 0.7, 0.0175)
+mesh = SubResource("BaguetteSudGauche1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe0Partie0" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(-4.4275, 0.085, 0.0175)
+mesh = SubResource("PlintheSudDroit0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Plinthe1Partie0" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(5.1025, 0.085, 0.0175)
+mesh = SubResource("PlintheSudDroit1Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette0Partie0" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(-4.4275, 0.7, 0.0175)
+mesh = SubResource("BaguetteSudDroit0Partie0")
+material_override = ExtResource("metal")
+
+[node name="Baguette1Partie0" type="MeshInstance3D" parent="SudDroit"]
+position = Vector3(5.1025, 0.7, 0.0175)
+mesh = SubResource("BaguetteSudDroit1Partie0")
+material_override = ExtResource("metal")

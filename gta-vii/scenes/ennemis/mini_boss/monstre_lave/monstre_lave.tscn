@@ -1,0 +1,79 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/monstre_lave.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mini_boss/monstre_lave_jeu.glb" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flames.tscn" id="3"]
+[sub_resource type="CapsuleShape3D" id="Corps"]
+radius = 1.1
+height = 2.6
+[sub_resource type="SphereShape3D" id="Detection"]
+radius = 20.0
+[sub_resource type="CylinderMesh" id="Disque"]
+top_radius = 1.6
+bottom_radius = 1.6
+height = 0.015
+radial_segments = 48
+[sub_resource type="StandardMaterial3D" id="Annonce"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.28, 0.04, 0.12)
+
+[sub_resource type="SphereMesh" id="Orbe"]
+radius = 0.15
+height = 0.3
+[sub_resource type="StandardMaterial3D" id="Braise"]
+shading_mode = 0
+albedo_color = Color(1, 0.3, 0.02, 1)
+emission_enabled = true
+emission = Color(1, 0.12, 0.01, 1)
+emission_energy_multiplier = 2.0
+[node name="MonstreLave" type="CharacterBody3D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+vie_max = 600.0
+hauteur_modele = 3.6
+vitesse_marche = 2.5
+preparation_frappe = 0.6
+repos_frappe = 0.7
+delai_frappe = 1.5
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Corps")
+[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
+path_desired_distance = 1.5
+target_desired_distance = 0.7
+radius = 1.1
+[node name="Sketchfab_Scene" type="Node3D" parent="."]
+[node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
+[node name="droplet" type="Node3D" parent="."]
+[node name="SurfaceDetection" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection"]
+shape = SubResource("Detection")
+[node name="PointExclamationRouge" type="Node3D" parent="."]
+[node name="PopUpDegats" type="Label3D" parent="."]
+visible = false
+billboard = 1
+no_depth_test = true
+[node name="ZoneImpact" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("Disque")
+material_override = SubResource("Annonce")
+cast_shadow = 0
+
+[node name="Orbe" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.0, 1.25)
+mesh = SubResource("Orbe")
+material_override = SubResource("Braise")
+cast_shadow = 0
+[node name="Flammes" parent="Orbe" instance=ExtResource("3")]
+scale = Vector3(0.6, 0.6, 0.6)
+[node name="Titre" type="Label3D" parent="."]
+position = Vector3(0, 2.7, 0)
+font_size = 24
+pixel_size = 0.005
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.75, 0.45, 1)

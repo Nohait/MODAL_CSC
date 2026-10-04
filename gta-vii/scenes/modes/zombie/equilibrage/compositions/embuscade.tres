@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3 uid="uid://b3ei8kndbwv6a"]
+
+[ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
+[ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn" id="kamikaze"]
+[ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]
+[ext_resource type="Script" uid="uid://c27ul18w1nbp2" path="res://scenes/modes/zombie/equilibrage/type_ennemi_vague.gd" id="type"]
+
+[sub_resource type="Resource" id="Type_kamikaze"]
+script = ExtResource("type")
+scene = ExtResource("kamikaze")
+hauteur = 1.2
+premiere_vague = 7
+poids_tirage = 40.0
+minimum = 1
+maximum = 6
+
+[sub_resource type="Resource" id="Type_sbire"]
+script = ExtResource("type")
+scene = ExtResource("sbire")
+poids_tirage = 60.0
+minimum = 1
+script_zombie = ExtResource("aggro_sbire")
+
+[resource]
+script = ExtResource("composition")
+titre = "Embuscade"
+premiere_vague = 7
+poids = 3.0
+ennemis = Array[ExtResource("type")]([SubResource("Type_kamikaze"), SubResource("Type_sbire")])

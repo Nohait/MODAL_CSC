@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3 uid="uid://40gwyasx0lbs"]
+
+[ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
+[ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mini_boss/monstre_lave/monstre_lave.tscn" id="mini_boss"]
+[ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]
+[ext_resource type="Script" uid="uid://c27ul18w1nbp2" path="res://scenes/modes/zombie/equilibrage/type_ennemi_vague.gd" id="type"]
+
+[sub_resource type="Resource" id="Type_mini_boss"]
+script = ExtResource("type")
+scene = ExtResource("mini_boss")
+hauteur = 1.45
+premiere_vague = 10
+cout_difficulte = 8
+poids_tirage = 0.0
+minimum = 1
+maximum = 1
+
+[sub_resource type="Resource" id="Type_sbire"]
+script = ExtResource("type")
+scene = ExtResource("sbire")
+poids_tirage = 100.0
+maximum = 3
+script_zombie = ExtResource("aggro_sbire")
+
+[resource]
+script = ExtResource("composition")
+titre = "Monstre de lave"
+premiere_vague = 10
+poids = 0.0
+ennemis = Array[ExtResource("type")]([SubResource("Type_mini_boss"), SubResource("Type_sbire")])
+autoriser_tourelles = false
+limite_mobiles = 4
+ennemi_initial = SubResource("Type_mini_boss")

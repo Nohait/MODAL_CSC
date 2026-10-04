@@ -15,3 +15,6 @@ effet = "bouclier_joueur"
 valeur = 40.0
 duree = 1
 texte_effet = "Bouclier : %s PV"
+
+puissance_variable = false
+rarete = "rare"

@@ -1,5 +1,8 @@
 extends StaticBody3D
 
+signal victime_perdue
+
+const DEPOT = preload("res://scenes/modes/zombie/victimes/depot_victime.gd")
 const ICONE = preload("res://assets/textures/interfaces/ameliorations/icone_victimes.svg")
 # Seules les données restent dans le refuge ; les personnages déposés sont retirés.
 var victimes: Array[Dictionary] = []
@@ -11,6 +14,9 @@ var survole := false
 var surbrillance: ShaderMaterial
 var meshes: Array[Node] = []
 var compteur: Label3D
+var icone_victimes: Sprite3D
+var animation_compteur: Tween
+var animation_impact: Tween
 var barre: Sprite3D
 var viewport: SubViewport
 var vie_barre: ProgressBar
@@ -21,8 +27,11 @@ var barre_bouclier: ProgressBar
 var sprite_bouclier: Sprite3D
 var sirene_restante := 0.0
 var rayon_sirene := 0.0
+var temps_gyrophares := 0.0
 
 func _ready() -> void:
+	for feu in $Gyrophares.get_children():
+		feu.material_override = feu.material_override.duplicate()
 	add_to_group("refuge_zombie")
 	add_to_group("victime")
 	add_to_group("fleche")
@@ -32,13 +41,15 @@ func _ready() -> void:
 	meshes = $Modele.find_children("*", "MeshInstance3D", true, false)
 	surbrillance = ShaderMaterial.new()
 	surbrillance.shader = preload("res://scenes/modes/zombie/victimes/surbrillance_refuge.gdshader")
-	compteur = _texte(2.65, 26)
-	var icone := Sprite3D.new()
-	icone.texture = ICONE
-	icone.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	icone.pixel_size = 0.008
-	icone.position = Vector3(-0.4, 2.65, 0)
-	add_child(icone)
+	# Garder les indicateurs au-dessus du toit, même si la taille du camion change.
+	var hauteur_toit: float = $CollisionShape3D.position.y + $CollisionShape3D.shape.size.y / 2.0
+	compteur = _texte(hauteur_toit + 0.69, 26)
+	icone_victimes = Sprite3D.new()
+	icone_victimes.texture = ICONE
+	icone_victimes.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	icone_victimes.pixel_size = 0.008
+	icone_victimes.position = Vector3(-0.4, hauteur_toit + 0.69, 0)
+	add_child(icone_victimes)
 	viewport = SubViewport.new()
 	viewport.size = Vector2i(160, 18)
 	viewport.transparent_bg = true
@@ -58,7 +69,7 @@ func _ready() -> void:
 	barre.texture = viewport.get_texture()
 	barre.pixel_size = 0.01
 	barre.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	barre.position.y = 2.3
+	barre.position.y = hauteur_toit + 0.34
 	add_child(barre)
 	# Une seconde barre bleue représente la protection, au-dessus des PV verts.
 	var vue_bouclier := SubViewport.new()
@@ -78,9 +89,9 @@ func _ready() -> void:
 	sprite_bouclier.texture = vue_bouclier.get_texture()
 	sprite_bouclier.pixel_size = 0.01
 	sprite_bouclier.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	sprite_bouclier.position.y = 2.48
+	sprite_bouclier.position.y = hauteur_toit + 0.52
 	add_child(sprite_bouclier)
-	indication = _texte(3.15, 20)
+	indication = _texte(hauteur_toit + 1.19, 20)
 	indication.text = "Clic milieu : mettre l’escorte à l’abri"
 	actualiser()
 
@@ -96,6 +107,8 @@ func _texte(hauteur: float, taille: int) -> Label3D:
 
 func _physics_process(delta: float) -> void:
 	sirene_restante = maxf(0.0, sirene_restante - delta)
+	temps_gyrophares += delta
+	_actualiser_gyrophares()
 	# Le survol utilise le vrai volume 3D, même quand la caméra est inclinée.
 	var camera := get_viewport().get_camera_3d()
 	if camera == null: return
@@ -118,18 +131,13 @@ func _physics_process(delta: float) -> void:
 		ecart.y = 0
 		# La distance suit le bord du camion, y compris près de ses extrémités.
 		if ecart.length() <= distance_au_bord(victime.global_position) + 0.9:
-			victimes.append({"vie": victime.vie, "vie_max": victime.vie_max, "ordre": victime.get_meta("ordre_liberation", 0)})
-			# L’ordre de libération prime sur l’ordre d’arrivée au refuge.
-			victimes.sort_custom(func(a, b): return a.ordre < b.ordre)
-			escorte.freed_victims.erase(victime)
-			victime.queue_free()
-			actualiser()
+			_deposer_victime(victime)
 	if escorte.freed_victims.is_empty():
 		depot_demande = false
 		escorte.escort_changed.emit()
 
 func prendre_degats(degats: float) -> void:
-	if victimes.is_empty(): return
+	if victimes.is_empty() or degats <= 0.0: return
 	var restant := maxf(0, degats)
 	# Les protections les plus anciennes absorbent le coup avant les victimes.
 	for bouclier in boucliers:
@@ -142,7 +150,9 @@ func prendre_degats(degats: float) -> void:
 	victimes[-1].vie = maxf(0, victimes[-1].vie - restant)
 	if victimes[-1].vie == 0:
 		victimes.pop_back()
+		victime_perdue.emit()
 	actualiser()
+	_animer_impact(restant > 0.0)
 
 func actualiser() -> void:
 	compteur.text = str(victimes.size())
@@ -182,6 +192,8 @@ func attire(ennemi: Node3D) -> bool:
 func declencher_sirene(rayon: float, duree: float) -> void:
 	rayon_sirene = rayon
 	sirene_restante = duree
+	temps_gyrophares = 0.0
+	_actualiser_gyrophares()
 	var anneau := MeshInstance3D.new()
 	var forme := TorusMesh.new()
 	forme.inner_radius = 0.95
@@ -199,3 +211,59 @@ func declencher_sirene(rayon: float, duree: float) -> void:
 	onde.tween_property(anneau, "scale", Vector3(rayon, 1, rayon), 0.7)
 	onde.tween_property(mat, "albedo_color:a", 0.0, 0.7)
 	onde.chain().tween_callback(anneau.queue_free)
+
+func _actualiser_gyrophares() -> void:
+	# La sirène garde son alternance rapide ; au repos, les feux pulsent doucement.
+	var cote := int(temps_gyrophares / 0.2) % 2
+	var feux := $Gyrophares.get_children()
+	for i in range(feux.size()):
+		var lumiere: OmniLight3D = feux[i].get_node("Lumiere")
+		if sirene_restante > 0.0:
+			var allume := i == cote
+			feux[i].material_override.emission_energy_multiplier = 4.0 if allume else 0.15
+			lumiere.visible = allume
+			lumiere.light_energy = 2.5
+		else:
+			# Les deux couleurs sont déphasées : une seule atteint son maximum à la fois.
+			var intensite := pow(maxf(0.0, sin(temps_gyrophares * 1.8 + i * PI)), 3.0)
+			feux[i].material_override.emission_energy_multiplier = 0.2 + intensite * 1.8
+			lumiere.visible = true
+			lumiere.light_energy = 0.1 + intensite * 0.75
+
+func _deposer_victime(victime: CharacterBody3D) -> void:
+	if not escorte.freed_victims.has(victime): return
+	victimes.append({"vie": victime.vie, "vie_max": victime.vie_max, "ordre": victime.get_meta("ordre_liberation", 0)})
+	# L'ordre de libération prime toujours sur l'ordre d'arrivée au camion.
+	victimes.sort_custom(func(a, b): return a.ordre < b.ordre)
+	DEPOT.creer(victime, self)
+	escorte.freed_victims.erase(victime)
+	escorte.reorganiser_file()
+	if depot_demande:
+		# Les suivants continuent vers le camion après le retrait d’un membre.
+		for suivante in escorte.freed_victims:
+			if is_instance_valid(suivante): suivante.follow_target = self
+	escorte.escort_changed.emit()
+	victime.queue_free()
+	actualiser()
+	if animation_compteur: animation_compteur.kill()
+	icone_victimes.scale = Vector3.ONE
+	compteur.scale = Vector3.ONE
+	animation_compteur = create_tween().set_parallel(true)
+	# Le symbole et le nombre grossissent ensemble, puis reprennent leur taille.
+	animation_compteur.tween_property(icone_victimes, "scale", Vector3.ONE * 1.2, 0.1)
+	animation_compteur.tween_property(compteur, "scale", Vector3.ONE * 1.12, 0.1)
+	animation_compteur.chain().tween_property(icone_victimes, "scale", Vector3.ONE, 0.2)
+	animation_compteur.parallel().tween_property(compteur, "scale", Vector3.ONE, 0.2)
+
+func _animer_impact(vie_touchee: bool) -> void:
+	if animation_impact: animation_impact.kill()
+	barre.modulate = Color.WHITE
+	sprite_bouclier.modulate = Color.WHITE
+	compteur.modulate = Color.WHITE
+	var cible: Sprite3D = barre if vie_touchee else sprite_bouclier
+	cible.modulate = Color(1.6, 0.4, 0.3) if vie_touchee else Color(1.5, 1.8, 2.0)
+	compteur.modulate = Color(1.6, 0.5, 0.4) if vie_touchee else Color.WHITE
+	animation_impact = create_tween().set_parallel(true)
+	# Une réaction courte, sans secouer le camion ni changer les valeurs de vie.
+	animation_impact.tween_property(cible, "modulate", Color.WHITE, 0.3)
+	animation_impact.tween_property(compteur, "modulate", Color.WHITE, 0.3)

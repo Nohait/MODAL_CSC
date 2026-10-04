@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="verre"]
+albedo_color = Color(0.19, 0.3, 0.34, 1)
+metallic = 0.25
+roughness = 0.12
+
+[sub_resource type="CylinderMesh" id="eclat"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.012
+radial_segments = 3
+rings = 1
+
+[node name="EclatsVerre" type="Node3D"]
+editor_description = "Fragments de verre sous une fenêtre, sans collision."
+
+[node name="Eclat0" type="MeshInstance3D" parent="."]
+position = Vector3(-0.55, 0.025, 0.32)
+rotation = Vector3(0, 0.2, 0)
+scale = Vector3(1.3, 1, 0.6)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat1" type="MeshInstance3D" parent="."]
+position = Vector3(-0.2, 0.025, 0.6)
+rotation = Vector3(0, 1.1, 0)
+scale = Vector3(0.7, 1, 1.2)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat2" type="MeshInstance3D" parent="."]
+position = Vector3(0.12, 0.025, 0.37)
+rotation = Vector3(0, 0.5, 0)
+scale = Vector3(1.4, 1, 0.8)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat3" type="MeshInstance3D" parent="."]
+position = Vector3(0.45, 0.025, 0.8)
+rotation = Vector3(0, 2, 0)
+scale = Vector3(0.7, 1, 0.5)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.7, 0.025, 0.95)
+rotation = Vector3(0, 0.8, 0)
+scale = Vector3(0.5, 1, 0.8)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat5" type="MeshInstance3D" parent="."]
+position = Vector3(0.65, 0.025, 0.28)
+rotation = Vector3(0, 1.8, 0)
+scale = Vector3(0.8, 1, 0.5)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0
+
+[node name="Eclat6" type="MeshInstance3D" parent="."]
+position = Vector3(0.25, 0.025, 1.2)
+rotation = Vector3(0, 2.6, 0)
+scale = Vector3(0.6, 1, 0.7)
+mesh = SubResource("eclat")
+material_override = SubResource("verre")
+cast_shadow = 0

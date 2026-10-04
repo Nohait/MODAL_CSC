@@ -1,0 +1,65 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier/etagere_archives.tscn" id="etagere_archives"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier/classeur_archives.tscn" id="classeur_archives"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier/cartons.tscn" id="cartons"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier/tableau_electrique.tscn" id="tableau_electrique"]
+
+[node name="MobilierPieces" type="Node3D"]
+editor_description = "Mobilier des archives et du local technique. Les grands passages restent libres ; aucune logique de vague n'est attachÃƒÂ©e ÃƒÂ  ce dÃƒÂ©cor."
+
+[node name="Archives" type="Node3D" parent="."]
+
+[node name="Technique" type="Node3D" parent="."]
+
+[node name="Classeurs" parent="Archives" instance=ExtResource("classeur_archives" )]
+position = Vector3(-18.6, 0, -15)
+rotation = Vector3(0, 1.570796, 0)
+
+[node name="EtagereNord1" parent="Archives" instance=ExtResource("etagere_archives" )]
+position = Vector3(-17, 0, -19.2)
+rotation = Vector3(0, 1.570796, 0)
+
+[node name="EtagereNord2" parent="Archives" instance=ExtResource("etagere_archives" )]
+position = Vector3(-14.5, 0, -19.2)
+rotation = Vector3(0, 1.570796, 0)
+
+[node name="Cartons" parent="Archives" instance=ExtResource("cartons" )]
+position = Vector3(-18, 0, -5.5)
+rotation = Vector3(0, 0.15, 0)
+
+[node name="TableauElectrique" parent="Technique" instance=ExtResource("tableau_electrique" )]
+position = Vector3(17, 0.65, -18.9)
+rotation = Vector3(0, 0, 0)
+
+[node name="EtagereOutillage" parent="Technique" instance=ExtResource("etagere_archives" )]
+position = Vector3(18.8, 0, -12)
+rotation = Vector3(0, 0, 0)
+
+[node name="CartonsTechnique" parent="Technique" instance=ExtResource("cartons" )]
+position = Vector3(18.2, 0, -5.8)
+rotation = Vector3(0, -0.3, 0)
+
+[node name="FeuEtagere" parent="Archives" instance=ExtResource("foyer")]
+position = Vector3(-17, 1.25, -18.85)
+taille = 0.8
+energie = 1.9
+
+[node name="FeuCartons" parent="Archives" instance=ExtResource("foyer")]
+position = Vector3(-18, 0.55, -5.5)
+taille = 1.0
+energie = 2.0
+
+[node name="FeuTechnique" parent="Technique" instance=ExtResource("foyer")]
+position = Vector3(18.2, 0.5, -5.8)
+taille = 0.85
+energie = 1.7
+
+[node name="FeuTableau" parent="Technique" instance=ExtResource("foyer")]
+position = Vector3(17.1, 1.45, -19.18)
+taille = 0.35
+energie = 0.7
+portee_lumiere = 2.5
+densite_fumee = 0.3

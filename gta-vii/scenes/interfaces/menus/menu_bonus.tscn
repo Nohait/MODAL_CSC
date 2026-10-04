@@ -11,6 +11,8 @@
 
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ouverture_booster.tscn" id="8_ouverture"]
 
+[ext_resource type="Script" path="res://scenes/interfaces/menus/statistiques_joueur.gd" id="9_stats"]
+
 [sub_resource type="ShaderMaterial" id="PochetteBonus"]
 shader = ExtResource("5_booster")
 shader_parameter/taille = Vector2(260, 60)
@@ -64,7 +66,7 @@ content_margin_bottom = 10.0
 
 [node name="MenuBonus" type="CanvasLayer"]
 process_mode = 3
-layer = 20
+layer = 30
 script = ExtResource("1")
 
 [node name="Raccourci" type="Button" parent="."]
@@ -311,3 +313,10 @@ theme_override_constants/h_separation = 18
 theme_override_constants/v_separation = 20
 
 [node name="OuvertureBooster" parent="." instance=ExtResource("8_ouverture")]
+
+[node name="Statistiques" type="PanelContainer" parent="Menu/Panneau/Marge/Disposition/Defilement"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 0
+script = ExtResource("9_stats")

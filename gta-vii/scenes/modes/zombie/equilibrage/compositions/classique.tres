@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3 uid="uid://d3bknrvk4s52x"]
+
+[ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn" id="chien"]
+[ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn" id="kamikaze"]
+[ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]
+[ext_resource type="Script" uid="uid://c27ul18w1nbp2" path="res://scenes/modes/zombie/equilibrage/type_ennemi_vague.gd" id="type"]
+
+[sub_resource type="Resource" id="Type_sbire"]
+script = ExtResource("type")
+scene = ExtResource("sbire")
+poids_tirage = 55.0
+minimum = 1
+script_zombie = ExtResource("aggro_sbire")
+
+[sub_resource type="Resource" id="Type_chien"]
+script = ExtResource("type")
+scene = ExtResource("chien")
+premiere_vague = 3
+poids_tirage = 30.0
+maximum = 12
+
+[sub_resource type="Resource" id="Type_demolisseur"]
+script = ExtResource("type")
+scene = ExtResource("demolisseur")
+hauteur = 1.45
+premiere_vague = 5
+cout_difficulte = 3
+poids_tirage = 6.0
+maximum = 2
+
+[sub_resource type="Resource" id="Type_artilleur"]
+script = ExtResource("type")
+scene = ExtResource("artilleur")
+hauteur = 1.45
+premiere_vague = 5
+cout_difficulte = 2
+poids_tirage = 10.0
+maximum = 3
+
+[sub_resource type="Resource" id="Type_kamikaze"]
+script = ExtResource("type")
+scene = ExtResource("kamikaze")
+hauteur = 1.2
+premiere_vague = 7
+poids_tirage = 12.0
+maximum = 6
+
+[resource]
+script = ExtResource("composition")
+poids = 2.0
+ennemis = Array[ExtResource("type")]([SubResource("Type_sbire"), SubResource("Type_chien"), SubResource("Type_demolisseur"), SubResource("Type_artilleur"), SubResource("Type_kamikaze")])

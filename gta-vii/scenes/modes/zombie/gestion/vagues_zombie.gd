@@ -10,6 +10,9 @@ var vague_en_cours := false
 var refuge: Node3D
 var phase := "combat"
 var calendrier: Array[Dictionary] = []
+var composition_actuelle: CompositionVague
+# Les annonces gardent leurs positions habituelles ; ce tableau leur associe un type.
+var types_planifies: Dictionary = {}
 @onready var boutique = get_node("../../UpgradeManager")
 
 func demarrer_partie() -> void:
@@ -28,6 +31,7 @@ func demarrer_partie() -> void:
 	refuge.name = "Refuge"
 	salle.get_node("Navigation/Decor").add_child(refuge)
 	refuge.escorte = victim_manager
+	refuge.victime_perdue.connect(boutique.retours_bonus.afficher_victime_perdue)
 	victim_manager.refuge = refuge
 	boutique.boutique_fermee.connect(_apres_boutique)
 	await activer_salle(0)
@@ -43,12 +47,14 @@ func _demarrer_vague() -> void:
 	vague_actuelle += 1
 	temps_vague = 0.0
 	vague_en_cours = true
+	types_planifies.clear()
+	composition_actuelle = difficulte.choisir_composition(vague_actuelle)
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
 	positions.shuffle()
 	# Réserver les places des captives avant celles des ennemis.
 	var captives := randi_range(maxi(1, difficulte.victimes_minimum), maxi(difficulte.victimes_minimum, difficulte.victimes_maximum))
 	salle_actuelle.remaining_victims = 0
-	for i in range(mini(captives, positions.size())):
+	for i in range(mini(captives, maxi(0, positions.size() - 1))):
 		var victime = VICTIME_SCENE.instantiate()
 		victime.position = positions.pop_back() + Vector3.UP * 0.75
 		salle_actuelle.get_node("Victimes").add_child(victime)
@@ -58,7 +64,8 @@ func _demarrer_vague() -> void:
 		victime.died.connect(_on_victim_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 		salle_actuelle.remaining_victims += 1
 	# Les tourelles prennent leurs places avant les sbires : pas de superposition.
-	for i in range(difficulte.nombre_tourelles(vague_actuelle)):
+	for i in range(difficulte.nombre_tourelles(vague_actuelle) if composition_actuelle.autoriser_tourelles else 0):
+		if positions.size() <= 1: break # Garder un emplacement pour le premier sbire.
 		var indice := -1
 		for j in range(positions.size()):
 			if emplacement_suffisamment_eloigne(salle_actuelle, positions[j]):
@@ -75,11 +82,19 @@ func _demarrer_vague() -> void:
 		salle_actuelle.get_node("Ennemis").add_child(tour)
 		tour.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 		salle_actuelle.remaining_enemies += 1
-	var nombre := mini(difficulte.nombre_sbires(vague_actuelle), positions.size())
-	for i in range(nombre):
-		salle_actuelle.mobiles_a_creer.append(positions[i])
+	var types := composition_actuelle.repartir(difficulte.budget_mobiles(vague_actuelle), vague_actuelle)
+	# Réserver une position par ennemi, sans recouvrir le camion ni un autre corps.
+	for type in types:
+		var indice := _trouver_position_type(type, positions)
+		if indice == -1: continue
+		var emplacement: Vector3 = positions.pop_at(indice)
+		types_planifies[emplacement] = type
+		salle_actuelle.mobiles_a_creer.append(emplacement)
 	# Compter aussi les ennemis à venir empêche de finir la vague trop tôt.
-	salle_actuelle.remaining_enemies += nombre
+	salle_actuelle.remaining_enemies += salle_actuelle.mobiles_a_creer.size()
+	# La liste commence par le boss dans sa composition, sinon par un type mélangé.
+	if not salle_actuelle.mobiles_a_creer.is_empty():
+		creer_mobile(salle_actuelle, salle_actuelle.mobiles_a_creer.pop_front())
 	# Le dernier groupe apparaît exactement à la fin du timer de sauvetage.
 	calendrier.clear()
 	var duree := randf_range(difficulte.duree_minimum_vague, maxf(difficulte.duree_minimum_vague, difficulte.duree_maximum_vague))
@@ -87,7 +102,7 @@ func _demarrer_vague() -> void:
 	salle_actuelle.temps_sauvetage_restant = duree
 	salle_actuelle.sauvetage_en_cours = true
 	salle_actuelle.sauvetage_termine = false
-	var groupes := ceili(float(nombre) / difficulte.taille_groupe(vague_actuelle))
+	var groupes := ceili(float(salle_actuelle.mobiles_a_creer.size()) / difficulte.taille_groupe(vague_actuelle))
 	for i in range(groupes):
 		var echeance := duree * float(i + 1) / groupes
 		calendrier.append({"annonce": maxf(0, echeance - duree_annonce), "apparition": echeance})
@@ -143,7 +158,7 @@ func actualiser_objectifs() -> void:
 		boutique.points += refuge.victimes.size()
 		_nettoyer_dangers()
 	# Reprendre le HUD existant ; les portes restent fermées pendant la survie.
-	informations_salle.objectifs.text = "MODE ZOMBIE · VAGUE %d" % vague_actuelle
+	informations_salle.objectifs.text = "VAGUE %d · %s" % [vague_actuelle, composition_actuelle.titre.to_upper()]
 	informations_salle.ennemis.text = "%d ENNEMIS RESTANTS · %d À VENIR" % [remaining_enemies, salle_actuelle.mobiles_a_creer.size() + salle_actuelle.mobiles_annonces.size()] if vague_en_cours else ("BOUTIQUE DANS %d s" if phase == "avant_boutique" else "PROCHAINE VAGUE DANS %d s") % ceili(pause_restante)
 	informations_salle.victimes_a_liberer = salle_actuelle.remaining_victims
 	informations_salle._actualiser_timer(timer_bar.value)
@@ -158,7 +173,7 @@ func _nettoyer_dangers() -> void:
 func aller_vague_debug(numero: int) -> void:
 	if transition_en_cours or not is_instance_valid(salle_actuelle):
 		return
-	# La fonction héritée annule aussi les annonces et les sbires encore à venir.
+	# La fonction héritée annule aussi les annonces et les mobiles encore à venir.
 	liberer_salle_debug()
 	for captive in salle_actuelle.get_node("Victimes").get_children():
 		if captive.is_in_group("victime"): captive.queue_free()
@@ -166,7 +181,17 @@ func aller_vague_debug(numero: int) -> void:
 	vague_actuelle = maxi(1, numero) - 1
 	_demarrer_vague()
 
+func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
+	# Le système commun appelle ce point d'entrée pour chaque apparition annoncée.
+	if types_planifies.has(emplacement):
+		var type: TypeEnnemiVague = types_planifies[emplacement]
+		types_planifies.erase(emplacement)
+		_creer_type(salle, emplacement, type)
+		return
+	super.creer_mobile(salle, emplacement)
+
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
+	# Un sbire ajouté par le debug n'appartient pas au calendrier de la vague.
 	var sbire = SBIRE_SCENE.instantiate()
 	sbire.set_script(preload("res://scenes/modes/zombie/ennemis/sbire_zombie.gd"))
 	sbire.etage = 1
@@ -174,3 +199,34 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
 	salle.get_node("Ennemis").add_child(sbire)
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+
+func peut_creer_ennemi_debug() -> bool:
+	return is_instance_valid(salle_actuelle) and not transition_en_cours and vague_en_cours
+
+func _trouver_position_type(type: TypeEnnemiVague, positions: Array[Vector3]) -> int:
+	var modele = type.scene.instantiate()
+	var collision: CollisionShape3D = modele.get_node("CollisionShape3D")
+	var requete := PhysicsShapeQueryParameters3D.new()
+	requete.shape = collision.shape
+	requete.collision_mask = 15
+	var resultat := -1
+	for i in range(positions.size()):
+		if not emplacement_suffisamment_eloigne(salle_actuelle, positions[i]): continue
+		modele.position = positions[i] + Vector3.UP * type.hauteur
+		requete.transform = salle_actuelle.global_transform * modele.transform * collision.transform
+		if salle_actuelle.get_world_3d().direct_space_state.intersect_shape(requete, 1).is_empty():
+			resultat = i
+			break
+	modele.free()
+	return resultat
+
+func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> void:
+	var ennemi = type.scene.instantiate()
+	if type.script_zombie != null: ennemi.set_script(type.script_zombie)
+	# La difficulté augmente le nombre d'ennemis, pas leurs PV ni leurs dégâts.
+	ennemi.etage = 1
+	ennemi.position = emplacement + Vector3.UP * type.hauteur
+	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+	salle.get_node("Ennemis").add_child(ennemi)
+	var agent = ennemi.get_node_or_null("NavigationAgent")
+	if agent != null: agent.set_navigation_map(salle.carte_ennemis)

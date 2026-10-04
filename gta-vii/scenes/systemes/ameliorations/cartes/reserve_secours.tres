@@ -15,3 +15,6 @@ effet = "reserve_secours"
 valeur = 30.0
 duree = 0
 texte_effet = "Rend %s %% de vie"
+
+puissance_variable = false
+rarete = "rare"

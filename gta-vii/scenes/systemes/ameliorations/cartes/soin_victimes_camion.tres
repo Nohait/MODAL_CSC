@@ -15,3 +15,6 @@ effet = "soin_victimes"
 valeur = 25.0
 duree = 0
 texte_effet = "Restaure %s PV par victime"
+
+puissance_variable = false
+rarete = "commun"

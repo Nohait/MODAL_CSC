@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/gravats_beton.tscn" id="gravats"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/applique_murale.tscn" id="applique"]
+
+[node name="CoinHall" type="Node3D"]
+editor_description = "Applique et gravats contre un mur : l'intérieur de la pièce est du côté -Z. Les piliers sont placés séparément dans le hall."
+
+[node name="Applique" parent="." instance=ExtResource("applique")]
+position = Vector3(0, 2.4, 0.12)
+rotation = Vector3(0, 3.1415927, 0)
+
+[node name="Gravats" parent="." instance=ExtResource("gravats")]
+position = Vector3(2.15, 0, -1.15)
+rotation = Vector3(0, -0.4, 0)
+
+[node name="PetitsGravats" parent="." instance=ExtResource("gravats")]
+position = Vector3(-2.6, 0, -0.8)
+rotation = Vector3(0, 1.5, 0)
+scale = Vector3(0.6, 0.6, 0.6)
