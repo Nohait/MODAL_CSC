@@ -1,7 +1,7 @@
 extends Node3D
 
 signal etat_change
-@export_range(1, 100, 1) var prix_recharge := 10
+@export_range(1, 100, 1) var prix_recharge := 5
 var disponible := true
 var joueur_proche: Node3D
 @onready var indication: Label3D = $Indication

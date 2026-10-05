@@ -6,7 +6,7 @@ signal defi_demande(identifiant: StringName)
 signal catalogue_debug_demande
 signal continuer_demande
 signal recharge_murale_demandee
-signal sprinkler_demande
+signal sprinkler_demande(sprinkler: Node3D)
 signal bonus_demandes
 
 const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
@@ -43,8 +43,9 @@ var recharge_murale: Button
 var description_recharge: Label
 var prix_recharge: Label
 var entete_monnaies: HBoxContainer
-var activation_sprinkler: Button
-var prix_sprinkler: Label
+var tuiles_sprinklers: Array[Dictionary] = []
+var choix_sprinklers: Window
+var categorie_sprinklers: Button
 
 
 func _ready() -> void:
@@ -391,23 +392,98 @@ func actualiser_ravitaillement(solde: int, disponible: bool, prix: int, present:
 	elif solde < prix: prix_recharge.text += " · Fonds insuffisants"
 	recharge_murale.tooltip_text = "Recharger l’extincteur mural pour pouvoir y refaire un plein de mousse."
 
-func ajouter_sprinkler() -> void:
-	# Réutiliser la tuile de recharge, sans recopier sa connexion au bouton d'achat.
-	activation_sprinkler = recharge_murale.duplicate(0)
-	activation_sprinkler.name = "ActiverSprinkler"
-	recharge_murale.get_parent().add_child(activation_sprinkler)
-	var details := activation_sprinkler.get_child(0)
-	details.get_child(0).texture = preload("res://assets/textures/interfaces/boutique/sprinkler.svg")
-	details.get_child(1).text = "Armer\nle sprinkler"
-	prix_sprinkler = details.get_child(2)
-	activation_sprinkler.pressed.connect(func(): sprinkler_demande.emit())
-	activation_sprinkler.tooltip_text = "Le prochain ennemi dans sa zone déclenche un jet d’eau qui inflige des dégâts."
+func ajouter_sprinklers(sprinklers: Array[Node3D]) -> void:
+	categorie_sprinklers = recharge_murale.duplicate(0)
+	categorie_sprinklers.name = "CategorieSprinklers"
+	categorie_sprinklers.disabled = false
+	categorie_sprinklers.modulate.a = 1.0
+	recharge_murale.get_parent().add_child(categorie_sprinklers)
+	var illustration := categorie_sprinklers.get_child(0)
+	illustration.get_child(0).texture = preload("res://assets/textures/interfaces/boutique/sprinkler.svg")
+	illustration.get_child(1).text = "Sprinklers"
+	illustration.get_child(2).text = "Choisir un\nemplacement"
+	categorie_sprinklers.pressed.connect(_ouvrir_sprinklers)
+	# Une fenêtre exclusive garde les clics et le retour manette dans ce sous-menu.
+	choix_sprinklers = Window.new()
+	choix_sprinklers.title = "Sprinklers"
+	choix_sprinklers.size = Vector2i(900, 400)
+	choix_sprinklers.transient = true
+	choix_sprinklers.exclusive = true
+	choix_sprinklers.borderless = true
+	add_child(choix_sprinklers)
+	choix_sprinklers.hide()
+	choix_sprinklers.close_requested.connect(_fermer_sprinklers)
+	choix_sprinklers.window_input.connect(_input_sprinklers)
+	var racine := Control.new()
+	racine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	choix_sprinklers.add_child(racine)
+	var contenu := _panneau(racine, "CHOISIR UN SPRINKLER")
+	contenu.get_parent().set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var offres := HBoxContainer.new()
+	offres.add_theme_constant_override("separation", 14)
+	contenu.add_child(offres)
+	# Chaque tuile conserve sa propre référence ; acheter l'une n'arme pas les autres.
+	for sprinkler in sprinklers:
+		var bouton: Button = recharge_murale.duplicate(0)
+		bouton.name = "Activer" + sprinkler.name
+		offres.add_child(bouton)
+		var details := bouton.get_child(0)
+		details.get_child(0).texture = preload("res://assets/textures/interfaces/boutique/sprinkler.svg")
+		details.get_child(1).text = "Armer le sprinkler\n" + sprinkler.emplacement
+		details.get_child(1).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		bouton.pressed.connect(func(): sprinkler_demande.emit(sprinkler))
+		bouton.tooltip_text = "Le prochain ennemi dans sa zone déclenche un jet d’eau qui inflige des dégâts."
+		tuiles_sprinklers.append({"objet": sprinkler, "bouton": bouton, "prix": details.get_child(2)})
+	var bloc := VBoxContainer.new()
+	bloc.custom_minimum_size = Vector2(220, 250)
+	offres.add_child(bloc)
+	var legende := _texte("Emplacement", 18)
+	legende.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	bloc.add_child(legende)
+	var plan := preload("res://scenes/modes/zombie/interfaces/boutique/apercu_sprinklers.gd").new()
+	plan.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	plan.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bloc.add_child(plan)
+	for tuile in tuiles_sprinklers:
+		tuile.bouton.mouse_entered.connect(plan.montrer.bind(tuile.objet))
+		tuile.bouton.mouse_exited.connect(plan.montrer.bind(null))
+		tuile.bouton.focus_entered.connect(plan.montrer.bind(tuile.objet))
+		tuile.bouton.focus_exited.connect(plan.montrer.bind(null))
+	var fermer = BOUTON.instantiate()
+	fermer.taille_minimale = Vector2(300, 44)
+	fermer.taille_police = 18
+	fermer.text = "Retour à la boutique"
+	fermer.pressed.connect(_fermer_sprinklers)
+	contenu.add_child(fermer)
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(racine)
 
-func actualiser_sprinkler(solde: int, prix: int, arme: bool, actif: bool, present: bool) -> void:
-	activation_sprinkler.visible = present
-	activation_sprinkler.disabled = not present or arme or actif or solde < prix
-	activation_sprinkler.modulate.a = 0.55 if activation_sprinkler.disabled else 1.0
-	prix_sprinkler.text = "%d pièces" % prix
-	if actif: prix_sprinkler.text = "En cours"
-	elif arme: prix_sprinkler.text = "Déjà armé"
-	elif solde < prix: prix_sprinkler.text += " · Fonds insuffisants"
+func _ouvrir_sprinklers() -> void:
+	choix_sprinklers.popup_centered()
+
+func _fermer_sprinklers() -> void:
+	choix_sprinklers.hide()
+	if not Input.get_connected_joypads().is_empty(): categorie_sprinklers.grab_focus()
+
+func _input_sprinklers(event: InputEvent) -> void:
+	if not event.is_echo() and event.is_action_pressed("ui_cancel"):
+		choix_sprinklers.set_input_as_handled()
+		_fermer_sprinklers()
+
+func _notification(what: int) -> void:
+	# Le sous-menu doit aussi disparaître si la boutique se ferme par une autre commande.
+	if what == NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree():
+		if is_instance_valid(choix_sprinklers): choix_sprinklers.hide()
+
+func actualiser_sprinklers(solde: int) -> void:
+	for tuile in tuiles_sprinklers:
+		var objet = tuile.objet
+		if not is_instance_valid(objet):
+			tuile.bouton.hide()
+			continue
+		var actif: bool = objet.temps_restant > 0.0
+		tuile.bouton.disabled = objet.arme or actif or solde < objet.prix_activation
+		tuile.bouton.modulate.a = 0.55 if tuile.bouton.disabled else 1.0
+		tuile.prix.text = "%d pièces" % objet.prix_activation
+		if actif: tuile.prix.text = "En cours"
+		elif objet.arme: tuile.prix.text = "Déjà armé"
+		elif solde < objet.prix_activation: tuile.prix.text += " · Fonds insuffisants"

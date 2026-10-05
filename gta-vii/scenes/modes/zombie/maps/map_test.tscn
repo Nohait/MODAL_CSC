@@ -593,6 +593,19 @@ cast_shadow = 0
 [node name="ExtincteurMural" parent="Navigation/Decor" instance=ExtResource("extincteur_mural")]
 position = Vector3(-6, 0, -19.95)
 
-[node name="Sprinkler" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
-position = Vector3(6, 0, -19.9)
+[node name="SprinklerEntree" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
+position = Vector3(-2, 0, -19.9)
+emplacement = "Porte du fond"
+
+[node name="SprinklerAppartements" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
+position = Vector3(-9.4, 0, -7.6)
+rotation = Vector3(0, 1.570796, 0)
+emplacement = "Passage appartements"
+sur_pied = true
+
+[node name="SprinklerAscenseur" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
+position = Vector3(-9.4, 0, 12.4)
+rotation = Vector3(0, 1.570796, 0)
+emplacement = "Passage ascenseur"
+sur_pied = true
 

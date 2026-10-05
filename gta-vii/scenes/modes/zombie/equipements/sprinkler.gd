@@ -2,7 +2,10 @@ extends Node3D
 
 signal etat_change
 const VAPEUR = preload("res://scenes/effets/combat/impact_mousse.tscn")
-@export_range(1, 100, 1) var prix_activation := 15
+@export var emplacement := "Entrée"
+@export_range(1.0, 3.5, 0.1) var hauteur := 2.7
+@export var sur_pied := false
+@export_range(1, 100, 1) var prix_activation := 5
 @export_range(1.0, 8.0, 0.5) var rayon := 4.0
 @export_range(0.5, 10.0, 0.5) var duree := 3.0
 @export_range(1.0, 100.0, 1.0) var degats_par_seconde := 20.0
@@ -14,6 +17,26 @@ var temps_degats := 0.0
 
 func _ready() -> void:
 	add_to_group("sprinkler")
+	# Le pied permet de garder une tête haute même près d'une cloison basse.
+	$Support.visible = sur_pied
+	$Support/Mat.mesh = $Support/Mat.mesh.duplicate()
+	# Le bas de la tête est 25 cm sous son centre : le poteau s'arrête à ce raccord.
+	$Support/Mat.mesh.height = hauteur - 0.25
+	$Support/Mat.position.y = (hauteur - 0.25) / 2.0
+	for noeud in [$Tete, $Eau, $Etat]:
+		noeud.position.y += hauteur - 2.7
+	# Sur pied, centrer la tête sur le poteau ; au mur, conserver un petit déport.
+	var avance := 0.0 if sur_pied else 0.2
+	$Tete.position.z = avance
+	$Eau.position.z = avance + 0.3
+	$Etat.position.z = avance
+	# Le modèle téléchargé n'a pas de texture : lui donner une finition métallique sobre.
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color("a38a62")
+	metal.metallic = 0.75
+	metal.roughness = 0.45
+	for morceau in $Tete.find_children("*", "MeshInstance3D", true, false):
+		morceau.material_override = metal
 	$Zone/Collision.shape = $Zone/Collision.shape.duplicate()
 	$Zone/Collision.shape.radius = rayon
 	$Zone/Anneau.mesh = $Zone/Anneau.mesh.duplicate()
@@ -25,6 +48,13 @@ func armer() -> void:
 	arme = true
 	_actualiser()
 	etat_change.emit()
+
+func recharger() -> void:
+	# Le debug peut aussi interrompre un jet en cours avant de réarmer l'équipement.
+	temps_restant = 0.0
+	temps_degats = 0.0
+	eau.emitting = false
+	armer()
 
 func _physics_process(delta: float) -> void:
 	if arme:
@@ -69,4 +99,4 @@ func _peut_toucher(corps: Node3D) -> bool:
 
 func _actualiser() -> void:
 	$Zone/Anneau.visible = arme or temps_restant > 0.0
-	$Etat.text = "Sprinkler actif" if temps_restant > 0.0 else ("Sprinkler armé" if arme else "Sprinkler · Activation en boutique")
+	$Etat.text = emplacement + " · " + ("Actif" if temps_restant > 0.0 else ("Armé" if arme else "Activation en boutique"))

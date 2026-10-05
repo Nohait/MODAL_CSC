@@ -442,7 +442,7 @@ func _actualiser_pieces(_solde: int = 0) -> void:
 				break
 	var present := is_instance_valid(extincteur_mural)
 	boutique.actualiser_ravitaillement(monnaie.solde, extincteur_mural.disponible if present else false,
-		extincteur_mural.prix_recharge if present else 10, present)
+		extincteur_mural.prix_recharge if present else 5, present)
 
 func _acheter_recharge_murale() -> void:
 	# Revérifier côté jeu : un bouton grisé ne remplace pas la vérification d'un achat.

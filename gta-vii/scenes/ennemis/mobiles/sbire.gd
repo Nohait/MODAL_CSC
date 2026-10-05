@@ -385,10 +385,12 @@ func afficher_degats(degats: float) -> void:
 	var rd2 = randf_range(-0.1,0.1)
 	var rd3 = randf_range(-0.1,0.1)
 
-	$PopUpDegats.text = "-" + str(degats)
+	# Arrondir seulement le texte : les dégâts réels gardent leur précision.
+	$PopUpDegats.text = "-%d" % roundi(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
 	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
-	$PopUpDegats.font_size = 100*(1+rd2)
+	$PopUpDegats.font_size = roundi(40 * (1 + rd2))
+	$PopUpDegats.outline_size = 4
 	$PopUpDegats.visible = true
 
 	if popup_tween:
@@ -396,7 +398,7 @@ func afficher_degats(degats: float) -> void:
 
 	var position_depart = Vector3(rd1,2.5+rd2 ,0+rd3)
 	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
-	var taille_fin = 120*(1+rd1)
+	var taille_fin = roundi(48 * (1 + rd1))
 	popup_tween = create_tween() #Fonction qui permet de faire un gradient
 
 	popup_tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)

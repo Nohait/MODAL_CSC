@@ -25,6 +25,7 @@ func _ready() -> void:
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(choix_ennemis)
 	menu.hide()
 	_preparer_choix_ennemis()
+	_preparer_recharge_equipements()
 	# Un fond doré distingue le survol et les options activées du fond sombre.
 	for bouton in [invincibilite, degats, points_boutique, suivant, %LibererSalle, %Fermer]:
 		_styliser_selection(bouton)
@@ -44,6 +45,26 @@ func _ready() -> void:
 		bouton.pressed.connect(_aller_etage.bind(numero))
 		etages.add_child(bouton)
 
+
+func _preparer_recharge_equipements() -> void:
+	var bouton := Button.new()
+	bouton.name = "RechargerEquipements"
+	bouton.text = "Recharger tous les équipements"
+	_styliser_selection(bouton)
+	var contenu := %Fermer.get_parent()
+	contenu.add_child(bouton)
+	contenu.move_child(bouton, %Fermer.get_index())
+	bouton.pressed.connect(_recharger_equipements)
+
+func _recharger_equipements() -> void:
+	var nombre := 0
+	# Limiter la recherche à la salle actuelle, même si d'autres salles sont déjà générées.
+	for groupe in ["extincteur_mural", "sprinkler"]:
+		for equipement in get_tree().get_nodes_in_group(groupe):
+			if is_instance_valid(salles.salle_actuelle) and salles.salle_actuelle.is_ancestor_of(equipement):
+				equipement.recharger()
+				nombre += 1
+	situation.text = "%d équipement(s) rechargé(s) gratuitement." % nombre
 
 func _input(event: InputEvent) -> void:
 	if event is not InputEventKey or not event.pressed or event.echo:

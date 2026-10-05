@@ -1,7 +1,7 @@
 extends "res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd"
 
 signal boutique_fermee
-var sprinkler: Node3D
+var sprinklers: Array[Node3D] = []
 
 func _acheter_booster(rarete: StringName) -> void:
 	var avant := points
@@ -16,7 +16,6 @@ func _choisir(carte: Control) -> void:
 
 func _ready() -> void:
 	super._ready()
-	boutique.ajouter_sprinkler()
 	boutique.sprinkler_demande.connect(_acheter_sprinkler)
 	# Adapter les textes sans modifier la boutique du mode principal.
 	for noeud in boutique.find_children("*", "Label", true, false):
@@ -61,24 +60,18 @@ func _continuer() -> void:
 
 func _actualiser_pieces(_solde: int = 0) -> void:
 	super._actualiser_pieces(_solde)
-	# Comme l'extincteur, le sprinkler est créé avec la map, après le menu.
-	if not is_instance_valid(boutique.activation_sprinkler): return
-	if not is_instance_valid(sprinkler):
+	# La map existe au premier affichage de la boutique, pas à son initialisation.
+	if sprinklers.is_empty():
 		for objet in get_tree().get_nodes_in_group("sprinkler"):
 			if get_parent().is_ancestor_of(objet):
-				sprinkler = objet
-				sprinkler.etat_change.connect(_actualiser_pieces)
-				break
-	var present := is_instance_valid(sprinkler)
-	boutique.actualiser_sprinkler(monnaie.solde, sprinkler.prix_activation if present else 15,
-		sprinkler.arme if present else false, sprinkler.temps_restant > 0.0 if present else false, present)
+				sprinklers.append(objet)
+				objet.etat_change.connect(_actualiser_pieces)
+		if not sprinklers.is_empty(): boutique.ajouter_sprinklers(sprinklers)
+	boutique.actualiser_sprinklers(monnaie.solde)
 
-func _acheter_sprinkler() -> void:
+func _acheter_sprinkler(sprinkler: Node3D) -> void:
 	if not boutique_ouverte or choix_ouverts or not is_instance_valid(sprinkler): return
-	if sprinkler.arme or sprinkler.temps_restant > 0.0: return
+	if not sprinklers.has(sprinkler) or sprinkler.arme or sprinkler.temps_restant > 0.0: return
 	if monnaie.depenser(sprinkler.prix_activation):
 		sprinkler.armer()
-		boutique.retour.text = "Sprinkler armé : le prochain ennemi dans sa zone déclenchera le jet."
-
-
-
+		boutique.retour.text = "Sprinkler armé · %s : le prochain ennemi déclenchera le jet." % sprinkler.emplacement

@@ -25,6 +25,7 @@ func _ready() -> void:
 		bouton.pressed.connect(_aller_etage.bind(numero))
 		etages.add_child(bouton)
 	_preparer_choix_ennemis()
+	_preparer_recharge_equipements()
 	_preparer_choix_vagues()
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(choix_ennemis)
