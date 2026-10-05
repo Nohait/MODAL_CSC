@@ -1,0 +1,77 @@
+[gd_scene format=3]
+
+[sub_resource type="StyleBoxFlat" id="Fond"]
+bg_color = Color(0.08, 0.09, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.6, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="ChoixVagues" type="Control"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Centre" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panneau" type="PanelContainer" parent="Centre"]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Fond")
+
+[node name="Marge" type="MarginContainer" parent="Centre/Panneau"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Contenu" type="VBoxContainer" parent="Centre/Panneau/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Titre" type="Label" parent="Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+text = "CHOISIR UNE VAGUE"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.88, 0.65, 1)
+
+[node name="Explication" type="Label" parent="Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+text = "Remplace la vague actuelle et reprend le jeu.
+Avance à la première vague autorisée si nécessaire."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Defilement" type="ScrollContainer" parent="Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 320)
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="ListeVagues" type="GridContainer" parent="Centre/Panneau/Marge/Contenu/Defilement"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="Retour" type="Button" parent="Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Retour au menu de test"

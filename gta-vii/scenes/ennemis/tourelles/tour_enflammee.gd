@@ -19,6 +19,7 @@ var etage := 1
 
 # Annonce une vraie mort au RoomManager, avant la suppression du nœud.
 signal died
+signal degats_subis(quantite: float)
 var est_mort := false
 
 var cible = null
@@ -156,8 +157,11 @@ func prendre_degats(degats: float) -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
 	if est_mort:
 		return
+	# Le bilan écoute cette perte effective ; un coup fatal ne compte pas de PV négatifs.
+	var vie_avant: float = vie
 	vie -= degats
 	vie = max(vie, 0)
+	if vie < vie_avant: degats_subis.emit(vie_avant - vie)
 	cible = player #On change l'aggro si le joueur attaque la tour
 	
 	afficher_degats(degats)
@@ -172,6 +176,7 @@ func mourir():
 	est_mort = true
 	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
 	var steam_death=  AudioStreamPlayer3D.new()
+	steam_death.bus = &"Effets"
 	get_parent().add_child(steam_death)
 	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
 	steam_death.global_position = global_position

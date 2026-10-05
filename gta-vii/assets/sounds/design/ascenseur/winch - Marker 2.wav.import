@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dqt7cmr8qw3pc"
+path="res://.godot/imported/winch - Marker 2.wav-a6556d7427bb5807929d04aed9f89de1.sample"
+
+[deps]
+
+source_file="res://assets/sounds/design/ascenseur/winch - Marker 2.wav"
+dest_files=["res://.godot/imported/winch - Marker 2.wav-a6556d7427bb5807929d04aed9f89de1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

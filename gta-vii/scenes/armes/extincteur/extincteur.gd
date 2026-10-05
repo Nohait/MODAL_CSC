@@ -10,6 +10,9 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 
 @onready var steam_damage = $"Sons/steam_damage".get_children()
 @onready var steam_damage_sound = $"Sons/steam_damage/steam_damage2"
+@onready var souffle: AudioStreamPlayer3D = $Sons/Souffle
+@onready var volume_souffle: float = souffle.volume_db
+var fondu_souffle: Tween
 
 
 @export_group("Jet")
@@ -51,6 +54,9 @@ var attente_recharge := 0.0
 var bonus_degats_actif := false
 # Indépendant de l'escorte : reste actif quand une victime est évacuée.
 var multiplicateur_degats_ameliorations := 1.0
+# Les événements sont indépendants des cartes et ne changent pas leur équilibrage.
+var consommation_evenement := 1.0
+var panne_evenement := false
 var bonus_dernier_souffle := 0.0
 var seuil_dernier_souffle := 25.0
 var ralentissement_jet := 0.0
@@ -110,17 +116,35 @@ func actualiser_position_jet() -> void:
 	# local_coords reste activé : le jet déjà émis suit la visée, comme auparavant.
 
 func start_primary_attack() -> void:
-	if not is_overheated and not is_attacking:
+	if not panne_evenement and not is_overheated and not is_attacking:
 		portions_jet.append(Vector2.ZERO)
 		is_attacking = true
 		attente_recharge = delai_avant_recharge
 		particles.emitting = true
+		regler_souffle(true)
 
 
 func stop_primary_attack() -> void:
 	# Arrêter l'émission ; les portions déjà parties continuent leur trajet.
+	if is_attacking:
+		regler_souffle(false)
 	is_attacking = false
 	particles.emitting = false
+
+func regler_souffle(en_marche: bool) -> void:
+	# Interrompre le fondu précédent permet aussi de reprendre un tir très rapidement.
+	if fondu_souffle: fondu_souffle.kill()
+	fondu_souffle = create_tween()
+	if en_marche:
+		if not souffle.playing:
+			souffle.volume_db = -60.0
+			souffle.play()
+		# Le Tween monte le volume en 80 ms, sans changer la vitesse du son.
+		fondu_souffle.tween_property(souffle, "volume_db", volume_souffle, 0.08)
+	else:
+		# Baisser le volume avant stop() évite une coupure sèche du souffle.
+		fondu_souffle.tween_property(souffle, "volume_db", -60.0, 0.12)
+		fondu_souffle.tween_callback(souffle.stop)
 
 
 func vider_jet() -> void:
@@ -145,7 +169,7 @@ func _physics_process(delta: float) -> void:
 		modifier(15,2.8)
 	if is_attacking:
 		attente_recharge = delai_avant_recharge
-		charge -= consumption_rate * delta
+		charge -= consumption_rate * consommation_evenement * delta
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true

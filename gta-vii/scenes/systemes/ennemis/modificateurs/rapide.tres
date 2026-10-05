@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ModificateurElite" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ennemis/modificateur_elite.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+identifiant = "rapide"
+titre = "Véloce"
+description = "Court 35 % plus vite."
+couleur = Color(0.15, 0.85, 1, 1)
+symbole = "»"
+vitesse = 1.35

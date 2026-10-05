@@ -98,18 +98,22 @@ billboard = 1
 [node name="cris" type="Node3D" parent="Sons" unique_id=81621523]
 
 [node name="scream1" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=297965837]
+bus = &"Effets"
 stream = ExtResource("2_ovwgb")
 
 [node name="man_helpme1" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=203652440]
+bus = &"Effets"
 stream = ExtResource("3_feqff")
 unit_size = 5.0
 
 [node name="man_helpme2" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=573838042]
+bus = &"Effets"
 stream = ExtResource("4_m8bqf")
 
 [node name="UI" type="Node3D" parent="Sons" unique_id=2011843790]
 
 [node name="liberation" type="AudioStreamPlayer3D" parent="Sons/UI" unique_id=615371580]
+bus = &"Effets"
 stream = ExtResource("5_bwg0e")
 pitch_scale = 20.0
 

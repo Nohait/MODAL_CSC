@@ -79,6 +79,7 @@ func actualiser_secours() -> void:
 	secours.tooltip_text = "Secours disponibles : %d" % nombre
 
 func afficher_impact_bouclier() -> void:
+	joueur.flash_degats(Color("59bde8"))
 	if animation_eclat: animation_eclat.kill()
 	eclat.show()
 	eclat.scale = Vector3.ONE

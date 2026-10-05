@@ -30,6 +30,10 @@ func _ready() -> void:
 	# Décaler les oscillations pour que les foyers ne battent pas tous ensemble.
 	temps = global_position.x * 0.7 + global_position.z * 0.3
 	_actualiser()
+	if not Engine.is_editor_hint():
+		# Le fichier boucle ; décaler le départ évite que tous les foyers crépitent en même temps.
+		var son: AudioStreamPlayer3D = $Crepitement
+		son.play(randf_range(0.0, son.stream.get_length()))
 
 func _process(delta: float) -> void:
 	temps += delta

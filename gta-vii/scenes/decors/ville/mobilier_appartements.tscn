@@ -1,0 +1,603 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/ville/mobilier_annexe.gd" id="script"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/bedDouble.glb" id="bedDouble"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/bedSingle.glb" id="bedSingle"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/bookcaseOpen.glb" id="bookcaseOpen"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/books.glb" id="books"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/kitchenCabinet.glb" id="kitchenCabinet"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/kitchenSink.glb" id="kitchenSink"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/kitchenStove.glb" id="kitchenStove"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/kitchenFridge.glb" id="kitchenFridge"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/bathroomSink.glb" id="bathroomSink"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/shower.glb" id="shower"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/toilet.glb" id="toilet"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/loungeSofa.glb" id="loungeSofa"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/tableCoffee.glb" id="tableCoffee"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/chair.glb" id="chair"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/table.glb" id="table"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/cardboardBoxClosed.glb" id="cardboardBoxClosed"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/cabinetBed.glb" id="cabinetBed"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/appartements/poubelle_metal.glb" id="poubelle_metal"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
+
+[sub_resource type="StandardMaterial3D" id="carrelage_bain"]
+albedo_color = Color(0.27, 0.30, 0.31, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="sol_bain"]
+size = Vector3(2.3, 0.04, 2.6)
+
+[sub_resource type="BoxMesh" id="cloison_bain"]
+size = Vector3(0.12, 1.7, 2.6)
+
+[sub_resource type="BoxMesh" id="retour_bain"]
+size = Vector3(1.2, 1.7, 0.12)
+
+[node name="MobilierAnnexes" type="Node3D"]
+editor_description = "Quatre appartements habités et le local à poubelles. Modèles décoratifs sans collisions. Hauteur et Suie sont réglables sur chaque meuble."
+
+[node name="AppartementNord0" type="Node3D" parent="."]
+position = Vector3(-28, 0.09, -9.1)
+
+[node name="Lit" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-0.2, 0, -1)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bedDouble")
+hauteur = 0.8
+suie = 0.25
+
+[node name="Chevet" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-1.8, 0, -1.8)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cabinetBed")
+hauteur = 0.5
+suie = 0.25
+
+[node name="Bibliotheque" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-0.3, 0, 2.45)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bookcaseOpen")
+hauteur = 1.7
+suie = 0.25
+
+[node name="Livres" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-0.25, 0.63, 2.3)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("books")
+hauteur = 0.19
+suie = 0.25
+
+[node name="PlanTravail" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-2.85, 0, -2.3)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenCabinet")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Evier" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-2.85, 0, -1.3199999999999998)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenSink")
+hauteur = 0.98
+suie = 0.25
+
+[node name="Cuisiniere" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-2.85, 0, -0.33999999999999986)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenStove")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Refrigerateur" type="Node3D" parent="AppartementNord0"]
+position = Vector3(-2.85, 0, 1.5)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenFridge")
+hauteur = 1.8
+suie = 0.25
+
+[node name="SalleEau" type="Node3D" parent="AppartementNord0"]
+position = Vector3(2.55, 0, -2.5)
+
+[node name="Sol" type="MeshInstance3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(0, 0.015, 0)
+mesh = SubResource("sol_bain")
+material_override = SubResource("carrelage_bain")
+
+[node name="Cloison" type="MeshInstance3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(-1.15, 0.85, 0)
+mesh = SubResource("cloison_bain")
+material_override = ExtResource("mur")
+
+[node name="Retour" type="MeshInstance3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(0.55, 0.85, 1.3)
+mesh = SubResource("retour_bain")
+material_override = ExtResource("mur")
+
+[node name="Douche" type="Node3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(0.3, 0.04, -0.4)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("shower")
+hauteur = 1.85
+suie = 0.1
+
+[node name="Toilettes" type="Node3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(-0.45, 0.04, 0.65)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("toilet")
+hauteur = 0.75
+suie = 0.13
+
+[node name="Lavabo" type="Node3D" parent="AppartementNord0/SalleEau"]
+position = Vector3(0.55, 0.55, 0.75)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bathroomSink")
+hauteur = 0.5
+suie = 0.12
+
+[node name="IncendieCuisine" parent="AppartementNord0" instance=ExtResource("foyer")]
+position = Vector3(-2.85, 0.92, -0.34)
+taille = 0.48
+energie = 1.1
+portee_lumiere = 4.0
+densite_fumee = 0.5
+
+[node name="AppartementNord1" type="Node3D" parent="."]
+position = Vector3(-36, 0.09, -9.1)
+
+[node name="Lit" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-0.2, 0, -1)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bedSingle")
+hauteur = 0.8
+suie = 0.25
+
+[node name="Chevet" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-1.8, 0, -1.8)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cabinetBed")
+hauteur = 0.5
+suie = 0.25
+
+[node name="Bibliotheque" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-0.3, 0, 2.45)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bookcaseOpen")
+hauteur = 1.7
+suie = 0.25
+
+[node name="Livres" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-0.25, 0.63, 2.3)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("books")
+hauteur = 0.19
+suie = 0.25
+
+[node name="PlanTravail" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-2.85, 0, -2.3)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenCabinet")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Evier" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-2.85, 0, -1.3199999999999998)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenSink")
+hauteur = 0.98
+suie = 0.25
+
+[node name="Cuisiniere" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-2.85, 0, -0.33999999999999986)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenStove")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Refrigerateur" type="Node3D" parent="AppartementNord1"]
+position = Vector3(-2.85, 0, 1.5)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenFridge")
+hauteur = 1.8
+suie = 0.25
+
+[node name="SalleEau" type="Node3D" parent="AppartementNord1"]
+position = Vector3(2.55, 0, -2.5)
+
+[node name="Sol" type="MeshInstance3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(0, 0.015, 0)
+mesh = SubResource("sol_bain")
+material_override = SubResource("carrelage_bain")
+
+[node name="Cloison" type="MeshInstance3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(-1.15, 0.85, 0)
+mesh = SubResource("cloison_bain")
+material_override = ExtResource("mur")
+
+[node name="Retour" type="MeshInstance3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(0.55, 0.85, 1.3)
+mesh = SubResource("retour_bain")
+material_override = ExtResource("mur")
+
+[node name="Douche" type="Node3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(0.3, 0.04, -0.4)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("shower")
+hauteur = 1.85
+suie = 0.1
+
+[node name="Toilettes" type="Node3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(-0.45, 0.04, 0.65)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("toilet")
+hauteur = 0.75
+suie = 0.13
+
+[node name="Lavabo" type="Node3D" parent="AppartementNord1/SalleEau"]
+position = Vector3(0.55, 0.55, 0.75)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bathroomSink")
+hauteur = 0.5
+suie = 0.12
+
+[node name="IncendieLit" parent="AppartementNord1" instance=ExtResource("foyer")]
+position = Vector3(0.3, 0.6, -1)
+taille = 0.42
+energie = 1.1
+portee_lumiere = 4.0
+densite_fumee = 0.5
+
+[node name="AppartementSud0" type="Node3D" parent="."]
+position = Vector3(-28, 0.09, 3.1)
+
+[node name="Lit" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-0.2, 0, 1)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bedDouble")
+hauteur = 0.8
+suie = 0.25
+
+[node name="Chevet" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-1.8, 0, 1.8)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cabinetBed")
+hauteur = 0.5
+suie = 0.25
+
+[node name="Bibliotheque" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-0.3, 0, -2.45)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bookcaseOpen")
+hauteur = 1.7
+suie = 0.25
+
+[node name="Livres" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-0.25, 0.63, -2.3)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("books")
+hauteur = 0.19
+suie = 0.25
+
+[node name="PlanTravail" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-2.85, 0, 2.3)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenCabinet")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Evier" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-2.85, 0, 1.3199999999999998)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenSink")
+hauteur = 0.98
+suie = 0.25
+
+[node name="Cuisiniere" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-2.85, 0, 0.33999999999999986)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenStove")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Refrigerateur" type="Node3D" parent="AppartementSud0"]
+position = Vector3(-2.85, 0, -1.5)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenFridge")
+hauteur = 1.8
+suie = 0.25
+
+[node name="SalleEau" type="Node3D" parent="AppartementSud0"]
+position = Vector3(2.55, 0, 2.5)
+
+[node name="Sol" type="MeshInstance3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(0, 0.015, 0)
+mesh = SubResource("sol_bain")
+material_override = SubResource("carrelage_bain")
+
+[node name="Cloison" type="MeshInstance3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(-1.15, 0.85, 0)
+mesh = SubResource("cloison_bain")
+material_override = ExtResource("mur")
+
+[node name="Retour" type="MeshInstance3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(0.55, 0.85, -1.3)
+mesh = SubResource("retour_bain")
+material_override = ExtResource("mur")
+
+[node name="Douche" type="Node3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(0.3, 0.04, 0.4)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("shower")
+hauteur = 1.85
+suie = 0.1
+
+[node name="Toilettes" type="Node3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(-0.45, 0.04, -0.65)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("toilet")
+hauteur = 0.75
+suie = 0.13
+
+[node name="Lavabo" type="Node3D" parent="AppartementSud0/SalleEau"]
+position = Vector3(0.55, 0.55, -0.75)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bathroomSink")
+hauteur = 0.5
+suie = 0.12
+
+[node name="IncendieLit" parent="AppartementSud0" instance=ExtResource("foyer")]
+position = Vector3(0.3, 0.6, 1)
+taille = 0.42
+energie = 1.1
+portee_lumiere = 4.0
+densite_fumee = 0.5
+
+[node name="AppartementSud1" type="Node3D" parent="."]
+position = Vector3(-36, 0.09, 3.1)
+
+[node name="Lit" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-0.2, 0, 1)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bedSingle")
+hauteur = 0.8
+suie = 0.25
+
+[node name="Chevet" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-1.8, 0, 1.8)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cabinetBed")
+hauteur = 0.5
+suie = 0.25
+
+[node name="Bibliotheque" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-0.3, 0, -2.45)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bookcaseOpen")
+hauteur = 1.7
+suie = 0.25
+
+[node name="Livres" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-0.25, 0.63, -2.3)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("books")
+hauteur = 0.19
+suie = 0.25
+
+[node name="PlanTravail" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-2.85, 0, 2.3)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenCabinet")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Evier" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-2.85, 0, 1.3199999999999998)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenSink")
+hauteur = 0.98
+suie = 0.25
+
+[node name="Cuisiniere" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-2.85, 0, 0.33999999999999986)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenStove")
+hauteur = 0.9
+suie = 0.25
+
+[node name="Refrigerateur" type="Node3D" parent="AppartementSud1"]
+position = Vector3(-2.85, 0, -1.5)
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("kitchenFridge")
+hauteur = 1.8
+suie = 0.25
+
+[node name="SalleEau" type="Node3D" parent="AppartementSud1"]
+position = Vector3(2.55, 0, 2.5)
+
+[node name="Sol" type="MeshInstance3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(0, 0.015, 0)
+mesh = SubResource("sol_bain")
+material_override = SubResource("carrelage_bain")
+
+[node name="Cloison" type="MeshInstance3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(-1.15, 0.85, 0)
+mesh = SubResource("cloison_bain")
+material_override = ExtResource("mur")
+
+[node name="Retour" type="MeshInstance3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(0.55, 0.85, -1.3)
+mesh = SubResource("retour_bain")
+material_override = ExtResource("mur")
+
+[node name="Douche" type="Node3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(0.3, 0.04, 0.4)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("shower")
+hauteur = 1.85
+suie = 0.1
+
+[node name="Toilettes" type="Node3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(-0.45, 0.04, -0.65)
+rotation = Vector3(0, 3.14159, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("toilet")
+hauteur = 0.75
+suie = 0.13
+
+[node name="Lavabo" type="Node3D" parent="AppartementSud1/SalleEau"]
+position = Vector3(0.55, 0.55, -0.75)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bathroomSink")
+hauteur = 0.5
+suie = 0.12
+
+[node name="IncendieCuisine" parent="AppartementSud1" instance=ExtResource("foyer")]
+position = Vector3(-2.85, 0.92, 0.34)
+taille = 0.48
+energie = 1.1
+portee_lumiere = 4.0
+densite_fumee = 0.5
+
+[node name="Salon" type="Node3D" parent="."]
+position = Vector3(-43.6, 0.09, -9)
+
+[node name="Canape" type="Node3D" parent="Salon"]
+position = Vector3(0, 0, -1.3)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("loungeSofa")
+hauteur = 0.9
+suie = 0.25
+
+[node name="TableBasse" type="Node3D" parent="Salon"]
+position = Vector3(0, 0, 0.5)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("tableCoffee")
+hauteur = 0.45
+suie = 0.25
+
+[node name="Bibliotheque" type="Node3D" parent="Salon"]
+position = Vector3(2.25, 0, -1.5)
+rotation = Vector3(0, 0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("bookcaseOpen")
+hauteur = 1.8
+suie = 0.25
+
+[node name="LocalPoubelles" type="Node3D" parent="."]
+
+[node name="Poubelle0" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(-4.8, 0.09, -29.2)
+rotation = Vector3(0, 0.0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("poubelle_metal")
+hauteur = 1.05
+suie = 0.08
+
+[node name="Poubelle1" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(-3.3, 0.09, -29.2)
+rotation = Vector3(0, 0.23, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("poubelle_metal")
+hauteur = 1.05
+suie = 0.08
+
+[node name="Poubelle2" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(-1.8, 0.09, -29.2)
+rotation = Vector3(0, 0.46, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("poubelle_metal")
+hauteur = 1.05
+suie = 0.08
+
+[node name="Poubelle3" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(1.0, 0.09, -29.2)
+rotation = Vector3(0, 0.6900000000000001, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("poubelle_metal")
+hauteur = 1.05
+suie = 0.08
+
+[node name="Poubelle4" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(2.5, 0.09, -29.2)
+rotation = Vector3(0, 0.92, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("poubelle_metal")
+hauteur = 1.05
+suie = 0.08
+
+[node name="Carton0" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(-5, 0.09, -27.5)
+rotation = Vector3(0, 0.0, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cardboardBoxClosed")
+hauteur = 0.65
+suie = 0.45
+
+[node name="Carton1" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(3.5, 0.09, -29)
+rotation = Vector3(0, 0.6, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cardboardBoxClosed")
+hauteur = 0.65
+suie = 0.45
+
+[node name="Carton2" type="Node3D" parent="LocalPoubelles"]
+position = Vector3(4.5, 0.09, -28)
+rotation = Vector3(0, 1.2, 0)
+script = ExtResource("script")
+modele_scene = ExtResource("cardboardBoxClosed")
+hauteur = 0.65
+suie = 0.45
+
+[node name="IncendieCartons" parent="LocalPoubelles" instance=ExtResource("foyer")]
+position = Vector3(4.1, 0.25, -28.5)
+taille = 0.6
+energie = 1.1
+portee_lumiere = 4.0
+densite_fumee = 0.5

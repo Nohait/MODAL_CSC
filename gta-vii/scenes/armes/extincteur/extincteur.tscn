@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cj5mcflqq4lnc"]
 
+[ext_resource type="AudioStream" path="res://assets/sounds/design/155516__planet-leader__fireextinguisher.wav" id="souffle"]
+
 [ext_resource type="Script" uid="uid://di455s628jw3t" path="res://scenes/armes/extincteur/extincteur.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://8srttl8ul3pr" path="res://assets/modeles/extincteur/extincteur0.blend" id="2_klu21"]
 [ext_resource type="Script" uid="uid://bxavtvxd02gl7" path="res://scenes/armes/extincteur/indicateur_attaque.gd" id="3_indicateur"]
@@ -74,10 +76,19 @@ visible = false
 
 [node name="Sons" type="Node3D" parent="." unique_id=670960918]
 
+[node name="Souffle" type="AudioStreamPlayer3D" parent="Sons"]
+bus = &"Effets"
+stream = ExtResource("souffle")
+volume_db = -12.0
+unit_size = 4.0
+max_distance = 12.0
+
 [node name="steam_damage" type="Node3D" parent="Sons" unique_id=705348924]
 
 [node name="steam_damage2" type="AudioStreamPlayer3D" parent="Sons/steam_damage" unique_id=1437426322]
+bus = &"Effets"
 stream = ExtResource("4_0ntp2")
 
 [node name="steam_damage1" type="AudioStreamPlayer3D" parent="Sons/steam_damage" unique_id=110784539]
+bus = &"Effets"
 stream = ExtResource("5_eg3a3")

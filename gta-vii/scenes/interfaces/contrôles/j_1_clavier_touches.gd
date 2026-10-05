@@ -25,6 +25,7 @@ func _ready() -> void:
 		boutons_actions[action].pressed.connect(commencer_rebind.bind(action))
 
 func commencer_rebind(action: String) -> void:
+	menu_controles.annuler_rebind()
 	#en attendant que le joueur choisisse, on affiche '...'
 	boutons_actions[action].text = "..."
 	
@@ -52,6 +53,15 @@ func changer_touche(event: InputEvent) -> void:
 	
 	en_attente = false
 	action_a_modifier = ""
+	menu_controles.commandes_changees.emit()
+
+func annuler_rebind() -> void:
+	if not en_attente: return
+	boutons_actions[action_a_modifier].button_mask = MOUSE_BUTTON_MASK_LEFT
+	boutons_actions[action_a_modifier].focus_mode = Control.FOCUS_ALL
+	en_attente = false
+	action_a_modifier = ""
+	menu_controles.mettre_a_jour_affichage_clavier()
 	
 
 func mettre_a_jour_boutons() -> void:
@@ -61,7 +71,11 @@ func mettre_a_jour_boutons() -> void:
 			enfant.custom_minimum_size = taille_minimale_boutons
 
 func _input(event: InputEvent) -> void:
-	if not en_attente:
+	if not en_attente or not is_visible_in_tree():
+		return
+	if event.is_action_pressed("ui_cancel"):
+		annuler_rebind()
+		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		changer_touche(event)

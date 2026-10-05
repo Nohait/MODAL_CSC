@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://33d8otsyev3h"]
 
 [ext_resource type="Script" uid="uid://dmtdn0y7jc87q" path="res://scenes/ennemis/tourelles/projectile_tour.gd" id="1_ml7bw"]
-[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_bkn8t"]
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flammes_simples.tscn" id="2_bkn8t"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ml7bw"]
 albedo_color = Color(1, 0.49803922, 0.13333334, 1)
@@ -28,4 +28,4 @@ mesh = SubResource("SphereMesh_c8fcr")
 shape = SubResource("SphereShape3D_softn")
 
 [node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_bkn8t")]
-transform = Transform3D(4.1861715, 0, 0, 0, 0.41926527, 0, 0, 0, 3.0066571, 0.017909586, -0.036562085, 0.009313464)
+editor_description = "Garder une échelle uniforme : la taille du feu se règle sur ses particules."

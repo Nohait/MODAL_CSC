@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b58or6p5xbts" path="res://scenes/ennemis/tourelles/tour_enflammee.gd" id="1_wegx8"]
 [ext_resource type="PackedScene" uid="uid://bep7kihre8e2c" path="res://assets/modeles/ennemis/tourelle_oeil/oeil.glb" id="3_oeil"]
 [ext_resource type="Script" uid="uid://brepu3outyodl" path="res://scenes/ennemis/tourelles/visuel_tourelle.gd" id="4_visuel"]
-[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="5_x68gu"]
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flammes_simples.tscn" id="5_x68gu"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rr374"]
 resource_name = "TourMateriau"
@@ -109,7 +109,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_x68gu")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5419326, 0)
 
 [node name="vfx_fire" parent="Visuel/OeilPivot" unique_id=1657664350 instance=ExtResource("5_x68gu")]
-transform = Transform3D(3.110069, 0, 0, 0, 1, 0, 0, 0, 1, 0.014327049, -0.086061, 0.043255806)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.014327049, -0.086061, 0.043255806)
 
 [node name="Oeil" parent="Visuel/OeilPivot" unique_id=1354444570 instance=ExtResource("3_oeil")]
 transform = Transform3D(0.62, 0, 0, 0, 1.6, 0, 0, 0, 0.85, 0, 0, 0)

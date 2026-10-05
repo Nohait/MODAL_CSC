@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/entree_ennemis.gd" id="script"]
 
+[ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/annonce_porte.gd" id="annonce"]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/poussiere_porte.gdshader" id="poussiere_shader"]
+
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
 
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
@@ -9,6 +13,17 @@
 [ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
 
 [ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+
+[sub_resource type="ShaderMaterial" id="poussiere_materiau"]
+shader = ExtResource("poussiere_shader")
+
+[sub_resource type="QuadMesh" id="poussiere_mesh"]
+material = SubResource("poussiere_materiau")
+size = Vector2(0.16, 0.16)
+
+[sub_resource type="Gradient" id="poussiere_fondu"]
+offsets = PackedFloat32Array(0, 0.15, 1)
+colors = PackedColorArray(0.48, 0.40, 0.32, 0, 0.48, 0.40, 0.32, 0.35, 0.32, 0.28, 0.23, 0)
 
 [sub_resource type="StandardMaterial3D" id="noir"]
 albedo_color = Color(0.012, 0.009, 0.008, 1)
@@ -70,6 +85,9 @@ size = Vector3(1.8, 3.0, 0.12)
 
 [sub_resource type="BoxMesh" id="box16"]
 size = Vector3(1.8, 3.0, 0.12)
+
+[sub_resource type="BoxShape3D" id="limite_seuil"]
+size = Vector3(3.8, 3.2, 0.2)
 
 [node name="PorteArrivee" type="Node3D"]
 script = ExtResource("script")
@@ -178,3 +196,33 @@ initial_velocity_min = 0.2
 initial_velocity_max = 0.7
 color_ramp = SubResource("fondu")
 cast_shadow = 0
+
+[node name="AnnoncePorte" type="Node3D" parent="."]
+script = ExtResource("annonce")
+
+[node name="Poussiere" type="CPUParticles3D" parent="AnnoncePorte"]
+position = Vector3(0, 2.7, 0.25)
+emitting = false
+amount = 16
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("poussiere_mesh")
+emission_shape = 3
+emission_box_extents = Vector3(1.8, 0.1, 0.12)
+direction = Vector3(0, 0, 1)
+spread = 45.0
+gravity = Vector3(0, -1.5, 0)
+initial_velocity_min = 0.3
+initial_velocity_max = 0.8
+color_ramp = SubResource("poussiere_fondu")
+cast_shadow = 0
+
+[node name="LimiteSeuil" type="StaticBody3D" parent="." groups=["collider"]]
+editor_description = "Limite de l'arène : les figurants traversent visuellement, les vrais ennemis apparaissent déjà à l'intérieur."
+position = Vector3(0, 1.6, -0.12)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="LimiteSeuil"]
+shape = SubResource("limite_seuil")

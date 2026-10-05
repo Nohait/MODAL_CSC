@@ -2,6 +2,17 @@ extends "res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd"
 
 signal boutique_fermee
 
+func _acheter_booster(rarete: StringName) -> void:
+	var avant := points
+	super._acheter_booster(rarete)
+	# Un achat refusé ou un booster gratuit ne dépense aucun point.
+	StatistiquesZombie.noter_achat(avant - points)
+
+func _choisir(carte: Control) -> void:
+	if not choix_ouverts or not is_instance_valid(carte) or carte.get_parent() != cartes: return
+	super._choisir(carte)
+	StatistiquesZombie.noter_amelioration()
+
 func _ready() -> void:
 	super._ready()
 	# Adapter les textes sans modifier la boutique du mode principal.

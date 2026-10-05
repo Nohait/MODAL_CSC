@@ -192,6 +192,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			input_victim_control_fait = false
 				
+		# Rappel sur Q physique : A sur AZERTY, distinct de la touche physique A du déplacement.
 		if Input.is_action_just_pressed("victime_nav_auto"):
 			victim_manager.retour_nav_auto()
 	
@@ -219,15 +220,20 @@ func animate(delta: float) -> void:
 	
 	
 
-func flash_degats() -> void:
+func flash_degats(teinte: Color = Color("d11500")) -> void:
 	if flash_tween:
 		flash_tween.kill()
+	if damage_flash.material == null:
+		var materiau := ShaderMaterial.new()
+		materiau.shader = preload("res://scenes/interfaces/hud/contour_degats.gdshader")
+		damage_flash.material = materiau
 	damage_flash.visible = true
-	damage_flash.color.a = 0.0
-	
+	damage_flash.color = Color(teinte, 0.0)
+	# Un seul effet pour la vie et le bouclier ; les impacts rapprochés le relancent.
 	flash_tween = create_tween()
-	flash_tween.tween_property(damage_flash,"color:a",0.4,0.05)
-	flash_tween.tween_property(damage_flash,"color:a",0.0,0.2)
+	flash_tween.tween_property(damage_flash, "color:a", 0.45, 0.045)
+	flash_tween.tween_property(damage_flash, "color:a", 0.0, 0.28)
+	flash_tween.tween_callback(damage_flash.hide)
 
 func prendre_degats(degats: float) -> void:
 	# Quitter la fonction avant de retirer de la vie si le mode est actif.

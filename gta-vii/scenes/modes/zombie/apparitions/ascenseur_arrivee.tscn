@@ -1,6 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="AudioStream" path="res://assets/sounds/design/ascenseur/ouverture_portes.wav" id="ouverture_portes"]
+
 [ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/entree_ennemis.gd" id="script"]
+[ext_resource type="AudioStream" path="res://assets/sounds/design/ascenseur/winch - Region #1.wav" id="mecanisme"]
 
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
 
@@ -289,3 +292,19 @@ initial_velocity_min = 0.2
 initial_velocity_max = 0.7
 color_ramp = SubResource("fondu")
 cast_shadow = 0
+
+[node name="Mecanisme" type="AudioStreamPlayer3D" parent="."]
+bus = &"Effets"
+position = Vector3(0, 1, -1.5)
+stream = ExtResource("mecanisme")
+volume_db = -7.0
+unit_size = 5.0
+max_distance = 18.0
+
+[node name="OuverturePortes" type="AudioStreamPlayer3D" parent="."]
+bus = &"Effets"
+position = Vector3(0, 1, 0)
+stream = ExtResource("ouverture_portes")
+volume_db = -12.0
+unit_size = 5.0
+max_distance = 18.0

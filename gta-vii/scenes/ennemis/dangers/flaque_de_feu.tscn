@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://34w4hj7arfm7"]
 
 [ext_resource type="Script" uid="uid://c8qj2u0ap2a3s" path="res://scenes/ennemis/dangers/flaque_de_feu.gd" id="1_rvmi7"]
-[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_ct53f"]
+[ext_resource type="PackedScene" path="res://scenes/effets/feu/flammes_simples.tscn" id="2_ct53f"]
 
 [ext_resource type="Shader" path="res://scenes/ennemis/dangers/visuel_flaque.gdshader" id="visuel"]
 
@@ -57,3 +57,7 @@ outline_size = 20
 
 [node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_ct53f")]
 transform = Transform3D(1, 0, 0, 0, 0.8, 0, 0, 0, 1, -0.008569062, 0.06868073, 0.053449154)
+
+[node name="Flames" parent="vfx_fire" index="0"]
+editor_description = "Configurer le nombre avant l'entrée dans l'arbre : ne pas redimensionner les données de rendu dans _ready."
+amount = 30

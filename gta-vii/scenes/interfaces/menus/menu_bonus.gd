@@ -22,10 +22,18 @@ var animation: Tween
 var animation_raccourci: Tween
 var accent_survol := 0.0
 var temps_booster := 0.0
+@onready var onglet_bonus: Button = %OngletBonus
+@onready var onglet_glossaire: Button = %OngletGlossaire
+@onready var glossaire: Control = %Glossaire
+@onready var contenu_bonus: Control = $Menu/Panneau/Marge/Disposition/Defilement
 @onready var ouverture_booster: Control = $OuvertureBooster
 
 
 func _ready() -> void:
+	for onglet in [onglet_bonus, onglet_glossaire]:
+		var papier_onglet: TextureRect = onglet.get_node("Papier")
+		papier_onglet.material = papier_onglet.material.duplicate()
+		papier_onglet.material.set_shader_parameter("selection", 0.0)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	# Process Mode = Always dans la scène : le menu et son animation vivent en pause.
 	raccourci.get_node("Fond").material = raccourci.get_node("Fond").material.duplicate()
@@ -33,6 +41,10 @@ func _ready() -> void:
 	raccourci.mouse_entered.connect(_animer_raccourci.bind(true))
 	raccourci.mouse_exited.connect(_animer_raccourci.bind(false))
 	fermer.pressed.connect(fermer_menu)
+	%Options.pressed.connect(Reglages.ouvrir)
+	onglet_bonus.pressed.connect(_choisir_onglet.bind(false))
+	onglet_glossaire.pressed.connect(_choisir_onglet.bind(true))
+	_choisir_onglet(false)
 	upgrades.ameliorations_changees.connect(actualiser_affichage)
 	papier.material = papier.material.duplicate()
 	papier.resized.connect(_actualiser_taille_papier)
@@ -46,6 +58,14 @@ func _actualiser_taille_papier() -> void:
 
 func _process(delta: float) -> void:
 	temps_booster += delta
+	for onglet in [onglet_bonus, onglet_glossaire]:
+		var fond_onglet: TextureRect = onglet.get_node("Papier")
+		var cible := 1.0 if onglet.button_pressed else (0.45 if onglet.is_hovered() or onglet.has_focus() else 0.0)
+		var accent: float = fond_onglet.material.get_shader_parameter("selection")
+		# Éclaircir progressivement le papier au survol et sur l'onglet actif.
+		fond_onglet.material.set_shader_parameter("selection", lerpf(accent, cible, 1.0 - exp(-12.0 * delta)))
+		fond_onglet.material.set_shader_parameter("horloge", temps_booster)
+		fond_onglet.material.set_shader_parameter("taille", onglet.size)
 	var fond: TextureRect = raccourci.get_node("Fond")
 	fond.material.set_shader_parameter("horloge", temps_booster)
 	fond.material.set_shader_parameter("taille", raccourci.size)
@@ -79,6 +99,7 @@ func peut_ouvrir() -> bool:
 
 func ouvrir_menu() -> void:
 	if not peut_ouvrir(): return
+	_choisir_onglet(false)
 	pause_avant = get_tree().paused
 	fermer.text = "Retour à la boutique" if pause_avant else "Reprendre"
 	gestionnaire.player.extincteur.stop_primary_attack()
@@ -134,7 +155,7 @@ func actualiser_affichage() -> void:
 		touche = OS.get_keycode_string(evenement.physical_keycode if evenement.physical_keycode else evenement.keycode)
 	raccourci.get_node("Touche").text = "[%s]" % touche
 	raccourci.get_node("Nombre").text = "%d amélioration%s" % [nombre, "s" if nombre > 1 else ""]
-	raccourci.tooltip_text = "Ouvrir les bonus (%s)" % touche
+	raccourci.tooltip_text = "Ouvrir le carnet (%s)" % touche
 
 	_vider_cartes(cartes_permanents)
 	_vider_cartes(cartes_temporaires)
@@ -174,3 +195,10 @@ func _animer_raccourci(survole: bool) -> void:
 	animation_raccourci = create_tween()
 	animation_raccourci.tween_property(self, "accent_survol",
 		1.0 if survole else 0.0, 0.15)
+
+func _choisir_onglet(ouvrir_glossaire: bool) -> void:
+	contenu_bonus.visible = not ouvrir_glossaire
+	glossaire.visible = ouvrir_glossaire
+	onglet_bonus.set_pressed_no_signal(not ouvrir_glossaire)
+	onglet_glossaire.set_pressed_no_signal(ouvrir_glossaire)
+	if ouvrir_glossaire: glossaire.actualiser()

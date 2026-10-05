@@ -41,12 +41,10 @@ func _ready() -> void:
 		visuel.position = -limites.get_center() * facteur
 	origine_visuel = visuel.position
 	taille_visuel = visuel.scale
-	var particules: GPUParticles3D = flammes.get_node("Flames")
-	var mat: ParticleProcessMaterial = particules.process_material.duplicate()
-	mat.emission_sphere_radius = 0.8
-	mat.gravity = Vector3(0, 3, 0)
-	mat.color = Color(3.5, 1.1, 0.25, 1)
-	particules.process_material = mat
+	var particules: CPUParticles3D = flammes.get_node("Flames")
+	particules.emission_sphere_radius = 0.8
+	particules.gravity = Vector3(0, 3, 0)
+	particules.color = Color(3.5, 1.1, 0.25, 1)
 	particules.preprocess = 0.6
 	flammes.scale = Vector3.ONE * 0.36
 
@@ -120,7 +118,7 @@ func _exploser() -> void:
 		var rayon := PhysicsRayQueryParameters3D.create(global_position, destination, 1)
 		rayon.exclude = [get_rid(), corps.get_rid()]
 		if get_world_3d().direct_space_state.intersect_ray(rayon).is_empty():
-			corps.prendre_degats(degats_explosion * (1.0 + maxi(etage - 1, 0) * degats_par_etage_pourcent / 100.0))
+			corps.prendre_degats(degats_explosion * multiplicateur_degats() * (1.0 + maxi(etage - 1, 0) * degats_par_etage_pourcent / 100.0))
 	# Une explosion compte comme une mort normale pour la fin de la vague.
 	# Être tué par l'extincteur appelle directement mourir(), sans explosion.
 	mourir()

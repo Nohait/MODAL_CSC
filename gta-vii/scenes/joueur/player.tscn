@@ -15,6 +15,11 @@
 collision_layer = 2
 script = ExtResource("1_3vyb7")
 
+[node name="EcouteAmbiance" type="AudioListener3D" parent="."]
+position = Vector3(0, 1, 0)
+current = true
+editor_description = "Les sons 3D sont entendus depuis le pompier, indépendamment de la hauteur de la caméra."
+
 [node name="visual" type="Node3D" parent="." unique_id=1533517147]
 
 [node name="pompier" parent="visual" unique_id=245445476 instance=ExtResource("2_6e3g7")]

@@ -10,7 +10,16 @@ extends Resource
 @export_range(0, 100, 1) var limite_mobiles := 0
 @export var ennemi_initial: TypeEnnemiVague
 
+@export_group("Effet de la vague spéciale")
+@export_enum("aucun", "blackout", "double_horde", "brouillard", "chaleur", "panne", "doree", "mutation") var evenement := "aucun"
+@export var composition_base: CompositionVague
+# Zéro : jusqu'à la fin de la vague. La mutation dure 60 secondes de jeu.
+@export_range(0.0, 120.0, 1.0) var duree_effet := 0.0
+@export_range(1.0, 3.0, 0.1) var multiplicateur_budget := 1.0
+@export_range(1.0, 3.0, 0.1) var multiplicateur_consommation := 1.0
+
 func repartir(budget: int, vague: int) -> Array[TypeEnnemiVague]:
+	if composition_base != null: return composition_base.repartir(budget, vague)
 	var resultat: Array[TypeEnnemiVague] = []
 	var comptes := {}
 	var restant := maxi(1, budget)

@@ -17,6 +17,7 @@ var types_planifies: Dictionary = {}
 var entrees_planifiees: Dictionary = {}
 var entrees: Array[EntreeEnnemisZombie] = []
 var visuels_types: Dictionary = {}
+@onready var evenements = get_node("../../EvenementsVague")
 @onready var boutique = get_node("../../UpgradeManager")
 
 func demarrer_partie() -> void:
@@ -51,7 +52,7 @@ func demarrer_sauvetage(_salle: Node3D) -> void:
 	# Le sauvetage commence après la course d’entrée, comme dans le jeu principal.
 	_demarrer_vague()
 
-func _demarrer_vague() -> void:
+func _demarrer_vague(composition_forcee: CompositionVague = null) -> void:
 	phase = "combat"
 	vague_actuelle += 1
 	temps_vague = 0.0
@@ -60,7 +61,12 @@ func _demarrer_vague() -> void:
 	entrees_planifiees.clear()
 	for entree_mob in entrees:
 		entree_mob.reinitialiser()
-	composition_actuelle = difficulte.choisir_composition(vague_actuelle)
+	# Le debug peut imposer une composition pour cette vague seulement.
+	composition_actuelle = composition_forcee if composition_forcee != null else difficulte.choisir_composition(vague_actuelle)
+	# Ne pas superposer un nouvel événement à une mutation encore active.
+	if evenements.mutation_en_cours() and composition_actuelle != difficulte.composition_boss:
+		composition_actuelle = difficulte.composition_classique
+	evenements.commencer(composition_actuelle)
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
 	positions.shuffle()
 	# Réserver les places des captives avant celles des ennemis.
@@ -94,7 +100,7 @@ func _demarrer_vague() -> void:
 		salle_actuelle.get_node("Ennemis").add_child(tour)
 		tour.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 		salle_actuelle.remaining_enemies += 1
-	var types := composition_actuelle.repartir(difficulte.budget_mobiles(vague_actuelle), vague_actuelle)
+	var types := composition_actuelle.repartir(roundi(difficulte.budget_mobiles(vague_actuelle) * composition_actuelle.multiplicateur_budget), vague_actuelle)
 	# Réserver une position par ennemi, sans recouvrir le camion ni un autre corps.
 	for type in types:
 		var indice := _trouver_position_type(type, positions)
@@ -162,6 +168,7 @@ func actualiser_objectifs() -> void:
 	remaining_enemies = salle_actuelle.remaining_enemies
 	if vague_en_cours and remaining_enemies == 0 and not salle_actuelle.sauvetage_en_cours:
 		vague_en_cours = false
+		evenements.fin_vague()
 		vagues_terminees += 1
 		phase = "avant_boutique"
 		pause_restante = difficulte.delai_avant_boutique
@@ -182,16 +189,17 @@ func _nettoyer_dangers() -> void:
 		for danger in salle_actuelle.get_node(nom).get_children():
 			danger.queue_free()
 
-func aller_vague_debug(numero: int) -> void:
+func aller_vague_debug(numero: int, composition_forcee: CompositionVague = null) -> void:
 	if transition_en_cours or not is_instance_valid(salle_actuelle):
 		return
+	evenements.terminer()
 	# La fonction héritée annule aussi les annonces et les mobiles encore à venir.
 	liberer_salle_debug()
 	for captive in salle_actuelle.get_node("Victimes").get_children():
 		if captive.is_in_group("victime"): captive.queue_free()
 	calendrier.clear()
 	vague_actuelle = maxi(1, numero) - 1
-	_demarrer_vague()
+	_demarrer_vague(composition_forcee)
 
 func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 	# Le système commun appelle ce point d'entrée pour chaque apparition annoncée.
@@ -211,10 +219,10 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 				if autre.entree == entree_mob: encore_utilisee = true
 			if not encore_utilisee: entree_mob.terminer()
 		elif not salle.sauvetage_en_cours:
-			# Premier adversaire : déjà au seuil dès que la vague commence.
+			# Premier adversaire présent dès le départ, avec une porte qui s'ouvre progressivement.
 			var entree_mob := _choisir_entree(type, entrees.filter(func(entree_mob): return entree_mob.type_entree == "ascenseur"))
 			if entree_mob != null:
-				entree_mob.terminer()
+				entree_mob.ouvrir_pour_arrivee_immediate()
 				var destination := entree_mob.to_global(Vector3(0, type.hauteur, entree_mob.distance_sortie))
 				destination = _destination_libre(type, entree_mob, destination)
 				emplacement = salle.to_local(destination) - Vector3.UP * type.hauteur
@@ -259,6 +267,8 @@ func _trouver_position_type(type: TypeEnnemiVague, positions: Array[Vector3], or
 func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> Node3D:
 	var ennemi = type.scene.instantiate()
 	if type.script_zombie != null: ennemi.set_script(type.script_zombie)
+	# Le butin utilise exactement le coût retenu par cette composition.
+	ennemi.set_meta("valeur_pieces", type.cout_difficulte)
 	# La difficulté augmente le nombre d'ennemis, pas leurs PV ni leurs dégâts.
 	ennemi.etage = 1
 	ennemi.position = emplacement + Vector3.UP * type.hauteur
@@ -344,7 +354,13 @@ func _visuel_type(type: TypeEnnemiVague) -> Node3D:
 		if is_instance_valid(modele.get("cible_idle")): modele.cible_idle.queue_free()
 		modele.queue_free()
 		visuels_types[type.scene] = visuel
-	return visuels_types[type.scene].duplicate(0)
+	var copie: Node3D = visuels_types[type.scene].duplicate(0)
+	# Les figurants qui sortent des portes annoncent aussi leur version dorée.
+	if composition_actuelle.evenement == "doree":
+		var effet = preload("res://scenes/systemes/ennemis/ennemi_dore.gd").new()
+		effet.name = "Dore"
+		copie.add_child(effet)
+	return copie
 
 func liberer_salle_debug() -> void:
 	if transition_en_cours or not is_instance_valid(salle_actuelle) or salle_actuelle.liberee:

@@ -1,0 +1,332 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Small_1.gltf" id="petit"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Medium_2_001.gltf" id="moyen"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Large_2.gltf" id="grand"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/asphalte_ville.tres" id="asphalte"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="beton"]
+
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/trottoir_ville.tres" id="trottoir_texture"]
+
+[sub_resource type="StandardMaterial3D" id="trottoir"]
+albedo_color = Color(0.28, 0.29, 0.30, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="marquage"]
+albedo_color = Color(0.55, 0.50, 0.37, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="boite1"]
+size = Vector3(100, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="boite2"]
+size = Vector3(12, 0.2, 90)
+
+[sub_resource type="BoxMesh" id="boite3"]
+size = Vector3(50, 0.16, 3)
+
+[sub_resource type="BoxMesh" id="boite4"]
+size = Vector3(96, 0.16, 2)
+
+[sub_resource type="BoxMesh" id="boite5"]
+size = Vector3(3, 0.16, 48)
+
+[sub_resource type="BoxMesh" id="boite6"]
+size = Vector3(2, 0.16, 84)
+
+[sub_resource type="BoxMesh" id="boite7"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite8"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite9"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite10"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite11"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite12"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite13"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite14"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite15"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite16"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite17"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite18"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite19"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite20"]
+size = Vector3(3, 0.012, 0.12)
+
+[sub_resource type="BoxMesh" id="boite21"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite22"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite23"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite24"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite25"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite26"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite27"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite28"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite29"]
+size = Vector3(0.12, 0.012, 3)
+
+[sub_resource type="BoxMesh" id="boite30"]
+size = Vector3(5, 3.2, 0.25)
+
+[sub_resource type="BoxMesh" id="boite31"]
+size = Vector3(0.25, 3.2, 4)
+
+[sub_resource type="BoxMesh" id="sol_sud"]
+size = Vector3(76, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="cour_ouest"]
+size = Vector3(12, 0.2, 48)
+
+[sub_resource type="BoxMesh" id="terrain_ville"]
+size = Vector3(140, 0.1, 140)
+
+[sub_resource type="BoxMesh" id="cour_nord"]
+size = Vector3(48, 0.16, 8)
+
+[node name="ExterieurVille" type="Node3D"]
+editor_description = "Décor extérieur seulement : rue au nord et à droite du hall, façades en face et passage de service derrière la porte nord. Sans collisions ni navigation. Les modèles restent séparés pour déplacer chaque immeuble dans l'éditeur."
+
+[node name="RueNord" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.19, -36)
+mesh = SubResource("boite1")
+material_override = ExtResource("asphalte")
+
+[node name="RueDroite" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.19, 0)
+mesh = SubResource("boite2")
+material_override = ExtResource("asphalte")
+
+[node name="TrottoirNord" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.08, -29.6)
+mesh = SubResource("boite3")
+material_override = ExtResource("trottoir_texture")
+
+[node name="TrottoirFaceNord" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.08, -42)
+mesh = SubResource("boite4")
+material_override = ExtResource("trottoir_texture")
+
+[node name="TrottoirDroit" type="MeshInstance3D" parent="."]
+position = Vector3(21.6, -0.08, 0)
+mesh = SubResource("boite5")
+material_override = ExtResource("trottoir_texture")
+
+[node name="TrottoirFaceDroit" type="MeshInstance3D" parent="."]
+position = Vector3(34, -0.08, 0)
+mesh = SubResource("boite6")
+material_override = ExtResource("trottoir_texture")
+
+[node name="LigneNord0" type="MeshInstance3D" parent="."]
+position = Vector3(-44, -0.082, -36)
+mesh = SubResource("boite7")
+material_override = SubResource("marquage")
+
+[node name="LigneNord1" type="MeshInstance3D" parent="."]
+position = Vector3(-37, -0.082, -36)
+mesh = SubResource("boite8")
+material_override = SubResource("marquage")
+
+[node name="LigneNord2" type="MeshInstance3D" parent="."]
+position = Vector3(-30, -0.082, -36)
+mesh = SubResource("boite9")
+material_override = SubResource("marquage")
+
+[node name="LigneNord3" type="MeshInstance3D" parent="."]
+position = Vector3(-23, -0.082, -36)
+mesh = SubResource("boite10")
+material_override = SubResource("marquage")
+
+[node name="LigneNord4" type="MeshInstance3D" parent="."]
+position = Vector3(-16, -0.082, -36)
+mesh = SubResource("boite11")
+material_override = SubResource("marquage")
+
+[node name="LigneNord5" type="MeshInstance3D" parent="."]
+position = Vector3(-9, -0.082, -36)
+mesh = SubResource("boite12")
+material_override = SubResource("marquage")
+
+[node name="LigneNord6" type="MeshInstance3D" parent="."]
+position = Vector3(-2, -0.082, -36)
+mesh = SubResource("boite13")
+material_override = SubResource("marquage")
+
+[node name="LigneNord7" type="MeshInstance3D" parent="."]
+position = Vector3(5, -0.082, -36)
+mesh = SubResource("boite14")
+material_override = SubResource("marquage")
+
+[node name="LigneNord8" type="MeshInstance3D" parent="."]
+position = Vector3(12, -0.082, -36)
+mesh = SubResource("boite15")
+material_override = SubResource("marquage")
+
+[node name="LigneNord9" type="MeshInstance3D" parent="."]
+position = Vector3(19, -0.082, -36)
+mesh = SubResource("boite16")
+material_override = SubResource("marquage")
+
+[node name="LigneNord10" type="MeshInstance3D" parent="."]
+position = Vector3(26, -0.082, -36)
+mesh = SubResource("boite17")
+material_override = SubResource("marquage")
+
+[node name="LigneNord11" type="MeshInstance3D" parent="."]
+position = Vector3(33, -0.082, -36)
+mesh = SubResource("boite18")
+material_override = SubResource("marquage")
+
+[node name="LigneNord12" type="MeshInstance3D" parent="."]
+position = Vector3(40, -0.082, -36)
+mesh = SubResource("boite19")
+material_override = SubResource("marquage")
+
+[node name="LigneNord13" type="MeshInstance3D" parent="."]
+position = Vector3(47, -0.082, -36)
+mesh = SubResource("boite20")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite0" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, -18)
+mesh = SubResource("boite21")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite1" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, -11)
+mesh = SubResource("boite22")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite2" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, -4)
+mesh = SubResource("boite23")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite3" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 3)
+mesh = SubResource("boite24")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite4" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 10)
+mesh = SubResource("boite25")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite5" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 17)
+mesh = SubResource("boite26")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite6" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 24)
+mesh = SubResource("boite27")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite7" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 31)
+mesh = SubResource("boite28")
+material_override = SubResource("marquage")
+
+[node name="LigneDroite8" type="MeshInstance3D" parent="."]
+position = Vector3(28, -0.082, 38)
+mesh = SubResource("boite29")
+material_override = SubResource("marquage")
+
+[node name="ImmeubleNord0" parent="." instance=ExtResource("petit")]
+position = Vector3(-32, 0, -43)
+
+[node name="ImmeubleNord1" parent="." instance=ExtResource("moyen")]
+position = Vector3(-16, 0, -43)
+
+[node name="ImmeubleNord2" parent="." instance=ExtResource("petit")]
+position = Vector3(2, 0, -43)
+
+[node name="ImmeubleNord3" parent="." instance=ExtResource("grand")]
+position = Vector3(19, 0, -43)
+
+[node name="ImmeubleEst0" parent="." instance=ExtResource("petit")]
+position = Vector3(35, 0, -8)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="ImmeubleEst1" parent="." instance=ExtResource("moyen")]
+position = Vector3(35, 0, 10)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="ImmeubleEst2" parent="." instance=ExtResource("petit")]
+position = Vector3(35, 0, 29)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="LueurRue0" type="OmniLight3D" parent="."]
+position = Vector3(-14, 3, -34)
+light_color = Color(0.65, 0.72, 1.0, 1)
+light_energy = 1.2
+omni_range = 12.0
+
+[node name="LueurRue1" type="OmniLight3D" parent="."]
+position = Vector3(17, 3, -34)
+light_color = Color(0.65, 0.72, 1.0, 1)
+light_energy = 1.2
+omni_range = 12.0
+
+[node name="LueurRue2" type="OmniLight3D" parent="."]
+position = Vector3(26, 3, 10)
+light_color = Color(0.65, 0.72, 1.0, 1)
+light_energy = 1.2
+omni_range = 12.0
+
+[node name="RueDevantEntree" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.19, 30)
+mesh = SubResource("sol_sud")
+material_override = ExtResource("asphalte")
+
+[node name="CourServiceOuest" type="MeshInstance3D" parent="."]
+position = Vector3(-26, -0.19, 0)
+mesh = SubResource("cour_ouest")
+material_override = ExtResource("trottoir_texture")
+
+[node name="TerrainSousImmeubles" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.3, 0)
+mesh = SubResource("terrain_ville")
+material_override = SubResource("trottoir")
+
+[node name="CourServiceNord" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.08, -24)
+mesh = SubResource("cour_nord")
+material_override = ExtResource("trottoir_texture")

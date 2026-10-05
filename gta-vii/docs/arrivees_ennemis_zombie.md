@@ -41,3 +41,5 @@ Pour une nouvelle map, instancier ces accès sous `Navigation/Decor/EntreesEnnem
 ## Vérification
 
 Chargement et navigation de MapTest, ascenseur et groupe de deux sbires, présentation des six types mobiles, filtrage des fenêtres, annulation par le debug et vagues complètes 5, 7, 10 et 15. Les compteurs et la fin du sauvetage sont synchronisés avec les créations. Le rendu de la descente et de la sortie a été inspecté ; l'aperçu du catalogue des maps est actualisé.
+
+Le rappel de l’escorte utilise **Q physique**, soit **A sur AZERTY**, au clavier (clic du stick droit à la manette). La touche physique A servait déjà au déplacement vers la gauche : sur un clavier AZERTY, appuyer sur Q annulait donc aussi l’ordre de déplacement. Le rappel utilise maintenant Q physique, un emplacement distinct du déplacement.

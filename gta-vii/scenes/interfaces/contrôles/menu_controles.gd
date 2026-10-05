@@ -1,5 +1,8 @@
 extends Control
 
+signal commandes_changees
+@export var integre_options := false
+
 var noms_souris = {
 	MOUSE_BUTTON_LEFT: "Clic Gauche",
 	MOUSE_BUTTON_RIGHT: "Clic Droit",
@@ -116,7 +119,9 @@ func _ready() -> void:
 	%ReinitialiserClavier.pressed.connect(reinitialiser_clavier)
 	%ReinitialiserManette.visible = OS.is_debug_build()
 	%ReinitialiserManette.pressed.connect(reinitialiser_manette)
-	reinitialiser_manette()
+	mettre_a_jour_affichage_clavier()
+	mettre_a_jour_affichage_manette()
+	if integre_options: _adapter_options()
 
 	hide()
 
@@ -129,26 +134,85 @@ func fermer() -> void:
 	%Fermer.release_focus()
 
 func _input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if not integre_options and is_visible_in_tree() and not rebind_en_cours() and event.is_action_pressed("ui_cancel"):
 		fermer()
 		get_viewport().set_input_as_handled()
 
 func reinitialiser_clavier():
 	for action in touches_par_defaut_clavier:
-		InputMap.action_erase_events(action)
-		var evenement
-		if touches_par_defaut_clavier[action] in noms_souris:
-			evenement = InputEventMouseButton.new()
-			evenement.button_index = touches_par_defaut_clavier[action]
-		else:
-			evenement = InputEventKey.new()
-			evenement.keycode = touches_par_defaut_clavier[action]
-		InputMap.action_add_event(action, evenement)
-
-		mettre_a_jour_affichage_clavier()
+		_retablir_action(action, false)
+	mettre_a_jour_affichage_clavier()
+	commandes_changees.emit()
 
 func reinitialiser_manette():
+	for action in touches_par_defaut_manette:
+		_retablir_action(action, true)
 	mettre_a_jour_affichage_manette()
+	commandes_changees.emit()
+
+func _retablir_action(action: String, manette: bool) -> void:
+	# Reprendre les vrais réglages du projet, en conservant l'autre périphérique.
+	for event in InputMap.action_get_events(action):
+		if (event is InputEventJoypadButton or event is InputEventJoypadMotion) == manette:
+			InputMap.action_erase_event(action, event)
+	var origine: Dictionary = ProjectSettings.get_setting("input/" + action, {})
+	for event in origine.get("events", []):
+		if (event is InputEventJoypadButton or event is InputEventJoypadMotion) == manette:
+			InputMap.action_add_event(action, event.duplicate())
+
+func rebind_en_cours() -> bool:
+	return $Menu/MenuTouches/J1ClavierTouches.en_attente or $Menu/MenuTouches/J1ManetteTouches.en_attente
+
+func annuler_rebind() -> void:
+	$Menu/MenuTouches/J1ClavierTouches.annuler_rebind()
+	$Menu/MenuTouches/J1ManetteTouches.annuler_rebind()
+
+func _adapter_options() -> void:
+	# Conserver la hiérarchie utilisée par les scripts du collègue, adapter l'habillage.
+	for chemin in ["Fond", "Menu/Flammes", "Menu/Titre", "Menu/Surtitre", "Menu/Accroche", "Menu/MenuTouches/ColonneNoms/Signature"]:
+		get_node(chemin).hide()
+	$Menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	$Menu/MenuTouches.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	$Menu/MenuTouches.offset_bottom = -64.0
+	for colonne in [$Menu/MenuTouches/ColonneNoms, $Menu/MenuTouches/J1ClavierTouches, $Menu/MenuTouches/J1ManetteTouches]:
+		colonne.add_theme_constant_override("separation", 8)
+		colonne.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if colonne != $Menu/MenuTouches/ColonneNoms:
+			colonne.taille_minimale_boutons = Vector2(180, 44)
+		for enfant in colonne.get_children():
+			if enfant is Button:
+				enfant.taille_minimale = Vector2(180, 44)
+				enfant.custom_minimum_size = Vector2(180, 44)
+				enfant.add_theme_font_size_override("font_size", 20)
+				var icone: TextureRect = enfant.get_node("Icone")
+				icone.custom_minimum_size = Vector2.ZERO
+				icone.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+				icone.offset_left = -19.0
+				icone.offset_top = -19.0
+				icone.offset_right = 19.0
+				icone.offset_bottom = 19.0
+				if colonne == $Menu/MenuTouches/ColonneNoms:
+					enfant.disabled = true
+					enfant.add_theme_color_override("font_disabled_color", Color("e9d8b4"))
+					enfant.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					enfant.focus_mode = Control.FOCUS_NONE
+			elif enfant.name == "Espace":
+				enfant.custom_minimum_size.y = 26
+		var titre := Label.new()
+		titre.text = "Commande" if colonne == $Menu/MenuTouches/ColonneNoms else ("Clavier / souris" if colonne == $Menu/MenuTouches/J1ClavierTouches else "Manette")
+		titre.add_theme_font_size_override("font_size", 18)
+		colonne.get_node("Espace").add_child(titre)
+	$Bas.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	$Bas.offset_top = -54.0
+	$Bas.offset_bottom = 0.0
+	%Fermer.hide()
+	for bouton in [%ReinitialiserClavier, %ReinitialiserManette]:
+		bouton.show()
+		bouton.taille_minimale = Vector2(240, 48)
+		bouton.custom_minimum_size = Vector2(240, 48)
+		bouton.add_theme_font_size_override("font_size", 18)
+	%ReinitialiserClavier.text = "Réinitialiser le clavier"
+	%ReinitialiserManette.text = "Réinitialiser la manette"
 
 
 func mettre_a_jour_affichage_clavier() -> void:
@@ -157,7 +221,10 @@ func mettre_a_jour_affichage_clavier() -> void:
 
 		for evenement in evenements:
 			if evenement is InputEventKey:
-				boutons_actions["clavier"][action].text = en_francais(OS.get_keycode_string(evenement.keycode))
+				var code: int = evenement.keycode
+				if code == 0:
+					code = evenement.physical_keycode if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(evenement.physical_keycode)
+				boutons_actions["clavier"][action].text = en_francais(OS.get_keycode_string(code))
 				break
 
 			if evenement is InputEventMouseButton:

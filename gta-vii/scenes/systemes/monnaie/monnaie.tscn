@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/monnaie/monnaie.gd" id="script"]
+[ext_resource type="AudioStream" path="res://assets/sounds/interfaces/collecte_piece.wav" id="son"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_piece.svg" id="icone"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="police"]
+
+[node name="Monnaie" type="Node3D"]
+script = ExtResource("script")
+
+[node name="SonCollecte" type="AudioStreamPlayer" parent="."]
+bus = &"Effets"
+stream = ExtResource("son")
+max_polyphony = 4
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Compteur" type="HBoxContainer" parent="HUD"]
+offset_left = 25.0
+offset_top = 202.0
+offset_right = 130.0
+offset_bottom = 244.0
+mouse_filter = 2
+theme_override_constants/separation = 9
+
+[node name="Icone" type="TextureRect" parent="HUD/Compteur"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("icone")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Nombre" type="Label" parent="HUD/Compteur"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("police")
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(1, 0.84, 0.47, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.04, 0.01, 1)
+theme_override_constants/outline_size = 4
+text = "0"

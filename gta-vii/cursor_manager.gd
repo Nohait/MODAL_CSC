@@ -8,6 +8,8 @@ var curseur_texture = preload("res://assets/textures/interfaces/curseurs/curseur
 @export var vitesse := 1000.0
 @export var sensibilite_x := 1.8
 @export var sensibilite_y := 1.0
+@export_range(0.0, 0.5, 0.01) var zone_morte := 0.15
+var manette_active := -1
 
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(curseur_texture, Input.CURSOR_POINTING_HAND, Vector2(3, 3))
@@ -16,13 +18,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	var joystick := Vector2(
-		Input.get_joy_axis(0, JOY_AXIS_RIGHT_X),
-		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
-	)
+	var joystick := _lire_stick_droit()
 
-	if joystick.length() > 0.15:
-		joystick = joystick.normalized()
+	if joystick.length() > zone_morte:
+		# Garder l'amplitude du stick permet aussi de viser avec précision.
+		joystick = joystick.normalized() * clampf((joystick.length() - zone_morte) / (1.0 - zone_morte), 0.0, 1.0)
 
 		joystick.x *= sensibilite_x
 		joystick.y *= sensibilite_y
@@ -46,8 +46,21 @@ func _process(delta: float) -> void:
 		Input.warp_mouse(position_curseur)
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadMotion and event.axis in [JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y]:
+		manette_active = event.device
 	if event is InputEventMouseMotion:
-		position_curseur = event.position
+		# warp_mouse génère aussi des mouvements de souris. Pendant la visée au
+		# stick, ils ne doivent pas écraser notre position calculée dans le viewport.
+		if _lire_stick_droit().length() <= zone_morte:
+			position_curseur = event.position
+
+func _lire_stick_droit() -> Vector2:
+	var manettes := Input.get_connected_joypads()
+	if manettes.is_empty(): return Vector2.ZERO
+	# Après une reconnexion, la manette n'a pas forcément l'identifiant 0.
+	if not manettes.has(manette_active): manette_active = manettes[0]
+	return Vector2(Input.get_joy_axis(manette_active, JOY_AXIS_RIGHT_X),
+		Input.get_joy_axis(manette_active, JOY_AXIS_RIGHT_Y))
 
 
 

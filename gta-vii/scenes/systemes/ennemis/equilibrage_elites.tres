@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EquilibrageElites" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ennemis/equilibrage_elites.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+chance_initiale = 5.0
+augmentation_par_vague_ou_salle = 1.5
+chance_maximale = 30.0

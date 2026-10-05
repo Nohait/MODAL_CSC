@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/feu/flame_2.png" id="1_flamme"]
+
+[sub_resource type="StandardMaterial3D" id="MateriauFeu"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_flamme")
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="Flamme"]
+material = SubResource("MateriauFeu")
+size = Vector2(0.7, 1.0)
+
+[sub_resource type="Curve" id="Taille"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="vfx_fire" type="Node3D"]
+editor_description = "Feu simple : matériau standard avec billboard de particules. Utilisé par la tourelle, ses projectiles et les flaques."
+
+[node name="Flames" type="CPUParticles3D" parent="."]
+cast_shadow = 0
+amount = 20
+lifetime = 0.65
+preprocess = 0.65
+fixed_fps = 30
+local_coords = true
+mesh = SubResource("Flamme")
+emission_shape = 1
+emission_sphere_radius = 0.12
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0.5, 0)
+initial_velocity_min = 0.2
+initial_velocity_max = 0.5
+scale_amount_min = 0.45
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Taille")
+color = Color(2, 0.65, 0.12, 1)

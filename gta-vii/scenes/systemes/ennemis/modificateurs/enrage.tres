@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ModificateurElite" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ennemis/modificateur_elite.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+identifiant = "enrage"
+titre = "Enragé"
+description = "Sous 30 % de vie : vitesse +50 % et dégâts +40 %."
+couleur = Color(1, 0.15, 0.22, 1)
+symbole = "!"
+seuil_rage = 0.3
+vitesse = 1.5
+degats = 1.4

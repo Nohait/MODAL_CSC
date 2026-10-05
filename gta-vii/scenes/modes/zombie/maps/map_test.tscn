@@ -33,6 +33,14 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/habillage_hall.tscn" id="habillage"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/atmosphere_hall.tscn" id="atmosphere"]
 
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/exterieur_ville.tscn" id="ville"]
+
+[ext_resource type="Shader" path="res://assets/shaders/decors/ruban_securite.gdshader" id="ruban_shader"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/annexes_hall.tscn" id="annexes"]
+
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_appartements.tscn" id="porte_appartements"]
+
 [sub_resource type="BoxMesh" id="MeshSol"]
 size = Vector3(40, 0.2, 40)
 
@@ -152,6 +160,12 @@ size = Vector3(0.5, 3, 11.47)
 
 [sub_resource type="BoxShape3D" id="MurDroitFenetre0"]
 size = Vector3(0.05, 1.9, 1.56)
+
+[sub_resource type="ShaderMaterial" id="ruban_materiau"]
+shader = ExtResource("ruban_shader")
+
+[sub_resource type="BoxMesh" id="ruban_mesh"]
+size = Vector3(2.5, 0.13, 0.015)
 
 [node name="MapTest" instance=ExtResource("salle")]
 script = ExtResource("map")
@@ -370,13 +384,10 @@ material_override = ExtResource("mur")
 shape = SubResource("CollisionCouloirDroit")
 
 [node name="FondCouloir" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+editor_description = "Limite invisible derrière le ruban : garder la collision pour empêcher la sortie, sans fermer visuellement l’entrée."
 position = Vector3(0, 1.5, 24.25)
 collision_layer = 1
 collision_mask = 0
-
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/FondCouloir"]
-mesh = SubResource("MeshFondCouloir")
-material_override = ExtResource("mur")
 
 [node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/FondCouloir"]
 shape = SubResource("CollisionFondCouloir")
@@ -544,10 +555,12 @@ energie = 1.5
 [node name="EntreesEnnemis" type="Node3D" parent="Navigation/Decor"]
 
 [node name="PorteNord" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_porte")]
+afficher_fond = false
 position = Vector3(0, 0, -20)
 rotation = Vector3(0, 0, 0)
 
-[node name="BrecheGauche" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_breche")]
+[node name="PorteAppartements" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("porte_appartements")]
+afficher_fond = false
 distance_sortie = 4.8
 position = Vector3(-20, 0, -3)
 rotation = Vector3(0, 1.570796, 0)
@@ -563,3 +576,13 @@ rotation = Vector3(0, -1.570796, 0)
 [node name="AscenseurGauche" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_ascenseur")]
 position = Vector3(-20, 0, 17)
 rotation = Vector3(0, 1.570796, 0)
+
+[node name="ExterieurVille" parent="." instance=ExtResource("ville")]
+
+[node name="RubanIntervention" type="MeshInstance3D" parent="Navigation/Decor"]
+position = Vector3(0, 0.95, 24.2)
+mesh = SubResource("ruban_mesh")
+material_override = SubResource("ruban_materiau")
+cast_shadow = 0
+
+[node name="AnnexesHall" parent="." instance=ExtResource("annexes")]

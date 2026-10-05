@@ -28,4 +28,5 @@ func _ready() -> void:
 	vagues.difficulte = difficulte
 	vagues.map = get_tree().get_meta("map_zombie", map)
 	niveau.get_node("MenuDebug").set_script(DEBUG)
+	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
 	add_child(niveau)

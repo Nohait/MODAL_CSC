@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ModificateurElite" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/ennemis/modificateur_elite.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+identifiant = "aura_vitesse"
+titre = "Meneur"
+description = "Accélère de 25 % les ennemis à moins de 5 mètres."
+couleur = Color(0.15, 1, 0.65, 1)
+symbole = "≋"
+aura = "vitesse"

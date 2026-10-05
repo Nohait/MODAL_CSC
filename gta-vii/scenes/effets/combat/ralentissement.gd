@@ -22,5 +22,14 @@ func _physics_process(delta: float) -> void:
 	# Rendre les matériaux initiaux ; les autres sbires gardent leurs propres matériaux.
 	multiplicateur = 1.0
 	for mesh in overlays:
-		if is_instance_valid(mesh): mesh.material_overlay = overlays[mesh]
+		if not is_instance_valid(mesh): continue
+		# Une mutation peut avoir changé le trait pendant le gel.
+		var elite = get_parent().get_node_or_null("Elite")
+		var precedent = overlays[mesh]
+		if elite != null:
+			mesh.material_overlay = elite.teinte
+		elif precedent is ShaderMaterial and precedent.shader.resource_path.ends_with("habillage_elite.gdshader"):
+			mesh.material_overlay = null
+		else:
+			mesh.material_overlay = precedent
 	queue_free()

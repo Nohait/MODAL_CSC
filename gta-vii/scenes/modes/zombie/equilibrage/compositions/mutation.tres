@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="script"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/equilibrage/compositions/classique.tres" id="base"]
+
+[resource]
+script = ExtResource("script")
+titre = "Mutation générale"
+premiere_vague = 7
+poids = 0.7
+evenement = "mutation"
+composition_base = ExtResource("base")
+duree_effet = 60.0
+multiplicateur_budget = 1.0
+multiplicateur_consommation = 1.0

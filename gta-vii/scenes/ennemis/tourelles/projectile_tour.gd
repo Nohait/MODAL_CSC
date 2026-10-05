@@ -18,13 +18,13 @@ func _physics_process(delta: float) -> void:
 	if position.y <= 0.4:
 		var flaque = flaque_scene.instantiate()
 		flaque.etage = etage
-		flaques.add_child(flaque)
-		# Les deux conteneurs peuvent être décalés : conserver la position dans le monde.
-		flaque.global_position = global_position
+		# Régler l'emplacement et la taille AVANT que _ready démarre les flammes.
+		# to_local convertit la position du projectile dans le conteneur des flaques.
+		flaque.position = flaques.to_local(global_position)
 		flaque.position.y = 0.2
-		
 		# Même tirage de taille que les flaques présentes au début d'une salle.
 		flaque.choisir_taille_aleatoire()
+		flaques.add_child(flaque)
 		queue_free()
 
 func _on_body_entered(body: Node3D) -> void:

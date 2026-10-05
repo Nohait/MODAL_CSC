@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompositionVague" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="script"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/equilibrage/compositions/classique.tres" id="base"]
+
+[resource]
+script = ExtResource("script")
+titre = "Panne de mousse"
+premiere_vague = 5
+poids = 0.7
+evenement = "panne"
+composition_base = ExtResource("base")
+duree_effet = 6.0
+multiplicateur_budget = 1.0
+multiplicateur_consommation = 1.0

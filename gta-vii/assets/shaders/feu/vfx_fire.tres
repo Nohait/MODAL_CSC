@@ -65,6 +65,7 @@ op_type = 2
 operator = 2
 
 [sub_resource type="VisualShaderNodeBillboard" id="VisualShaderNodeBillboard_6bi0s"]
+billboard_type = 3
 keep_scale = true
 
 [resource]

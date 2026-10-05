@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d05bc4d0i4ew0"
+path="res://.godot/imported/Paper Sound - 4.wav-1368894529ba0ee42c5ef1f71c4ec8dc.sample"
+
+[deps]
+
+source_file="res://assets/sounds/design/papier/Paper Sound - 4.wav"
+dest_files=["res://.godot/imported/Paper Sound - 4.wav-1368894529ba0ee42c5ef1f71c4ec8dc.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

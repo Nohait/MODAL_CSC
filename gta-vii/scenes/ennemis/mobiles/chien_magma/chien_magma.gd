@@ -200,7 +200,7 @@ func _avancer_bond(delta: float) -> void:
 	if collision:
 		var corps = collision.get_collider()
 		if is_instance_valid(corps) and corps.is_in_group("player"):
-			corps.prendre_degats(degats_bond)
+			corps.prendre_degats(degats_bond * multiplicateur_degats())
 		# Un seul impact termine le bond : aucun dégât répété par image.
 		_terminer_bond()
 	elif temps_etat <= 0.0:
@@ -248,7 +248,7 @@ func _mordre() -> void:
 	animation_frappe.chain().tween_callback(crocs.hide)
 	if is_instance_valid(player) and not player.is_queued_for_deletion():
 		if global_position.distance_to(player.global_position) <= portee_morsure and _voie_libre():
-			player.prendre_degats(degats_morsure)
+			player.prendre_degats(degats_morsure * multiplicateur_degats())
 
 func _jouer_animation(marche: bool) -> void:
 	if animations == null: return

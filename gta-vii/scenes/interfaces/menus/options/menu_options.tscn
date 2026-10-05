@@ -1,0 +1,160 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/options/menu_options.gd" id="script"]
+[ext_resource type="Theme" path="res://scenes/interfaces/menus/options/theme_options.tres" id="theme"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="bouton"]
+[ext_resource type="PackedScene" path="res://scenes/interfaces/contrôles/menu_controles.tscn" id="controles"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="papier"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/fond_menu_bonus.gdshader" id="shader"]
+[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="titre"]
+
+[sub_resource type="ShaderMaterial" id="Papier"]
+shader = ExtResource("shader")
+shader_parameter/largeur_bord = 12.0
+shader_parameter/rayon_coin = 18.0
+shader_parameter/intensite_braises = 0.3
+
+[node name="MenuOptions" type="CanvasLayer"]
+layer = 100
+process_mode = 3
+script = ExtResource("script")
+
+[node name="Menu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+
+[node name="Voile" type="ColorRect" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.015, 0.012, 0.012, 0.86)
+
+[node name="Panneau" type="Control" parent="Menu"]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.16
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("papier")
+expand_mode = 1
+mouse_filter = 2
+material = SubResource("Papier")
+
+[node name="Onglets" type="HBoxContainer" parent="Menu/Panneau"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = -60.0
+offset_right = 620.0
+offset_bottom = -8.0
+theme_override_constants/separation = 12
+
+[node name="OngletReglages" parent="Menu/Panneau/Onglets" instance=ExtResource("bouton")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Réglages"
+toggle_mode = true
+taille_minimale = Vector2(220, 50)
+taille_police = 24
+
+[node name="OngletControles" parent="Menu/Panneau/Onglets" instance=ExtResource("bouton")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Contrôles"
+toggle_mode = true
+taille_minimale = Vector2(220, 50)
+taille_police = 24
+
+[node name="Titre" type="Label" parent="Menu/Panneau"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 18.0
+offset_right = 500.0
+offset_bottom = 84.0
+theme_override_fonts/font = ExtResource("titre")
+theme_override_font_sizes/font_size = 48
+text = "Options"
+
+[node name="Defilement" type="ScrollContainer" parent="Menu/Panneau"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = 96.0
+offset_right = -44.0
+offset_bottom = -94.0
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="Pages" type="VBoxContainer" parent="Menu/Panneau/Defilement"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContenuReglages" type="VBoxContainer" parent="Menu/Panneau/Defilement/Pages"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="PageControles" type="VBoxContainer" parent="Menu/Panneau/Defilement/Pages"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Instructions" type="Label" parent="Menu/Panneau/Defilement/Pages/PageControles"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Sélectionnez une commande, puis appuyez sur la touche souhaitée. Échap / B : annuler."
+autowrap_mode = 2
+
+[node name="Controles" parent="Menu/Panneau/Defilement/Pages/PageControles" instance=ExtResource("controles")]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(800, 420)
+size_flags_horizontal = 3
+integre_options = true
+
+[node name="Information" type="Label" parent="Menu/Panneau"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = -76.0
+offset_right = 620.0
+offset_bottom = -22.0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.72, 0.61, 0.48, 1)
+text = "Réglages enregistrés automatiquement\nF2 / Start : options · Échap / B : retour"
+
+[node name="Fermer" parent="Menu/Panneau" instance=ExtResource("bouton")]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -284.0
+offset_top = -74.0
+offset_right = -44.0
+offset_bottom = -20.0
+text = "Retour"
+taille_minimale = Vector2(240, 54)
+taille_police = 24

@@ -316,6 +316,7 @@ func mourir() -> void:
 	actualiser_barre_vie()
 	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
 	var victim_death_sound =  AudioStreamPlayer3D.new()
+	victim_death_sound.bus = &"Effets"
 	get_parent().add_child(victim_death_sound)
 	victim_death_sound.stream = victim_death.pick_random()
 	victim_death_sound.global_position = global_position

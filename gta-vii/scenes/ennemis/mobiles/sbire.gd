@@ -19,6 +19,7 @@ var etage := 1
 
 # Annonce une vraie mort au RoomManager, avant la suppression du nœud.
 signal died
+signal degats_subis(quantite: float)
 var est_mort := false
 
 # L'agent calcule le chemin ; ce CharacterBody3D réalise le déplacement.
@@ -36,6 +37,11 @@ var cible = null
 var vie := vie_max
 
 @export var vitesse_sbire = 7
+
+# Bonus temporaires recalculés par les auras des élites.
+var vitesse_aura := 1.0
+var degats_aura := 1.0
+var resistance_aura := 0.0
 
 var hitbox_radius = 0.9 #Définit comment l'extincteur va implémenter la largueur de le sbire dans son cône d'attaque
 
@@ -79,22 +85,22 @@ func _ready() -> void:
 	_preparer_feux_mains()
 	cible_idle.name = "Cible " + self.name
 	get_parent().add_child(cible_idle)
-	
+
 	# Les PV restent ceux de l’Inspecteur ; seuls les dégâts progressent par étage.
 	var paliers := maxi(etage - 1, 0)
 	vie = vie_max
 	degats_sbire *= 1.0 + paliers * degats_par_etage_pourcent / 100.0
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
-	
+
 	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.
-	
+
 	pass # Replace with function body.
 
-		
+
 func _physics_process(delta):
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
 	timer_apres_attaque -= delta
-	
+
 	# La préparation garde sa cible, mais n'empêche plus de la poursuivre.
 	if preparation_restante > 0.0:
 		if not is_instance_valid(cible_attaque) or cible_attaque.is_queued_for_deletion():
@@ -123,14 +129,14 @@ func _physics_process(delta):
 	chgt_cible_timer -= delta
 	if chgt_cible_timer < 0:
 		choisir_cible()
-	
+
 	if cible == null or en_idle:
 		idle_timer -= delta
 		if idle_timer <0 :
 			cible_idle.position =  choisir_destination_idle()
 			cible = cible_idle
 			idle_timer = randf_range(temps_idle_min,temps_idle_max)
-	
+
 	if timer_apres_attaque > 0.0:
 		velocity = Vector3.ZERO
 		move_and_slide()
@@ -140,34 +146,34 @@ func _physics_process(delta):
 		cible = null
 		velocity = Vector3.ZERO
 		return
-	
+
 	if cible != null :	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
-		
+
 		#On tourne le sbire et sa hitbox vers la cible
 		var direction = global_position.direction_to(cible.global_position)
-		var theta = atan2(direction.x, direction.z) - rotation.y	
+		var theta = atan2(direction.x, direction.z) - rotation.y
 		self.rotate(Vector3(0,1,0),theta)
 		detection_shape.rotate(Vector3(0,1,0),theta)
-		
-		
+
+
 		if distance > distance_lacher: #calcul de sortie de range
 			cible = null
 			en_idle = true
 			velocity = Vector3.ZERO
-			move_and_slide()	
-			
+			move_and_slide()
+
 		elif distance > distance_attaque: # comportement dans la range
 			# Suivre les étapes d'un chemin au lieu de foncer directement vers le joueur.
 			suivre_cible_navigation()
-			
+
 		else: #comportement dans la portée d'attaque
-			velocity = Vector3.ZERO 
-			
+			velocity = Vector3.ZERO
+
 			if attaque_timer < 0.0:
 				if cible.is_in_group("player") or cible.is_in_group("victime"):
 					commencer_preparation()
-			
+
 #On detecte pour bypass le cooldown de changer de cible dans choisir_cible() pour sortir instantanément de l'idle
 func _on_surface_detection_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
@@ -206,7 +212,7 @@ func suivre_cible_navigation() -> void:
 	navigation_agent.target_position = cible.global_position
 	if en_idle:
 		navigation_agent.target_position = cible_idle.position
-	
+
 	var prochaine_position := navigation_agent.get_next_path_position()
 
 	# Ce point peut être intermédiaire.
@@ -215,9 +221,9 @@ func suivre_cible_navigation() -> void:
 	if direction.length() > 0.01:
 		# Normaliser conserve uniquement la direction.
 		velocity = direction.normalized() * vitesse_sbire * multiplicateur_vitesse()
-	
+
 	# L'agent ne déplace rien lui-même : appliquer la vitesse avec les collisions.
-	
+
 	move_and_slide()
 
 func choisir_cible():
@@ -227,18 +233,18 @@ func choisir_cible():
 		distance_min = global_position.distance_to(cible.global_position)
 	else:
 		distance_min = 1000.0
-		
+
 	for body in bodies:
 		#les cibles ne peuvent etre que des gentils libérés
 		if body.is_in_group("player") or (body.is_in_group("victime") and body.is_freed):
 			var distance_body = global_position.distance_to(body.global_position)
 			print(body, " dbody: ",distance_body," dmin: ", distance_min)
-			
+
 			#La cible choisie est la plus proche
 			if distance_body <= distance_min:
 				distance_min = distance_body
 				cible = body
-		
+
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
 		en_idle = false
@@ -266,22 +272,26 @@ func prendre_degats(degats: float) -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
 	if est_mort:
 		return
+	degats *= 1.0 - resistance_aura
+	# Annoncer les PV réellement retirés, sans compter les dégâts au-delà de zéro.
+	var vie_avant: float = vie
 	vie -= degats
 	vie = max(vie, 0)
-	
+	if vie < vie_avant: degats_subis.emit(vie_avant - vie)
+
 	#Le joueur prends l'aggro
 	if cible != player:
 		animation_enerve()
-		
+
 		cible = player
 		chgt_cible_timer = aggro_cooldown #On veut que la cible ait le temps de "s'echapper"
-	
+
 	afficher_degats(degats)
 
-	
+
 	if vie <= 0:
 		mourir()
-		
+
 func mourir():
 	# Une mort ne doit émettre le signal qu'une seule fois.
 	if est_mort:
@@ -291,14 +301,15 @@ func mourir():
 		animation_feux.kill()
 	if animation_frappe:
 		animation_frappe.kill()
-	
+
 	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
 	var steam_death=  AudioStreamPlayer3D.new()
+	steam_death.bus = &"Effets"
 	get_parent().add_child(steam_death)
 	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
 	steam_death.global_position = global_position
 	steam_death.play()
-	
+
 	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
 	if afficher_cendres:
 		RETOUR_COMBAT.creer_cendres(self, [$Sketchfab_Scene, $droplet], duree_cendres)
@@ -315,9 +326,8 @@ func _preparer_feux_mains() -> void:
 	for feu in feux_mains:
 		tailles_feux.append(feu.scale)
 		feu.scale *= 0.55
-		var particules: GPUParticles3D = feu.get_node("Flames")
-		particules.process_material = particules.process_material.duplicate()
-		particules.process_material.color = Color(3.0, 1.3, 0.5, 1.0)
+		var particules: CPUParticles3D = feu.get_node("Flames")
+		particules.color = Color(3.0, 1.3, 0.5, 1.0)
 
 func _animer_feux(charger: bool, duree: float) -> void:
 	if animation_feux:
@@ -325,10 +335,10 @@ func _animer_feux(charger: bool, duree: float) -> void:
 	animation_feux = create_tween().set_parallel(true)
 	for i in range(feux_mains.size()):
 		var feu := feux_mains[i]
-		var mat: ParticleProcessMaterial = feu.get_node("Flames").process_material
+		var particules: CPUParticles3D = feu.get_node("Flames")
 		# Taille et couleur changent ensemble, progressivement pendant la préparation.
 		animation_feux.tween_property(feu, "scale", tailles_feux[i] * (1.15 if charger else 0.55), duree)
-		animation_feux.tween_property(mat, "color", Color(7.0, 0.7, 0.12, 1.0) if charger else Color(3.0, 1.3, 0.5, 1.0), duree)
+		animation_feux.tween_property(particules, "color", Color(7.0, 0.7, 0.12, 1.0) if charger else Color(3.0, 1.3, 0.5, 1.0), duree)
 
 func commencer_preparation() -> void:
 	cible_attaque = cible
@@ -346,7 +356,7 @@ func attaque() -> void:
 	if global_position.distance_to(cible_attaque.global_position) > distance_attaque:
 		return
 	# Un seul appel direct : aucune création de projectile, aucun dégât différé.
-	var degats: float = round(randf_range(0.9, 1.1) * degats_sbire * 100.0) / 100.0
+	var degats: float = round(randf_range(0.9, 1.1) * degats_sbire * multiplicateur_degats() * 100.0) / 100.0
 	cible_attaque.prendre_degats(degats)
 
 func _jouer_frappe() -> void:
@@ -360,30 +370,30 @@ func _jouer_frappe() -> void:
 	animation_frappe.tween_property(modele, "position", origine, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 func couleur_degats(degats: float) -> Color:
-	
+
 	var t = clamp((degats - 0.9*degats_sbire) / 1.0, 0.0, 1.0)
-	
+
 	var blanc = Color(0.998, 1.0, 0.29, 1.0)
 	var orange = Color(1.0, 0.388, 0.0, 1.0)
-	
+
 	return blanc.lerp(orange, t)
-	
+
 #On affiche les dégats
 var popup_tween: Tween
 func afficher_degats(degats: float) -> void:
 	var rd1 = randf_range(-0.1,0.1)
 	var rd2 = randf_range(-0.1,0.1)
 	var rd3 = randf_range(-0.1,0.1)
-	
+
 	$PopUpDegats.text = "-" + str(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
 	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
 	$PopUpDegats.font_size = 100*(1+rd2)
 	$PopUpDegats.visible = true
-	
+
 	if popup_tween:
 		popup_tween.kill()
-	
+
 	var position_depart = Vector3(rd1,2.5+rd2 ,0+rd3)
 	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
 	var taille_fin = 120*(1+rd1)
@@ -408,4 +418,9 @@ func appliquer_gel(pourcentage: float, duree: float) -> void:
 
 func multiplicateur_vitesse() -> float:
 	var gel = get_node_or_null("Ralentissement")
-	return gel.multiplicateur if gel != null else 1.0
+	var elite = get_node_or_null("Elite")
+	return (gel.multiplicateur if gel != null else 1.0) * vitesse_aura * (elite.vitesse() if elite != null else 1.0)
+
+func multiplicateur_degats() -> float:
+	var elite = get_node_or_null("Elite")
+	return degats_aura * (elite.degats() if elite != null else 1.0)

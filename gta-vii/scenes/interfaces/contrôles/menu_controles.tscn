@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="3_bm73f"]
 [ext_resource type="Script" uid="uid://tvvahyuhbk7s" path="res://scenes/interfaces/contrôles/j_1_clavier_touches.gd" id="4_tkrf5"]
 [ext_resource type="Script" uid="uid://dr2r1mifrb88f" path="res://scenes/interfaces/contrôles/j_1_manette_touches.gd" id="6_uyq8f"]
-[ext_resource type="Script" uid="uid://dyf0ei4jridbl" path="res://scenes/jeu/cursor_manager.gd" id="7_ghsur"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_xuack"]
 noise_type = 3
@@ -281,5 +280,3 @@ custom_minimum_size = Vector2(220, 64)
 layout_mode = 2
 text = "Retour"
 
-[node name="CursorManager" type="Node3D" parent="." unique_id=402327798]
-script = ExtResource("7_ghsur")

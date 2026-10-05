@@ -25,6 +25,7 @@ func _ready() -> void:
 		boutons_actions[action].pressed.connect(commencer_rebind.bind(action))
 
 func commencer_rebind(action: String) -> void:
+	menu_controles.annuler_rebind()
 	#en attendant que le joueur choisisse, on affiche '...'
 	boutons_actions[action].get_node("Icone").texture = null
 	boutons_actions[action].text = "..."
@@ -41,7 +42,10 @@ func changer_touche(event: InputEvent) -> void:
 			InputMap.action_erase_event(action_a_modifier, evenement)
 	
 	#On rajoute le nouveau controle manette
-	InputMap.action_add_event(action_a_modifier, event)
+	# Une commande s'applique à toute manette, même après une reconnexion.
+	var commande := event.duplicate()
+	commande.device = -1
+	InputMap.action_add_event(action_a_modifier, commande)
 	
 	#On change l'image du bouton après avoir changé de touche
 	if event is InputEventJoypadMotion:
@@ -51,6 +55,13 @@ func changer_touche(event: InputEvent) -> void:
 		
 	en_attente = false
 	action_a_modifier = ""
+	menu_controles.commandes_changees.emit()
+
+func annuler_rebind() -> void:
+	if not en_attente: return
+	en_attente = false
+	action_a_modifier = ""
+	menu_controles.mettre_a_jour_affichage_manette()
 	
 
 func mettre_a_jour_boutons() -> void:
@@ -60,7 +71,11 @@ func mettre_a_jour_boutons() -> void:
 			enfant.custom_minimum_size = taille_minimale_boutons
 
 func _input(event: InputEvent) -> void:
-	if not en_attente:
+	if not en_attente or not is_visible_in_tree():
+		return
+	if event.is_action_pressed("ui_cancel"):
+		annuler_rebind()
+		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventJoypadMotion:
 		if abs(event.axis_value) > 0.5:

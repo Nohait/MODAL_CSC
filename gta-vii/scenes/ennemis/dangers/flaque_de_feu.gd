@@ -14,6 +14,7 @@ var etage := 1
 
 # Les flaques initiales annoncent leur destruction au RoomManager.
 signal died
+signal degats_subis(quantite: float)
 var est_mort := false
 
 @export_group("Statistiques de base")
@@ -40,15 +41,16 @@ func _ready() -> void:
 	# Chaque flaque reçoit un contour différent, sans dupliquer le matériau partagé.
 	$MeshInstance3D.set_instance_shader_parameter("variation", randf_range(0.0, TAU))
 	# Répartir de petites flammes sur la flaque, plutôt qu'étirer un feu central.
-	var flammes: GPUParticles3D = $vfx_fire/Flames
-	flammes.amount = 30
-	var particules := flammes.process_material.duplicate() as ParticleProcessMaterial
-	particules.emission_sphere_radius = 0.55
-	particules.gravity = Vector3(0, 2, 0)
-	particules.scale_min = 0.4
-	particules.scale_max = 0.75
-	particules.color = Color(2.5, 1.15, 0.4, 1.0)
-	flammes.process_material = particules
+	var flammes: CPUParticles3D = $vfx_fire/Flames
+	# Les réglages CPU appartiennent à l'émetteur : plus de matériau de simulation à dupliquer.
+	flammes.emission_sphere_radius = 0.55
+	flammes.gravity = Vector3(0, 2, 0)
+	flammes.scale_amount_min = 0.4
+	flammes.scale_amount_max = 0.75
+	flammes.color = Color(2.5, 1.15, 0.4, 1.0)
+	# L'enfant a démarré avant le _ready de la flaque : recalculer immédiatement
+	# ses particules avec les réglages définitifs, avant le premier affichage.
+	flammes.restart()
 	# Les PV restent ceux de l’Inspecteur ; seuls les dégâts progressent par étage.
 	var paliers := maxi(etage - 1, 0)
 	vie = vie_max
@@ -76,8 +78,11 @@ func _on_body_exited(body: Node3D) -> void:
 func prendre_degats(degats: float) -> void:
 	if est_mort:
 		return
+	# Le bilan écoute cette perte effective ; un coup fatal ne compte pas de PV négatifs.
+	var vie_avant: float = vie
 	vie -= degats
 	vie = max(vie, 0)
+	if vie < vie_avant: degats_subis.emit(vie_avant - vie)
 	afficher_degats(degats)
 	
 	if vie <= 0:
@@ -90,6 +95,7 @@ func mourir():
 	
 	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
 	var steam_death=  AudioStreamPlayer3D.new()
+	steam_death.bus = &"Effets"
 	get_parent().add_child(steam_death)
 	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
 	steam_death.global_position = global_position

@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://bciys0ip6dqw2"]
 
-[ext_resource type="PackedScene" uid="uid://cj0jpr12jqcwc" path="res://scenes/interfaces/contrôles/menu_controles.tscn" id="9_gp83s"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
 [ext_resource type="Script" uid="uid://baiuejiyyy2ni" path="res://scenes/interfaces/menus/titre/decoration_titre.gd" id="decor"]
 [ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="flames"]
@@ -169,10 +168,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Succès"
 
-[node name="Controles" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
+[node name="Options" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Contrôles	"
+text = "Options"
 
 [node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
 unique_name_in_owner = true
@@ -192,9 +191,3 @@ text = "GTA VII  /  PROTOTYPE"
 [node name="MenuSucces" parent="." unique_id=1377465611 instance=ExtResource("success")]
 layout_mode = 1
 
-[node name="MenuControles" parent="." unique_id=1597530792 instance=ExtResource("9_gp83s")]
-layout_mode = 1
-offset_left = 2.0
-offset_top = -1.0
-offset_right = 2.0
-offset_bottom = -1.0

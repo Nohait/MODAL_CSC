@@ -12,7 +12,14 @@ extends Resource
 @export var compositions_speciales: Array[CompositionVague] = [
 	preload("res://scenes/modes/zombie/equilibrage/compositions/meute.tres"),
 	preload("res://scenes/modes/zombie/equilibrage/compositions/siege.tres"),
-	preload("res://scenes/modes/zombie/equilibrage/compositions/embuscade.tres")
+	preload("res://scenes/modes/zombie/equilibrage/compositions/embuscade.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/blackout.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/double_horde.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/brouillard.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/chaleur.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/panne.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/doree.tres"),
+	preload("res://scenes/modes/zombie/equilibrage/compositions/mutation.tres")
 ]
 @export var composition_boss: CompositionVague = preload("res://scenes/modes/zombie/equilibrage/compositions/mini_boss.tres")
 @export_range(1, 100, 1) var intervalle_vagues_boss := 10

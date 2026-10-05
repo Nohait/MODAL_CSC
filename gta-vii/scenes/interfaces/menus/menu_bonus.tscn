@@ -13,6 +13,10 @@
 
 [ext_resource type="Script" path="res://scenes/interfaces/menus/statistiques_joueur.gd" id="9_stats"]
 
+[ext_resource type="Script" path="res://scenes/interfaces/menus/glossaire/glossaire.gd" id="10_glossaire"]
+
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/onglet_carnet.gdshader" id="11_onglet"]
+
 [sub_resource type="ShaderMaterial" id="PochetteBonus"]
 shader = ExtResource("5_booster")
 shader_parameter/taille = Vector2(260, 60)
@@ -64,6 +68,20 @@ content_margin_right = 18.0
 content_margin_top = 10.0
 content_margin_bottom = 10.0
 
+[sub_resource type="ShaderMaterial" id="OngletBonusPapier"]
+shader = ExtResource("11_onglet")
+shader_parameter/taille = Vector2(170, 54)
+shader_parameter/largeur_bord = 5.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.3
+
+[sub_resource type="ShaderMaterial" id="OngletGlossairePapier"]
+shader = ExtResource("11_onglet")
+shader_parameter/taille = Vector2(170, 54)
+shader_parameter/largeur_bord = 5.0
+shader_parameter/rayon_coin = 6.0
+shader_parameter/intensite_braises = 0.3
+
 [node name="MenuBonus" type="CanvasLayer"]
 process_mode = 3
 layer = 30
@@ -113,7 +131,7 @@ mouse_filter = 2
 theme_override_colors/font_color = Color(0.94, 0.85, 0.69, 1)
 theme_override_fonts/font = ExtResource("7_oswald")
 theme_override_font_sizes/font_size = 17
-text = "BONUS"
+text = "CARNET"
 
 [node name="Nombre" type="Label" parent="Raccourci"]
 offset_left = 53.0
@@ -160,9 +178,88 @@ color = Color(0.01, 0.006, 0.008, 0.88)
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.045
-anchor_top = 0.04
+anchor_top = 0.11
 anchor_right = 0.955
 anchor_bottom = 0.96
+
+[node name="Onglets" type="HBoxContainer" parent="Menu/Panneau"]
+offset_left = 30.0
+offset_top = -49.0
+offset_right = 390.0
+offset_bottom = 5.0
+theme_override_constants/separation = 8
+
+[node name="OngletBonus" type="Button" parent="Menu/Panneau/Onglets"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(170, 54)
+toggle_mode = true
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau/Onglets/OngletBonus"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="Menu/Panneau/Onglets/OngletBonus"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+text = "Bonus"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OngletGlossaire" type="Button" parent="Menu/Panneau/Onglets"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(170, 54)
+toggle_mode = true
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau/Onglets/OngletGlossaire"]
+show_behind_parent = true
+material = SubResource("OngletGlossairePapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="Menu/Panneau/Onglets/OngletGlossaire"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+text = "Glossaire"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Papier" type="TextureRect" parent="Menu/Panneau"]
 layout_mode = 1
@@ -188,38 +285,11 @@ mouse_filter = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_top = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_bottom = 48
 
 [node name="Disposition" type="VBoxContainer" parent="Menu/Panneau/Marge"]
 layout_mode = 2
 theme_override_constants/separation = 12
-
-[node name="Entete" type="HBoxContainer" parent="Menu/Panneau/Marge/Disposition"]
-layout_mode = 2
-
-[node name="Titre" type="Label" parent="Menu/Panneau/Marge/Disposition/Entete"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("4")
-theme_override_font_sizes/font_size = 34
-theme_override_colors/font_color = Color(0.96, 0.84, 0.65, 1)
-text = "Ce qui nous fait tenir"
-
-[node name="Fermer" type="Button" parent="Menu/Panneau/Marge/Disposition/Entete"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(130, 44)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.83, 0.65, 1)
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/hover = SubResource("BoutonActif")
-theme_override_styles/focus = SubResource("BoutonActif")
-text = "Reprendre"
-
-[node name="SousTitre" type="Label" parent="Menu/Panneau/Marge/Disposition"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.62, 0.5, 1)
-theme_override_font_sizes/font_size = 14
-text = "BONUS ACTIFS   /   PARTIE EN PAUSE"
 
 [node name="Defilement" type="HBoxContainer" parent="Menu/Panneau/Marge/Disposition"]
 layout_mode = 2
@@ -320,3 +390,51 @@ custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_vertical = 0
 script = ExtResource("9_stats")
+
+[node name="Glossaire" type="HBoxContainer" parent="Menu/Panneau/Marge/Disposition"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("10_glossaire")
+
+[node name="Fermer" type="Button" parent="Menu/Panneau"]
+unique_name_in_owner = true
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = -49.0
+offset_right = -30.0
+offset_bottom = -5.0
+theme_override_colors/font_color = Color(0.95, 0.83, 0.65, 1)
+theme_override_styles/normal = SubResource("Bouton")
+theme_override_styles/hover = SubResource("BoutonActif")
+theme_override_styles/focus = SubResource("BoutonActif")
+text = "Reprendre"
+
+[node name="Options" type="Button" parent="Menu/Panneau"]
+unique_name_in_owner = true
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -370.0
+offset_top = -49.0
+offset_right = -235.0
+offset_bottom = -5.0
+theme_override_colors/font_color = Color(0.95, 0.83, 0.65, 1)
+theme_override_styles/normal = SubResource("Bouton")
+theme_override_styles/hover = SubResource("BoutonActif")
+theme_override_styles/focus = SubResource("BoutonActif")
+text = "Options"
+
+[node name="Pause" type="Label" parent="Menu/Panneau"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -34.0
+offset_right = 250.0
+offset_bottom = -14.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("7_oswald")
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.75, 0.61, 0.50, 1)
+text = "PARTIE EN PAUSE"

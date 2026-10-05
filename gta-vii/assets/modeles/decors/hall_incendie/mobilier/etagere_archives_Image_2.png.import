@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brbw0cbi6e8g2"
-path="res://.godot/imported/etagere_archives_Image_2.png-b38e4f54f84213dd70110d1c48d0a7ab.ctex"
+path.s3tc="res://.godot/imported/etagere_archives_Image_2.png-b38e4f54f84213dd70110d1c48d0a7ab.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "c2db921f2fdcf27f28d8a9f06c80973b"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/decors/hall_incendie/mobilier/etagere_archives_Image_2.png"
-dest_files=["res://.godot/imported/etagere_archives_Image_2.png-b38e4f54f84213dd70110d1c48d0a7ab.ctex"]
+dest_files=["res://.godot/imported/etagere_archives_Image_2.png-b38e4f54f84213dd70110d1c48d0a7ab.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

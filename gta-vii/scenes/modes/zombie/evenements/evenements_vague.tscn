@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/evenements/evenements_vague.gd" id="script"]
+
+[node name="EvenementsVague" type="Node3D"]
+process_priority = 100
+script = ExtResource("script")
