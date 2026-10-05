@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/audio/musique_zombie.gd" id="script"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/hitman.mp3" id="vagues"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/volatile_reaction.mp3" id="danger"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/dark_fog.mp3" id="obscurite"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/industrial_music_box.mp3" id="boutique"]
+
+[node name="MusiqueZombie" type="Node"]
+process_mode = 3
+script = ExtResource("script")
+vagues = ExtResource("vagues")
+danger = ExtResource("danger")
+obscurite = ExtResource("obscurite")
+boutique = ExtResource("boutique")
+
+[node name="PisteA" type="AudioStreamPlayer" parent="."]
+volume_db = -60.0
+bus = &"Musique"
+
+[node name="PisteB" type="AudioStreamPlayer" parent="."]
+volume_db = -60.0
+bus = &"Musique"

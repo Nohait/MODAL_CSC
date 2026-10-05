@@ -2,8 +2,8 @@ extends Node
 
 const FICHIER = "user://reglages.cfg"
 const MENU = preload("res://scenes/interfaces/menus/options/menu_options.tscn")
-const BUS_VOLUMES = {"general": "Master", "ambiance": "Ambiance", "effets": "Effets"}
-var volumes := {"general": 1.0, "ambiance": 1.0, "effets": 1.0}
+const BUS_VOLUMES = {"general": "Master", "ambiance": "Ambiance", "effets": "Effets", "musique": "Musique"}
+var volumes := {"general": 1.0, "ambiance": 1.0, "effets": 1.0, "musique": 1.0}
 var sensibilite := 1.0
 var mode_fenetre: int
 var menu: CanvasLayer

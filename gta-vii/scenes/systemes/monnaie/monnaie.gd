@@ -50,3 +50,13 @@ func _ramasser() -> void:
 
 func _process(delta: float) -> void:
 	delai_son = maxf(0.0, delai_son - delta)
+
+
+func depenser(prix: int) -> bool:
+	# Vérifier avant de débiter évite un solde négatif et centralise la mise à jour du HUD.
+	if prix < 0 or solde < prix:
+		return false
+	solde -= prix
+	compteur.text = str(solde)
+	solde_change.emit(solde)
+	return true

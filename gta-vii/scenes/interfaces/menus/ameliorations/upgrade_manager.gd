@@ -32,6 +32,8 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_bout
 @onready var defis = $DefiManager
 @onready var menu: Control = $Menu
 @onready var cartes: GridContainer = $Menu/Defilement/Centre/Marge/Contenu/Cartes
+var extincteur_mural: Node3D
+@onready var monnaie = get_node("../Monnaie")
 var boutique: Control
 var niveaux: Dictionary = {}
 # Historique de la partie : une carte unique consommée ne redevient pas achetable.
@@ -94,6 +96,9 @@ func _ready() -> void:
 	boutique.catalogue = offres_boosters()
 	add_child(boutique)
 	boutique.hide()
+	boutique.ajouter_ravitaillement()
+	boutique.recharge_murale_demandee.connect(_acheter_recharge_murale)
+	monnaie.solde_change.connect(_actualiser_pieces)
 	boutique.achat_demande.connect(_acheter_booster)
 	boutique.catalogue_debug_demande.connect(ouvrir_catalogue_debug)
 	boutique.defi_demande.connect(_acheter_defi)
@@ -118,7 +123,7 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 	points = 0
 	for victime in escorte.freed_victims:
 		if is_instance_valid(victime) and not victime.est_morte and not victime.is_queued_for_deletion():
-			points += victime.points_boutique
+			points += 1
 	if points_abondants_test:
 		points = POINTS_BOUTIQUE_TEST
 	boutique_ouverte = true
@@ -138,6 +143,7 @@ func _actualiser_boutique(message: String = "") -> void:
 	if message.is_empty():
 		message = defis.bilan + "Les points non dépensés seront perdus en quittant la boutique."
 	boutique.actualiser_boutique(points, defis.actifs, defis.propositions(), defis.boosters_rares_gratuits, message)
+	_actualiser_pieces()
 
 
 func _acheter_defi(id: StringName) -> void:
@@ -425,3 +431,23 @@ func _cartes_achetables(type_bonus: String) -> Array[Amelioration]:
 		if definition.obtention_unique and cartes_obtenues.has(definition.identifiant): continue
 		resultat.append(definition)
 	return resultat
+
+func _actualiser_pieces(_solde: int = 0) -> void:
+	if not is_instance_valid(extincteur_mural):
+		# La map est créée après la boutique : chercher l'objet au premier affichage.
+		for objet in get_tree().get_nodes_in_group("extincteur_mural"):
+			if get_parent().is_ancestor_of(objet):
+				extincteur_mural = objet
+				extincteur_mural.etat_change.connect(_actualiser_pieces)
+				break
+	var present := is_instance_valid(extincteur_mural)
+	boutique.actualiser_ravitaillement(monnaie.solde, extincteur_mural.disponible if present else false,
+		extincteur_mural.prix_recharge if present else 10, present)
+
+func _acheter_recharge_murale() -> void:
+	# Revérifier côté jeu : un bouton grisé ne remplace pas la vérification d'un achat.
+	if not boutique_ouverte or choix_ouverts or not is_instance_valid(extincteur_mural): return
+	if extincteur_mural.disponible: return
+	if monnaie.depenser(extincteur_mural.prix_recharge):
+		extincteur_mural.recharger()
+		boutique.retour.text = "Extincteur mural rechargé : un plein de mousse vous attend."

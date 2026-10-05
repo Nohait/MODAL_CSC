@@ -114,6 +114,8 @@ func _physics_process(delta: float) -> void:
 			return
 		if temps_etat <= 0.0:
 			# La direction mémorisée ne change plus : un dash peut faire rater le bond.
+			# Ce passage ne se produit qu’au départ du bond, jamais à chaque image.
+			$GrognementBond.play()
 			etat = "bond"
 			temps_etat = duree_bond
 			cooldown_bond = delai_entre_bonds

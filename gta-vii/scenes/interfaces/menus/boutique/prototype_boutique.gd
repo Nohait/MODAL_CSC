@@ -5,6 +5,8 @@ signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
 signal catalogue_debug_demande
 signal continuer_demande
+signal recharge_murale_demandee
+signal sprinkler_demande
 signal bonus_demandes
 
 const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
@@ -35,6 +37,14 @@ var vide: Label
 var boosters: Array[Control] = []
 var ouverture: Control
 var panneau_defis: Control
+var colonne_offres: VBoxContainer
+var compteur_pieces: Label
+var recharge_murale: Button
+var description_recharge: Label
+var prix_recharge: Label
+var entete_monnaies: HBoxContainer
+var activation_sprinkler: Button
+var prix_sprinkler: Label
 
 
 func _ready() -> void:
@@ -47,6 +57,7 @@ func _ready() -> void:
 	bloc_points.add_theme_constant_override("separation", 4)
 	contenu.add_child(bloc_points)
 	var entete := HBoxContainer.new()
+	entete_monnaies = entete
 	entete.add_theme_constant_override("separation", 12)
 	bloc_points.add_child(entete)
 	var icone := TextureRect.new()
@@ -76,6 +87,7 @@ func _ready() -> void:
 	colonnes.add_theme_constant_override("separation", 24)
 	defilement.add_child(colonnes)
 	var gauche := VBoxContainer.new()
+	colonne_offres = gauche
 	gauche.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	gauche.size_flags_stretch_ratio = 1.6
 	gauche.add_theme_constant_override("separation", 18)
@@ -137,14 +149,6 @@ func _ready() -> void:
 	retour.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(retour)
 	if not mode_demonstration:
-		var bonus = BOUTON.instantiate()
-		bonus.name = "ConsulterBonus"
-		bonus.taille_police = 18
-		bonus.custom_minimum_size = Vector2(300, 40)
-		bonus.text = "Mes bonus et statistiques [B]"
-		bonus.focus_mode = Control.FOCUS_NONE
-		bonus.pressed.connect(func(): bonus_demandes.emit())
-		contenu.add_child(bonus)
 		var continuer = BOUTON.instantiate()
 		continuer.taille_police = 18
 		continuer.custom_minimum_size = Vector2(300, 40)
@@ -304,3 +308,106 @@ func animer_ouverture(rarete: StringName) -> void:
 		await tween.finished
 		booster.show()
 		return
+
+
+func ajouter_ravitaillement() -> void:
+	# En zombie, réunir les quatre boosters en haut laisse la place aux achats en pièces.
+	for bouton in contenu.get_children():
+		if bouton is Button:
+			bouton.custom_minimum_size.y = 44
+	var ligne: Container = boosters[0].get_parent().get_parent()
+	var temporaires: Container = boosters.back().get_parent().get_parent()
+	var panneau_temporaire := temporaires.get_parent().get_parent()
+	for booster in boosters:
+		var emplacement := booster.get_parent()
+		if emplacement.get_parent() != ligne: emplacement.reparent(ligne)
+	if temporaires != ligne:
+		colonne_offres.remove_child(panneau_temporaire)
+		panneau_temporaire.queue_free()
+	ligne.get_parent().get_child(0).text = "AMÉLIORATIONS · POINTS"
+	var equipement := _panneau(colonne_offres, "ÉQUIPEMENT & RAVITAILLEMENT")
+	var budget := HBoxContainer.new()
+	budget.add_theme_constant_override("separation", 10)
+	var separation := Control.new()
+	separation.custom_minimum_size.x = 20
+	entete_monnaies.add_child(separation)
+	entete_monnaies.add_child(budget)
+	var piece := TextureRect.new()
+	piece.texture = preload("res://assets/textures/interfaces/hud/icone_piece.svg")
+	piece.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	piece.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	piece.custom_minimum_size = Vector2(28, 28)
+	budget.add_child(piece)
+	compteur_pieces = _texte("0 PIÈCE", 23)
+	budget.add_child(compteur_pieces)
+	var offres := HBoxContainer.new()
+	equipement.add_child(offres)
+	recharge_murale = Button.new()
+	recharge_murale.custom_minimum_size = Vector2(180, 250)
+	recharge_murale.pressed.connect(func(): recharge_murale_demandee.emit())
+	offres.add_child(recharge_murale)
+	# La tuile reste un seul bouton : ses enfants ne capturent pas les clics.
+	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var cadre := StyleBoxFlat.new()
+		cadre.bg_color = Color("bea17c") if etat == "normal" or etat == "disabled" else Color("d6bc93")
+		cadre.border_color = Color("614635")
+		cadre.set_border_width_all(2)
+		cadre.set_corner_radius_all(6)
+		recharge_murale.add_theme_stylebox_override(etat, cadre)
+	var details := VBoxContainer.new()
+	details.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	details.offset_left = 12
+	details.offset_right = -12
+	details.offset_top = 8
+	details.offset_bottom = -8
+	details.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	recharge_murale.add_child(details)
+	var image := TextureRect.new()
+	image.texture = preload("res://assets/textures/interfaces/boutique/extincteur_mural.svg")
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	image.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details.add_child(image)
+	description_recharge = _texte("Recharger\nl’extincteur mural", 17)
+	description_recharge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description_recharge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details.add_child(description_recharge)
+	prix_recharge = _texte("", 16)
+	prix_recharge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prix_recharge.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prix_recharge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details.add_child(prix_recharge)
+
+func actualiser_ravitaillement(solde: int, disponible: bool, prix: int, present: bool) -> void:
+	compteur_pieces.text = "%d PIÈCE%s" % [solde, "S" if solde != 1 else ""]
+	# Une salle classique peut ne pas proposer d'extincteur mural.
+	recharge_murale.visible = present
+	recharge_murale.disabled = not present or disponible or solde < prix
+	recharge_murale.modulate.a = 0.55 if recharge_murale.disabled else 1.0
+	prix_recharge.text = "%d pièces" % prix
+	if not present: prix_recharge.text = "Indisponible"
+	elif disponible: prix_recharge.text = "Déjà prêt"
+	elif solde < prix: prix_recharge.text += " · Fonds insuffisants"
+	recharge_murale.tooltip_text = "Recharger l’extincteur mural pour pouvoir y refaire un plein de mousse."
+
+func ajouter_sprinkler() -> void:
+	# Réutiliser la tuile de recharge, sans recopier sa connexion au bouton d'achat.
+	activation_sprinkler = recharge_murale.duplicate(0)
+	activation_sprinkler.name = "ActiverSprinkler"
+	recharge_murale.get_parent().add_child(activation_sprinkler)
+	var details := activation_sprinkler.get_child(0)
+	details.get_child(0).texture = preload("res://assets/textures/interfaces/boutique/sprinkler.svg")
+	details.get_child(1).text = "Armer\nle sprinkler"
+	prix_sprinkler = details.get_child(2)
+	activation_sprinkler.pressed.connect(func(): sprinkler_demande.emit())
+	activation_sprinkler.tooltip_text = "Le prochain ennemi dans sa zone déclenche un jet d’eau qui inflige des dégâts."
+
+func actualiser_sprinkler(solde: int, prix: int, arme: bool, actif: bool, present: bool) -> void:
+	activation_sprinkler.visible = present
+	activation_sprinkler.disabled = not present or arme or actif or solde < prix
+	activation_sprinkler.modulate.a = 0.55 if activation_sprinkler.disabled else 1.0
+	prix_sprinkler.text = "%d pièces" % prix
+	if actif: prix_sprinkler.text = "En cours"
+	elif arme: prix_sprinkler.text = "Déjà armé"
+	elif solde < prix: prix_sprinkler.text += " · Fonds insuffisants"

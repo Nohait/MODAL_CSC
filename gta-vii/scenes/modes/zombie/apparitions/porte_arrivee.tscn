@@ -1,74 +1,38 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c5frdt427ejaf"]
 
-[ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/entree_ennemis.gd" id="script"]
-
-[ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/annonce_porte.gd" id="annonce"]
-
-[ext_resource type="Shader" path="res://assets/shaders/decors/poussiere_porte.gdshader" id="poussiere_shader"]
-
-[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
-
+[ext_resource type="Script" uid="uid://dp77oblikb8n5" path="res://scenes/modes/zombie/apparitions/annonce_porte.gd" id="annonce"]
+[ext_resource type="Material" uid="uid://ucwny6jop1vc" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
-
-[ext_resource type="Material" path="res://assets/materiaux/encadrement_porte.tres" id="metal"]
-
-[ext_resource type="Material" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
-
-[sub_resource type="ShaderMaterial" id="poussiere_materiau"]
-shader = ExtResource("poussiere_shader")
-
-[sub_resource type="QuadMesh" id="poussiere_mesh"]
-material = SubResource("poussiere_materiau")
-size = Vector2(0.16, 0.16)
-
-[sub_resource type="Gradient" id="poussiere_fondu"]
-offsets = PackedFloat32Array(0, 0.15, 1)
-colors = PackedColorArray(0.48, 0.40, 0.32, 0, 0.48, 0.40, 0.32, 0.35, 0.32, 0.28, 0.23, 0)
-
-[sub_resource type="StandardMaterial3D" id="noir"]
-albedo_color = Color(0.012, 0.009, 0.008, 1)
-roughness = 1.0
-
-[sub_resource type="StandardMaterial3D" id="braise"]
-shading_mode = 0
-transparency = 1
-vertex_color_use_as_albedo = true
-billboard_mode = 1
-albedo_color = Color(1, 0.3, 0.03, 1)
-emission_enabled = true
-emission = Color(1, 0.16, 0.015, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="QuadMesh" id="grain"]
-size = Vector2(0.03, 0.035)
-material = SubResource("braise")
-
-[sub_resource type="Gradient" id="fondu"]
-offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
-colors = PackedColorArray(1, 0.6, 0.1, 0, 1, 0.5, 0.05, 0.8, 1, 0.15, 0.01, 0.4, 1, 0.1, 0.01, 0)
-
-[sub_resource type="BoxMesh" id="box4"]
-size = Vector3(4.8, 0.2, 3.8)
+[ext_resource type="Material" uid="uid://bhlrjecqdgqno" path="res://assets/materiaux/porte_bois_peint.tres" id="peinture"]
+[ext_resource type="Shader" uid="uid://c5lshp5tyhgri" path="res://assets/shaders/decors/poussiere_porte.gdshader" id="poussiere_shader"]
+[ext_resource type="Script" uid="uid://cvgogepw2111o" path="res://scenes/modes/zombie/apparitions/entree_ennemis.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
 
 [sub_resource type="BoxShape3D" id="box4Shape"]
 size = Vector3(4.8, 0.2, 3.8)
 
-[sub_resource type="BoxMesh" id="box6"]
-size = Vector3(4.8, 3.4, 0.3)
+[sub_resource type="BoxMesh" id="box4"]
+size = Vector3(4.8, 0.2, 3.8)
 
 [sub_resource type="BoxShape3D" id="box6Shape"]
 size = Vector3(4.8, 3.4, 0.3)
 
-[sub_resource type="BoxMesh" id="box8"]
-size = Vector3(0.25, 3.4, 3.6)
+[sub_resource type="StandardMaterial3D" id="noir"]
+albedo_color = Color(0.012, 0.009, 0.008, 1)
+
+[sub_resource type="BoxMesh" id="box6"]
+size = Vector3(4.8, 3.4, 0.3)
 
 [sub_resource type="BoxShape3D" id="box8Shape"]
 size = Vector3(0.25, 3.4, 3.6)
 
-[sub_resource type="BoxMesh" id="box10"]
+[sub_resource type="BoxMesh" id="box8"]
 size = Vector3(0.25, 3.4, 3.6)
 
 [sub_resource type="BoxShape3D" id="box10Shape"]
+size = Vector3(0.25, 3.4, 3.6)
+
+[sub_resource type="BoxMesh" id="box10"]
 size = Vector3(0.25, 3.4, 3.6)
 
 [sub_resource type="BoxMesh" id="box12"]
@@ -81,108 +45,126 @@ size = Vector3(0.25, 3.4, 0.35)
 size = Vector3(4.45, 0.22, 0.35)
 
 [sub_resource type="BoxMesh" id="box15"]
-size = Vector3(1.8, 3.0, 0.12)
+size = Vector3(1.8, 3, 0.12)
 
 [sub_resource type="BoxMesh" id="box16"]
-size = Vector3(1.8, 3.0, 0.12)
+size = Vector3(1.8, 3, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="braise"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.3, 0.03, 1)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="grain"]
+material = SubResource("braise")
+size = Vector2(0.03, 0.035)
+
+[sub_resource type="Gradient" id="fondu"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 0.6, 0.1, 0, 1, 0.5, 0.05, 0.8, 1, 0.15, 0.01, 0.4, 1, 0.1, 0.01, 0)
+
+[sub_resource type="ShaderMaterial" id="poussiere_materiau"]
+render_priority = 0
+shader = ExtResource("poussiere_shader")
+
+[sub_resource type="QuadMesh" id="poussiere_mesh"]
+material = SubResource("poussiere_materiau")
+size = Vector2(0.16, 0.16)
+
+[sub_resource type="Gradient" id="poussiere_fondu"]
+offsets = PackedFloat32Array(0, 0.15, 1)
+colors = PackedColorArray(0.48, 0.4, 0.32, 0, 0.48, 0.4, 0.32, 0.35, 0.32, 0.28, 0.23, 0)
 
 [sub_resource type="BoxShape3D" id="limite_seuil"]
 size = Vector3(3.8, 3.2, 0.2)
 
-[node name="PorteArrivee" type="Node3D"]
-script = ExtResource("script")
-type_entree = "porte"
+[node name="PorteArrivee" type="Node3D" unique_id=438277245]
 editor_description = "Entrée de mobiles annoncée par une lueur et des braises. Le calendrier de la vague déclenche les vrais ennemis en fin de trajet."
+script = ExtResource("script")
 
-[node name="SolAcces" type="StaticBody3D" groups=["collider"] parent="."]
-position = Vector3(0, -0.1, -1.8)
-collision_layer = 1
+[node name="SolAcces" type="StaticBody3D" parent="." unique_id=673350370 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -1.8)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="SolAcces"]
+[node name="Collision" type="CollisionShape3D" parent="SolAcces" unique_id=858019856]
 shape = SubResource("box4Shape")
 
-[node name="Visuel" type="MeshInstance3D" parent="SolAcces"]
-position = Vector3(0, 0, 0)
-mesh = SubResource("box4")
+[node name="Visuel" type="MeshInstance3D" parent="SolAcces" unique_id=1471450512]
 material_override = ExtResource("sol")
+mesh = SubResource("box4")
 
-[node name="FondSombre" type="StaticBody3D" groups=["collider"] parent="."]
-position = Vector3(0, 1.7, -3.6)
-collision_layer = 1
+[node name="FondSombre" type="StaticBody3D" parent="." unique_id=704230876 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, -3.6)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="FondSombre"]
+[node name="Collision" type="CollisionShape3D" parent="FondSombre" unique_id=283514317]
 shape = SubResource("box6Shape")
 
-[node name="Visuel" type="MeshInstance3D" parent="FondSombre"]
-position = Vector3(0, 0, 0)
-mesh = SubResource("box6")
+[node name="Visuel" type="MeshInstance3D" parent="FondSombre" unique_id=834721929]
 material_override = SubResource("noir")
+mesh = SubResource("box6")
 
-[node name="Paroi-1" type="StaticBody3D" groups=["collider"] parent="."]
-position = Vector3(-2.35, 1.7, -1.8)
-collision_layer = 1
+[node name="Paroi-1" type="StaticBody3D" parent="." unique_id=1909024708 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35, 1.7, -1.8)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="Paroi-1"]
+[node name="Collision" type="CollisionShape3D" parent="Paroi-1" unique_id=1408502936]
 shape = SubResource("box8Shape")
 
-[node name="Visuel" type="MeshInstance3D" parent="Paroi-1"]
-position = Vector3(0, 0, 0)
-mesh = SubResource("box8")
+[node name="Visuel" type="MeshInstance3D" parent="Paroi-1" unique_id=1681851780]
 material_override = ExtResource("mur")
+mesh = SubResource("box8")
 
-[node name="Paroi1" type="StaticBody3D" groups=["collider"] parent="."]
-position = Vector3(2.35, 1.7, -1.8)
-collision_layer = 1
+[node name="Paroi1" type="StaticBody3D" parent="." unique_id=1029157814 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35, 1.7, -1.8)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="Paroi1"]
+[node name="Collision" type="CollisionShape3D" parent="Paroi1" unique_id=2140453372]
 shape = SubResource("box10Shape")
 
-[node name="Visuel" type="MeshInstance3D" parent="Paroi1"]
-position = Vector3(0, 0, 0)
-mesh = SubResource("box10")
+[node name="Visuel" type="MeshInstance3D" parent="Paroi1" unique_id=1129198825]
 material_override = ExtResource("mur")
+mesh = SubResource("box10")
 
-[node name="Montant-2.1" type="MeshInstance3D" parent="."]
-position = Vector3(-2.1, 1.7, 0.0)
+[node name="Montant-2.1" type="MeshInstance3D" parent="." unique_id=58408212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 1.7, 0)
+material_override = ExtResource("metal")
 mesh = SubResource("box12")
-material_override = ExtResource("metal")
 
-[node name="Montant2.1" type="MeshInstance3D" parent="."]
-position = Vector3(2.1, 1.7, 0.0)
+[node name="Montant2.1" type="MeshInstance3D" parent="." unique_id=1273970654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 1.7, 0)
+material_override = ExtResource("metal")
 mesh = SubResource("box13")
-material_override = ExtResource("metal")
 
-[node name="Linteau" type="MeshInstance3D" parent="."]
-position = Vector3(0, 3.3, 0)
+[node name="Linteau" type="MeshInstance3D" parent="." unique_id=1992397192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0)
+material_override = ExtResource("metal")
 mesh = SubResource("box14")
-material_override = ExtResource("metal")
 
-[node name="Portes" type="Node3D" parent="."]
+[node name="Portes" type="Node3D" parent="." unique_id=1801189678]
 
-[node name="Gauche" type="MeshInstance3D" parent="Portes"]
-position = Vector3(-0.9, 1.5, 0.05)
+[node name="Gauche" type="MeshInstance3D" parent="Portes" unique_id=745637128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.5, 0.05)
+material_override = ExtResource("peinture")
 mesh = SubResource("box15")
-material_override = ExtResource("peinture")
 
-[node name="Droite" type="MeshInstance3D" parent="Portes"]
-position = Vector3(0.9, 1.5, 0.05)
+[node name="Droite" type="MeshInstance3D" parent="Portes" unique_id=259345001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.5, 0.05)
+material_override = ExtResource("peinture")
 mesh = SubResource("box16")
-material_override = ExtResource("peinture")
 
-[node name="Annonce" type="Node3D" parent="."]
-position = Vector3(0, 1.2, 0.3)
+[node name="Annonce" type="Node3D" parent="." unique_id=1950273096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.3)
 
-[node name="Lumiere" type="OmniLight3D" parent="Annonce"]
+[node name="Lumiere" type="OmniLight3D" parent="Annonce" unique_id=978736857]
 light_color = Color(1, 0.3, 0.06, 1)
 light_energy = 0.0
-omni_range = 5.0
 shadow_enabled = true
 
-[node name="Braises" type="CPUParticles3D" parent="Annonce"]
+[node name="Braises" type="CPUParticles3D" parent="Annonce" unique_id=1915520067]
+cast_shadow = 0
 emitting = false
 amount = 18
 lifetime = 1.5
@@ -195,13 +177,13 @@ gravity = Vector3(0, 0.1, 0)
 initial_velocity_min = 0.2
 initial_velocity_max = 0.7
 color_ramp = SubResource("fondu")
-cast_shadow = 0
 
-[node name="AnnoncePorte" type="Node3D" parent="."]
+[node name="AnnoncePorte" type="Node3D" parent="." unique_id=853709787]
 script = ExtResource("annonce")
 
-[node name="Poussiere" type="CPUParticles3D" parent="AnnoncePorte"]
-position = Vector3(0, 2.7, 0.25)
+[node name="Poussiere" type="CPUParticles3D" parent="AnnoncePorte" unique_id=852959504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0.25)
+cast_shadow = 0
 emitting = false
 amount = 16
 lifetime = 0.6
@@ -211,18 +193,15 @@ mesh = SubResource("poussiere_mesh")
 emission_shape = 3
 emission_box_extents = Vector3(1.8, 0.1, 0.12)
 direction = Vector3(0, 0, 1)
-spread = 45.0
 gravity = Vector3(0, -1.5, 0)
 initial_velocity_min = 0.3
 initial_velocity_max = 0.8
 color_ramp = SubResource("poussiere_fondu")
-cast_shadow = 0
 
-[node name="LimiteSeuil" type="StaticBody3D" parent="." groups=["collider"]]
+[node name="LimiteSeuil" type="StaticBody3D" parent="." unique_id=2088863624 groups=["collider"]]
 editor_description = "Limite de l'arène : les figurants traversent visuellement, les vrais ennemis apparaissent déjà à l'intérieur."
-position = Vector3(0, 1.6, -0.12)
-collision_layer = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.12)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="LimiteSeuil"]
+[node name="Collision" type="CollisionShape3D" parent="LimiteSeuil" unique_id=1643448646]
 shape = SubResource("limite_seuil")

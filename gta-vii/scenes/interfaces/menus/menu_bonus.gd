@@ -27,10 +27,13 @@ var temps_booster := 0.0
 @onready var glossaire: Control = %Glossaire
 @onready var contenu_bonus: Control = $Menu/Panneau/Marge/Disposition/Defilement
 @onready var ouverture_booster: Control = $OuvertureBooster
+@onready var confirmation: Window = %ConfirmationTitre
+@onready var boutons_carnet: Array[Button] = [onglet_bonus, onglet_glossaire, %Options, fermer, %RetourTitre, %AnnulerRetour, %ConfirmerRetour]
+var retour_en_cours := false
 
 
 func _ready() -> void:
-	for onglet in [onglet_bonus, onglet_glossaire]:
+	for onglet in boutons_carnet:
 		var papier_onglet: TextureRect = onglet.get_node("Papier")
 		papier_onglet.material = papier_onglet.material.duplicate()
 		papier_onglet.material.set_shader_parameter("selection", 0.0)
@@ -42,6 +45,13 @@ func _ready() -> void:
 	raccourci.mouse_exited.connect(_animer_raccourci.bind(false))
 	fermer.pressed.connect(fermer_menu)
 	%Options.pressed.connect(Reglages.ouvrir)
+	%RetourTitre.pressed.connect(_demander_retour_titre)
+	%AnnulerRetour.pressed.connect(_annuler_retour_titre)
+	%ConfirmerRetour.pressed.connect(_retourner_titre)
+	confirmation.close_requested.connect(_annuler_retour_titre)
+	confirmation.window_input.connect(_input_confirmation)
+	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(confirmation.get_node("Contenu"))
+	confirmation.get_node("Contenu/Papier").material = papier.material.duplicate()
 	onglet_bonus.pressed.connect(_choisir_onglet.bind(false))
 	onglet_glossaire.pressed.connect(_choisir_onglet.bind(true))
 	_choisir_onglet(false)
@@ -58,7 +68,7 @@ func _actualiser_taille_papier() -> void:
 
 func _process(delta: float) -> void:
 	temps_booster += delta
-	for onglet in [onglet_bonus, onglet_glossaire]:
+	for onglet in boutons_carnet:
 		var fond_onglet: TextureRect = onglet.get_node("Papier")
 		var cible := 1.0 if onglet.button_pressed else (0.45 if onglet.is_hovered() or onglet.has_focus() else 0.0)
 		var accent: float = fond_onglet.material.get_shader_parameter("selection")
@@ -66,6 +76,10 @@ func _process(delta: float) -> void:
 		fond_onglet.material.set_shader_parameter("selection", lerpf(accent, cible, 1.0 - exp(-12.0 * delta)))
 		fond_onglet.material.set_shader_parameter("horloge", temps_booster)
 		fond_onglet.material.set_shader_parameter("taille", onglet.size)
+	if confirmation.visible:
+		var fond_confirmation: TextureRect = confirmation.get_node("Contenu/Papier")
+		fond_confirmation.material.set_shader_parameter("horloge", temps_booster)
+		fond_confirmation.material.set_shader_parameter("taille", fond_confirmation.size)
 	var fond: TextureRect = raccourci.get_node("Fond")
 	fond.material.set_shader_parameter("horloge", temps_booster)
 	fond.material.set_shader_parameter("taille", raccourci.size)
@@ -78,7 +92,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	# _input reçoit B/Échap même si un bouton du menu possède le focus clavier.
-	if event.is_echo():
+	if confirmation.visible or event.is_echo():
 		return
 	if menu.visible:
 		if event.is_action_pressed("menu_bonus") or event.is_action_pressed("ui_cancel"):
@@ -130,6 +144,7 @@ func fermer_menu() -> void:
 		return
 	if animation:
 		animation.kill()
+	confirmation.hide()
 	ouverture_booster.masquer()
 	menu.hide()
 	raccourci.show()
@@ -202,3 +217,38 @@ func _choisir_onglet(ouvrir_glossaire: bool) -> void:
 	onglet_bonus.set_pressed_no_signal(not ouvrir_glossaire)
 	onglet_glossaire.set_pressed_no_signal(ouvrir_glossaire)
 	if ouvrir_glossaire: glossaire.actualiser()
+
+
+func _demander_retour_titre() -> void:
+	# Une fenêtre exclusive bloque les clics et la navigation dans le Carnet derrière.
+	confirmation.popup_centered()
+	if not Input.get_connected_joypads().is_empty():
+		%AnnulerRetour.grab_focus()
+
+
+func _annuler_retour_titre() -> void:
+	confirmation.hide()
+	# Annuler ne change ni la partie ni son état de pause.
+	if not Input.get_connected_joypads().is_empty():
+		%RetourTitre.grab_focus()
+
+
+func _input_confirmation(event: InputEvent) -> void:
+	if not event.is_echo() and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("menu_bonus")):
+		confirmation.set_input_as_handled()
+		_annuler_retour_titre()
+
+
+func _retourner_titre() -> void:
+	if retour_en_cours:
+		return
+	retour_en_cours = true
+	# Charger d'abord l'écran : si le fichier manque, on conserve la partie en pause.
+	var arbre := get_tree()
+	var erreur := arbre.change_scene_to_file("res://scenes/interfaces/menus/ecran_titre.tscn")
+	if erreur != OK:
+		retour_en_cours = false
+		push_error("Impossible de retourner à l'écran titre.")
+		return
+	arbre.paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

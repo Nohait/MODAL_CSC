@@ -23,6 +23,7 @@ func _ready() -> void:
 	_creer_curseur("general", "Volume général", 0.0, 100.0, 1.0)
 	_creer_curseur("ambiance", "Crépitement des incendies", 0.0, 100.0, 1.0)
 	_creer_curseur("effets", "Effets sonores", 0.0, 100.0, 1.0)
+	_creer_curseur("musique", "Musique", 0.0, 100.0, 1.0)
 	_creer_titre("AFFICHAGE ET VISÉE")
 	var ligne := HBoxContainer.new()
 	contenu.add_child(ligne)

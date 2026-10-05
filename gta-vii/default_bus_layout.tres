@@ -9,3 +9,6 @@ bus/1/volume_db = 0.0
 bus/2/name = &"Effets"
 bus/2/send = &"Master"
 bus/2/volume_db = 0.0
+bus/3/name = &"Musique"
+bus/3/send = &"Master"
+bus/3/volume_db = 0.0

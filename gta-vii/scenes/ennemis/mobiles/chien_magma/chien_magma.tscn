@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mobiles/chien_magma/chien_magma.glb" id="2"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="3_son"]
 [sub_resource type="CapsuleShape3D" id="Corps"]
 radius = 0.55
 height = 1.4
@@ -36,3 +37,11 @@ no_depth_test = true
 position = Vector3(0, 0.15, 1.2)
 [node name="Haut" type="Node3D" parent="Crocs"]
 [node name="Bas" type="Node3D" parent="Crocs"]
+
+[node name="GrognementBond" type="AudioStreamPlayer3D" parent="."]
+editor_description = "Un grognement par impulsion. Volume et portée réglables ici."
+stream = ExtResource("3_son")
+volume_db = -15.0
+unit_size = 4.0
+max_distance = 22.0
+bus = &"Effets"

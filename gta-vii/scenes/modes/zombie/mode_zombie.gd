@@ -29,4 +29,6 @@ func _ready() -> void:
 	vagues.map = get_tree().get_meta("map_zombie", map)
 	niveau.get_node("MenuDebug").set_script(DEBUG)
 	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
+	# La musique appartient à cette partie : quitter le mode arrête aussi les morceaux.
+	niveau.add_child(preload("res://scenes/modes/zombie/audio/musique_zombie.tscn").instantiate())
 	add_child(niveau)

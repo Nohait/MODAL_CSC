@@ -36,38 +36,6 @@ shader_parameter/largeur_bord = 17.0
 shader_parameter/rayon_coin = 20.0
 shader_parameter/intensite_braises = 0.55
 
-[sub_resource type="StyleBoxFlat" id="Bouton"]
-bg_color = Color(0.18, 0.035, 0.045, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.6, 0.36, 0.19, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
-content_margin_left = 18.0
-content_margin_right = 18.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id="BoutonActif"]
-bg_color = Color(0.3, 0.07, 0.075, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.65, 0.31, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
-content_margin_left = 18.0
-content_margin_right = 18.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-
 [sub_resource type="ShaderMaterial" id="OngletBonusPapier"]
 shader = ExtResource("11_onglet")
 shader_parameter/taille = Vector2(170, 54)
@@ -185,7 +153,8 @@ anchor_bottom = 0.96
 [node name="Onglets" type="HBoxContainer" parent="Menu/Panneau"]
 offset_left = 30.0
 offset_top = -49.0
-offset_right = 390.0
+anchor_right = 1.0
+offset_right = -30.0
 offset_bottom = 5.0
 theme_override_constants/separation = 8
 
@@ -260,6 +229,89 @@ theme_override_constants/outline_size = 3
 text = "Glossaire"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Espace" type="Control" parent="Menu/Panneau/Onglets"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Options" type="Button" parent="Menu/Panneau/Onglets"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(125, 54)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+text = "Options"
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau/Onglets/Options"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="Fermer" type="Button" parent="Menu/Panneau/Onglets"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(205, 54)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+text = "Reprendre"
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau/Onglets/Fermer"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="RetourTitre" type="Button" parent="Menu/Panneau/Onglets"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(275, 54)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+text = "Retourner à l’écran titre"
+
+[node name="Papier" type="TextureRect" parent="Menu/Panneau/Onglets/RetourTitre"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
 
 [node name="Papier" type="TextureRect" parent="Menu/Panneau"]
 layout_mode = 1
@@ -398,34 +450,6 @@ layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("10_glossaire")
 
-[node name="Fermer" type="Button" parent="Menu/Panneau"]
-unique_name_in_owner = true
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -220.0
-offset_top = -49.0
-offset_right = -30.0
-offset_bottom = -5.0
-theme_override_colors/font_color = Color(0.95, 0.83, 0.65, 1)
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/hover = SubResource("BoutonActif")
-theme_override_styles/focus = SubResource("BoutonActif")
-text = "Reprendre"
-
-[node name="Options" type="Button" parent="Menu/Panneau"]
-unique_name_in_owner = true
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -370.0
-offset_top = -49.0
-offset_right = -235.0
-offset_bottom = -5.0
-theme_override_colors/font_color = Color(0.95, 0.83, 0.65, 1)
-theme_override_styles/normal = SubResource("Bouton")
-theme_override_styles/hover = SubResource("BoutonActif")
-theme_override_styles/focus = SubResource("BoutonActif")
-text = "Options"
-
 [node name="Pause" type="Label" parent="Menu/Panneau"]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -438,3 +462,119 @@ theme_override_fonts/font = ExtResource("7_oswald")
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.75, 0.61, 0.50, 1)
 text = "PARTIE EN PAUSE"
+
+[node name="ConfirmationTitre" type="Window" parent="."]
+unique_name_in_owner = true
+visible = false
+size = Vector2i(620, 280)
+unresizable = true
+borderless = true
+transient = true
+exclusive = true
+transparent_bg = true
+
+[node name="Contenu" type="Control" parent="ConfirmationTitre"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Papier" type="TextureRect" parent="ConfirmationTitre/Contenu"]
+material = SubResource("PapierBordeaux")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="Marge" type="MarginContainer" parent="ConfirmationTitre/Contenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="Disposition" type="VBoxContainer" parent="ConfirmationTitre/Contenu/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Titre" type="Label" parent="ConfirmationTitre/Contenu/Marge/Disposition"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+text = "Retourner à l’écran titre ?"
+horizontal_alignment = 1
+
+[node name="Avertissement" type="Label" parent="ConfirmationTitre/Contenu/Marge/Disposition"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("7_oswald")
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color(0.85, 0.75, 0.64, 1)
+text = "La partie en cours sera perdue.
+Voulez-vous vraiment quitter cette partie ?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Boutons" type="HBoxContainer" parent="ConfirmationTitre/Contenu/Marge/Disposition"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 18
+
+[node name="AnnulerRetour" type="Button" parent="ConfirmationTitre/Contenu/Marge/Disposition/Boutons"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(225, 54)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+text = "Annuler"
+
+[node name="Papier" type="TextureRect" parent="ConfirmationTitre/Contenu/Marge/Disposition/Boutons/AnnulerRetour"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="ConfirmerRetour" type="Button" parent="ConfirmationTitre/Contenu/Marge/Disposition/Boutons"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(225, 54)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.97, 0.87, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("RaccourciVide")
+theme_override_styles/hover = SubResource("RaccourciVide")
+theme_override_styles/pressed = SubResource("RaccourciVide")
+theme_override_styles/focus = SubResource("RaccourciVide")
+text = "Confirmer"
+
+[node name="Papier" type="TextureRect" parent="ConfirmationTitre/Contenu/Marge/Disposition/Boutons/ConfirmerRetour"]
+show_behind_parent = true
+material = SubResource("OngletBonusPapier")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1

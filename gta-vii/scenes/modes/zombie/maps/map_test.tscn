@@ -41,6 +41,9 @@
 
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_appartements.tscn" id="porte_appartements"]
 
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/extincteur_mural.tscn" id="extincteur_mural"]
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/sprinkler.tscn" id="sprinkler"]
+
 [sub_resource type="BoxMesh" id="MeshSol"]
 size = Vector3(40, 0.2, 40)
 
@@ -586,3 +589,10 @@ material_override = SubResource("ruban_materiau")
 cast_shadow = 0
 
 [node name="AnnexesHall" parent="." instance=ExtResource("annexes")]
+
+[node name="ExtincteurMural" parent="Navigation/Decor" instance=ExtResource("extincteur_mural")]
+position = Vector3(-6, 0, -19.95)
+
+[node name="Sprinkler" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
+position = Vector3(6, 0, -19.9)
+

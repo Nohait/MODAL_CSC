@@ -174,7 +174,7 @@ func actualiser_objectifs() -> void:
 		pause_restante = difficulte.delai_avant_boutique
 		# Compter au moment de la victoire, avant la pause et les dépôts suivants.
 		salle_terminee.emit(salle_actuelle)
-		boutique.points += refuge.victimes.size()
+		boutique.points = refuge.victimes.size()
 		_nettoyer_dangers()
 	# Reprendre le HUD existant ; les portes restent fermées pendant la survie.
 	informations_salle.objectifs.text = "VAGUE %d · %s" % [vague_actuelle, composition_actuelle.titre.to_upper()]
@@ -391,3 +391,4 @@ func _exit_tree() -> void:
 	# Les modèles de présentation conservés hors de l'arbre doivent aussi être libérés.
 	for visuel in visuels_types.values():
 		visuel.free()
+

@@ -9,6 +9,8 @@ var animation: Tween
 
 func lancer(source: Control) -> Tween:
 	masquer()
+	# La déchirure accompagne le départ des deux moitiés, boutique et Carnet compris.
+	SonsInterface.ouvrir_booster()
 	show()
 	var gauche := _creer_moitie(source, -1.0)
 	var droite := _creer_moitie(source, 1.0)
