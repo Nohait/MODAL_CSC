@@ -1,10 +1,42 @@
 [gd_scene format=3 uid="uid://chgr25lo0i0g6"]
 
 [ext_resource type="Script" uid="uid://cihc78eohkcd6" path="res://scenes/victimes/victime.gd" id="1_gyep1"]
+[ext_resource type="PackedScene" uid="uid://d1rj0yjqnrbvy" path="res://scenes/victimes/anims/victime_scene.tscn" id="2_feqff"]
 [ext_resource type="AudioStream" uid="uid://bty8pb0obb4ka" path="res://assets/sounds/victimes/woman_scream3.wav" id="2_ovwgb"]
 [ext_resource type="AudioStream" uid="uid://c1v61jkgc5lc4" path="res://assets/sounds/victimes/man_helpme.wav" id="3_feqff"]
 [ext_resource type="AudioStream" uid="uid://bi73govvxn4v" path="res://assets/sounds/victimes/man_help2.wav" id="4_m8bqf"]
 [ext_resource type="AudioStream" uid="uid://sfuniwh3gbw" path="res://assets/sounds/victimes/liberation.wav" id="5_bwg0e"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_feqff"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m8bqf"]
+animation = &"slow_run"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_bwg0e"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_feqff")
+blend_point_0/pos = 0.0
+blend_point_0/name = &"idle"
+blend_point_1/node = SubResource("AnimationNodeAnimation_m8bqf")
+blend_point_1/pos = 1.0
+blend_point_1/name = &"slow_run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_16tf1"]
+animation = &"Terrified"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ex4il"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_kxpxk"]
+xfade_time = 0.15
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_bqdvy"]
+states/Locomotion/node = SubResource("AnimationNodeBlendSpace1D_bwg0e")
+states/Locomotion/position = Vector2(526, 99.84)
+states/Start/position = Vector2(90.4, 79.2)
+states/Terrified/node = SubResource("AnimationNodeAnimation_16tf1")
+states/Terrified/position = Vector2(273.2, 92)
+transitions = ["Start", "Terrified", SubResource("AnimationNodeStateMachineTransition_ex4il"), "Terrified", "Locomotion", SubResource("AnimationNodeStateMachineTransition_kxpxk")]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_cqhq5"]
 radius = 0.3
@@ -14,8 +46,8 @@ height = 1.3
 albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2f56o"]
-radius = 0.3
-height = 1.3
+radius = 0.3647461
+height = 1.9957031
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
 radius = 2.0
@@ -42,11 +74,58 @@ corner_radius_bottom_left = 3
 collision_layer = 8
 script = ExtResource("1_gyep1")
 
+[node name="victime" parent="." unique_id=518449011 instance=ExtResource("2_feqff")]
+transform = Transform3D(1.135, 0, 0, 0, 1.135, 0, 0, 0, 1.135, 0, -0.6208883, 0)
+
+[node name="Skeleton3D" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="0" unique_id=1164513802]
+bones/0/rotation = Quaternion(-0.48614094, 0.029733453, 0.09646748, 0.86803055)
+bones/1/rotation = Quaternion(0.15943919, 0.019048998, 0.029797023, 0.9865742)
+bones/2/rotation = Quaternion(0.078227356, 0.010373054, 0.021433907, 0.9966511)
+bones/3/rotation = Quaternion(0.07802329, 0.012648884, 0.021118958, 0.99664754)
+bones/4/rotation = Quaternion(0.015288316, 0.09343542, -0.05602127, 0.99393046)
+bones/5/rotation = Quaternion(0.021291118, 0.03718534, -0.014136489, 0.99898154)
+bones/7/rotation = Quaternion(-0.6023841, -0.35148263, 0.44040757, -0.56536245)
+bones/8/rotation = Quaternion(0.28322667, -0.3888145, -0.23229669, 0.84536636)
+bones/9/rotation = Quaternion(0.017849442, -0.0012101308, 0.964655, 0.26290837)
+bones/10/rotation = Quaternion(-0.062678576, -0.44303, 0.07910918, 0.8908073)
+bones/11/rotation = Quaternion(0.31141943, 0.024855161, 0.16073631, 0.93625)
+bones/15/rotation = Quaternion(0.22189023, 0.08844681, 0.10354348, 0.9655158)
+bones/16/rotation = Quaternion(0.7221446, -0.005273598, -0.08731406, 0.68618923)
+bones/19/rotation = Quaternion(0.21786049, -0.00021949183, -0.013155307, 0.97589123)
+bones/21/rotation = Quaternion(0.46269917, 0.0009448152, -0.05335427, 0.88490796)
+bones/23/rotation = Quaternion(0.24509898, 0.015605776, -0.09146368, 0.96504784)
+bones/25/rotation = Quaternion(0.49228415, 0.0056334822, -0.054516513, 0.8687074)
+bones/27/rotation = Quaternion(0.22306848, -0.039828617, -0.19098715, 0.9550801)
+bones/29/rotation = Quaternion(0.45828912, -0.00027180236, -0.05972171, 0.8867944)
+bones/31/rotation = Quaternion(0.61214614, -0.40140536, 0.52867216, 0.429717)
+bones/32/rotation = Quaternion(0.12223131, 0.1417099, -0.61051095, 0.7695806)
+bones/33/rotation = Quaternion(0.014450063, 0.0029861182, -0.76327276, 0.64590794)
+bones/34/rotation = Quaternion(0.12695359, 0.71555114, -0.09282499, 0.68062687)
+bones/55/rotation = Quaternion(0.05826989, 0.55142194, 0.8318614, -0.023348767)
+bones/56/rotation = Quaternion(-0.4375662, -0.06269715, 0.025312038, 0.89664054)
+bones/57/rotation = Quaternion(0.55828065, -0.10036046, -0.045440145, 0.82230514)
+bones/58/rotation = Quaternion(0.32653388, -0.051893152, 0.016038701, 0.94362366)
+bones/60/rotation = Quaternion(0.003072373, 0.6007621, 0.7872071, 0.13921371)
+bones/61/rotation = Quaternion(-0.4858885, -0.06165498, 0.038701165, 0.8709841)
+bones/62/rotation = Quaternion(0.5965486, -0.01804999, 0.032815497, 0.8017026)
+bones/63/rotation = Quaternion(0.3132125, 0.051161118, -0.015747152, 0.9481732)
+
+[node name="AnimationTree" type="AnimationTree" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="1" unique_id=2048477472]
+root_node = NodePath("../..")
+tree_root = SubResource("AnimationNodeStateMachine_bqdvy")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Locomotion/blend_position = 0.0
+
+[node name="AnimationPlayer" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="2" unique_id=1992042941]
+autoplay = &""
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=489462347]
+visible = false
 mesh = SubResource("CapsuleMesh_cqhq5")
 surface_material_override/0 = SubResource("StandardMaterial3D_gyep1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1845318397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34785157, 0)
 shape = SubResource("CapsuleShape3D_2f56o")
 
 [node name="Detection" type="Area3D" parent="." unique_id=978119668]
@@ -119,3 +198,5 @@ pitch_scale = 20.0
 
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
 [connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]
+
+[editable path="victime"]

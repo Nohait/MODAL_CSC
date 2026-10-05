@@ -20,6 +20,20 @@ signal died(victim: CharacterBody3D)
 @onready var victim_death = [
 	 preload("res://assets/sounds/victimes/victim_death2.wav")
 ]
+
+## Gestion de l'animation
+@onready var anim_tree: AnimationTree = $victime/Armature/AnimationTree
+@onready var playback: AnimationNodeStateMachinePlayback = anim_tree.get("parameters/playback")
+
+## Suivi
+@export_group("Suivi")
+## Distance (au-delà de stop_distance) à partir de laquelle la victime atteint sa vitesse maximale.
+## Plus petit = freine tard et brusquement, plus grand = freine tôt et en douceur.
+@export_range(0.5, 10.0, 0.1, "or_greater") var distance_ralentissement: float = 3.0
+## Rapidité des accélérations et décélérations (en unités/s²).
+@export_range(1.0, 100.0, 1.0, "or_greater") var acceleration: float = 25.0
+
+
 # ------------------------------------------------------------------
 # BARRE DE VIE
 # ------------------------------------------------------------------
@@ -94,7 +108,6 @@ var is_freed := false
 var ennemis: Node = null
 
 func _ready() -> void:
-
 	# Le même signal prévient le VictimManager et déclenche le retour visuel local.
 	freed.connect(_jouer_effet_liberation)
 	stop_distance_player = stop_distance
@@ -163,6 +176,20 @@ func _ready() -> void:
 	actualiser_barre_vie()
 	update_interaction_label()
 
+func _animate() -> void:
+	var vitesse_horizontale := Vector2(velocity.x, velocity.z)
+
+	# Orientation
+	if vitesse_horizontale.length() > 0.1:
+		rotation.y = atan2(velocity.x, velocity.z) 
+
+	# Blend Idle (0) <-> Run (1)
+	var vitesse_max := speed * multiplicateur_vitesse
+	var blend := 0.0
+	if is_freed and vitesse_max > 0.0:
+		blend = clampf(vitesse_horizontale.length() / vitesse_max, 0.0, 1.0)
+	anim_tree.set("parameters/Locomotion/blend_position", blend)
+
 func _physics_process(_delta: float) -> void:
 	if est_morte:
 		return
@@ -171,7 +198,11 @@ func _physics_process(_delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			free_victim()
 	if is_freed and is_instance_valid(follow_target):
-		follow_target_node()
+		follow_target_node(_delta)
+	else :
+		velocity.x = 0.0
+		velocity.z = 0.0
+	_animate()
 		
 # ------------------------------------------------------------------
 # INTERACTION
@@ -195,6 +226,7 @@ func free_victim() -> void:
 	arret = false
 	interaction_label.visible = false
 	freed.emit(self)
+	playback.travel("Locomotion")
 	print("Victime libérée avec ", vie, " / ", vie_max, " PV")
 
 func _jouer_effet_liberation(_victime: CharacterBody3D) -> void:
@@ -227,38 +259,42 @@ func get_nom_affiche() -> String:
 
 # Suivi
 
-func follow_target_node() -> void:
-	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map())== 0:
+func follow_target_node(delta: float) -> void:
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
 		return
-	var to_target := follow_target.global_position- global_position
+	var to_target := follow_target.global_position - global_position
 	to_target.y = 0.0
-	velocity.x = 0.0
-	velocity.z = 0.0
+
 	if follow_target.is_in_group("fleche"):
 		stop_distance = 0.1
 	else:
 		stop_distance = stop_distance_player
-	if to_target.length() > stop_distance:
-		arret = false
-		var point_sol := NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(),global_position)
 
-		navigation_agent.path_height_offset = point_sol.y- global_position.y
+	var distance := to_target.length()
+	var vitesse_voulue := Vector3.ZERO
+
+	if distance > stop_distance:
+		arret = false
+		var point_sol := NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(), global_position)
+		navigation_agent.path_height_offset = point_sol.y - global_position.y
 		navigation_agent.target_position = follow_target.global_position
 
 		var next_position := navigation_agent.get_next_path_position()
-		var direction := next_position -global_position
+		var direction := next_position - global_position
 		direction.y = 0.0
 
 		if direction.length() > 0.01:
-			direction = direction.normalized()
-			direction += vecteur_fuite()
-			direction = direction.normalized()
-			velocity.x = direction.x * speed * multiplicateur_vitesse
-			velocity.z = direction.z * speed * multiplicateur_vitesse
+			direction = (direction.normalized() + vecteur_fuite()).normalized()
+			# 0 à stop_distance, 1 à stop_distance + distance_ralentissement
+			var facteur := clampf((distance - stop_distance) / distance_ralentissement, 0.0, 1.0)
+			vitesse_voulue = direction * speed * multiplicateur_vitesse * facteur
+	elif follow_target.is_in_group("fleche"):
+		arret = true
 
-	else:
-		if follow_target.is_in_group("fleche"):
-			arret = true
+	# Accélération / décélération progressive vers la vitesse voulue
+	var horizontale := Vector3(velocity.x, 0.0, velocity.z).move_toward(vitesse_voulue, acceleration * delta)
+	velocity.x = horizontale.x
+	velocity.z = horizontale.z
 	move_and_slide()
 
 # Dégâts normaux
