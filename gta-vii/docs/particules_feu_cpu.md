@@ -105,3 +105,26 @@ Validation : 100 impacts au sol, en supprimant les anciennes flaques entre
 les impacts, avec vérification de leur création et du nombre de 30 particules.
 Pas d'erreur uniform_set pendant le test ; avertissements de textures à la
 sortie du moteur inchangés. Dégâts, collisions et absence de pièces sont conservés.
+
+## Premier affichage des flammes partagées
+
+Un flash est encore signalé au spawn du sbire. L'émetteur commun flames.tscn
+avait fixed_fps = 30 et preprocess = 0. Dans CPUParticles3D::_update_internal,
+Godot active le dessin avant de vérifier si une simulation a été effectuée.
+Si le delta initial est inférieur à 1/30 s, il peut ne calculer aucune étape et
+ne pas appeler _update_particle_data_buffer lors de cette première mise à jour.
+Cela laisse une séquence de premier affichage fragile, indépendante du shader.
+
+Les deux émetteurs de flames.tscn ont désormais preprocess = 0.05 : cette petite
+avance déclenche un calcul et la préparation des données dès leur démarrage,
+même si le jeu tourne à plus de 30 FPS. Les textures, shaders, nombre, taille,
+couleur et comportement des flammes sont conservés. L'effet commence simplement
+avec 50 ms de simulation déjà effectuées. Cela concerne tous les utilisateurs
+de cette scène, notamment les deux mains du sbire.
+
+Validation : 160 apparitions rapides des huit types d'ennemis à 120 FPS maximum.
+Vérification que chaque émetteur CPU visible à cadence fixe possède au moins
+une étape de preprocess. Aucune erreur uniform_set pendant ce test ; les
+avertissements de textures à la fermeture du moteur restent présents.
+Le flash n'ayant pas été reproduit localement, la disparition du symptôme doit
+encore être confirmée en partie sur la machine concernée.

@@ -43,13 +43,14 @@ shader_parameter/FloatParameter = 0.7
 [sub_resource type="QuadMesh" id="QuadMesh_bqdvy"]
 
 [node name="vfx_fire" type="Node3D" unique_id=1657664350]
-editor_description = "Flammes CPU : conserver le visuel en évitant le bug Godot de uniform_set invalidé à la première émission des particules GPU."
+editor_description = "Flammes CPU. Le preprocess de 0,05 s impose un premier calcul avant le dessin, même si la première image dure moins de 1/30 s."
 
 [node name="Flames" type="CPUParticles3D" parent="." unique_id=1442931123]
 transform = Transform3D(0.56, 0, 0, 0, 0.56, 0, 0, 0, 0.56, 0, -0.1390686, 0)
 material_override = SubResource("ShaderMaterial_0jbfk")
 amount = 20
 lifetime = 1.2
+preprocess = 0.05
 fixed_fps = 30
 visibility_aabb = AABB(-4, -4, -4, 8, 8, 8)
 local_coords = true
@@ -71,6 +72,7 @@ visible = false
 material_override = SubResource("ShaderMaterial_413tl")
 amount = 1
 lifetime = 5.0
+preprocess = 0.05
 fixed_fps = 30
 visibility_aabb = AABB(-4, -4, -4, 8, 8, 8)
 mesh = SubResource("QuadMesh_bqdvy")
