@@ -9,8 +9,8 @@
 [sub_resource type="Resource" id="Type_kamikaze"]
 script = ExtResource("type")
 scene = ExtResource("kamikaze")
-volant = true
 hauteur = 1.2
+volant = true
 premiere_vague = 7
 poids_tirage = 40.0
 minimum = 1
