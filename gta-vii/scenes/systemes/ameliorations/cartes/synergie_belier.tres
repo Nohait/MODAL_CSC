@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/dash.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"synergie_belier"
+titre = "Déblayage express"
+description = "La fin du dash projette une onde qui frappe et repousse les ennemis proches."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "synergie_belier"
+obtention_unique = true
+puissance_variable = false
+rarete = "synergie"
+valeur = 30.0
+texte_effet = "ONDE DE DÉBLAYAGE"
+active = false
+
+rayon = 4.0
+contrepartie = 18.0
+duree_effet = 0.45
+duree_recul = 0.35

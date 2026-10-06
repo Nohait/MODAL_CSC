@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"mise_a_distance"
+titre = "Veuillez reculer"
+description = "Le jet repousse légèrement les ennemis."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "mise_a_distance"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 1.5
+texte_effet = "Recul continu"

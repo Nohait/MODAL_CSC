@@ -63,9 +63,6 @@ func _demarrer_vague(composition_forcee: CompositionVague = null) -> void:
 		entree_mob.reinitialiser()
 	# Le debug peut imposer une composition pour cette vague seulement.
 	composition_actuelle = composition_forcee if composition_forcee != null else difficulte.choisir_composition(vague_actuelle)
-	# Ne pas superposer un nouvel événement à une mutation encore active.
-	if evenements.mutation_en_cours() and composition_actuelle != difficulte.composition_boss:
-		composition_actuelle = difficulte.composition_classique
 	evenements.commencer(composition_actuelle)
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
 	positions.shuffle()
@@ -287,6 +284,7 @@ func _duree_entrees() -> float:
 func _choisir_entree(type: TypeEnnemiVague, exclues: Array) -> EntreeEnnemisZombie:
 	var possibles: Array[EntreeEnnemisZombie] = []
 	for entree_mob in entrees:
+		if vague_actuelle < entree_mob.premiere_vague: continue
 		if entree_mob.type_entree == "ascenseur" and (entree_mob.fermeture_restante > 0.0 or entree_mob.remontee_restante > 0.0):
 			continue # Laisser la cabine vide repartir avant d'y charger le groupe suivant.
 		if entree_mob.accepte(type) and not entree_mob.occupee and not exclues.has(entree_mob):

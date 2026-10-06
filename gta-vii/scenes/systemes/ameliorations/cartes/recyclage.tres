@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/reserve.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"recyclage"
+titre = "Rien ne se perd"
+description = "Chaque élimination rend un peu de mousse."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "recyclage"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 3.0
+texte_effet = "+{valeur} mousse par élimination"

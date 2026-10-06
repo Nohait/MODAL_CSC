@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"revanche"
+titre = "Ça va chauffer"
+description = "Perdre de la vie renforce brièvement le jet."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "revanche"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 40.0
+texte_effet = "+{valeur} % dégâts pendant {duree} s"
+duree_effet = 3.0

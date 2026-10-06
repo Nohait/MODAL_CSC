@@ -13,7 +13,7 @@ func _ready() -> void:
 	# Cet Autoload survit aux changements de scène, comme ses notifications.
 	var fichier := ConfigFile.new()
 	if fichier.load(chemin_sauvegarde) == OK:
-		for succes in CATALOGUE.SUCCES:
+		for succes in CATALOGUE.liste():
 			if fichier.get_value("succes", succes.id, false) == true:
 				obtenus[succes.id] = true
 	add_child(NOTIFICATIONS.instantiate())
@@ -26,6 +26,11 @@ func valider_victoire(nombre_victimes: int) -> void:
 		if nombre_victimes >= succes.escorte_minimum:
 			debloquer(succes)
 
+func progresser(critere: String, valeur: int) -> void:
+	for definition in CATALOGUE.PROGRESSION:
+		if definition.critere == critere and valeur >= definition.objectif:
+			debloquer(definition.fiche())
+
 func debloquer(succes: Dictionary) -> void:
 	# Une seconde victoire ne doit ni doubler le compteur ni rejouer la notification.
 	if est_obtenu(succes.id):
@@ -33,6 +38,7 @@ func debloquer(succes: Dictionary) -> void:
 	obtenus[succes.id] = true
 	_sauvegarder()
 	succes_obtenu.emit(succes)
+	SonsInterface.jouer_succes()
 
 func reinitialiser() -> void:
 	# Écrire une sauvegarde vide empêche les anciens succès de revenir au lancement.

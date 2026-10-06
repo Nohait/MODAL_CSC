@@ -5,7 +5,8 @@ uniform float horloge = 0.0;
 uniform float intensite = 1.0;
 void fragment() {
 	float contour = pow(1.0 - abs(dot(normalize(NORMAL), normalize(VIEW))), 2.5);
-	ALBEDO = teinte.rgb;
-	EMISSION = teinte.rgb * 1.4;
+	vec3 couleur = teinte.rgb;
+	ALBEDO = couleur;
+	EMISSION = couleur * 1.4;
 	ALPHA = contour * (0.25 + 0.1 * sin(horloge * 3.0)) * intensite;
 }

@@ -7,6 +7,13 @@ var booster: AudioStreamPlayer
 var derniere_image_clic := -1
 var attenuation_musique: AudioEffectAmplify
 var fondu_musique: Tween
+@export_range(-40.0, 0.0, 1.0) var volume_succes_db := -24.0
+
+func jouer_succes() -> void:
+	var son := _creer_lecteur(preload("res://assets/sounds/design/menus/maximize_004.ogg"))
+	son.volume_db = volume_succes_db
+	son.finished.connect(son.queue_free)
+	son.play()
 
 func celebrer_legendaire() -> void:
 	# Le lecteur appartient à l'autoload : choisir une carte ne coupe pas sa résonance.

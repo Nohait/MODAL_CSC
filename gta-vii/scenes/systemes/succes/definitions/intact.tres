@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DefinitionSucces" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/succes/definition_succes.gd" id="script"]
+[resource]
+script = ExtResource("script")
+identifiant = "zombie_intact"
+titre = "Uniforme impeccable"
+description = "Terminer 3 vagues consécutives sans perdre de vie."
+critere = "vagues_intactes"
+objectif = 3

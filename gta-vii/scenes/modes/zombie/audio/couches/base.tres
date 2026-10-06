@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CoucheMusicaleZombie" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/audio/couche_musicale.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/assault/MUS_Combat_Incoming_Loop_Synth_100BPM.wav" id="2"]
+
+[resource]
+script = ExtResource("1")
+titre = "Synthétiseurs"
+piste = ExtResource("2")
+volume_db = -10.0
+ennemis_minimum = 0
+vague_minimum = 1
+activer_si_elite = false
+activer_si_boss = true

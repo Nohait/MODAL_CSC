@@ -46,6 +46,13 @@ func _process(_delta: float) -> void:
 	var composition: CompositionVague = gestionnaire.composition_actuelle
 	if composition == null:
 		return
+	if not get_parent().get_node("CouchesMusicales").couches.is_empty():
+		if fondu: fondu.kill()
+		for lecteur in lecteurs:
+			lecteur.volume_db = move_toward(lecteur.volume_db, -60.0, _delta * 30.0)
+			if lecteur.volume_db <= -60.0: _memoriser_et_arreter(lecteur)
+		piste_actuelle = null
+		return
 	if composition == gestionnaire.difficulte.composition_boss or composition.evenement == "double_horde":
 		_changer_piste(danger)
 	elif composition.evenement in ["blackout", "brouillard"]:

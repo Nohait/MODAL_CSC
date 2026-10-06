@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Synergie" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/synergie.gd" id="script"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/synergie_samu.tres" id="carte"]
+[resource]
+script = ExtResource("script")
+identifiant = &"samu"
+ingredients = Array[StringName]([&"dash_sauvetage", &"recyclage"])
+carte = ExtResource("carte")

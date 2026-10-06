@@ -2,6 +2,7 @@ extends Node
 
 signal rencontre_ajoutee
 signal ennemi_enregistre(ennemi: Node3D)
+signal elite_importante_apparue(ennemi: Node3D)
 const CATALOGUE = preload("res://scenes/systemes/ennemis/definitions_ennemis.gd")
 const ELITE = preload("res://scenes/systemes/ennemis/elite_ennemi.gd")
 const SAUVEGARDE = "user://glossaire.cfg"
@@ -54,6 +55,8 @@ func _enregistrer_ennemi(identifiant_instance: int) -> void:
 			if tirage < 0.0:
 				appliquer_elite(noeud, mod)
 				break
+		if noeud.has_node("Elite"):
+			elite_importante_apparue.emit(noeud)
 
 	ennemi_enregistre.emit(noeud)
 
@@ -66,6 +69,14 @@ func _progression(ennemi: Node) -> int:
 			return maxi(1, int(vague)) if vague != null else gestionnaire.indice_salle + 1
 		courant = courant.get_parent()
 	return 1
+
+func _gestionnaire(ennemi: Node) -> Node:
+	var courant := ennemi.get_parent()
+	while courant != null:
+		var gestionnaire := courant.get_node_or_null("RoomManager")
+		if gestionnaire != null: return gestionnaire
+		courant = courant.get_parent()
+	return null
 
 func fiche_scene(chemin: String) -> Dictionary:
 	for fiche in CATALOGUE.ENNEMIS:
@@ -110,6 +121,14 @@ func _physics_process(delta: float) -> void:
 	ennemis = ennemis.filter(func(n): return is_instance_valid(n) and not n.is_queued_for_deletion())
 	var camera := get_viewport().get_camera_3d()
 	var joueur = get_tree().get_first_node_in_group("player")
+	var sources_aura: Array[Node3D] = []
+	for source in ennemis:
+		var elite = source.get_node_or_null("Elite")
+		if elite == null or source.get("est_mort") == true or not source.is_visible_in_tree(): continue
+		for mod in [elite.definition]:
+			if mod.aura != "aucune":
+				sources_aura.append(source)
+				break
 	for ennemi in ennemis:
 		if not ennemi.is_visible_in_tree() or ennemi.get("est_mort") == true: continue
 		if ennemi.has_method("multiplicateur_degats"):
@@ -117,15 +136,15 @@ func _physics_process(delta: float) -> void:
 			ennemi.degats_aura = 1.0
 			ennemi.resistance_aura = 0.0
 			# Les auras identiques ne s'empilent pas ; les différentes peuvent coexister.
-			for source in ennemis:
+			for source in sources_aura:
 				var elite = source.get_node_or_null("Elite")
 				if elite == null or not source.is_visible_in_tree() or source.get("est_mort") == true: continue
-				var mod: ModificateurElite = elite.definition
-				if mod.aura == "aucune" or source.global_position.distance_to(ennemi.global_position) > mod.rayon_aura: continue
-				match mod.aura:
-					"vitesse": ennemi.vitesse_aura = maxf(ennemi.vitesse_aura, 1.0 + mod.bonus_aura)
-					"degats": ennemi.degats_aura = maxf(ennemi.degats_aura, 1.0 + mod.bonus_aura)
-					"resistance": ennemi.resistance_aura = maxf(ennemi.resistance_aura, mod.bonus_aura)
+				for mod in [elite.definition]:
+					if mod.aura == "aucune" or source.global_position.distance_to(ennemi.global_position) > mod.rayon_aura: continue
+					match mod.aura:
+						"vitesse": ennemi.vitesse_aura = maxf(ennemi.vitesse_aura, 1.0 + mod.bonus_aura)
+						"degats": ennemi.degats_aura = maxf(ennemi.degats_aura, 1.0 + mod.bonus_aura)
+						"resistance": ennemi.resistance_aura = maxf(ennemi.resistance_aura, mod.bonus_aura)
 		if camera == null or not is_instance_valid(joueur): continue
 		if not camera.is_position_in_frustum(ennemi.global_position) or joueur.global_position.distance_to(ennemi.global_position) > 24.0: continue
 		var rayon := PhysicsRayQueryParameters3D.create(joueur.global_position, ennemi.global_position + Vector3.UP * 0.5, 1)

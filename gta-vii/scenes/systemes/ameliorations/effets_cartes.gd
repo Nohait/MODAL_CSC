@@ -21,6 +21,8 @@ var victimes_bouclier: Dictionary = {}
 var prochaine_protection: Dictionary = {}
 var temps_ecoule := 0.0
 var attente_trace := 0.0
+var maximum_zones := 40
+const ONDE_DEBLAYAGE = preload("res://scenes/effets/combat/onde_deblayage.gd")
 const TRACE = preload("res://scenes/effets/combat/trace_combat.gd")
 
 func _ready() -> void:
@@ -72,9 +74,11 @@ func infliger(ennemi: Node3D, degats: float, source: StringName = &"mousse") -> 
 
 func toucher_jet(ennemi: Node3D, delta: float) -> void:
 	etat(ennemi).toucher_jet(delta)
+	if is_instance_valid(gestion.branches_zombie): gestion.branches_zombie.toucher(ennemi, delta)
 
 func modifier_degats(ennemi: Node3D, source: StringName) -> float:
 	var facteur := 1.0
+	if is_instance_valid(gestion.branches_zombie): facteur *= gestion.branches_zombie.multiplicateur_cible(ennemi)
 	var statut := ennemi.get_node_or_null("EtatMousse")
 	if statut != null: facteur *= statut.multiplier_degats(source)
 	if valeur("gyrophare_intervention") > 0 and gestion.mode_jeu == "zombie":
@@ -86,13 +90,16 @@ func multiplicateur_jet() -> float:
 	var facteur: float = 1.0 + valeur("surpression") / 100.0 * gestion.extincteur.charge / gestion.extincteur.max_charge
 	if depuis_dash <= 1.5: facteur *= 1.0 + valeur("depart_pression") / 100.0
 	if valeur("jet_pulse") > 0: facteur *= 1.0 + valeur("jet_pulse") / 100.0
+	if is_instance_valid(gestion.branches_zombie): facteur *= gestion.branches_zombie.multiplicateur_jet()
 	return facteur
 
 func multiplicateur_recharge() -> float:
 	var nombre: int = gestion.escorte.freed_victims.size()
 	if gestion.mode_jeu == "zombie" and is_instance_valid(gestion.room_manager.refuge):
 		nombre += gestion.room_manager.refuge.victimes.size()
-	return 1.0 + minf(30.0, nombre * valeur("equipe_soutien")) / 100.0
+	var facteur := 1.0 + minf(30.0, nombre * valeur("equipe_soutien")) / 100.0
+	if is_instance_valid(gestion.branches_zombie): facteur *= gestion.branches_zombie.multiplicateur_recharge()
+	return facteur
 
 func _physics_process(delta: float) -> void:
 	if joueur.est_mort or joueur.entree_automatique:
@@ -126,8 +133,15 @@ func _physics_process(delta: float) -> void:
 		if valeur("sillage_secours") > 0 and derniere_trace.distance_to(joueur.global_position) >= 0.65:
 			creer_zone(joueur.global_position, "mousse", valeur("sillage_secours"), 0.65, 3.0, gestion.extincteur.ralentissement_jet)
 			derniere_trace = joueur.global_position
-	if etait_dash and not joueur.is_dashing and valeur("freinage_urgence") > 0:
+	if etait_dash and not joueur.is_dashing and valeur("freinage_urgence") > 0 and valeur("synergie_belier") <= 0:
 		repousser(joueur.global_position, 2.8, valeur("freinage_urgence"))
+	if etait_dash and not joueur.is_dashing and valeur("synergie_belier") > 0:
+		var definition: Amelioration = gestion.catalogue_ameliorations.trouver(&"synergie_belier")
+		var vague = ONDE_DEBLAYAGE.new()
+		vague.effets = self
+		vague.definition = definition
+		gestion.room_manager.salle_actuelle.add_child(vague)
+		vague.global_position = Vector3(joueur.global_position.x, 0.08, joueur.global_position.z)
 	etait_dash = joueur.is_dashing
 	derniere_position = joueur.global_position
 	attente_zone -= delta
@@ -149,6 +163,13 @@ func _physics_process(delta: float) -> void:
 		_actualiser_boucliers_victimes(0.2)
 
 func _traverser_dash() -> void:
+	if valeur("dash_assaut") > 0:
+		for ennemi in ennemis_proches(joueur.global_position, joueur.dash_speed * joueur.dash_duration + 2):
+			var point := Geometry3D.get_closest_point_to_segment(ennemi.global_position, derniere_position, joueur.global_position)
+			if point.distance_to(ennemi.global_position) > 1.5 or touches_dash.has(ennemi.get_instance_id()): continue
+			touches_dash[ennemi.get_instance_id()] = true
+			var gain := valeur("dash_assaut") + (valeur("brise_glace") if etat(ennemi).refroidi() else 0.0)
+			infliger(ennemi, gain, &"dash")
 	if valeur("brise_glace") > 0:
 		for ennemi in ennemis_proches(joueur.global_position, joueur.dash_speed * joueur.dash_duration + 2):
 			var point := Geometry3D.get_closest_point_to_segment(ennemi.global_position, derniere_position, joueur.global_position)
@@ -171,6 +192,13 @@ func _traverser_dash() -> void:
 
 func creer_zone(position: Vector3, type: String, degats: float, rayon: float, duree: float, gel: float = 0.0) -> void:
 	if not is_instance_valid(gestion.room_manager.salle_actuelle): return
+	var zones: Array[Node] = []
+	for actuelle in get_tree().get_nodes_in_group("zones_mousse"):
+		if not actuelle.is_queued_for_deletion() and gestion.room_manager.salle_actuelle.is_ancestor_of(actuelle): zones.append(actuelle)
+	# Les chaînes d'explosions remplacent les plaques les plus anciennes au plafond.
+	while zones.size() >= maximum_zones:
+		var ancienne: Node = zones.pop_front()
+		ancienne.queue_free()
 	var zone = ZONE.new()
 	zone.name = "ZoneMousse"
 	zone.effets = self
@@ -195,6 +223,9 @@ func explosion(position: Vector3, rayon: float, degats: float, glace: bool = fal
 	if joueur.est_mort: return
 	onde(position, rayon, glace)
 	bouffee(position + Vector3.UP)
+	if glace and valeur("blizzard_proximite") > 0:
+		var definition: Amelioration = gestion.catalogue_ameliorations.trouver(&"blizzard_proximite")
+		creer_zone(position, "mousse", definition.valeur, definition.rayon, definition.duree_effet, definition.valeur)
 	for ennemi in ennemis_proches(position, rayon):
 		infliger(ennemi, degats)
 		if glace and ennemi.has_method("appliquer_gel"): ennemi.appliquer_gel(20, 1)

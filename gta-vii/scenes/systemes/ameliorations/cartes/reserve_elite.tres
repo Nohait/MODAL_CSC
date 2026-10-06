@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/reserve.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"reserve_elite"
+titre = "Prélèvement réglementaire"
+description = "Vaincre une élite remplit une partie de la réserve."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "reserve_elite"
+obtention_unique = true
+puissance_variable = false
+rarete = "epique"
+valeur = 20.0
+texte_effet = "+{valeur} % de réserve par élite"

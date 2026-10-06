@@ -89,7 +89,7 @@ func _preparer_modele() -> void:
 
 func _physics_process(delta: float) -> void:
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
-	if est_gele():
+	if est_gele() or subit_recul():
 		velocity = Vector3.ZERO
 		return
 	if est_mort: return

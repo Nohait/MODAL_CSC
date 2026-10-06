@@ -5,6 +5,9 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 @export var vitesse_marche := 3.5
 @export var hauteur_modele := 2.4
 @export var portee_tir := 12.0
+@export_range(0.1, 1.0, 0.05) var intervalle_navigation := 0.3
+@export_range(0.1, 3.0, 0.1) var deplacement_avant_recalcul := 0.6
+@export_range(256, 8192, 256) var limite_polygones_navigation := 2048
 @export_group("Artilleur — tir")
 @export var preparation_tir := 0.8
 @export var delai_tir := 2.0
@@ -19,11 +22,15 @@ var direction_tir := Vector3.FORWARD
 var depart_tir: Marker3D
 var origine_visuel := Vector3.ZERO
 var taille_visuel := Vector3.ONE
+var attente_navigation := 0.0
+var cible_navigation: Node3D
 @onready var visuel: Node3D = $Sketchfab_Scene
 @onready var orbe: MeshInstance3D = $Orbe
 
 func _ready() -> void:
 	vie = vie_max
+	# Borner les recherches lorsque la cible se trouve dans une zone inaccessible.
+	navigation_agent.path_search_max_polygons = limite_polygones_navigation
 	hitbox_radius = 0.8
 	cible_idle.free()
 	cible_idle = null
@@ -62,8 +69,9 @@ func choisir_cible() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	attente_navigation = maxf(0.0, attente_navigation - delta)
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
-	if est_gele():
+	if est_gele() or subit_recul():
 		velocity = Vector3.ZERO
 		return
 	if est_mort: return
@@ -111,7 +119,15 @@ func _voie_libre(corps: Node3D) -> bool:
 func _suivre_cible() -> void:
 	velocity = Vector3.ZERO
 	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0: return
-	navigation_agent.target_position = cible.global_position
+	# Affecter target_position relance la recherche : ne pas le faire à chaque image.
+	var cible_changee: bool = cible_navigation != cible
+	var cible_deplacee := navigation_agent.target_position.distance_squared_to(cible.global_position) >= deplacement_avant_recalcul * deplacement_avant_recalcul
+	if cible_changee or (attente_navigation <= 0.0 and (cible_deplacee or navigation_agent.is_navigation_finished())):
+		navigation_agent.target_position = cible.global_position
+		cible_navigation = cible
+		attente_navigation = intervalle_navigation
+	# Un chemin terminé attend le prochain recalcul ; le suivre encore provoquerait des requêtes inutiles.
+	if navigation_agent.is_navigation_finished(): return
 	var direction := navigation_agent.get_next_path_position() - global_position
 	direction.y = 0.0
 	if direction.length() > 0.05:

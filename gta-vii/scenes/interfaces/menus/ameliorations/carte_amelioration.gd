@@ -13,7 +13,7 @@ signal revelee(rarete_obtenue: StringName)
 
 @export_group("Contenu")
 const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_boutique.gd")
-@export_enum("aucune", "commun", "rare", "epique", "legendaire", "temporaire") var rarete: String = "aucune":
+@export_enum("aucune", "commun", "rare", "epique", "legendaire", "temporaire", "synergie") var rarete: String = "aucune":
 	set(valeur):
 		rarete = valeur
 		if is_node_ready():
@@ -112,7 +112,7 @@ func sortir_du_paquet(origine: Vector2, delai: float) -> Tween:
 	return sortie
 
 func reveler() -> void:
-	var puissance := maxi(0, ["commun", "rare", "epique", "legendaire"].find(rarete))
+	var puissance := maxi(0, ["commun", "rare", "epique", "legendaire", "synergie"].find(rarete))
 	actualiser_dimensions()
 	revelation_tween = create_tween()
 	SonsInterface.preparer_carte(puissance)
@@ -232,7 +232,7 @@ func actualiser_contenu() -> void:
 	materiau_papier.set_shader_parameter("teinte_rarete", teinte)
 	materiau_papier.set_shader_parameter("braises_personnalisees", coloree)
 	materiau_papier.set_shader_parameter("teinte_braises", teinte)
-	niveau_rarete = maxi(0, ["commun", "rare", "epique", "legendaire"].find(rarete))
+	niveau_rarete = maxi(0, ["commun", "rare", "epique", "legendaire", "synergie"].find(rarete))
 	materiau_papier.set_shader_parameter("niveau_rarete", float(niveau_rarete))
 	var marque: Label = $Visuel/Contenu/Organisation/Entete/Marque
 	marque.text = CATALOGUE.NOMS.get(StringName(rarete), "✦").to_upper()

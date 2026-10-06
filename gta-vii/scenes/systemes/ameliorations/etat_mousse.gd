@@ -8,6 +8,8 @@ var delai_gel := 0.0
 var dernier_contact := 0.0
 var recul := Vector3.ZERO
 var recul_restant := 0.0
+var recul_initial := 0.2
+var recul_prioritaire := false
 var halo: MeshInstance3D
 var halo_materiau: StandardMaterial3D
 
@@ -49,9 +51,14 @@ func refroidi() -> bool:
 func multiplier_degats(_source: StringName) -> float:
 	return 1.0 + (effets.valeur("enrobage") / 100.0 if enrobage_restant > 0 else 0.0)
 
-func repousser(direction: Vector3, force: float) -> void:
+func repousser(direction: Vector3, force: float, duree: float = 0.2, prioritaire: bool = false) -> void:
+	# Un petit recul continu du jet ne doit pas écraser l'impulsion de l'onde.
+	if recul_prioritaire and recul_restant > 0.0 and not prioritaire: return
+	direction.y = 0.0
 	recul = direction.normalized() * force
-	recul_restant = 0.2
+	recul_restant = duree
+	recul_initial = maxf(duree, 0.01)
+	recul_prioritaire = prioritaire
 
 func _physics_process(delta: float) -> void:
 	dernier_contact += delta
@@ -62,9 +69,11 @@ func _physics_process(delta: float) -> void:
 	halo.visible = enrobage_restant > 0 or gel_restant > 0
 	halo_materiau.albedo_color = Color(0.15, 0.65, 1, 0.8) if gel_restant > 0 else Color(0.9, 0.95, 0.85, 0.7)
 	if recul_restant > 0 and get_parent() is CharacterBody3D:
-		recul_restant -= delta
-		# move_and_collide respecte les murs, contrairement à une téléportation.
-		get_parent().move_and_collide(recul * delta)
+		var pas := minf(delta, recul_restant)
+		var frein := recul_restant / recul_initial if recul_prioritaire else 1.0
+		recul_restant = maxf(0.0, recul_restant - delta)
+		# L'impulsion ralentit progressivement et les collisions arrêtent le recul aux murs.
+		get_parent().move_and_collide(recul * pas * frein)
 
 func _mort() -> void:
 	if not is_instance_valid(effets): return

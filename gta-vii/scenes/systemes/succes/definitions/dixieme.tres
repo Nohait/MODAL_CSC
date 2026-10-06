@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DefinitionSucces" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/succes/definition_succes.gd" id="script"]
+[resource]
+script = ExtResource("script")
+identifiant = "zombie_dixieme"
+titre = "Encore un petit tour"
+description = "Terminer la vague 10."
+critere = "vague"
+objectif = 10

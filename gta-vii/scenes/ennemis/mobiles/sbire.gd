@@ -99,7 +99,7 @@ func _ready() -> void:
 
 func _physics_process(delta):
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
-	if est_gele():
+	if est_gele() or subit_recul():
 		velocity = Vector3.ZERO
 		return
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
@@ -397,7 +397,9 @@ func afficher_degats(degats: float) -> void:
 	$PopUpDegats.text = "-%d" % roundi(degats)
 	$PopUpDegats.modulate = couleur_degats(degats)
 	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
-	$PopUpDegats.font_size = roundi(40 * (1 + rd2))
+	# Garder la police stable : le grossissement vient de l'échelle du nœud.
+	$PopUpDegats.font_size = 40
+	$PopUpDegats.scale = Vector3.ONE * (1.0 + rd2)
 	$PopUpDegats.outline_size = 4
 	$PopUpDegats.visible = true
 
@@ -406,16 +408,15 @@ func afficher_degats(degats: float) -> void:
 
 	var position_depart = Vector3(rd1,2.5+rd2 ,0+rd3)
 	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
-	var taille_fin = roundi(48 * (1 + rd1))
+	var taille_fin = Vector3.ONE * (1.2 * (1.0 + rd1))
 	popup_tween = create_tween() #Fonction qui permet de faire un gradient
 
 	popup_tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)
-	popup_tween.parallel().tween_property($PopUpDegats,"font_size",taille_fin,0.2)
+	popup_tween.parallel().tween_property($PopUpDegats,"scale",taille_fin,0.2)
 	popup_tween.parallel().tween_property($PopUpDegats,"modulate:a",0.0,0.4)
 
-	await popup_tween.finished
-
-	$PopUpDegats.visible = false
+	# Une animation tuée n'émet pas finished : ne pas laisser une fonction l'attendre.
+	popup_tween.tween_callback($PopUpDegats.hide)
 
 func appliquer_gel(pourcentage: float, duree: float) -> void:
 	if est_mort: return
@@ -429,6 +430,10 @@ func appliquer_gel(pourcentage: float, duree: float) -> void:
 func est_gele() -> bool:
 	var statut := get_node_or_null("EtatMousse")
 	return statut != null and statut.gel_restant > 0
+
+func subit_recul() -> bool:
+	var statut := get_node_or_null("EtatMousse")
+	return statut != null and statut.recul_prioritaire and statut.recul_restant > 0.0
 
 func multiplicateur_vitesse() -> float:
 	var gel = get_node_or_null("Ralentissement")

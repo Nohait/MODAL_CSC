@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"jet_lourd"
+titre = "Lance de siège"
+description = "Un jet puissant qui ralentit vos déplacements pendant le tir."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "jet_lourd"
+obtention_unique = true
+puissance_variable = false
+rarete = "epique"
+valeur = 70.0
+texte_effet = "+{valeur} % dégâts · −{contrepartie} % déplacement pendant le tir"
+incompatibles = Array[StringName]([&"jet_mobile"])
+contrepartie = 45.0

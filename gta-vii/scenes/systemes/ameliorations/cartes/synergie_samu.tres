@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/soin_victimes.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"synergie_samu"
+titre = "Urgence collective"
+description = "Chaque élimination soigne les victimes proches du pompier."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "synergie_samu"
+obtention_unique = true
+puissance_variable = false
+rarete = "synergie"
+valeur = 2.0
+texte_effet = "SOINS AUX ÉLIMINATIONS"
+active = false

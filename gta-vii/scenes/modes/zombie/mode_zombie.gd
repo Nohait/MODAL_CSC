@@ -5,22 +5,33 @@ const GESTIONNAIRE = preload("res://scenes/modes/zombie/gestion/vagues_zombie.gd
 const DEBUG = preload("res://scenes/modes/zombie/interfaces/debug/debug_zombie.gd")
 @export var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
 @export var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
+@export_group("Musique adaptative")
+@export var couches_musicales: Array[CoucheMusicaleZombie] = [
+	preload("res://scenes/modes/zombie/audio/couches/base.tres"),
+	preload("res://scenes/modes/zombie/audio/couches/cordes.tres"),
+	preload("res://scenes/modes/zombie/audio/couches/percussions.tres"),
+	preload("res://scenes/modes/zombie/audio/couches/guitares.tres")
+]
+@export_group("Progression et builds")
+@export var synergies_zombie: Array[Synergie] = [preload("res://scenes/systemes/ameliorations/synergies/belier.tres"), preload("res://scenes/systemes/ameliorations/synergies/samu.tres")]
+@export var paliers_arene: Array[PalierArene] = [preload("res://scenes/modes/zombie/evenements/paliers/fenetre.tres"), preload("res://scenes/modes/zombie/evenements/paliers/ascenseur.tres"), preload("res://scenes/modes/zombie/evenements/paliers/lumiere.tres")]
 const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 
-@export_group("Éclairage")
+@export_group("Ã‰clairage")
 @export var ambiance: Environment = preload("res://assets/materiaux/hall_incendie/ambiance_hall.tres")
 @export_range(0.0, 1.0, 0.05) var energie_soleil := 0.3
 
 func _ready() -> void:
-	# Reprendre main sans copier le joueur, le décor, les lumières ni leurs scripts.
+	# Reprendre main sans copier le joueur, le dÃ©cor, les lumiÃ¨res ni leurs scripts.
 	var niveau = NIVEAU.instantiate()
-	# Le mode zombie garde ses réglages lumineux sans modifier ceux du jeu classique.
+	# Le mode zombie garde ses rÃ©glages lumineux sans modifier ceux du jeu classique.
 	niveau.get_node("Eclairage/Ambiance").environment = ambiance
 	niveau.get_node("Eclairage/Soleil").light_energy = energie_soleil
-	# Spécialiser les systèmes communs avant leur initialisation.
+	# SpÃ©cialiser les systÃ¨mes communs avant leur initialisation.
 	niveau.get_node("VictimManager").set_script(preload("res://scenes/modes/zombie/victimes/escorte_zombie.gd"))
 	niveau.get_node("UpgradeManager").set_script(preload("res://scenes/modes/zombie/interfaces/boutique/boutique_zombie.gd"))
 	niveau.get_node("UpgradeManager").mode_jeu = "zombie"
+	niveau.get_node("UpgradeManager").synergies = synergies_zombie
 	niveau.get_node("UpgradeManager/DefiManager").set_script(preload("res://scenes/modes/zombie/interfaces/boutique/defis_zombie.gd"))
 	niveau.set_script(PARTIE)
 	var vagues = niveau.get_node("Salles/RoomManager")
@@ -29,6 +40,25 @@ func _ready() -> void:
 	vagues.map = get_tree().get_meta("map_zombie", map)
 	niveau.get_node("MenuDebug").set_script(DEBUG)
 	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
-	# La musique appartient à cette partie : quitter le mode arrête aussi les morceaux.
+	# La musique appartient Ã  cette partie : quitter le mode arrÃªte aussi les morceaux.
 	niveau.add_child(preload("res://scenes/modes/zombie/audio/musique_zombie.tscn").instantiate())
+	var sons_vagues := preload("res://scenes/modes/zombie/audio/feedback_vagues.tscn").instantiate()
+	niveau.add_child(sons_vagues)
+	var musique_adaptative := Node.new()
+	musique_adaptative.set_script(preload("res://scenes/modes/zombie/audio/couches_dynamiques.gd"))
+	musique_adaptative.name = "CouchesMusicales"
+	musique_adaptative.couches = couches_musicales
+	niveau.add_child(musique_adaptative)
+	var arene := Node.new()
+	arene.name = "ArenaEventManager"
+	arene.set_script(preload("res://scenes/modes/zombie/evenements/arena_event_manager.gd"))
+	arene.paliers = paliers_arene
+	arene.palier_declenche.connect(func(palier): niveau.get_node("UpgradeManager").retours_bonus._afficher_message(palier.titre, preload("res://assets/textures/interfaces/ameliorations/pictogrammes/intervention_eclair.svg")))
+	niveau.add_child(arene)
+	var score := preload("res://scenes/modes/zombie/gestion/score_combo_manager.tscn").instantiate()
+	niveau.add_child(score)
+	var succes := Node.new()
+	succes.name = "SuccesZombie"
+	succes.set_script(preload("res://scenes/modes/zombie/gestion/succes_zombie.gd"))
+	niveau.add_child(succes)
 	add_child(niveau)

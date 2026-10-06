@@ -1,6 +1,9 @@
 extends CanvasLayer
 
 signal ameliorations_changees
+@export var synergies: Array[Synergie] = []
+@export_range(8, 128) var maximum_zones_mousse := 40
+var synergy_manager: Node
 
 @export_enum("classique", "zombie") var mode_jeu := "classique"
 @export var catalogue_ameliorations: CatalogueAmeliorations = preload("res://scenes/systemes/ameliorations/catalogue_ameliorations.tres")
@@ -70,9 +73,14 @@ var sirene_definition: Amelioration
 var rayon_sirene := 0.0
 var retours_bonus: CanvasLayer
 var effets_cartes: Node
+var branches_zombie: Node
 
 
 func _ready() -> void:
+	synergy_manager = preload("res://scenes/systemes/ameliorations/synergy_manager.gd").new()
+	synergy_manager.catalogue = synergies
+	synergy_manager.synergie_decouverte.connect(_recevoir_synergie)
+	add_child(synergy_manager)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	menu.hide()
 	joueur.ameliorations = self
@@ -80,7 +88,12 @@ func _ready() -> void:
 	effets_cartes = preload("res://scenes/systemes/ameliorations/effets_cartes.gd").new()
 	effets_cartes.name = "EffetsCartes"
 	effets_cartes.gestion = self
+	effets_cartes.maximum_zones = maximum_zones_mousse
 	joueur.add_child(effets_cartes)
+	if mode_jeu == "zombie":
+		branches_zombie = preload("res://scenes/systemes/ameliorations/branches_zombie.gd").new()
+		branches_zombie.gestion = self
+		joueur.add_child(branches_zombie)
 	escorte.escort_changed.connect(_actualiser_vitesse_escorte)
 	retours_bonus = preload("res://scenes/interfaces/hud/retours_bonus.tscn").instantiate()
 	retours_bonus.joueur = joueur
@@ -227,8 +240,10 @@ func _afficher_cartes(propositions: Array, avec_revelation := false) -> void:
 			carte.lecture_seule = true
 			var titres := PackedStringArray()
 			for id in definition.prerequis:
-				if not cartes_obtenues.has(id): titres.append(catalogue_ameliorations.trouver(id).titre)
-			carte.statut = "REQUIERT : " + ", ".join(titres)
+				if not cartes_obtenues.has(id):
+					var requise := catalogue_ameliorations.trouver(id)
+					titres.append(requise.titre if requise != null else String(id))
+			carte.statut = "REQUIERT : " + ", ".join(titres) if not titres.is_empty() else "INCOMPATIBLE AVEC VOTRE BUILD"
 		carte.titre = definition.titre
 		carte.description = definition.description
 		carte.illustration = definition.pictogramme
@@ -298,6 +313,13 @@ func _choisir(carte: Control) -> void:
 		await confirmation.finished
 		revelation_en_cours = false
 	appliquer_amelioration(carte.identifiant)
+	while not synergy_manager.en_attente.is_empty():
+		revelation_en_cours = true
+		var definition: Synergie = synergy_manager.en_attente.pop_front()
+		var presentation := preload("res://scenes/interfaces/menus/ameliorations/fusion_synergie.tscn").instantiate()
+		add_child(presentation)
+		await presentation.presenter(definition, catalogue_ameliorations)
+		revelation_en_cours = false
 	_retour_boutique()
 	_actualiser_boutique("Carte appliquée. Vous pouvez acheter autre chose ou continuer.")
 
@@ -347,6 +369,14 @@ func appliquer_amelioration(identifiant: StringName) -> void:
 		if definition.effet in ["bouclier_camion", "bouclier_joueur"]: acquisition.bouclier_restant = gain
 		acquisitions.append(acquisition)
 		recalculer_effets()
+	ameliorations_changees.emit()
+	synergy_manager.verifier(cartes_obtenues, mode_jeu)
+
+func _recevoir_synergie(definition: Synergie) -> void:
+	var carte := definition.carte
+	acquisitions.append({"id": carte.identifiant, "definition": carte, "rarete": &"synergie", "gain": carte.valeur, "restant": 0, "commence": false})
+	cartes_obtenues[carte.identifiant] = true
+	recalculer_effets()
 	ameliorations_changees.emit()
 
 func _appliquer_soin(effet: String, gain: float) -> void:
@@ -419,6 +449,8 @@ func recalculer_effets() -> void:
 	extincteur.reload_rate = recharge_de_base * (1.0 + totaux.get("recharge", 0.0) / 100.0)
 	var ancienne_vie_max: float = joueur.BarreDeVie.max_value
 	joueur.BarreDeVie.max_value = vie_de_base + totaux.get("vie_max", 0.0)
+	if mode_jeu == "zombie" and totaux.get("verre_ardent", 0.0) > 0:
+		joueur.BarreDeVie.max_value *= 1.0 - catalogue_ameliorations.trouver(&"verre_ardent").contrepartie / 100.0
 	joueur.BarreDeVie.value = minf(joueur.BarreDeVie.max_value, joueur.BarreDeVie.value + maxf(0, joueur.BarreDeVie.max_value - ancienne_vie_max))
 	if mode_jeu == "zombie" and is_instance_valid(room_manager.refuge):
 		room_manager.refuge.reduction_degats = minf(80.0, totaux.get("blindage_camion", 0.0)) / 100.0
@@ -465,7 +497,7 @@ func formater_pourcentage(valeur: float) -> String:
 func formater_effet(identifiant: StringName, gain: float) -> String:
 	var definition := catalogue_ameliorations.trouver(identifiant)
 	if definition == null: return ""
-	return definition.texte_effet % formater_pourcentage(gain) if "%s" in definition.texte_effet else definition.texte_effet
+	return definition.texte_pour(gain)
 
 func texte_effet(identifiant: StringName, _nombre: int = 1) -> String:
 	return formater_effet(identifiant, bonus_cumules_pourcent.get(identifiant, 0.0))
@@ -538,6 +570,12 @@ func _cartes_achetables(type_bonus: String) -> Array[Amelioration]:
 	return resultat
 
 func prerequis_remplis(definition: Amelioration) -> bool:
+	for id in definition.incompatibles:
+		if cartes_obtenues.has(id): return false
+	# Vérifier aussi l'autre sens pour éviter une exclusivité à sens unique.
+	for id in cartes_obtenues:
+		var acquise := catalogue_ameliorations.trouver(id)
+		if acquise != null and definition.identifiant in acquise.incompatibles: return false
 	for id in definition.prerequis:
 		if not cartes_obtenues.has(id): return false
 	return true

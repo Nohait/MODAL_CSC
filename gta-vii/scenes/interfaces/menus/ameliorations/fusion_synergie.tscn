@@ -1,0 +1,5 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/ameliorations/fusion_synergie.gd" id="script"]
+[node name="FusionSynergie" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("script")

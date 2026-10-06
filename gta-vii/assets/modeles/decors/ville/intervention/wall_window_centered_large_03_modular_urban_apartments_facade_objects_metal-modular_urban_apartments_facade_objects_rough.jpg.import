@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dht1jaybbyd7u"
-path="res://.godot/imported/wall_window_centered_large_03_modular_urban_apartments_facade_objects_metal-modular_urban_apartments_facade_objects_rough.jpg-f6d709b9b4addf5ae08db847803dedda.ctex"
+path.s3tc="res://.godot/imported/wall_window_centered_large_03_modular_urban_apartments_facade_objects_metal-modular_urban_apartments_facade_objects_rough.jpg-f6d709b9b4addf5ae08db847803dedda.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2edbefb8b8fb91fa8c06383497262187"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/decors/ville/intervention/wall_window_centered_large_03_modular_urban_apartments_facade_objects_metal-modular_urban_apartments_facade_objects_rough.jpg"
-dest_files=["res://.godot/imported/wall_window_centered_large_03_modular_urban_apartments_facade_objects_metal-modular_urban_apartments_facade_objects_rough.jpg-f6d709b9b4addf5ae08db847803dedda.ctex"]
+dest_files=["res://.godot/imported/wall_window_centered_large_03_modular_urban_apartments_facade_objects_metal-modular_urban_apartments_facade_objects_rough.jpg-f6d709b9b4addf5ae08db847803dedda.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

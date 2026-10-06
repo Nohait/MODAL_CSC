@@ -3,6 +3,7 @@ extends Node3D
 
 @export_enum("porte", "breche", "fenetre", "ascenseur") var type_entree := "porte"
 @export_range(1, 5) var capacite := 3
+@export_range(1, 100) var premiere_vague := 1
 @export_range(0.5, 5.0, 0.1) var duree_arrivee := 2.8
 @export var hauteur_depart_cabine := 8.0
 @export var afficher_fond := true

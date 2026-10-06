@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/soin_victimes.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"dash_sauvetage"
+titre = "Passage du SAMU"
+description = "Le départ du dash soigne les victimes proches."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "dash_sauvetage"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 8.0
+texte_effet = "{valeur} PV · intervalle de {intervalle} s"
+intervalle = 3.0
+rayon = 3.0

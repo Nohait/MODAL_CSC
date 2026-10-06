@@ -4,6 +4,7 @@ extends CharacterBody3D
 # Émis uniquement quand des PV sont réellement retirés, pour le défi sans dégâts.
 signal degats_recus(quantite: float)
 signal died
+signal dash_commence(direction: Vector3)
 var est_mort := false
 var ameliorations: Node
 var protection_secours := 0.0
@@ -127,6 +128,7 @@ func _physics_process(delta: float) -> void:
 		# Un délai déjà commencé n'est pas recalculé en cours de route.
 		dash_cooldown_left = get_dash_cooldown()
 		dash_time_left = dash_duration
+		dash_commence.emit(last_direction)
 		
 	if dash_cooldown_left > 0.0:
 		dash_cooldown_left -= delta
@@ -148,6 +150,8 @@ func _physics_process(delta: float) -> void:
 			#On update la dernière direction prise
 			last_direction = direction
 			var courage: float = ameliorations.effets_cartes.multiplicateur_courage() if is_instance_valid(ameliorations) else 1.0
+			if is_instance_valid(ameliorations) and is_instance_valid(ameliorations.branches_zombie):
+				courage *= ameliorations.branches_zombie.multiplicateur_marche()
 			velocity.x = direction.x * speed * courage
 			velocity.z = direction.z * speed * courage
 		else:

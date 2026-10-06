@@ -9,6 +9,7 @@
 [ext_resource type="FontFile" uid="uid://bakravhue45e3" path="res://assets/fonts/Oswald-SemiBold.ttf" id="7_police"]
 
 [ext_resource type="Script" path="res://scenes/joueur/sons/pas_joueur.gd" id="8_pas"]
+[ext_resource type="Script" path="res://scenes/joueur/feedback_dash.gd" id="9_dash"]
 [ext_resource type="AudioStream" path="res://assets/sounds/joueur/pas/pas_bottes_01.wav" id="pas_1"]
 [ext_resource type="AudioStream" path="res://assets/sounds/joueur/pas/pas_bottes_02.wav" id="pas_2"]
 [ext_resource type="AudioStream" path="res://assets/sounds/joueur/pas/pas_bottes_03.wav" id="pas_3"]
@@ -24,6 +25,9 @@ script = ExtResource("1_3vyb7")
 position = Vector3(0, 1, 0)
 current = true
 editor_description = "Les sons 3D sont entendus depuis le pompier, indépendamment de la hauteur de la caméra."
+
+[node name="FeedbackDash" type="Node3D" parent="."]
+script = ExtResource("9_dash")
 
 [node name="Pas" type="AudioStreamPlayer3D" parent="."]
 editor_description = "Pas de bottes : volume sur ce nœud, rythme avec Distance entre pas. Partagé par les deux modes."

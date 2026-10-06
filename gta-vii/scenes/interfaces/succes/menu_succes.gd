@@ -36,12 +36,12 @@ func actualiser_liste() -> void:
 	for enfant in %Liste.get_children():
 		%Liste.remove_child(enfant)
 		enfant.queue_free()
-	for succes in SuccesManager.CATALOGUE.SUCCES:
+	for succes in SuccesManager.CATALOGUE.liste():
 		var ligne = LIGNE.instantiate()
 		%Liste.add_child(ligne)
 		ligne.afficher(succes, SuccesManager.est_obtenu(succes.id))
 	var nombre := SuccesManager.obtenus.size()
-	var total := SuccesManager.CATALOGUE.SUCCES.size()
+	var total := SuccesManager.CATALOGUE.liste().size()
 	%Progression.max_value = total
 	%Progression.value = nombre
 	%Compteur.text = "%d / %d succès obtenus" % [nombre, total]

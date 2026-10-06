@@ -9,7 +9,8 @@ var restant := 0.0
 var environnement_initial: Environment
 var energies := {}
 var lampe: OmniLight3D
-var mutations := {}
+# Des identifiants stables : un ennemi détruit ne doit pas rester comme clé.
+var mutations: Dictionary[int, ModificateurElite] = {}
 var modification: ModificateurElite
 var annonce: VBoxContainer
 var titre: Label
@@ -49,10 +50,7 @@ func _ready() -> void:
 	annonce.hide()
 
 func commencer(choix: CompositionVague) -> void:
-	# Une mutation reste active pendant 60 s, même si la vague finit plus tôt.
-	if mutation_en_cours():
-		if choix != vagues.difficulte.composition_classique: _annoncer(choix.titre, "Mutation encore active")
-		return
+	# Chaque événement appartient à sa vague : nettoyer avant d'en commencer une autre.
 	terminer()
 	composition = choix
 	restant = choix.duree_effet
@@ -128,11 +126,20 @@ func _ennemi_ajoute(ennemi: Node3D) -> void:
 			var effet = DORE.new()
 			effet.name = "Dore"
 			ennemi.add_child(effet)
-	if mutation_en_cours() and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(ennemi):
+	var identifiant := ennemi.get_instance_id()
+	if mutation_en_cours() and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(identifiant):
 		var elite = ennemi.get_node_or_null("Elite")
-		mutations[ennemi] = elite.definition if elite != null else null
+		# Mémoriser l'unique mutation d'origine avant le remplacement temporaire.
+		mutations[identifiant] = elite.definition if elite != null else null
+		# Retirer la sauvegarde avant que l'ennemi soit réellement détruit.
+		var nettoyage := _oublier_mutation.bind(identifiant)
+		if not ennemi.tree_exiting.is_connected(nettoyage):
+			ennemi.tree_exiting.connect(nettoyage, CONNECT_ONE_SHOT)
 		if elite != null: elite.retirer()
 		CatalogueEnnemis.appliquer_elite(ennemi, modification)
+
+func _oublier_mutation(identifiant: int) -> void:
+	mutations.erase(identifiant)
 
 func mutation_en_cours() -> bool:
 	return composition != null and composition.evenement == "mutation" and restant > 0.0
@@ -153,7 +160,8 @@ func _process(delta: float) -> void:
 			if panne: _annoncer("Mousse rétablie", "")
 
 func fin_vague() -> void:
-	if not mutation_en_cours(): terminer()
+	# La durée est un maximum ; la mutation s'arrête aussi si la vague finit avant.
+	terminer()
 
 func terminer() -> void:
 	if is_instance_valid(extincteur):
@@ -166,12 +174,14 @@ func terminer() -> void:
 		if is_instance_valid(lumiere): lumiere.light_energy = energies[lumiere]
 	energies.clear()
 	if is_instance_valid(lampe): lampe.queue_free()
-	for ennemi in mutations:
+	# Copier les clés : retirer un effet peut lui-même faire quitter un nœud de l'arbre.
+	for identifiant in mutations.keys():
+		var ennemi = instance_from_id(identifiant)
 		if not is_instance_valid(ennemi) or ennemi.is_queued_for_deletion(): continue
 		var elite = ennemi.get_node_or_null("Elite")
 		if elite != null: elite.retirer()
-		if mutations[ennemi] != null:
-			CatalogueEnnemis.appliquer_elite(ennemi, mutations[ennemi])
+		if mutations.get(identifiant) != null:
+			CatalogueEnnemis.appliquer_elite(ennemi, mutations[identifiant])
 		else:
 			ennemi.set_meta("variante_glossaire", "normal")
 	mutations.clear()

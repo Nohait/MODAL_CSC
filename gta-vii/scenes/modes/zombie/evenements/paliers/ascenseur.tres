@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PalierArene" format=3]
+[ext_resource type="Script" path="res://scenes/modes/zombie/evenements/palier_arene.gd" id="script"]
+[resource]
+script = ExtResource("script")
+titre = "La cage d'ascenseur s'anime"
+vague = 5
+evenement = "ouvrir_entree"
+cible = NodePath("Navigation/Decor/EntreesEnnemis/AscenseurGauche")

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byfq8fki13td5"
-path="res://.godot/imported/wall_door_centered_large_01_modular_urban_apartments_facade_objects_diff-modular_urban_apartments_facade_objects_alpha.png-35a3f7867238b9830e7ad7a39e1a103b.ctex"
+path.s3tc="res://.godot/imported/wall_door_centered_large_01_modular_urban_apartments_facade_objects_diff-modular_urban_apartments_facade_objects_alpha.png-35a3f7867238b9830e7ad7a39e1a103b.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "003365b3f6d26edeb8a808627b03f316"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/decors/ville/intervention/wall_door_centered_large_01_modular_urban_apartments_facade_objects_diff-modular_urban_apartments_facade_objects_alpha.png"
-dest_files=["res://.godot/imported/wall_door_centered_large_01_modular_urban_apartments_facade_objects_diff-modular_urban_apartments_facade_objects_alpha.png-35a3f7867238b9830e7ad7a39e1a103b.ctex"]
+dest_files=["res://.godot/imported/wall_door_centered_large_01_modular_urban_apartments_facade_objects_diff-modular_urban_apartments_facade_objects_alpha.png-35a3f7867238b9830e7ad7a39e1a103b.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/jet_givre.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"blizzard_proximite"
+titre = "Blizzard de proximité"
+description = "Les explosions glacées laissent des plaques de gel qui blessent et ralentissent."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "blizzard_proximite"
+obtention_unique = true
+puissance_variable = false
+rarete = "legendaire"
+valeur = 20.0
+texte_effet = "PLAQUES GLACÉES EXPLOSIVES"
+prerequis = Array[StringName]([&"jet_givre", &"choc_thermique"])
+duree_effet = 3.0
+rayon = 2.0

@@ -50,6 +50,36 @@
 [ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/gyrophare_intervention.tres" id="gyrophare_intervention"]
 [ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/maintenance_preventive.tres" id="maintenance_preventive"]
 
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/dash_assaut.tres" id="dash_assaut"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/dash_sauvetage.tres" id="dash_sauvetage"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/predateur_elites.tres" id="predateur_elites"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/recyclage.tres" id="recyclage"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/verre_ardent.tres" id="verre_ardent"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/jet_lourd.tres" id="jet_lourd"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/jet_mobile.tres" id="jet_mobile"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/ancrage.tres" id="ancrage"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/mise_a_distance.tres" id="mise_a_distance"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/revanche.tres" id="revanche"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/soin_victoire.tres" id="soin_victoire"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/reserve_elite.tres" id="reserve_elite"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/blizzard_proximite.tres" id="blizzard_proximite"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/synergie_belier.tres" id="synergie_belier"]
+
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/synergie_samu.tres" id="synergie_samu"]
+
 [resource]
 script = ExtResource("script")
-cartes = Array[ExtResource("definition")]([ExtResource("pression"), ExtResource("reserve"), ExtResource("recharge"), ExtResource("vitalite"), ExtResource("soin_joueur"), ExtResource("soin_victimes"), ExtResource("soin_victimes_camion"), ExtResource("blindage_camion"), ExtResource("bouclier_camion"), ExtResource("jet_givre"), ExtResource("dernier_souffle"), ExtResource("mousse_protectrice"), ExtResource("reserve_secours"), ExtResource("escorte_agile"), ExtResource("sirene_diversion"), ExtResource("choc_thermique"), ExtResource("verglas"), ExtResource("gel_profond"), ExtResource("eclats_glace"), ExtResource("brise_glace"), ExtResource("mousse_persistante"), ExtResource("mousse_expansive"), ExtResource("enrobage"), ExtResource("reaction_chaine"), ExtResource("jet_pulse"), ExtResource("double_lance"), ExtResource("sillage_secours"), ExtResource("depart_pression"), ExtResource("freinage_urgence"), ExtResource("deuxieme_souffle"), ExtResource("intervention_eclair"), ExtResource("retour_pression"), ExtResource("surpression"), ExtResource("formation_serree"), ExtResource("passage_securise"), ExtResource("priorite_blesses"), ExtResource("courage_contagieux"), ExtResource("equipe_soutien"), ExtResource("extraction_urgence"), ExtResource("circuit_secours"), ExtResource("eau_glacee"), ExtResource("reseau_interconnecte"), ExtResource("reserve_collective"), ExtResource("zone_repli"), ExtResource("gyrophare_intervention"), ExtResource("maintenance_preventive")])
+cartes = Array[ExtResource("definition")]([ExtResource("pression"), ExtResource("reserve"), ExtResource("recharge"), ExtResource("vitalite"), ExtResource("soin_joueur"), ExtResource("soin_victimes"), ExtResource("soin_victimes_camion"), ExtResource("blindage_camion"), ExtResource("bouclier_camion"), ExtResource("jet_givre"), ExtResource("dernier_souffle"), ExtResource("mousse_protectrice"), ExtResource("reserve_secours"), ExtResource("escorte_agile"), ExtResource("sirene_diversion"), ExtResource("choc_thermique"), ExtResource("verglas"), ExtResource("gel_profond"), ExtResource("eclats_glace"), ExtResource("brise_glace"), ExtResource("mousse_persistante"), ExtResource("mousse_expansive"), ExtResource("enrobage"), ExtResource("reaction_chaine"), ExtResource("jet_pulse"), ExtResource("double_lance"), ExtResource("sillage_secours"), ExtResource("depart_pression"), ExtResource("freinage_urgence"), ExtResource("deuxieme_souffle"), ExtResource("intervention_eclair"), ExtResource("retour_pression"), ExtResource("surpression"), ExtResource("formation_serree"), ExtResource("passage_securise"), ExtResource("priorite_blesses"), ExtResource("courage_contagieux"), ExtResource("equipe_soutien"), ExtResource("extraction_urgence"), ExtResource("circuit_secours"), ExtResource("eau_glacee"), ExtResource("reseau_interconnecte"), ExtResource("reserve_collective"), ExtResource("zone_repli"), ExtResource("gyrophare_intervention"), ExtResource("maintenance_preventive"), ExtResource("dash_assaut"), ExtResource("dash_sauvetage"), ExtResource("predateur_elites"), ExtResource("recyclage"), ExtResource("verre_ardent"), ExtResource("jet_lourd"), ExtResource("jet_mobile"), ExtResource("ancrage"), ExtResource("mise_a_distance"), ExtResource("revanche"), ExtResource("soin_victoire"), ExtResource("reserve_elite"), ExtResource("blizzard_proximite"), ExtResource("synergie_belier"), ExtResource("synergie_samu")])
