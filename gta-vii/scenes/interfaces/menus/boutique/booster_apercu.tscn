@@ -72,11 +72,27 @@ theme_override_font_sizes/font_size = 11
 text = "ÉQUIPEMENT DE SECOURS"
 horizontal_alignment = 1
 
-[node name="Symbole" type="Label" parent="Visuel/Marge/Contenu" unique_id=1257524206]
-unique_name_in_owner = true
-modulate = Color(0.6129412, 0.774902, 0.78313726, 1)
+[node name="EspaceSymbole" type="Control" parent="Visuel/Marge/Contenu"]
 layout_mode = 2
 size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 110)
+mouse_filter = 2
+
+[node name="Symbole" type="Label" parent="Visuel" unique_id=1257524206]
+unique_name_in_owner = true
+modulate = Color(0.6129412, 0.774902, 0.78313726, 1)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 0.43
+anchor_bottom = 0.43
+offset_left = -110.0
+offset_right = 110.0
+offset_top = -65.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 90
 text = "I"

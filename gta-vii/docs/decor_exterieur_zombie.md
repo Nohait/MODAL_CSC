@@ -1,7 +1,7 @@
 # Décor extérieur du hall zombie
 
 La première proposition est regroupée dans `scenes/decors/ville/exterieur_ville.tscn`.
-Elle est instanciée directement sous la racine de MapTest, à côté de Navigation.
+Elle est instanciée directement sous la racine de Hall, à côté de Navigation.
 Elle ne contient aucun corps physique, point de spawn ni script de gameplay.
 Le navmesh est calculé depuis Navigation : ces façades ne participent pas à son calcul.
 Les murs et garde-fous existants du hall continuent de limiter les déplacements.
@@ -29,7 +29,7 @@ Asphalt 02 de Rob Tuytel, Poly Haven, CC0 : https://polyhaven.com/a/asphalt_02
 Seuls trois immeubles, leurs dépendances et trois textures d’asphalte sont copiés.
 Le pack Kenney téléchargé reste disponible pour une autre proposition.
 
-Cette version concerne uniquement MapTest en mode zombie. Les fenêtres, portes,
+Cette version concerne uniquement Hall en mode zombie. Les fenêtres, portes,
 éclairages du hall et règles d’apparition des ennemis restent ceux du jeu existant.
 
 ## Cohérence des accès
@@ -62,7 +62,7 @@ le serveur officiel. Répétition physique de 1,8 m, normale faible et spéculai
 
 ## Porte de l'aile et escalier en demi-tour
 
-La brèche gauche de MapTest est remplacée par porte_appartements.tscn.
+La brèche gauche de Hall est remplacée par porte_appartements.tscn.
 Cette scène reprend l'entrée de mobs existante, avec battants_sur_gonds=true.
 Les nœuds Gauche/Droite sont des pivots aux bords du cadre ; leurs enfants Battant
 et Poignee tournent avec eux. _regler_portes adapte le mouvement à ce mode,

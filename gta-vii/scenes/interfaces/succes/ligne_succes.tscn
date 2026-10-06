@@ -6,7 +6,7 @@
 
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="paper"]
 
-[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="skin"]
+[ext_resource type="Shader" path="res://scenes/interfaces/succes/parchemin_succes.gdshader" id="skin"]
 
 [ext_resource type="Script" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
 

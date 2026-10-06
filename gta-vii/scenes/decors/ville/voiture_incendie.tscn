@@ -1,0 +1,103 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/voiture_brulee.glb" id="voiture"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="Script" path="res://scenes/decors/ville/voiture_incendie.gd" id="script"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/flamme_animee.gdshader" id="shader"]
+[ext_resource type="Texture2D" path="res://assets/textures/feu/mikodrak/feu_anime.png" id="animation"]
+
+[sub_resource type="QuadMesh" id="langue"]
+size = Vector2(1.8, 2.8)
+
+[sub_resource type="ShaderMaterial" id="feu"]
+shader = ExtResource("shader")
+shader_parameter/animation = ExtResource("animation")
+
+[node name="VoitureIncendie" type="Node3D"]
+script = ExtResource("script")
+editor_description = "Épave décorative d'environ 4,6 m, flammes animées sur plans croisés, sans collision ni dégâts."
+
+[node name="Modele" parent="." instance=ExtResource("voiture")]
+position = Vector3(-0.0085, -0.0145, 0.132)
+scale = Vector3(0.75, 0.75, 0.75)
+
+[node name="Flammes" type="Node3D" parent="."]
+
+[node name="Capot0" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.6, -1.45)
+rotation = Vector3(0, 0.0, 0)
+scale = Vector3(1.0, 1.0, 1.0)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Capot1" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.6, -1.45)
+rotation = Vector3(0, 1.0472, 0)
+scale = Vector3(1.0, 1.0, 1.0)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Capot2" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.6, -1.45)
+rotation = Vector3(0, 2.0944, 0)
+scale = Vector3(1.0, 1.0, 1.0)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Habitacle0" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.9, 0)
+rotation = Vector3(0, 0.0, 0)
+scale = Vector3(1.2, 1.2, 1.2)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Habitacle1" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.9, 0)
+rotation = Vector3(0, 1.0472, 0)
+scale = Vector3(1.2, 1.2, 1.2)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Habitacle2" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.9, 0)
+rotation = Vector3(0, 2.0944, 0)
+scale = Vector3(1.2, 1.2, 1.2)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Arriere0" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.5, 1.4)
+rotation = Vector3(0, 0.0, 0)
+scale = Vector3(0.7, 0.7, 0.7)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Arriere1" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.5, 1.4)
+rotation = Vector3(0, 1.0472, 0)
+scale = Vector3(0.7, 0.7, 0.7)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Arriere2" type="MeshInstance3D" parent="Flammes"]
+position = Vector3(0, 1.5, 1.4)
+rotation = Vector3(0, 2.0944, 0)
+scale = Vector3(0.7, 0.7, 0.7)
+mesh = SubResource("langue")
+material_override = SubResource("feu")
+cast_shadow = 0
+
+[node name="Foyer" parent="." instance=ExtResource("foyer")]
+position = Vector3(0, 0.9, -0.8)
+taille = 1.6
+energie = 2.5
+portee_lumiere = 8.0
+densite_fumee = 1.2

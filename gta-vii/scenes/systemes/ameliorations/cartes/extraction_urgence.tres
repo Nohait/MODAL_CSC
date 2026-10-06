@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/extraction_urgence.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"extraction_urgence"
+titre = "Extraction d’urgence"
+description = "Une victime menacée de mort est ramenée près de vous."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "extraction_urgence"
+obtention_unique = true
+puissance_variable = false
+rarete = "legendaire"
+valeur = 1.0
+texte_effet = "Un secours par victime"
+prerequis = Array[StringName]([])

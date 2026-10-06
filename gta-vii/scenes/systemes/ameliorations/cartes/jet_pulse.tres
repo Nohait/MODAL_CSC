@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/jet_pulse.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"jet_pulse"
+titre = "Jet pulsé"
+description = "Le jet tire par impulsions puissantes."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "jet_pulse"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 80.0
+texte_effet = "+%s %% par impact"
+prerequis = Array[StringName]([])

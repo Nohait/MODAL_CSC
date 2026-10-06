@@ -9,3 +9,6 @@ Les MP3 téléchargés sont conservés sans modification ; les fondus sont réal
 - « Volatile Reaction » — https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400039
 - « Dark Fog » — https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300031
 - « Industrial Music Box » — https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100812
+- « Cipher » — https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100844
+
+Cipher remplace Industrial Music Box dans la boutique zombie. Fichier officiel `Cipher2.mp3`, conservé sans modification sous le nom `cipher.mp3`. Source du téléchargement : https://incompetech.com/music/royalty-free/mp3-royaltyfree/Cipher2.mp3.

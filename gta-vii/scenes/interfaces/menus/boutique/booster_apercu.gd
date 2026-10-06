@@ -8,6 +8,7 @@ signal selectionne
 @export var prix := 1
 @export var contenu := "3 cartes communes"
 @export var symbole := "I"
+@export_range(0, 3) var niveau_eclat := 0
 
 @onready var visuel: Control = $Visuel
 @onready var papier: TextureRect = $Visuel/Papier
@@ -26,6 +27,7 @@ func _ready() -> void:
 	# La pochette, ses braises et son contour de survol partagent la même couleur.
 	materiau.set_shader_parameter("braises_personnalisees", true)
 	materiau.set_shader_parameter("teinte_braises", couleur)
+	materiau.set_shader_parameter("niveau_eclat", float(niveau_eclat))
 	%Titre.text = titre
 	%Contenu.text = contenu
 	%Symbole.text = symbole
@@ -49,6 +51,18 @@ func _process(delta: float) -> void:
 	visuel.pivot_offset = size / 2.0
 	materiau.set_shader_parameter("taille", size)
 	materiau.set_shader_parameter("survol", accent_survol)
+	materiau.set_shader_parameter("intensite_braises", 0.8 + niveau_eclat * 0.2 + accent_survol * 0.55)
+	queue_redraw()
+
+func _draw() -> void:
+	if accent_survol <= 0.001:
+		return
+	# Le halo est derrière les enfants : il éclaire le contour sans voiler le texte.
+	var halo := StyleBoxFlat.new()
+	halo.bg_color = Color.TRANSPARENT
+	halo.shadow_color = Color(couleur, accent_survol * (0.2 + niveau_eclat * 0.07))
+	halo.shadow_size = int(12 + niveau_eclat * 7)
+	draw_style_box(halo, Rect2(Vector2.ZERO, size))
 
 
 func _survol(active: bool) -> void:
@@ -62,7 +76,10 @@ func _survol(active: bool) -> void:
 	# grâce à accent_survol ; le shader reçoit chaque valeur intermédiaire.
 	animation.tween_property(self, "accent_survol", 1.0 if active else 0.0, 0.18).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	# Ease Out ralentit l'agrandissement à la fin pour éviter un arrêt brutal.
-	animation.tween_property(visuel, "scale", Vector2.ONE * (1.035 if active else 1.0), 0.18).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	animation.tween_property(visuel, "scale", Vector2.ONE * (1.055 + niveau_eclat * 0.012 if active else 1.0), 0.24).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	animation.tween_property(visuel, "rotation", deg_to_rad(-0.6 - niveau_eclat * 0.35) if active else 0.0, 0.24).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	# Relever la pochette sans déplacer sa zone cliquable ni ses voisines.
+	animation.tween_property(visuel, "position:y", -4.0 - niveau_eclat * 2.0 if active else 0.0, 0.24).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 
 func _cliquer(event: InputEvent) -> void:

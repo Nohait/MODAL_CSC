@@ -1,6 +1,6 @@
 # Créer et équilibrer des cartes
 
-Les cartes sont des ressources Godot. Le catalogue commun est dans `scenes/systemes/ameliorations/catalogue_ameliorations.tres`. Les quinze définitions se trouvent dans son dossier `cartes`. La boutique, le menu des bonus et le catalogue debug lisent ces mêmes données.
+Les cartes sont des ressources Godot. Le catalogue commun est dans `scenes/systemes/ameliorations/catalogue_ameliorations.tres`. Les 46 définitions se trouvent dans son dossier `cartes`. La boutique, le menu des bonus et le catalogue debug lisent ces mêmes données.
 
 ## Modifier une carte dans Godot
 
@@ -14,6 +14,7 @@ Ouvrir sa ressource .tres dans l’Inspecteur. Les propriétés sont :
 - Effet : comportement à appliquer. Les comportements incluent les statistiques, les soins, les boucliers, le gel, le secours, la vitesse d’escorte et la sirène.
 - Valeur : puissance de base à 100 %, ou gain exact pour une carte à effet fixe. Les versions communes/rares/épiques des statistiques multiplient cette valeur par 0,5 / 1 / 2. La rareté du booster règle les probabilités, pas directement la puissance.
 - Obtention unique : cocher pour limiter la carte à un achat par partie.
+- Prérequis : identifiants des cartes à acheter auparavant. Une carte verrouillée est exclue des boosters et reste visible, désactivée, dans le catalogue debug. L'historique des achats compte même si un bouclier temporaire a expiré.
 - Puissance variable : cocher pour une statistique disponible en trois raretés ; décocher pour conserver une rareté et un gain fixes.
 - Rareté : rareté propre à une carte fixe ; ignorée si Puissance variable est coché.
 - Durée : zéro pour un soin immédiat ; au moins 1 pour un effet temporaire continu. Les effets permanents ont une durée de zéro.
@@ -30,7 +31,9 @@ Les prix, puissances des versions et poids de tirage sont dans l’Inspecteur du
 
 Le bouton debug est présent dans les exécutions de développement, notamment depuis l’éditeur. Il affiche toutes les cartes actives autorisées dans le mode, sans tirage ni paiement. Le clic applique une carte à puissance 100 % et revient à la boutique ; Retour à la boutique permet de sortir sans choisir. Relancer la partie après une modification des ressources pour tester les nouvelles valeurs.
 
-Pour une variation d’un effet existant, aucun nouveau code n’est nécessaire. Pour inventer un nouveau comportement, ajouter son nom dans l’export Effet de amelioration.gd et son traitement dans l’UpgradeManager : `_appliquer_soin` pour une action immédiate, `recalculer_effets` pour un effet durable. Mettre à jour le test correspondant.
+Pour une variation d’un effet existant, aucun nouveau code n’est nécessaire. Pour inventer un nouveau comportement, ajouter son nom dans l’export Effet de amelioration.gd et son traitement dans l’UpgradeManager : `_appliquer_soin` pour une action immédiate, `recalculer_effets` pour une statistique durable. Les comportements de combat, de dash et d'équipement sont regroupés dans `scenes/systemes/ameliorations/effets_cartes.gd`.
+
+Les nouvelles cartes et les combos sont expliqués dans [combos_ameliorations.md](combos_ameliorations.md).
 
 ## Cartes initiales
 
@@ -101,14 +104,17 @@ Les deux gyrophares du camion sont éditables dans refuge_zombie.tscn, sous Gyro
 
 Un booster commun n’impose plus trois cartes communes. Le tirage commence par choisir une rareté, puis une définition autorisée dans cette rareté. Il retire cette définition avant le choix suivant, pour éviter deux variantes de la même amélioration dans un booster.
 
-| Booster | Poids commun | Poids rare | Poids épique |
-|---|---:|---:|---:|
-| Commun | 88 | 11 | 1 |
-| Rare | 25 | 65 | 10 |
-| Épique | 5 | 25 | 70 |
-| Intervention | 65 | 30 | 5 |
+| Booster | Prix | Poids commun | Poids rare | Poids épique | Poids légendaire |
+|---|---:|---:|---:|---:|---:|
+| Commun | 1 | 88 | 10,9 | 1 | 0,1 |
+| Rare | 2 | 25 | 64 | 10 | 1 |
+| Épique | 3 | 5 | 22 | 65 | 8 |
+| Légendaire | 5 | 0 | 20 | 50 | 30 |
+| Intervention | 1 | 65 | 30 | 5 | 0 |
 
-X, Y et Z dans les propriétés Poids booster du manager correspondent à ces trois colonnes. Les poids sont relatifs : ils n’ont pas besoin de totaliser 100. Quand une catégorie est vide, ses chances sont redistribuées entre les catégories disponibles ; les probabilités peuvent donc évoluer entre les trois choix d’un même booster. Les cartes affichent leur propre rareté et le menu des bonus conserve cette couleur.
+X, Y, Z et W dans les propriétés Poids booster du manager correspondent aux quatre raretés. Les poids sont relatifs : ils n’ont pas besoin de totaliser 100. Quand une catégorie est vide, ses chances sont redistribuées entre les catégories disponibles ; les probabilités peuvent donc évoluer entre les trois choix d’un même booster. Les cartes affichent leur propre rareté et le menu des bonus conserve cette couleur.
+
+Le booster légendaire est doré, avec les mêmes braises et animation d'ouverture que les autres. Il coûte 5 points, réglables dans le manager. Il est grisé et son achat est refusé sans paiement si aucune carte légendaire ne peut être obtenue. Choc thermique, Réaction en chaîne et Extraction d'urgence sont les trois premières légendaires : effets fixes, uniques et disponibles dans les deux modes. Les statistiques variables restent communes, rares ou épiques.
 
 Sous pression, Grande réserve, Second souffle et Carrosserie renforcée gardent trois versions à 50 / 100 / 200 % de leur valeur de base. Les autres cartes ont une rareté et une valeur fixes : Escorte agile et les soins sont communs ; la vie supplémentaire, Dernier souffle, Réserve de secours et les boucliers sont rares ; Jet givré et Sirène de diversion sont épiques. Toutes ces raretés sont modifiables dans leurs ressources.
 
@@ -125,3 +131,60 @@ Dans les deux modes, le bouton « Mes bonus et statistiques [B] » et la touche 
 Chaque ligne possède un pictogramme et une infobulle assortie au menu. Les pictogrammes des cartes sont réutilisés ; dash.svg est le seul nouveau dessin. Les ressources de recharge gardent leur effet : elles accélèrent la recharge à partir de sa nouvelle base.
 
 L'extincteur consomme 25 unités par seconde et recharge 20 unités par seconde à la base. Le paramètre exporté `delai_avant_recharge` impose 0,25 seconde sans tirer avant de recharger. Chaque nouvel appui redémarre cette attente : les clics rapprochés ne permettent donc pas de profiter des espaces entre les jets pour récupérer constamment de la mousse. Les trois paramètres restent modifiables dans l'inspecteur de l'extincteur.
+
+## Révélation des boosters
+
+L'achat affiche trois dos en papier, puis retourne les cartes de gauche à droite. `UpgradeManager._reveler_cartes()` orchestre l'ordre ; `carte_amelioration.gd` anime la largeur du visuel avec un Tween, dévoile le contenu au milieu et joue le son de sa rareté. Les cartes restent bloquées jusqu'à la fin de la séquence, pour la souris comme pour la manette. Le catalogue de debug et le Carnet n'utilisent pas cette animation.
+
+`dos_carte.svg` est un petit motif vectoriel créé pour le projet, posé sur le papier existant. `eclat_revelation.gd` dessine un halo et des braises autour de la carte. Les quatre niveaux augmentent la quantité de braises, leur portée, la lueur et le rebond. L'effet reste local : aucun flash de tout l'écran ni nouvelles particules 3D.
+
+Les sons sont ceux des packs Kenney déjà crédités dans `docs/sons_et_atelier_audio.md` : Music Jingles (`jingles_PIZZI00`, `jingles_PIZZI04`, `jingles_HIT00`, `jingles_HIT04`, dans cet ordre pour commun / rare / épique / légendaire). Ils passent par le bus Effets et respectent donc le volume des options. Les chemins et volumes sont réunis dans `_montrer_face()` pour les remplacer facilement après écoute en jeu.
+
+Le dos utilise également `dos_carte.gdshader` : le canal alpha du SVG délimite les motifs incandescents. Un bruit déformé forme la croûte sombre et les poches de lave orange / jaunes. Cette matière forme des remous dans les deux axes, avec un halo discret. Chaque carte reçoit un décalage aléatoire pour éviter des mouvements identiques. Le paramètre vitesse_coulee règle la vitesse du mouvement. La carte transmet son horloge au shader chaque image, y compris pendant la pause. Les sons courts sont musicaux : cordes pincées pour commun / rare, impacts musicaux pour épique / légendaire.
+
+Le nœud `Menu/FondRevelation` de `upgrade_manager.tscn` habille les achats avec une brume, des rais lumineux et des braises. Le fond commence neutre, puis prend progressivement la couleur de la meilleure carte déjà révélée, sans dévoiler les cartes cachées. Son script `fond_revelation.gd` anime les paramètres de `fond_revelation.gdshader`, même pendant la pause. Le signal `revelee` de chaque carte appelle `accentuer()` pour renforcer brièvement le halo selon sa rareté. Ce fond est derrière le défilement, ignore les clics et reste masqué dans le catalogue de debug. Il est réinitialisé à chaque achat. Les cartes obtenues sont triées après le tirage, de la moins rare à la plus rare ; les probabilités et effets restent inchangés. La luminosité et la quantité de braises augmentent avec la rareté révélée.
+
+La densité des braises du fond progresse fortement avec la rareté déjà dévoilée : environ 115 pour commune, 210 pour rare, 355 pour épique, 530 pour légendaire, avant masquage par les cartes. Leur taille et leur position sont variées ; leur vitesse augmente légèrement avec la rareté. Ces valeurs sont définies dans `fond_revelation.gdshader`.
+
+Dans le mode zombie, la boutique joue désormais Cipher de Kevin MacLeod (fichier `assets/sounds/musique/zombie/cipher.mp3`). La scène `musique_zombie.tscn` sélectionne cette piste ; `musique_zombie.gd` conserve les fondus, la boucle et la position mémorisée. Les crédits et la licence sont dans `assets/sounds/musique/zombie/credits.md`. La musique du mode classique reste gérée par son système existant.
+
+## Séquence physique et confirmation
+
+La boutique appelle `ouverture_booster.ouvrir()` : une copie du paquet vient au centre, gonfle et alterne rotation / déplacement sur six secousses. Le shader `booster_bonus.gdshader` reçoit le paramètre `pression` pour éclairer la fissure. La déchirure existante sépare ensuite les moitiés, avec une gerbe, un froissement et un son de papier déchiré. Le Carnet garde son ouverture rapide via `lancer()`.
+
+Les visuels des cartes sortent empilés au centre, puis rejoignent leurs cases. Chaque carte se soulève et chauffe avant son retournement. Une légendaire marque une courte suspension, atténue les cartes voisines et ajoute une onde et un accord de trois tintements. Le tri croissant et la coloration après révélation sont conservés.
+
+`SonsInterface.preparer_carte()` atténue la musique de 4 dB pour une épique et 7 dB pour une légendaire, avec un AudioEffectAmplify sur le bus Musique. Cet effet est distinct du réglage de volume des options. Le Tween de restauration appartient à cet autoload pour fonctionner même après fermeture du menu. Les sons utilisés sont déjà présents et crédités : Swishes Sound Pack, Various Paper Sound Effects et packs Kenney.
+
+La sélection anime `confirmer_acquisition()` sur la carte choisie et `consumer()` sur les autres. Le paramètre `disparition` du shader brûle le papier depuis les bords. Le manager bloque les interactions pendant cette confirmation, puis applique le bonus et revient à la boutique. Le mode zombie attend cette fin avant de compter l'amélioration dans ses statistiques. Le catalogue de debug reste immédiat.
+
+La lumière du paquet utilise lumiere_ouverture.gd et lumiere_ouverture.gdshader. Un CanvasLayer indépendant ajoute un halo orange sur tout l’écran : il monte pendant les secousses, culmine à la déchirure puis disparaît en 0,6 seconde. Le mélange additif éclaircit le menu sans masquer les clics.
+Les sons commun / rare sont désormais PIZZI04 / PIZZI00. La légendaire utilise Achievement de mdkieran, joué par SonsInterface pour terminer sa résonance même après sélection.
+
+
+Le son épique est maintenant la troisième variante de Up (upshort.wav), renommée revelation_epique.wav. Les lecteurs des révélations sont rattachés à SonsInterface pour ne pas couper leur fin lorsque le menu se ferme ; chaque lecteur se supprime à la fin du son.
+
+
+Habillage des boosters : booster.gdshader éclaire davantage le métal et dessine un sceau circulaire / losange derrière le chiffre. Le reflet mobile apparaît au survol. booster_apercu.gd reçoit niveau_eclat (0 à 3) depuis la boutique : cette rareté augmente le halo, les braises, la montée et l’inclinaison du visuel. La zone cliquable reste fixe. booster_bonus.gdshader conserve le même habillage pendant la déchirure.
+
+
+Les faces des cartes distinguent désormais leur rareté : nom dans l’en-tête, filet coloré (double dès rare), coins gravés et médaillon lumineux autour du pictogramme. Les épiques et légendaires ajoutent des étoiles animées, avec une intensité croissante. carte_amelioration.gd transmet le rang et la position réelle de l’illustration à carte_amelioration.gdshader ; les cartes compactes du Carnet conservent le même habillage. Le dos reste neutre jusqu’au retournement grâce à rarete_coloree. Au survol, les cartes sélectionnables se soulèvent davantage selon la rareté ; celles du Carnet gardent leur taille et position.
+
+
+Refonte métal / parchemin : la partie haute de carte_amelioration.gdshader dessine une plaque brossée sombre, teintée selon la rareté. La séparation suit la position du premier texte (durée si visible, sinon titre), pour conserver les informations sur le parchemin même dans le Carnet. pictogramme_metal.gdshader transforme la silhouette du SVG en emblème clair avec un biseau simulé par les variations d’alpha. Chaque carte possède son matériau, et le script conserve une marge autour du pictogramme. Le relief est une illusion 2D, sans éclairage PBR réel ni nouvelle texture téléchargée.
+
+
+Le Carnet utilise désormais fond_carnet.gdshader : métal graphite brossé, double filet cuivré et encarts distincts pour les deux familles de bonus. Le fond bordeaux partagé des autres écrans reste dans fond_menu_bonus.gdshader. Les cartes acquises sont contenues dans carte_carnet.gd : taille visuelle réduite à 60 %, avec une copie agrandie au survol dans une couche au-dessus du défilement. La copie ignore les clics, ne permet aucun achat et disparaît au départ de la souris ou à la fermeture du Carnet. Aucun effet de jeu n’est modifié.
+
+
+Le Carnet harmonise ses onglets et le panneau de statistiques en graphite avec des accents cuivrés. ECHELLE_VIGNETTE dans carte_carnet.gd vaut désormais 0,5. Toutes les cartes en consultation utilisent 240 × 365, y compris les temporaires : celles-ci réservent davantage de place à leur durée en réduisant l’illustration et l’espacement, plutôt qu’en allongeant leur cadre.
+
+
+Le zoom des vignettes est désormais déterminé par leur rectangle fixe et les limites des parents qui coupent le défilement. Tous les descendants de la petite carte ignorent la souris, car leurs rectangles de mise en page restent à la taille normale malgré le dessin réduit. Un aperçu existant est conservé, sans recréer son animation à chaque image. Sortir de la fenêtre ferme l’aperçu et bloque sa réapparition jusqu’au retour de la souris. Les infobulles des statistiques et les boutons du glossaire reprennent le graphite ; bouton_glossaire.gd utilise le shader des onglets et garde le vrai Button pour la navigation manette.
+
+
+Mousse protectrice et Protection d’urgence ont désormais une durée à zéro : elles accordent immédiatement une réserve de bouclier, conservée sans limite de salle/vague. Le manager les distingue des soins instantanés : leur acquisition reste active et chaque coup réduit bouclier_restant. La fin d’une étape conserve les réserves positives et retire seulement celles épuisées. Le Carnet indique JUSQU’À ÉPUISEMENT et les PV restants. Leurs modes, raretés, puissances et pools ne changent pas.
+
+
+Les options et le catalogue des succès partagent désormais fond_carnet.gdshader avec le Carnet : graphite brossé, filets cuivrés et bords brûlés. Les boutons utilisent onglet_carnet.gdshader avec un matériau distinct par bouton. Les réglages et la page de contrôles gardent leurs scripts et actions. Les lignes de succès utilisent parchemin_succes.gdshader, séparé des cartes d’amélioration pour rester des bandeaux de parchemin, avec des raretés colorées et un état non obtenu grisé.
+

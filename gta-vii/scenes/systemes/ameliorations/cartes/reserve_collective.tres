@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/reserve_collective.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"reserve_collective"
+titre = "Réserve collective"
+description = "Un plein mural soigne aussi les victimes du camion."
+pictogramme = ExtResource("icone")
+modes = 2
+effet = "reserve_collective"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 10.0
+texte_effet = "+%s PV / victime"
+prerequis = Array[StringName]([])

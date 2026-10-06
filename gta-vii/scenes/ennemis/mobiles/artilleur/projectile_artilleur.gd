@@ -29,6 +29,8 @@ func _physics_process(delta: float) -> void:
 		var corps = impact.collider
 		if (corps.is_in_group("player") or corps.is_in_group("victime")) and corps.has_method("prendre_degats"):
 			corps.prendre_degats(degats)
+		if corps.is_in_group("collider"):
+			preload("res://scenes/effets/combat/trace_combat.gd").creer(get_parent(), impact.position, impact.normal, Color(0.045, 0.025, 0.015, 0.7), 1.0, 8.0)
 		# Une seule collision : aucune flaque et aucun dégât répété.
 		queue_free()
 		return

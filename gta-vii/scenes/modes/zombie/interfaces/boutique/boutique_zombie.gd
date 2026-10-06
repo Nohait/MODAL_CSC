@@ -10,8 +10,9 @@ func _acheter_booster(rarete: StringName) -> void:
 	StatistiquesZombie.noter_achat(avant - points)
 
 func _choisir(carte: Control) -> void:
-	if not choix_ouverts or not is_instance_valid(carte) or carte.get_parent() != cartes: return
-	super._choisir(carte)
+	if not choix_ouverts or revelation_en_cours or not is_instance_valid(carte) or carte.get_parent() != cartes: return
+	# Compter l'amélioration après sa confirmation, sans doubler les clics pendant l'animation.
+	await super._choisir(carte)
 	StatistiquesZombie.noter_amelioration()
 
 func _ready() -> void:

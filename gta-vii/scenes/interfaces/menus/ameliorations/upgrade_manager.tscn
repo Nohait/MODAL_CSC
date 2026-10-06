@@ -2,6 +2,11 @@
 
 [ext_resource type="Script" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/interfaces/menus/boutique/defi_manager.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/ameliorations/fond_revelation.gd" id="3"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/fond_revelation.gdshader" id="4"]
+
+[sub_resource type="ShaderMaterial" id="FondRevelation"]
+shader = ExtResource("4")
 
 [node name="UpgradeManager" type="CanvasLayer"]
 process_mode = 3
@@ -26,6 +31,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.025, 0.018, 0.013, 0.96)
+
+[node name="FondRevelation" type="ColorRect" parent="Menu"]
+visible = false
+material = SubResource("FondRevelation")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("3")
 
 [node name="Defilement" type="ScrollContainer" parent="Menu"]
 layout_mode = 1

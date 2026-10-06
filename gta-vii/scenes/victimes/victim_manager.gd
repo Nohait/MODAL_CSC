@@ -45,7 +45,8 @@ func register_victim(victim: CharacterBody3D) -> void:
 	# Elle continuera à suivre le joueur quand l'ancienne salle sera désactivée.
 	victim.reparent(get_node("../Escorte"), true)
 	if freed_victims.is_empty():
-		victim.follow_target = cible_deplacement if is_instance_valid(cible_deplacement) else player
+		cible_deplacement = null
+		victim.follow_target = player
 	else:
 		victim.follow_target = freed_victims[-1]
 	freed_victims.append(victim)

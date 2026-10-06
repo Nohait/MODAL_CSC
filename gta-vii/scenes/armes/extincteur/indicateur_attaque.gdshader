@@ -8,6 +8,7 @@ uniform float largeur_contour = 0.02;
 uniform float rayon_min = 0.0;
 uniform float rayon_max = 2.8;
 uniform float demi_angle = 0.2618;
+uniform float angle_interieur = 0.0;
 uniform vec2 origine_jet;
 uniform vec2 direction_jet;
 varying vec2 position_sol;
@@ -26,6 +27,11 @@ void fragment() {
 	float bord_cercle = rayon_max - distance_point;
 	float bord_interieur = distance_point - rayon_min;
 	float bord_cone = sin(demi_angle - angle) * distance_point;
+	// Double lance conserve un espace central entre ses deux secteurs.
+	if (angle_interieur > 0.0) {
+		bord_cone = min(bord_cone, sin(angle - angle_interieur) * distance_point);
+	}
+	if (angle < angle_interieur) { discard; }
 	if (bord_cercle < 0.0 || bord_interieur < 0.0 || angle > demi_angle || rayon_max <= rayon_min) {
 		discard;
 	}

@@ -1,5 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/intervention_pompiers.tscn" id="intervention"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/voiture_incendie.tscn" id="voiture_incendie"]
+
 [ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Small_1.gltf" id="petit"]
 [ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Medium_2_001.gltf" id="moyen"]
 [ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/Building_Large_2.gltf" id="grand"]
@@ -273,6 +277,7 @@ material_override = SubResource("marquage")
 position = Vector3(-32, 0, -43)
 
 [node name="ImmeubleNord1" parent="." instance=ExtResource("moyen")]
+visible = false
 position = Vector3(-16, 0, -43)
 
 [node name="ImmeubleNord2" parent="." instance=ExtResource("petit")]
@@ -330,3 +335,15 @@ material_override = SubResource("trottoir")
 position = Vector3(0, -0.08, -24)
 mesh = SubResource("cour_nord")
 material_override = ExtResource("trottoir_texture")
+
+[node name="VoitureIncendieNord" parent="." instance=ExtResource("voiture_incendie")]
+position = Vector3(12, -0.09, -33.5)
+rotation = Vector3(0, 1.4, 0)
+
+[node name="VoitureIncendieEst" parent="." instance=ExtResource("voiture_incendie")]
+position = Vector3(27, -0.09, -10)
+rotation = Vector3(0, 0.12, 0)
+
+[node name="InterventionPompiers" parent="." instance=ExtResource("intervention")]
+position = Vector3(-20, -0.08, -29)
+rotation = Vector3(0, 1.5707963, 0)

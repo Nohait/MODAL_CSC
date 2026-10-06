@@ -15,6 +15,8 @@ var annonce: VBoxContainer
 var titre: Label
 var detail: Label
 var animation: Tween
+var temps_annonce := 0.0
+var encre: ShaderMaterial
 
 func _ready() -> void:
 	CatalogueEnnemis.ennemi_enregistre.connect(_ennemi_ajoute)
@@ -35,6 +37,9 @@ func _ready() -> void:
 	titre.add_theme_color_override("font_outline_color", Color("271215"))
 	titre.add_theme_constant_override("outline_size", 8)
 	annonce.add_child(titre)
+	encre = ShaderMaterial.new()
+	encre.shader = preload("res://scenes/modes/zombie/evenements/titre_incandescent.gdshader")
+	titre.material = encre
 	detail = Label.new()
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
@@ -97,6 +102,12 @@ func _annoncer(nom: String, texte: String) -> void:
 	detail.text = texte
 	annonce.modulate.a = 0.0
 	annonce.show()
+	temps_annonce = 0.0
+	annonce.pivot_offset = annonce.size / 2.0
+	annonce.scale = Vector2.ONE * 1.08
+	var mouvement := create_tween()
+	mouvement.tween_property(annonce, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	SonsInterface.annoncer_vague(composition.evenement if composition != null else "")
 	# Le fondu est séquentiel : apparition, lecture, puis disparition.
 	animation = create_tween()
 	animation.tween_property(annonce, "modulate:a", 1.0, 0.2)
@@ -127,6 +138,9 @@ func mutation_en_cours() -> bool:
 	return composition != null and composition.evenement == "mutation" and restant > 0.0
 
 func _process(delta: float) -> void:
+	if annonce.visible:
+		temps_annonce += delta
+		encre.set_shader_parameter("horloge", temps_annonce)
 	if composition == null: return
 	# Les scripts des appliques peuvent faire scintiller leur lumière : imposer la coupure après eux.
 	for lumiere in energies:

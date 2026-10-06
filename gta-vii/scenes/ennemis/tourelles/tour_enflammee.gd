@@ -153,11 +153,15 @@ func actualiser_laser(progression: float) -> void:
 	materiau_laser.albedo_color.a = lerpf(0.12, 1.0, progression)
 
 
-func prendre_degats(degats: float) -> void:
+func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
 	if est_mort:
 		return
 	# Le bilan écoute cette perte effective ; un coup fatal ne compte pas de PV négatifs.
+	# La source distingue le jet et l’eau des coups de feu pour les combos.
+	var pompier = get_tree().get_first_node_in_group("player")
+	if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations):
+		degats *= pompier.ameliorations.effets_cartes.modifier_degats(self, source)
 	var vie_avant: float = vie
 	vie -= degats
 	vie = max(vie, 0)

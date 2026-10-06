@@ -1,6 +1,10 @@
 extends Node3D
 
 signal etat_change
+var voyant: MeshInstance3D
+var temps_voyant := 0.0
+var attente_eclaboussure := 0.0
+var detail_etat: Label3D
 const VAPEUR = preload("res://scenes/effets/combat/impact_mousse.tscn")
 @export var emplacement := "Entrée"
 @export_range(1.0, 3.5, 0.1) var hauteur := 2.7
@@ -12,10 +16,25 @@ const VAPEUR = preload("res://scenes/effets/combat/impact_mousse.tscn")
 var arme := false
 var temps_restant := 0.0
 var temps_degats := 0.0
+var utilisations := 0
+var attente_rearmement := 0.0
+var utilise := false
 @onready var zone: Area3D = $Zone
 @onready var eau: CPUParticles3D = $Eau
 
 func _ready() -> void:
+	detail_etat = preload("res://scenes/interfaces/indications/indication_equipement.gd").habiller($Etat, emplacement)
+	voyant = MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = 0.07
+	sphere.height = 0.14
+	voyant.mesh = sphere
+	var mat := StandardMaterial3D.new()
+	mat.emission_enabled = true
+	voyant.material_override = mat
+	add_child(voyant)
+	voyant.position = Vector3(0, hauteur, 0.18)
+
 	add_to_group("sprinkler")
 	# Le pied permet de garder une tête haute même près d'une cloison basse.
 	$Support.visible = sur_pied
@@ -29,7 +48,8 @@ func _ready() -> void:
 	var avance := 0.0 if sur_pied else 0.2
 	$Tete.position.z = avance
 	$Eau.position.z = avance + 0.3
-	$Etat.position.z = avance
+	# Le texte tourne vers la caméra : le garder devant le mur, même sur pied.
+	$Etat.position.z = avance + 0.65
 	# Le modèle téléchargé n'a pas de texture : lui donner une finition métallique sobre.
 	var metal := StandardMaterial3D.new()
 	metal.albedo_color = Color("a38a62")
@@ -46,6 +66,10 @@ func _ready() -> void:
 
 func armer() -> void:
 	arme = true
+	utilise = false
+	attente_rearmement = 0.0
+	var effets = _effets_cartes()
+	utilisations = 2 if effets != null and effets.valeur("circuit_secours") > 0 else 1
 	_actualiser()
 	etat_change.emit()
 
@@ -57,10 +81,19 @@ func recharger() -> void:
 	armer()
 
 func _physics_process(delta: float) -> void:
+	if attente_rearmement > 0:
+		attente_rearmement = maxf(0, attente_rearmement - delta)
+		if attente_rearmement == 0: _actualiser()
+		return
 	if arme:
 		for ennemi in zone.get_overlapping_bodies():
 			if _peut_toucher(ennemi):
-				# Un achat donne un seul déclenchement, même si plusieurs ennemis arrivent.
+				# Circuit de secours ajoute une seconde utilisation, sans nouvel achat.
+				preload("res://scenes/effets/retours/impulsion_visuelle.gd").jouer(get_parent(), zone.global_position + Vector3.UP * 0.08, Color("80dfff"), rayon)
+				utilisations -= 1
+				utilise = true
+				var effets = _effets_cartes()
+				if effets != null: effets.sprinkler_declenche(self)
 				arme = false
 				temps_restant = duree
 				temps_degats = 0.0
@@ -78,7 +111,12 @@ func _physics_process(delta: float) -> void:
 		for ennemi in zone.get_overlapping_bodies():
 			if not _peut_toucher(ennemi): continue
 			var position_vapeur: Vector3 = ennemi.global_position + Vector3.UP
-			ennemi.prendre_degats(degats_par_seconde * temps_degats)
+			var effets = _effets_cartes()
+			if effets != null:
+				effets.infliger(ennemi, degats_par_seconde * temps_degats * effets.puissance_sprinkler(self), &"eau")
+				if effets.valeur("eau_glacee") > 0 and not ennemi.est_mort and ennemi.has_method("appliquer_gel"):
+					ennemi.appliquer_gel(effets.valeur("eau_glacee"), 1.0)
+			else: ennemi.prendre_degats(degats_par_seconde * temps_degats, &"eau")
 			var vapeur = VAPEUR.instantiate()
 			get_parent().add_child(vapeur)
 			vapeur.global_position = position_vapeur
@@ -86,8 +124,15 @@ func _physics_process(delta: float) -> void:
 		temps_degats = 0.0
 	if temps_restant <= 0.0:
 		eau.emitting = false
+		if utilisations > 0:
+			arme = true
+			attente_rearmement = 5.0
 		_actualiser()
 		etat_change.emit()
+
+func _effets_cartes() -> Node:
+	var pompier = get_tree().get_first_node_in_group("player")
+	return pompier.ameliorations.effets_cartes if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations) else null
 
 func _peut_toucher(corps: Node3D) -> bool:
 	if not is_instance_valid(corps) or corps.is_queued_for_deletion(): return false
@@ -99,4 +144,20 @@ func _peut_toucher(corps: Node3D) -> bool:
 
 func _actualiser() -> void:
 	$Zone/Anneau.visible = arme or temps_restant > 0.0
-	$Etat.text = emplacement + " · " + ("Actif" if temps_restant > 0.0 else ("Armé" if arme else "Activation en boutique"))
+	detail_etat.text = "ARROSAGE EN COURS" if temps_restant > 0.0 else ("RÉARMEMENT…" if attente_rearmement > 0 else ("PRÊT" if arme else "À RECHARGER EN BOUTIQUE"))
+	detail_etat.modulate = Color("8ad8ee") if temps_restant > 0.0 else (Color("9cd5b3") if arme else Color("b6aaa0"))
+
+func _process(delta: float) -> void:
+	temps_voyant += delta
+	attente_eclaboussure = maxf(0.0, attente_eclaboussure - delta)
+	if temps_restant > 0.0 and attente_eclaboussure == 0:
+		attente_eclaboussure = 0.45
+		var point := zone.global_position + Vector3(randf_range(-1.5, 1.5), 0, randf_range(-1.5, 1.5))
+		preload("res://scenes/effets/combat/eclaboussure_eau.gd").jouer(get_parent(), point)
+		preload("res://scenes/effets/combat/trace_combat.gd").sur_sol(get_parent(), point, Color(0.4, 0.68, 0.8, 0.22), 0.8, 2.5)
+
+	var actif := temps_restant > 0.0
+	var mat: StandardMaterial3D = voyant.material_override
+	mat.albedo_color = Color("80dfff") if actif else (Color("81dba7") if arme else Color("b76c50"))
+	mat.emission = mat.albedo_color
+	mat.emission_energy_multiplier = 2.5 if actif else (0.5 + 0.4 * sin(temps_voyant * 3.0) if arme else 0.15)

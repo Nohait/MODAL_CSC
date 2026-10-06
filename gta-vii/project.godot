@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 SonsInterface="*res://scenes/systemes/audio/sons_interface.gd"
-
 CatalogueEnnemis="*res://scenes/systemes/ennemis/catalogue_ennemis.gd"
 SuccesManager="*res://scenes/systemes/succes/succes_manager.gd"
 CursorManager="*res://cursor_manager.gd"

@@ -7,4 +7,4 @@ Licence [CC0](https://polyhaven.com/license). Textures de couleur, normale OpenG
 Les murs réutilisent les textures Concrete Wall 009 présentes dans `assets/textures/decors/etage_3/`.
 
 **Worn Tile Floor**, par **Dimitrios Savva**, [Poly Haven](https://polyhaven.com/a/worn_tile_floor).
-Licence CC0. Couleur, normale OpenGL et rugosité téléchargées en 2K. Ce carrelage remplace désormais le béton dans MapTest ; les anciennes textures restent disponibles.
+Licence CC0. Couleur, normale OpenGL et rugosité téléchargées en 2K. Ce carrelage remplace désormais le béton dans Hall ; les anciennes textures restent disponibles.

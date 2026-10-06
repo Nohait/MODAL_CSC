@@ -48,7 +48,7 @@ func _ready() -> void:
 	var cadre := PanelContainer.new()
 	cadre.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color(0.045, 0.025, 0.03, 0.7)
+	fond.bg_color = Color(0.07, 0.09, 0.11, 0.85)
 	fond.border_color = Color("936443")
 	fond.set_border_width_all(1)
 	fond.set_corner_radius_all(12)
@@ -102,20 +102,12 @@ func _texte(texte: String, taille: int) -> Label:
 	return label
 
 func _bouton(texte: String, couleur := Color("efd9b5")) -> Button:
-	var bouton := Button.new()
+	var bouton := preload("res://scenes/interfaces/menus/glossaire/bouton_glossaire.gd").new()
+	bouton.accent = couleur
 	bouton.text = texte
 	bouton.custom_minimum_size.y = 40
 	bouton.add_theme_color_override("font_color", couleur)
 	bouton.add_theme_color_override("font_disabled_color", Color("88786f"))
-	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("351a20") if etat in ["normal", "disabled"] else Color("603032")
-		style.border_color = couleur.darkened(0.4) if etat == "normal" else couleur
-		style.set_border_width_all(1)
-		style.set_corner_radius_all(5)
-		style.content_margin_left = 12
-		style.content_margin_right = 12
-		bouton.add_theme_stylebox_override(etat, style)
 	return bouton
 
 func actualiser() -> void:

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/equipe_soutien.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"equipe_soutien"
+titre = "Équipe de soutien"
+description = "Les victimes protégées accélèrent la recharge."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "equipe_soutien"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 3.0
+texte_effet = "+%s %% de recharge / victime"
+prerequis = Array[StringName]([])

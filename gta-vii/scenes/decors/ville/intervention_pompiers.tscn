@@ -1,0 +1,242 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scenes/decors/ville/intervention_pompiers.gd" id="script"]
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/pompier_intervention.tscn" id="pompier"]
+[ext_resource type="PackedScene" path="res://assets/modeles/camion_pompier/camion_pompier.glb" id="camion"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/wall_window_centered_large_03.glb" id="fenetre"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/wall_door_centered_large_01.glb" id="porte"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/crown_standard_standard_01.glb" id="corniche"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/fire_hydrant.glb" id="borne"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/street_lamp_01.glb" id="lampadaire"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/concrete_road_barrier_02.glb" id="barriere"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention/old_tyre.glb" id="pneu"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/flamme_animee.gdshader" id="feu"]
+[ext_resource type="Texture2D" path="res://assets/textures/feu/mikodrak/feu_anime.png" id="animation"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="beton"]
+[ext_resource type="Shader" path="res://scenes/effets/combat/trace_combat.gdshader" id="trace"]
+[sub_resource type="ShaderMaterial" id="flamme"]
+shader = ExtResource("feu")
+shader_parameter/animation = ExtResource("animation")
+shader_parameter/decalage = 1.3
+[sub_resource type="QuadMesh" id="langue"]
+size = Vector2(1.7, 3.0)
+material = SubResource("flamme")
+[sub_resource type="BoxMesh" id="batiment"]
+size = Vector3(8, 6, 15)
+[sub_resource type="ShaderMaterial" id="suie"]
+shader = ExtResource("trace")
+shader_parameter/teinte = Color(0.035, 0.025, 0.02, 0.65)
+shader_parameter/graine = 4.0
+[sub_resource type="PlaneMesh" id="tache"]
+size = Vector2(2, 3)
+[sub_resource type="StandardMaterial3D" id="mouille"]
+transparency = 1
+albedo_color = Color(0.12, 0.16, 0.18, 0.25)
+roughness = 0.7
+metallic_specular = 0.12
+[sub_resource type="CylinderMesh" id="flaque"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.006
+radial_segments = 24
+[node name="InterventionPompiers" type="Node3D"]
+script = ExtResource("script")
+[node name="Pompiers" type="Node3D" parent="."]
+[node name="Lancier" parent="Pompiers" instance=ExtResource("pompier")]
+position = Vector3(-2.2, 0, -2)
+rotation = Vector3(0, -1.5707963, 0)
+[node name="Equipier" parent="Pompiers" instance=ExtResource("pompier")]
+position = Vector3(-3.3, 0, -2.7)
+rotation = Vector3(0, -1.5707963, 0)
+hauteur_mains = 1.25
+avance_mains = 0.4
+[node name="Camion" parent="." instance=ExtResource("camion")]
+position = Vector3(0, 0, 3)
+scale = Vector3(9.61653, 9.61653, 9.61653)
+[node name="GyrophareBleu" type="OmniLight3D" parent="."]
+position = Vector3(-0.7, 2.75, 5.1)
+light_color = Color(0.06, 0.3, 1, 1)
+light_energy = 1.5
+omni_range = 8.0
+[node name="GyrophareRouge" type="OmniLight3D" parent="."]
+position = Vector3(0.7, 2.75, 5.1)
+light_color = Color(1, 0.06, 0.015, 1)
+light_energy = 1.5
+omni_range = 8.0
+[node name="BorneIncendie" parent="." instance=ExtResource("borne")]
+position = Vector3(-4.5, 0.05, 5)
+[node name="Batiment" type="Node3D" parent="."]
+position = Vector3(7.5, 0.08, 0)
+[node name="CibleLance" type="Marker3D" parent="Batiment"]
+position = Vector3(6.75, 4.5, 0)
+[node name="Volume" type="MeshInstance3D" parent="Batiment"]
+position = Vector3(11.15, 3, 3)
+mesh = SubResource("batiment")
+material_override = ExtResource("beton")
+
+[node name="Module0_0" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 0, -3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module0_1" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 0, 0)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module0_2" parent="Batiment" instance=ExtResource("porte")]
+position = Vector3(7, 0, 3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module0_3" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 0, 6)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module0_4" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 0, 9)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module1_0" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 3, -3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module1_1" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 3, 0)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module1_2" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 3, 3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module1_3" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 3, 6)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Module1_4" parent="Batiment" instance=ExtResource("fenetre")]
+position = Vector3(7, 3, 9)
+rotation = Vector3(0, -1.5707963, 0)
+
+
+
+
+
+
+[node name="Corniche0" parent="Batiment" instance=ExtResource("corniche")]
+position = Vector3(7, 6, -3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Corniche1" parent="Batiment" instance=ExtResource("corniche")]
+position = Vector3(7, 6, 0)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Corniche2" parent="Batiment" instance=ExtResource("corniche")]
+position = Vector3(7, 6, 3)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Corniche3" parent="Batiment" instance=ExtResource("corniche")]
+position = Vector3(7, 6, 6)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Corniche4" parent="Batiment" instance=ExtResource("corniche")]
+position = Vector3(7, 6, 9)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="FlammesFenetre" type="Node3D" parent="Batiment"]
+position = Vector3(6.65, 2.0, 6)
+[node name="Plan1" type="MeshInstance3D" parent="Batiment/FlammesFenetre"]
+rotation = Vector3(0, -1.5707963, 0)
+mesh = SubResource("langue")
+cast_shadow = 0
+[node name="Plan2" type="MeshInstance3D" parent="Batiment/FlammesFenetre"]
+rotation = Vector3(0, -0.8, 0)
+mesh = SubResource("langue")
+cast_shadow = 0
+[node name="LueurIncendie" type="OmniLight3D" parent="Batiment/FlammesFenetre"]
+light_color = Color(1, 0.25, 0.02, 1)
+light_energy = 2.0
+omni_range = 7.0
+
+[node name="Lampadaire0" parent="." instance=ExtResource("lampadaire")]
+position = Vector3(-3, 0.05, 10)
+rotation = Vector3(0, 0, 0)
+[node name="Lumiere" type="OmniLight3D" parent="Lampadaire0"]
+position = Vector3(0, 3.5, 0)
+light_color = Color(1, 0.76, 0.48, 1)
+light_energy = 1.4
+omni_range = 8.0
+
+[node name="Lampadaire1" parent="." instance=ExtResource("lampadaire")]
+position = Vector3(4, 0.05, 12)
+rotation = Vector3(0, 0, 0)
+[node name="Lumiere" type="OmniLight3D" parent="Lampadaire1"]
+position = Vector3(0, 3.5, 0)
+light_color = Color(1, 0.76, 0.48, 1)
+light_energy = 1.4
+omni_range = 8.0
+
+[node name="Lampadaire2" parent="." instance=ExtResource("lampadaire")]
+position = Vector3(3, 0.05, -8)
+rotation = Vector3(0, 0, 0)
+[node name="Lumiere" type="OmniLight3D" parent="Lampadaire2"]
+position = Vector3(0, 3.5, 0)
+light_color = Color(1, 0.76, 0.48, 1)
+light_energy = 1.4
+omni_range = 8.0
+
+[node name="Barriere0" parent="." instance=ExtResource("barriere")]
+position = Vector3(1.5, -0.08, -6)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Barriere1" parent="." instance=ExtResource("barriere")]
+position = Vector3(1.5, -0.08, -4)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Barriere2" parent="." instance=ExtResource("barriere")]
+position = Vector3(1.5, -0.08, 9)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Barriere3" parent="." instance=ExtResource("barriere")]
+position = Vector3(1.5, -0.08, 11)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Pneu0" parent="." instance=ExtResource("pneu")]
+position = Vector3(0, -0.08, -10)
+rotation = Vector3(1.5707963, 0.5, 0)
+[node name="Suie0" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.075, -10)
+rotation = Vector3(0, 0.5, 0)
+mesh = SubResource("tache")
+material_override = SubResource("suie")
+
+[node name="Pneu1" parent="." instance=ExtResource("pneu")]
+position = Vector3(1, -0.08, -11)
+rotation = Vector3(1.5707963, 1.3, 0)
+[node name="Suie1" type="MeshInstance3D" parent="."]
+position = Vector3(1, -0.075, -11)
+rotation = Vector3(0, 1.3, 0)
+mesh = SubResource("tache")
+material_override = SubResource("suie")
+
+[node name="Pneu2" parent="." instance=ExtResource("pneu")]
+position = Vector3(-1, -0.08, -9)
+rotation = Vector3(1.5707963, 2, 0)
+[node name="Suie2" type="MeshInstance3D" parent="."]
+position = Vector3(-1, -0.075, -9)
+rotation = Vector3(0, 2, 0)
+mesh = SubResource("tache")
+material_override = SubResource("suie")
+
+[node name="SolMouille0" type="MeshInstance3D" parent="."]
+position = Vector3(-2, -0.075, -1)
+scale = Vector3(1.6, 1, 0.6)
+mesh = SubResource("flaque")
+material_override = SubResource("mouille")
+
+[node name="SolMouille1" type="MeshInstance3D" parent="."]
+position = Vector3(2, -0.075, 0)
+scale = Vector3(0.7, 1, 1.8)
+mesh = SubResource("flaque")
+material_override = SubResource("mouille")
+
+[node name="SolMouille2" type="MeshInstance3D" parent="."]
+position = Vector3(-1, -0.075, 6)
+scale = Vector3(1.2, 1, 0.5)
+mesh = SubResource("flaque")
+material_override = SubResource("mouille")

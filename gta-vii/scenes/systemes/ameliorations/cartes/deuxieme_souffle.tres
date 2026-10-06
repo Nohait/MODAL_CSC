@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/deuxieme_souffle.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"deuxieme_souffle"
+titre = "Deuxième souffle"
+description = "Une élimination après un dash accélère le suivant."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "deuxieme_souffle"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 30.0
+texte_effet = "−%s %% du délai de dash"
+prerequis = Array[StringName]([])

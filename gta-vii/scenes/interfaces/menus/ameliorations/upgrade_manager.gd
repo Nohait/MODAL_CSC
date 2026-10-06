@@ -8,18 +8,20 @@ signal ameliorations_changees
 @export_range(1, 20) var prix_commun := 1
 @export_range(1, 20) var prix_rare := 2
 @export_range(1, 20) var prix_epique := 3
+@export_range(1, 20) var prix_legendaire := 5
 @export_range(1, 20) var prix_temporaire := 1
 @export_group("Boutique — puissance des raretés")
 # 50 % donne la moitié du bonus de base ; une carte dégâts à +20 % donne +10 %.
 @export_range(0.0, 300.0, 10.0) var puissance_commune := 50.0
 @export_range(0.0, 300.0, 10.0) var puissance_rare := 100.0
 @export_range(0.0, 300.0, 10.0) var puissance_epique := 200.0
-@export_group("Tirage — poids commun / rare / épique")
-# X = commun, Y = rare, Z = épique. Les proportions sont recalculées sur les cartes disponibles.
-@export var poids_booster_commun := Vector3(88, 11, 1)
-@export var poids_booster_rare := Vector3(25, 65, 10)
-@export var poids_booster_epique := Vector3(5, 25, 70)
-@export var poids_booster_temporaire := Vector3(65, 30, 5)
+@export_group("Tirage — poids commun / rare / épique / légendaire")
+# X = commun, Y = rare, Z = épique, W = légendaire. Les prérequis filtrent d'abord le pool.
+@export var poids_booster_commun := Vector4(88, 10.9, 1, 0.1)
+@export var poids_booster_rare := Vector4(25, 64, 10, 1)
+@export var poids_booster_epique := Vector4(5, 22, 65, 8)
+@export var poids_booster_legendaire := Vector4(0, 20, 50, 30)
+@export var poids_booster_temporaire := Vector4(65, 30, 5, 0)
 
 const TIRAGE = preload("res://scenes/systemes/ameliorations/tirage_ameliorations.gd")
 const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
@@ -31,6 +33,7 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_bout
 @onready var escorte = $"../VictimManager"
 @onready var defis = $DefiManager
 @onready var menu: Control = $Menu
+@onready var fond_revelation: ColorRect = $Menu/FondRevelation
 @onready var cartes: GridContainer = $Menu/Defilement/Centre/Marge/Contenu/Cartes
 var extincteur_mural: Node3D
 @onready var monnaie = get_node("../Monnaie")
@@ -39,6 +42,8 @@ var niveaux: Dictionary = {}
 # Historique de la partie : une carte unique consommée ne redevient pas achetable.
 var cartes_obtenues: Dictionary = {}
 var bonus_cumules_pourcent: Dictionary = {}
+# Réunir les cartes par comportement permet à plusieurs définitions de partager un effet.
+var effets_actifs: Dictionary = {}
 # Le récapitulatif garde la rareté et le gain réel de chaque acquisition.
 var acquisitions: Array[Dictionary] = []
 var points := 0
@@ -47,6 +52,7 @@ var points_abondants_test := false
 const POINTS_BOUTIQUE_TEST := 999
 var boutique_ouverte := false
 var choix_ouverts := false
+var revelation_en_cours := false
 var souris_avant: int
 var animation: Tween
 var charge_de_base: float
@@ -63,12 +69,18 @@ var sirene_timer := 0.0
 var sirene_definition: Amelioration
 var rayon_sirene := 0.0
 var retours_bonus: CanvasLayer
+var effets_cartes: Node
 
 
 func _ready() -> void:
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	menu.hide()
 	joueur.ameliorations = self
+	# Ce nœud suit le joueur ; les zones qu’il crée restent dans la salle.
+	effets_cartes = preload("res://scenes/systemes/ameliorations/effets_cartes.gd").new()
+	effets_cartes.name = "EffetsCartes"
+	effets_cartes.gestion = self
+	joueur.add_child(effets_cartes)
 	escorte.escort_changed.connect(_actualiser_vitesse_escorte)
 	retours_bonus = preload("res://scenes/interfaces/hud/retours_bonus.tscn").instantiate()
 	retours_bonus.joueur = joueur
@@ -112,6 +124,7 @@ func offres_boosters() -> Array[Dictionary]:
 		{"id": &"commun", "titre": "Commun", "couleur": CATALOGUE.COULEURS[&"commun"], "prix": prix_commun, "puissance": puissance_commune, "symbole": "I", "categorie": "permanent", "contenu": "3 choix · surtout communes"},
 		{"id": &"rare", "titre": "Rare", "couleur": CATALOGUE.COULEURS[&"rare"], "prix": prix_rare, "puissance": puissance_rare, "symbole": "II", "categorie": "permanent", "contenu": "3 choix · surtout rares"},
 		{"id": &"epique", "titre": "Épique", "couleur": CATALOGUE.COULEURS[&"epique"], "prix": prix_epique, "puissance": puissance_epique, "symbole": "III", "categorie": "permanent", "contenu": "3 choix · surtout épiques"},
+		{"id": &"legendaire", "titre": "Légendaire", "couleur": CATALOGUE.COULEURS[&"legendaire"], "prix": prix_legendaire, "puissance": 200.0, "symbole": "IV", "categorie": "permanent", "contenu": "3 choix · épiques et légendaires"},
 		{"id": &"temporaire", "titre": "Intervention", "couleur": CATALOGUE.COULEURS[&"temporaire"], "prix": prix_temporaire, "puissance": 100.0, "symbole": "+", "categorie": "temporaire", "contenu": "%d choix · soins et protection" % mini(3, catalogue_ameliorations.disponibles(mode_jeu, "temporaire").size())}
 	]
 
@@ -166,6 +179,9 @@ func _acheter_booster(rarete: StringName) -> void:
 	if propositions.is_empty():
 		_actualiser_boutique("Aucune carte disponible dans cette catégorie.")
 		return
+	if rarete == &"legendaire" and not _legendaire_disponible():
+		_actualiser_boutique("Aucune légendaire disponible : ses prérequis manquent ou vous les possédez déjà toutes.")
+		return
 	if rarete == &"rare_gratuit":
 		if defis.boosters_rares_gratuits <= 0: return
 		defis.boosters_rares_gratuits -= 1
@@ -185,15 +201,21 @@ func _acheter_booster(rarete: StringName) -> void:
 	match rarete:
 		&"rare": poids = poids_booster_rare
 		&"epique": poids = poids_booster_epique
+		&"legendaire": poids = poids_booster_legendaire
 		&"temporaire": poids = poids_booster_temporaire
 	# Chaque carte reçoit sa propre rareté ; la couleur du booster ne l'impose plus.
-	var choix := TIRAGE.tirer(propositions, poids, Vector3(puissance_commune, puissance_rare, puissance_epique))
+	var choix := TIRAGE.tirer(propositions, poids, Vector4(puissance_commune, puissance_rare, puissance_epique, 200.0))
 	await boutique.animer_ouverture(rarete)
-	_afficher_cartes(choix)
+	_afficher_cartes(choix, true)
 
-func _afficher_cartes(propositions: Array) -> void:
+func _afficher_cartes(propositions: Array, avec_revelation := false) -> void:
 	boutique.hide()
-	for proposition in propositions:
+	var ordre := propositions.duplicate()
+	if avec_revelation:
+		# Trier après le tirage conserve les probabilités ; seule la présentation change.
+		ordre.sort_custom(func(a, b): return TIRAGE.RARETES.find(StringName(a.rarete)) < TIRAGE.RARETES.find(StringName(b.rarete)))
+		fond_revelation.preparer()
+	for proposition in ordre:
 		var definition: Amelioration = proposition.definition
 		var carte = CARTE.instantiate()
 		carte.set_meta("multiplicateur", proposition.multiplicateur)
@@ -201,6 +223,12 @@ func _afficher_cartes(propositions: Array) -> void:
 		if catalogue_debug and definition.obtention_unique and cartes_obtenues.has(definition.identifiant):
 			carte.lecture_seule = true
 			carte.statut = "DÉJÀ OBTENUE"
+		if not prerequis_remplis(definition):
+			carte.lecture_seule = true
+			var titres := PackedStringArray()
+			for id in definition.prerequis:
+				if not cartes_obtenues.has(id): titres.append(catalogue_ameliorations.trouver(id).titre)
+			carte.statut = "REQUIERT : " + ", ".join(titres)
 		carte.titre = definition.titre
 		carte.description = definition.description
 		carte.illustration = definition.pictogramme
@@ -209,12 +237,43 @@ func _afficher_cartes(propositions: Array) -> void:
 		carte.effet_affiche = formater_effet(definition.identifiant, definition.valeur * proposition.multiplicateur)
 		carte.duree_affichee = texte_duree(definition.duree) if definition.type_bonus == "temporaire" else ""
 		carte.selected.connect(_choisir.bind(carte))
+		if avec_revelation:
+			carte.revelee.connect(fond_revelation.accentuer)
 		cartes.add_child(carte)
-	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "DEBUG · Choix gratuit à 100 % · Les cartes uniques déjà obtenues sont désactivées." if catalogue_debug else "Choisissez une carte. Les soins sont immédiats ; les autres effets indiquent leur durée."
+		if avec_revelation:
+			carte.preparer_revelation()
+	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "DEBUG · Choix gratuit à 100 % · Les cartes déjà obtenues ou sans leurs prérequis sont désactivées." if catalogue_debug else "Choisissez une carte. Les soins sont immédiats ; les autres effets indiquent leur durée."
 	menu.show()
+	if avec_revelation:
+		_reveler_cartes()
+
+func _reveler_cartes() -> void:
+	revelation_en_cours = true
+	# Attendre le calcul du GridContainer pour pivoter autour du vrai centre.
+	await get_tree().process_frame
+	var derniere_sortie: Tween
+	var origine := menu.get_global_transform() * (menu.size / 2.0)
+	for i in cartes.get_child_count():
+		derniere_sortie = cartes.get_child(i).sortir_du_paquet(origine, i * 0.07)
+	if derniere_sortie:
+		await derniere_sortie.finished
+	for carte in cartes.get_children():
+		if carte.rarete == "legendaire":
+			for autre in cartes.get_children():
+				if autre != carte:
+					create_tween().tween_property(autre, "modulate", Color(0.68, 0.68, 0.68), 0.15)
+		await carte.reveler()
+		if carte.rarete == "legendaire":
+			for autre in cartes.get_children():
+				create_tween().tween_property(autre, "modulate", Color.WHITE, 0.2)
+		await get_tree().create_timer(0.12).timeout
+	for carte in cartes.get_children():
+		carte.terminer_revelation()
+	revelation_en_cours = false
 
 func ouvrir_catalogue_debug() -> void:
 	if not boutique_ouverte or choix_ouverts: return
+	fond_revelation.hide()
 	catalogue_debug = true
 	choix_ouverts = true
 	rarete_courante = &"rare"
@@ -226,9 +285,18 @@ func ouvrir_catalogue_debug() -> void:
 	_afficher_cartes(propositions)
 
 func _choisir(carte: Control) -> void:
-	if not choix_ouverts or carte.get_parent() != cartes: return
+	if not choix_ouverts or revelation_en_cours or carte.get_parent() != cartes: return
 	rarete_courante = carte.rarete
 	multiplicateur_choix_courant = carte.get_meta("multiplicateur", 1.0)
+	if not catalogue_debug:
+		revelation_en_cours = true
+		fond_revelation.accentuer(StringName(carte.rarete))
+		for autre in cartes.get_children():
+			if autre != carte:
+				autre.consumer()
+		var confirmation: Tween = carte.confirmer_acquisition(menu.get_global_transform() * (menu.size / 2.0))
+		await confirmation.finished
+		revelation_en_cours = false
 	appliquer_amelioration(carte.identifiant)
 	_retour_boutique()
 	_actualiser_boutique("Carte appliquée. Vous pouvez acheter autre chose ou continuer.")
@@ -265,11 +333,12 @@ func appliquer_amelioration(identifiant: StringName) -> void:
 	var definition := catalogue_ameliorations.trouver(identifiant)
 	if definition == null or not catalogue_ameliorations.disponibles(mode_jeu).has(definition): return
 	if definition.obtention_unique and cartes_obtenues.has(identifiant): return
+	if not prerequis_remplis(definition): return
 	cartes_obtenues[identifiant] = true
 	# Même le debug respecte l'effet fixe et l'obtention unique.
 	var gain := definition.valeur * (multiplicateur_choix_courant if definition.puissance_variable else 1.0)
 	var rarete_acquisition := rarete_courante if definition.puissance_variable else StringName(definition.rarete)
-	if definition.type_bonus == "temporaire" and definition.duree == 0:
+	if definition.type_bonus == "temporaire" and definition.duree == 0 and definition.effet not in ["bouclier_camion", "bouclier_joueur"]:
 		# Un soin n’est pas un bonus actif : son effet est appliqué une seule fois.
 		_appliquer_soin(definition.effet, gain)
 	else:
@@ -285,12 +354,30 @@ func _appliquer_soin(effet: String, gain: float) -> void:
 		joueur.BarreDeVie.value = minf(joueur.BarreDeVie.value + gain, joueur.BarreDeVie.max_value)
 	elif effet == "soin_victimes":
 		if mode_jeu == "zombie":
-			room_manager.refuge.soigner_victimes(gain)
+			room_manager.refuge.soigner_victimes(gain, effets_cartes.valeur("priorite_blesses") > 0)
 		else:
+			var vivantes: Array = []
 			for victime in escorte.freed_victims:
-				if is_instance_valid(victime) and not victime.est_morte:
-					victime.vie = minf(victime.vie + gain, victime.vie_max)
-					victime.actualiser_barre_vie()
+				if is_instance_valid(victime) and not victime.est_morte: vivantes.append(victime)
+			repartir_soins(vivantes, gain, effets_cartes.valeur("priorite_blesses") > 0)
+			for victime in vivantes: victime.actualiser_barre_vie()
+
+# Les deux modes utilisent le même calcul, avec des nœuds ou des dictionnaires.
+static func repartir_soins(victimes: Array, gain: float, prioritaire: bool) -> void:
+	if not prioritaire:
+		for victime in victimes: victime.vie = minf(victime.vie_max, victime.vie + gain)
+		return
+	var reserve := 0.0
+	for victime in victimes:
+		reserve += minf(gain, maxf(0, victime.vie_max - victime.vie))
+	# Trier une COPIE préserve la file d'escorte et l'ordre des occupants du camion.
+	var ordre := victimes.duplicate()
+	ordre.sort_custom(func(a, b): return a.vie < b.vie)
+	for victime in ordre:
+		var soin := minf(reserve, victime.vie_max - victime.vie)
+		victime.vie += soin
+		reserve -= soin
+		if reserve <= 0: break
 
 func recalculer_effets() -> void:
 	var totaux: Dictionary = {}
@@ -315,9 +402,11 @@ func recalculer_effets() -> void:
 			sirene_definition = definition
 			# Plusieurs sirènes élargissent le rayon, sans multiplier les appels.
 			rayon_sirene = maxf(rayon_sirene, acquisition.gain)
+	effets_actifs = totaux
 	extincteur.ralentissement_jet = minf(80.0, totaux.get("jet_givre", 0.0))
 	extincteur.bonus_dernier_souffle = totaux.get("dernier_souffle", 0.0)
 	extincteur.particles.process_material.color = Color(0.06, 0.48, 1.0) if extincteur.ralentissement_jet > 0.0 else extincteur.couleur_jet_initiale
+	extincteur.regler_variantes(totaux.get("jet_pulse", 0.0) > 0, totaux.get("double_lance", 0.0) > 0)
 	bonus_vitesse_escorte = 1.0 + totaux.get("escorte_agile", 0.0) / 100.0
 	_actualiser_vitesse_escorte()
 	_actualiser_bouclier_joueur()
@@ -339,15 +428,25 @@ func recalculer_effets() -> void:
 
 func _commencer_etape(_salle: Node3D) -> void:
 	etape_en_cours = true
+	effets_cartes.reinitialiser_etape()
+	effets_cartes._suivre_victimes()
 	sirene_timer = sirene_definition.intervalle if sirene_definition != null else 0.0
 	for acquisition in acquisitions:
 		acquisition.commence = true
 
 func _terminer_etape(_salle: Node3D) -> void:
 	etape_en_cours = false
+	if mode_jeu == "zombie": effets_cartes.entretien()
+	for zone in get_tree().get_nodes_in_group("zones_mousse"):
+		if room_manager.salle_actuelle.is_ancestor_of(zone): zone.queue_free()
 	if mode_jeu == "zombie" and is_instance_valid(room_manager.refuge):
 		room_manager.refuge.sirene_restante = 0.0
 	for acquisition in acquisitions.duplicate():
+		# Une protection ne vieillit pas : seuls les dégâts consomment ses points.
+		if acquisition.definition.effet in ["bouclier_camion", "bouclier_joueur"]:
+			if acquisition.bouclier_restant <= 0.0:
+				acquisitions.erase(acquisition)
+			continue
 		if acquisition.definition.type_bonus != "temporaire" or not acquisition.commence: continue
 		acquisition.commence = false
 		acquisition.restant -= 1
@@ -365,7 +464,8 @@ func formater_pourcentage(valeur: float) -> String:
 
 func formater_effet(identifiant: StringName, gain: float) -> String:
 	var definition := catalogue_ameliorations.trouver(identifiant)
-	return definition.texte_effet % formater_pourcentage(gain) if definition != null else ""
+	if definition == null: return ""
+	return definition.texte_effet % formater_pourcentage(gain) if "%s" in definition.texte_effet else definition.texte_effet
 
 func texte_effet(identifiant: StringName, _nombre: int = 1) -> String:
 	return formater_effet(identifiant, bonus_cumules_pourcent.get(identifiant, 0.0))
@@ -384,7 +484,7 @@ func get_resume() -> String:
 func _actualiser_vitesse_escorte() -> void:
 	# Le signal couvre aussi les victimes libérées après l'achat de la carte.
 	for victime in escorte.freed_victims:
-		if is_instance_valid(victime): victime.multiplicateur_vitesse = bonus_vitesse_escorte
+		if is_instance_valid(victime): victime.multiplicateur_vitesse = bonus_vitesse_escorte * effets_cartes.multiplicateur_courage()
 
 func _actualiser_bouclier_joueur() -> void:
 	var restant := 0.0
@@ -395,6 +495,8 @@ func _actualiser_bouclier_joueur() -> void:
 
 func absorber_degats_joueur(degats: float) -> float:
 	var degats_avant := degats
+	var reserve_avant := 0.0
+	for protection in boucliers_joueur: reserve_avant += protection.bouclier_restant
 	# Dépenser les réserves les plus anciennes d'abord ; seul l'excédent touche les PV.
 	for protection in boucliers_joueur:
 		var absorption := minf(degats, protection.bouclier_restant)
@@ -403,6 +505,8 @@ func absorber_degats_joueur(degats: float) -> float:
 		if degats <= 0.0: break
 	_actualiser_bouclier_joueur()
 	if degats < degats_avant: retours_bonus.afficher_impact_bouclier()
+	if reserve_avant > 0 and degats_avant >= reserve_avant and effets_cartes.valeur("retour_pression") > 0:
+		effets_cartes.repousser(joueur.global_position, 3.0, effets_cartes.valeur("retour_pression"))
 	return degats
 
 func utiliser_secours() -> bool:
@@ -429,10 +533,20 @@ func _cartes_achetables(type_bonus: String) -> Array[Amelioration]:
 	var resultat: Array[Amelioration] = []
 	for definition in catalogue_ameliorations.disponibles(mode_jeu, type_bonus):
 		if definition.obtention_unique and cartes_obtenues.has(definition.identifiant): continue
+		if not prerequis_remplis(definition): continue
 		resultat.append(definition)
 	return resultat
 
+func prerequis_remplis(definition: Amelioration) -> bool:
+	for id in definition.prerequis:
+		if not cartes_obtenues.has(id): return false
+	return true
+
+func _legendaire_disponible() -> bool:
+	return _cartes_achetables("permanent").any(func(carte): return carte.rarete == "legendaire")
+
 func _actualiser_pieces(_solde: int = 0) -> void:
+	boutique.actualiser_legendaire(_legendaire_disponible())
 	if not is_instance_valid(extincteur_mural):
 		# La map est créée après la boutique : chercher l'objet au premier affichage.
 		for objet in get_tree().get_nodes_in_group("extincteur_mural"):

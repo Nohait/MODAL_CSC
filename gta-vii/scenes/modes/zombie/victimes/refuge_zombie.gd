@@ -28,8 +28,24 @@ var sprite_bouclier: Sprite3D
 var sirene_restante := 0.0
 var rayon_sirene := 0.0
 var temps_gyrophares := 0.0
+var accueil_restant := 0.0
+var lumiere_accueil: OmniLight3D
+var lumiere_impact: OmniLight3D
+var impact_restant := 0.0
 
 func _ready() -> void:
+	lumiere_accueil = OmniLight3D.new()
+	lumiere_accueil.light_color = Color("81e6a1")
+	lumiere_accueil.light_energy = 0.0
+	lumiere_accueil.omni_range = 8.0
+	lumiere_accueil.position = Vector3(0, 1.6, 0)
+	add_child(lumiere_accueil)
+	lumiere_impact = OmniLight3D.new()
+	lumiere_impact.position = Vector3(0, 1.8, 0)
+	lumiere_impact.omni_range = 5.0
+	lumiere_impact.light_energy = 0.0
+	add_child(lumiere_impact)
+
 	for feu in $Gyrophares.get_children():
 		feu.material_override = feu.material_override.duplicate()
 	add_to_group("refuge_zombie")
@@ -108,6 +124,10 @@ func _texte(hauteur: float, taille: int) -> Label3D:
 func _physics_process(delta: float) -> void:
 	sirene_restante = maxf(0.0, sirene_restante - delta)
 	temps_gyrophares += delta
+	accueil_restant = maxf(0.0, accueil_restant - delta)
+	lumiere_accueil.light_energy = accueil_restant * 2.0
+	impact_restant = maxf(0.0, impact_restant - delta)
+	lumiere_impact.light_energy = impact_restant * 5.0
 	_actualiser_gyrophares()
 	# Le survol utilise le vrai volume 3D, même quand la caméra est inclinée.
 	var camera := get_viewport().get_camera_3d()
@@ -127,6 +147,7 @@ func _physics_process(delta: float) -> void:
 	# On attend leur arrivée : cliquer ne téléporte aucune victime.
 	for victime in escorte.freed_victims.duplicate():
 		if not is_instance_valid(victime) or victime.est_morte: continue
+		if not escorte.victimes_en_depot.has(victime): continue
 		var ecart: Vector3 = victime.global_position - global_position
 		ecart.y = 0
 		# La distance suit le bord du camion, y compris près de ses extrémités.
@@ -138,6 +159,11 @@ func _physics_process(delta: float) -> void:
 
 func prendre_degats(degats: float) -> void:
 	if victimes.is_empty() or degats <= 0.0: return
+	var effets = _effets_cartes()
+	if effets != null and effets.protection_restant > 0:
+		degats *= 1.0 - effets.valeur("zone_repli") / 100.0
+	var protection_avant := 0.0
+	for bouclier in boucliers: protection_avant += bouclier.bouclier_restant
 	var restant := maxf(0, degats)
 	# Les protections les plus anciennes absorbent le coup avant les victimes.
 	for bouclier in boucliers:
@@ -145,6 +171,8 @@ func prendre_degats(degats: float) -> void:
 		bouclier.bouclier_restant -= absorbe
 		restant -= absorbe
 		if restant == 0: break
+	if effets != null and protection_avant > 0 and degats >= protection_avant:
+		effets.camion_bouclier_brise()
 	# Le blindage réduit seulement la partie qui atteint les occupants.
 	restant *= 1.0 - clampf(reduction_degats, 0.0, 0.8)
 	victimes[-1].vie = maxf(0, victimes[-1].vie - restant)
@@ -180,11 +208,13 @@ func distance_au_bord(position_monde: Vector3) -> float:
 	var bord_z := demi_taille.z / maxf(absf(direction.z), 0.001)
 	return minf(bord_x, bord_z)
 
-func soigner_victimes(gain: float) -> void:
-	# On conserve l’ordre et on ne ressuscite pas les victimes retirées de la liste.
-	for victime in victimes:
-		victime.vie = minf(victime.vie_max, victime.vie + gain)
+func soigner_victimes(gain: float, prioritaire := false) -> void:
+	preload("res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd").repartir_soins(victimes, gain, prioritaire)
 	actualiser()
+
+func _effets_cartes() -> Node:
+	var pompier = get_tree().get_first_node_in_group("player")
+	return pompier.ameliorations.effets_cartes if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations) else null
 
 func attire(ennemi: Node3D) -> bool:
 	return sirene_restante > 0.0 and global_position.distance_to(ennemi.global_position) <= rayon_sirene
@@ -236,12 +266,10 @@ func _deposer_victime(victime: CharacterBody3D) -> void:
 	# L'ordre de libération prime toujours sur l'ordre d'arrivée au camion.
 	victimes.sort_custom(func(a, b): return a.ordre < b.ordre)
 	DEPOT.creer(victime, self)
+	# Une brève lumière verte accueille la victime, puis décroît progressivement.
+	accueil_restant = 0.8
 	escorte.freed_victims.erase(victime)
 	escorte.reorganiser_file()
-	if depot_demande:
-		# Les suivants continuent vers le camion après le retrait d’un membre.
-		for suivante in escorte.freed_victims:
-			if is_instance_valid(suivante): suivante.follow_target = self
 	escorte.escort_changed.emit()
 	victime.queue_free()
 	actualiser()
@@ -256,6 +284,8 @@ func _deposer_victime(victime: CharacterBody3D) -> void:
 	animation_compteur.parallel().tween_property(compteur, "scale", Vector3.ONE, 0.2)
 
 func _animer_impact(vie_touchee: bool) -> void:
+	impact_restant = 0.3
+	lumiere_impact.light_color = Color("f65a43") if vie_touchee else Color("5caeff")
 	if animation_impact: animation_impact.kill()
 	barre.modulate = Color.WHITE
 	sprite_bouclier.modulate = Color.WHITE

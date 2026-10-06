@@ -4,7 +4,7 @@ const NIVEAU = preload("res://scenes/jeu/main.tscn")
 const GESTIONNAIRE = preload("res://scenes/modes/zombie/gestion/vagues_zombie.gd")
 const DEBUG = preload("res://scenes/modes/zombie/interfaces/debug/debug_zombie.gd")
 @export var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
-@export var map: PackedScene = preload("res://scenes/modes/zombie/maps/map_test.tscn")
+@export var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
 const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 
 @export_group("Éclairage")

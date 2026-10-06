@@ -1,6 +1,6 @@
-# Hall de MapTest
+# Hall de Hall
 
-Le décor est placé dans `scenes/modes/zombie/maps/map_test.tscn`, sous `Navigation/Decor`.
+Le décor est placé dans `scenes/modes/zombie/maps/hall.tscn`, sous `Navigation/Decor`.
 
 ## Modèles et scènes
 
@@ -16,17 +16,17 @@ Les colonnes et gravats utilisent leurs matériaux PBR d'origine. Aucun bruit de
 
 ## Sol et murs
 
-Les matériaux propres à MapTest sont dans `assets/materiaux/hall_incendie/` :
+Les matériaux propres à Hall sont dans `assets/materiaux/hall_incendie/` :
 
 - `sol_carrelage.tres` utilise désormais **Worn Tile Floor**, par Dimitrios Savva sur Poly Haven (CC0). Couleur, normale OpenGL et rugosité sont téléchargées en 2K. Une répétition couvre deux mètres, en coordonnées du monde, sur le sol et le couloir. Le matériau standard garde les joints nets ; les traces de suie indépendantes restent au-dessus du sol.
 - `sol_beton.tres` et ses textures **Concrete Floor Damaged 01** sont conservés pour une utilisation future.
 - `mur_beton.tres` réutilise les textures **Concrete Wall 009** déjà présentes pour l'étage 3, sans modifier le matériau de cet étage.
 
-La normale donne l'impression de relief à l'éclairage ; elle ne déforme pas la géométrie. La rugosité règle les reflets. Le mur utilise une projection triplanaire en coordonnées du monde : son échelle ne dépend pas de la taille de chaque bloc. Une répétition correspond à quatre mètres (`uv1_scale = 0.25`). Les matériaux sont aussi appliqués au couloir d'entrée de MapTest.
+La normale donne l'impression de relief à l'éclairage ; elle ne déforme pas la géométrie. La rugosité règle les reflets. Le mur utilise une projection triplanaire en coordonnées du monde : son échelle ne dépend pas de la taille de chaque bloc. Une répétition correspond à quatre mètres (`uv1_scale = 0.25`). Les matériaux sont aussi appliqués au couloir d'entrée de Hall.
 
 ## Ancien sol en béton : réduction de la répétition
 
-Ce shader reste disponible, mais n'est plus appliqué à MapTest. Son mélange de textures serait inadapté aux joints réguliers du nouveau carrelage.
+Ce shader reste disponible, mais n'est plus appliqué à Hall. Son mélange de textures serait inadapté aux joints réguliers du nouveau carrelage.
 
 `assets/shaders/decors/sol_beton.gdshader` mélange trois versions de la même texture, chacune décalée et tournée d'un multiple de 90 degrés. La variante choisie dépend de la position dans le monde : le résultat reste fixe, sans animation ni nouveaux tirages pendant la partie.
 

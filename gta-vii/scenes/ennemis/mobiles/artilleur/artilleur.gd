@@ -62,6 +62,10 @@ func choisir_cible() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
+	if est_gele():
+		velocity = Vector3.ZERO
+		return
 	if est_mort: return
 	cooldown_tir = maxf(0.0, cooldown_tir - delta)
 	if etat == "preparation":

@@ -1,10 +1,10 @@
-# MapTest : un ÃƒÂ©tage habillÃƒÂ©
+# Hall : un ÃƒÂ©tage habillÃƒÂ©
 
 Cette passe concerne le mode zombie. La surface reste de 40 Ãƒâ€” 40 mÃƒÂ¨tres, avec l'entrÃƒÂ©e existante au sud et le camion au centre. Les salles du mode classique ne sont pas modifiÃƒÂ©es.
 
 ## Organisation de l'espace
 
-`scenes/modes/zombie/maps/map_test.tscn` instancie quatre nouveaux ensembles sous `Navigation/Decor`. Ils sont ÃƒÂ©ditables directement dans Godot : aucun gÃƒÂ©nÃƒÂ©rateur supplÃƒÂ©mentaire ne tourne pendant la partie.
+`scenes/modes/zombie/maps/hall.tscn` instancie quatre nouveaux ensembles sous `Navigation/Decor`. Ils sont ÃƒÂ©ditables directement dans Godot : aucun gÃƒÂ©nÃƒÂ©rateur supplÃƒÂ©mentaire ne tourne pendant la partie.
 
 - `cloisons_etage.tscn` : deux sÃƒÂ©parations ÃƒÂ  X = -10 et X = 10 mÃƒÂ©nagent un hall central de 20 mÃƒÂ¨tres de large. Chaque cÃƒÂ´tÃƒÂ© comporte deux ouvertures de quatre mÃƒÂ¨tres, ÃƒÂ  Z = -10 et Z = 10. Dans chaque aile, une cloison ÃƒÂ  Z = 0 sÃƒÂ©pare les deux piÃƒÂ¨ces et conserve une ouverture de quatre mÃƒÂ¨tres. Cela crÃƒÂ©e plusieurs chemins entre les piÃƒÂ¨ces et le hall.
 - `signaletique_etage.tscn` : panneaux Accueil, Archives, Local technique, Bureaux et Salle de repos, ainsi que deux affiches de consignes. Les noms sont dÃƒÂ©coratifs ; ces piÃƒÂ¨ces n'ont pas encore de rÃƒÂ¨gles spÃƒÂ©cifiques.
@@ -21,7 +21,7 @@ Les plinthes intÃƒÂ©rieures sont dÃƒÂ©sormais deux bandes fines sur les 
 
 Les seize marqueurs ÃƒÂ  X = -10 ou X = 10 ont ÃƒÂ©tÃƒÂ© retirÃƒÂ©s : ils se retrouvaient dans les cloisons ou leurs passages. Il reste 44 emplacements rÃƒÂ©partis entre le hall et les piÃƒÂ¨ces. Les quatre points proches du camion ÃƒÂ©taient dÃƒÂ©jÃƒÂ  retirÃƒÂ©s lors de son agrandissement.
 
-La logique des vagues est inchangÃƒÂ©e : elle prend les positions de `PointsApparition`. Pour ajuster la disposition, dÃƒÂ©placer les marqueurs dans MapTest et conserver assez d'espace autour pour les grands ennemis. Les points ne doivent pas ÃƒÂªtre placÃƒÂ©s dans les murs, les gravats ou le camion.
+La logique des vagues est inchangÃƒÂ©e : elle prend les positions de `PointsApparition`. Pour ajuster la disposition, dÃƒÂ©placer les marqueurs dans Hall et conserver assez d'espace autour pour les grands ennemis. Les points ne doivent pas ÃƒÂªtre placÃƒÂ©s dans les murs, les gravats ou le camion.
 
 ## LumiÃƒÂ¨res et traces
 
@@ -40,18 +40,18 @@ Chargement des scÃƒÂ¨nes et shaders, accÃƒÂ¨s aux quatre piÃƒÂ¨ces d
 
 ## Mobilier importÃ© des archives et du local technique
 
-`scenes/decors/hall_incendie/mobilier_pieces.tscn` regroupe les placements dans deux nÅ“uds, Archives et Technique. Cette scÃ¨ne est instanciÃ©e dans MapTest sous `Navigation/Decor/MobilierPieces`.
+`scenes/decors/hall_incendie/mobilier_pieces.tscn` regroupe les placements dans deux nÅ“uds, Archives et Technique. Cette scÃ¨ne est instanciÃ©e dans Hall sous `Navigation/Decor/MobilierPieces`.
 
 Les scÃ¨nes rÃ©utilisables sont dans `scenes/decors/hall_incendie/mobilier/` : Ã©tagÃ¨re de 2,2 m, ensemble de classeurs de 1,4 m, cartons de 85 cm et tableau Ã©lectrique de 1,5 m fixÃ© en hauteur. Chaque scÃ¨ne contient le modÃ¨le et une boÃ®te de collision simple. Les personnages contournent ainsi le mobilier lors du calcul des deux navigations. Les meubles restent prÃ¨s des murs pour dÃ©gager les passages ; la carte conserve ses dimensions.
 
 Les GLB et leurs crÃ©dits se trouvent dans `assets/modeles/decors/hall_incendie/mobilier/`. Leur Ã©chelle est uniforme et les textures originales sont conservÃ©es, avec une rÃ©solution maximale de 2K. `cartons_noircis.gd` assombrit les cartons avec une teinte rÃ©glable dans l'inspecteur et copie leurs matÃ©riaux pour prÃ©server l'import d'origine. Ce dÃ©cor ne produit ni feu ni dÃ©gÃ¢ts.
 
-Pour dÃ©placer les objets, ouvrir `mobilier_pieces.tscn`. Pour ajuster les collisions ou la teinte des cartons, ouvrir leur scÃ¨ne individuelle. Les chemins vers les quatre piÃ¨ces et les 44 points d'apparition ont Ã©tÃ© contrÃ´lÃ©s avec le mobilier installÃ©. La capture de sÃ©lection de MapTest a Ã©tÃ© actualisÃ©e.
+Pour dÃ©placer les objets, ouvrir `mobilier_pieces.tscn`. Pour ajuster les collisions ou la teinte des cartons, ouvrir leur scÃ¨ne individuelle. Les chemins vers les quatre piÃ¨ces et les 44 points d'apparition ont Ã©tÃ© contrÃ´lÃ©s avec le mobilier installÃ©. La capture de sÃ©lection de Hall a Ã©tÃ© actualisÃ©e.
 
 
 ## Foyers d'incendie décoratifs
 
-Cinq instances de `foyer_incendie.tscn` animent MapTest : étagère et cartons des archives, tableau électrique et cartons du local technique, gravats de la salle de repos. Quatre sont regroupées dans `mobilier_pieces.tscn` ; la dernière est directement sous `Navigation/Decor` de MapTest.
+Cinq instances de `foyer_incendie.tscn` animent Hall : étagère et cartons des archives, tableau électrique et cartons du local technique, gravats de la salle de repos. Quatre sont regroupées dans `mobilier_pieces.tscn` ; la dernière est directement sous `Navigation/Decor` de Hall.
 
 La scène réutilise la texture Kenney `flame_01.png` et le shader existant `fumee_hall.gdshader`. Trois CPUParticles3D produisent des flammes courtes, de la fumée ascendante et de petites braises. Chaque rampe de couleur fait apparaître puis disparaître les particules progressivement. `preprocess` remplit l'effet avant la première image pour éviter de voir le feu démarrer à vide.
 

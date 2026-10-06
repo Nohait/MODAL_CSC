@@ -303,6 +303,10 @@ func follow_target_node(delta: float) -> void:
 func prendre_degats(degats: float) -> void:
 	if est_morte:
 		return
+	var pompier = get_tree().get_first_node_in_group("player")
+	if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations):
+		degats = pompier.ameliorations.effets_cartes.degats_victime(self, degats)
+	if degats <= 0: return
 	vie = maxf(vie - degats, 0.0)
 	actualiser_barre_vie()
 	flash_degats()

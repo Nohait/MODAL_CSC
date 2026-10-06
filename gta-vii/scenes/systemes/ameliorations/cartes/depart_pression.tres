@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/depart_pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"depart_pression"
+titre = "Départ sous pression"
+description = "Le jet est renforcé après un dash."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "depart_pression"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 40.0
+texte_effet = "+%s %% de dégâts pendant 1,5 s"
+prerequis = Array[StringName]([])

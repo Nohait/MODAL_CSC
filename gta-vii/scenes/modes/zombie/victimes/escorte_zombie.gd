@@ -2,35 +2,54 @@ extends "res://scenes/victimes/victim_manager.gd"
 
 var refuge: Node3D
 var ordre_liberation := 0
+# Le dépôt concerne seulement les victimes présentes lors du clic sur le camion.
+var victimes_en_depot: Array[CharacterBody3D] = []
 
 func diriger_victime(fleche) -> void:
+	victimes_en_depot.clear()
 	if is_instance_valid(refuge) and refuge.survole:
-		refuge.depot_demande = true
-		cible_deplacement = refuge
-		# Chaque membre vise le refuge : toute la file peut y entrer.
-		for victime in freed_victims:
-			victime.follow_target = refuge
+		victimes_en_depot.assign(freed_victims)
+		cible_deplacement = null
+		reorganiser_file()
 	else:
 		if is_instance_valid(refuge): refuge.depot_demande = false
 		super.diriger_victime(fleche)
 
 func retour_nav_auto() -> void:
+	victimes_en_depot.clear()
 	if is_instance_valid(refuge): refuge.depot_demande = false
 	super.retour_nav_auto()
 
 func register_victim(victim: CharacterBody3D) -> void:
-	if not freed_victims.has(victim):
-		ordre_liberation += 1
-		victim.set_meta("ordre_liberation", ordre_liberation)
+	if freed_victims.has(victim): return
+	ordre_liberation += 1
+	victim.set_meta("ordre_liberation", ordre_liberation)
 	super.register_victim(victim)
-	if is_instance_valid(refuge) and refuge.depot_demande:
-		victim.follow_target = refuge
+	# Une nouvelle libération ne reçoit jamais l'ancien ordre de dépôt.
+	var cible: Node3D = player
+	for precedente in freed_victims:
+		if precedente == victim: break
+		if is_instance_valid(precedente) and not victimes_en_depot.has(precedente):
+			cible = precedente
+	victim.follow_target = cible
 
 func reorganiser_file() -> void:
-	if is_instance_valid(refuge) and refuge.depot_demande:
-		# Le dépôt concerne toute l'escorte, même si une victime meurt en chemin.
-		cible_deplacement = refuge
-		for victime in freed_victims:
-			if is_instance_valid(victime): victime.follow_target = refuge
-	else:
+	if not is_instance_valid(refuge):
 		super.reorganiser_file()
+		return
+	# Retirer les victimes déposées ou mortes sans modifier l'ordre des survivantes.
+	for victime in victimes_en_depot.duplicate():
+		if not is_instance_valid(victime) or not freed_victims.has(victime):
+			victimes_en_depot.erase(victime)
+	refuge.depot_demande = not victimes_en_depot.is_empty()
+	if not refuge.depot_demande:
+		super.reorganiser_file()
+		return
+	var cible: Node3D = player
+	for victime in freed_victims:
+		if not is_instance_valid(victime): continue
+		if victimes_en_depot.has(victime):
+			victime.follow_target = refuge
+		else:
+			victime.follow_target = cible
+			cible = victime

@@ -25,6 +25,7 @@ func _physics_process(delta: float) -> void:
 		# Même tirage de taille que les flaques présentes au début d'une salle.
 		flaque.choisir_taille_aleatoire()
 		flaques.add_child(flaque)
+		preload("res://scenes/effets/combat/trace_combat.gd").sur_sol(flaques, global_position, Color(0.045, 0.025, 0.015, 0.7), 1.5, 8.0)
 		queue_free()
 
 func _on_body_entered(body: Node3D) -> void:
@@ -33,5 +34,9 @@ func _on_body_entered(body: Node3D) -> void:
 		body.prendre_degats(round(multiplier * degats *100.0)/100.0)
 		queue_free()
 	if body.is_in_group("collider"): #si on rencontre un mur, le projectile disparaît
+		var rayon := PhysicsRayQueryParameters3D.create(global_position - direction * 0.8, global_position + direction * 0.8, 1)
+		var impact := get_world_3d().direct_space_state.intersect_ray(rayon)
+		if not impact.is_empty():
+			preload("res://scenes/effets/combat/trace_combat.gd").creer(flaques, impact.position, impact.normal, Color(0.045, 0.025, 0.015, 0.7), 1.0, 8.0)
 		queue_free()
 		return

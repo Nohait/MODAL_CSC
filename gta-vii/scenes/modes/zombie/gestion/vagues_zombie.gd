@@ -1,7 +1,7 @@
 extends "res://scenes/salles/room_manager.gd"
 
 var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
-var map: PackedScene = preload("res://scenes/modes/zombie/maps/map_test.tscn")
+var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
 var vague_actuelle := 0
 var vagues_terminees := 0
 var temps_vague := 0.0

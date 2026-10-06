@@ -185,6 +185,7 @@ size = Vector3(1.1, 0.15, 3.8)
 shader = ExtResource("ruban")
 
 [sub_resource type="BoxMesh" id="bande_limite"]
+subdivide_width = 24
 size = Vector3(3.8, 0.12, 0.02)
 
 [sub_resource type="BoxMesh" id="main_courante"]

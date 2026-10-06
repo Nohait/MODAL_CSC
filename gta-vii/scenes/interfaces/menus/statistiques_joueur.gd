@@ -19,10 +19,12 @@ func _ready() -> void:
 	materiau_icones = ShaderMaterial.new()
 	materiau_icones.shader = shader
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.13, 0.055, 0.055, 0.65)
-	style.border_color = Color("886044")
+	style.bg_color = Color(0.10, 0.12, 0.14, 0.92)
+	style.border_color = Color("a17b50")
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(8)
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.3)
+	style.shadow_size = 8
 	style.content_margin_left = 16
 	style.content_margin_right = 16
 	style.content_margin_top = 16
@@ -100,10 +102,12 @@ func _creer_infobulle() -> void:
 	infobulle.z_index = 100
 	infobulle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("32201e")
+	style.bg_color = Color("252d34")
 	style.border_color = Color("b18c60")
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(5)
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.4)
+	style.shadow_size = 8
 	style.content_margin_left = 12
 	style.content_margin_right = 12
 	style.content_margin_top = 8

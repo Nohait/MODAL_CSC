@@ -39,7 +39,7 @@ func _collecter(noeud: Node, options: Array[Control], manette: bool) -> void:
 	if noeud is ScrollContainer:
 		noeud.follow_focus = true
 	var carte := noeud is Control and (noeud.has_signal("selected") or noeud.has_signal("selectionne"))
-	if carte and noeud.get("lecture_seule") == true:
+	if carte and (noeud.get("lecture_seule") == true or noeud.get_meta("revelation_bloquee", false)):
 		carte = false
 	if noeud is BaseButton or carte:
 		noeud.focus_mode = Control.FOCUS_ALL if manette else Control.FOCUS_NONE

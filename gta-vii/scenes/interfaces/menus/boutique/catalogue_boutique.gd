@@ -5,6 +5,7 @@ const COULEURS = {
 	&"commun": Color("c6ac86"),
 	&"rare": Color("569ccb"),
 	&"epique": Color("af77c8"),
+	&"legendaire": Color("efc35b"),
 	&"temporaire": Color("55b5a5")
 }
-const NOMS = {&"commun": "Commun", &"rare": "Rare", &"epique": "Épique", &"temporaire": "Intervention"}
+const NOMS = {&"commun": "Commun", &"rare": "Rare", &"epique": "Épique", &"legendaire": "Légendaire", &"temporaire": "Intervention"}

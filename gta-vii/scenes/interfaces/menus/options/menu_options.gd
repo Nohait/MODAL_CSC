@@ -16,6 +16,7 @@ var focus_avant: Control
 var entrees_suspendues: Array[Dictionary] = []
 var animation: Tween
 var horloge := 0.0
+var boutons_graphite: Array[Button] = []
 
 func _ready() -> void:
 	menu.hide()
@@ -41,7 +42,45 @@ func _ready() -> void:
 	controles.commandes_changees.connect(Reglages.sauvegarder)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	papier.material = papier.material.duplicate()
+	_habiller_boutons(menu)
 	_choisir_onglet(false)
+
+func _habiller_boutons(parent: Node) -> void:
+	for enfant in parent.get_children():
+		_habiller_boutons(enfant)
+	if not parent is Button:
+		return
+	var bouton := parent as Button
+	var fond: TextureRect
+	# Réutiliser la plaque des boutons existants préserve leurs dimensions et leurs actions.
+	for enfant in bouton.get_children():
+		if enfant is TextureRect and enfant.show_behind_parent:
+			fond = enfant
+			break
+	if fond == null:
+		fond = TextureRect.new()
+		fond.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		fond.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fond.show_behind_parent = true
+		bouton.add_child(fond)
+		fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fond.texture = preload("res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png")
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://scenes/interfaces/menus/onglet_carnet.gdshader")
+	mat.set_shader_parameter("selection", 0.0)
+	mat.set_shader_parameter("largeur_bord", 4.0)
+	mat.set_shader_parameter("rayon_coin", 6.0)
+	mat.set_shader_parameter("intensite_braises", 0.3)
+	fond.material = mat
+	bouton.set_meta("fond_graphite", fond)
+	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var style := StyleBoxEmpty.new()
+		style.content_margin_left = 12
+		style.content_margin_right = 12
+		style.content_margin_top = 6
+		style.content_margin_bottom = 6
+		bouton.add_theme_stylebox_override(etat, style)
+	boutons_graphite.append(bouton)
 
 func _creer_titre(texte: String) -> void:
 	var titre := Label.new()
@@ -160,8 +199,8 @@ func _choisir_onglet(commandes: bool) -> void:
 	controles.visible = commandes
 	onglet_reglages.set_pressed_no_signal(not commandes)
 	onglet_controles.set_pressed_no_signal(commandes)
-	onglet_reglages.modulate = Color.WHITE if not commandes else Color(0.7, 0.65, 0.6)
-	onglet_controles.modulate = Color.WHITE if commandes else Color(0.7, 0.65, 0.6)
+	onglet_reglages.modulate = Color.WHITE if not commandes else Color(0.75, 0.8, 0.85)
+	onglet_controles.modulate = Color.WHITE if commandes else Color(0.75, 0.8, 0.85)
 	%Defilement.scroll_vertical = 0
 
 func _input(event: InputEvent) -> void:
@@ -177,3 +216,10 @@ func _process(delta: float) -> void:
 	horloge += delta
 	papier.material.set_shader_parameter("horloge", horloge)
 	papier.material.set_shader_parameter("taille", papier.size)
+	for bouton in boutons_graphite:
+		var fond: TextureRect = bouton.get_meta("fond_graphite")
+		var cible := 1.0 if bouton.button_pressed else (0.45 if bouton.is_hovered() or bouton.has_focus() else 0.0)
+		var actuel: float = fond.material.get_shader_parameter("selection")
+		fond.material.set_shader_parameter("selection", lerpf(actuel, cible, 1.0 - exp(-12.0 * delta)))
+		fond.material.set_shader_parameter("horloge", horloge)
+		fond.material.set_shader_parameter("taille", bouton.size)

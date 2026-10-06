@@ -31,3 +31,19 @@ Souffle de l'extincteur : `assets/sounds/design/155516__planet-leader__fireextin
 Auteur : Planet-Leader, source et licence CC0 indiquées plus haut.
 Lecture en boucle pendant le tir, avec un fondu de 0,08 s au démarrage et 0,12 s à l'arrêt.
 Volume réglable sur le nœud `Sons/Souffle` de la scène extincteur ; sons d'impact conservés.
+
+Révélation légendaire : assets/sounds/interfaces/revelation_legendaire.wav.
+Achievement, par mdkieran, licence CC0 : https://opengameart.org/content/achievement .
+Fichier téléchargé par Rodrigo, conservé sans modification. Remplace le jingle et les tintements précédents ; lecture sur le bus Effets depuis SonsInterface.
+
+
+Révélation épique : assets/sounds/interfaces/revelation_epique.wav.
+Up (3x), par qubodup, licence CC0 : https://opengameart.org/content/up-3x .
+Troisième variante de l’archive (upshort.wav), conservée sans modification. Lecture à la révélation, sur le bus Effets, à -18 dB.
+
+
+Équilibrage : le son épique est joué à -8 dB (au lieu de -18 dB), car son fichier est plus discret que les autres révélations. Les volumes commun et rare restent à -22 et -20 dB.
+
+
+Volumes actuels de révélation : commune -18 dB, rare -16 dB, épique -2 dB, légendaire -14 dB. Ces réglages compensent les différences de niveau des fichiers et passent toujours par le bus Effets.
+

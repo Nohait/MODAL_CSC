@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvdriitpblj4t"
-path="res://.godot/imported/map_test.png-1b2b70add1d5622c85bdd6dc79aae03a.ctex"
+uid="uid://bqv3dbngcv0n5"
+path="res://.godot/imported/zone_repli.svg-bf50712d70886476e6f8d2f690d13f3d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/interfaces/maps/map_test.png"
-dest_files=["res://.godot/imported/map_test.png-1b2b70add1d5622c85bdd6dc79aae03a.ctex"]
+source_file="res://assets/textures/interfaces/ameliorations/pictogrammes/zone_repli.svg"
+dest_files=["res://.godot/imported/zone_repli.svg-bf50712d70886476e6f8d2f690d13f3d.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

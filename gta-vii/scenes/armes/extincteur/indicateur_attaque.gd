@@ -51,6 +51,7 @@ func _process(delta: float) -> void:
 		materiau.set_shader_parameter("rayon_min", portion.x)
 		materiau.set_shader_parameter("rayon_max", portion.y)
 		materiau.set_shader_parameter("demi_angle", deg_to_rad(extincteur.demi_angle_jet))
+		materiau.set_shader_parameter("angle_interieur", deg_to_rad(extincteur.demi_angle_jet * 0.3) if extincteur.double_lance else 0.0)
 		materiau.set_shader_parameter("opacite_fond", opacite_fond)
 		materiau.set_shader_parameter("opacite_contour", opacite_contour)
 		materiau.set_shader_parameter("couleur", couleur_impact if temps_impact > 0.0 else couleur_normale)

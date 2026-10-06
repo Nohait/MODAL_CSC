@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/hitman.mp3" id="vagues"]
 [ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/volatile_reaction.mp3" id="danger"]
 [ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/dark_fog.mp3" id="obscurite"]
-[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/industrial_music_box.mp3" id="boutique"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/cipher.mp3" id="boutique"]
 
 [node name="MusiqueZombie" type="Node"]
 process_mode = 3

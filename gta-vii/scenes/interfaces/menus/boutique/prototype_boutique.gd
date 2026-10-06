@@ -96,12 +96,13 @@ func _ready() -> void:
 	var renforts := _panneau(gauche, "BONUS PERMANENTS")
 	var pochettes := HBoxContainer.new()
 	pochettes.alignment = BoxContainer.ALIGNMENT_CENTER
-	pochettes.add_theme_constant_override("separation", 22)
+	pochettes.add_theme_constant_override("separation", 12)
 	renforts.add_child(pochettes)
 	var propositions: Array[Dictionary] = [
 		{"id": &"commun", "titre": "Commun", "couleur": Color("c6ac86"), "prix": 1, "puissance": puissance_commune, "symbole": "I"},
 		{"id": &"rare", "titre": "Rare", "couleur": Color("569ccb"), "prix": 2, "puissance": puissance_rare, "symbole": "II"},
-		{"id": &"epique", "titre": "Épique", "couleur": Color("af77c8"), "prix": 3, "puissance": puissance_epique, "symbole": "III"}
+		{"id": &"epique", "titre": "Épique", "couleur": Color("af77c8"), "prix": 3, "puissance": puissance_epique, "symbole": "III"},
+		{"id": &"legendaire", "titre": "Légendaire", "couleur": Color("efc35b"), "prix": 5, "puissance": 200.0, "symbole": "IV", "contenu": "3 choix · surtout légendaires"}
 	]
 	if not catalogue.is_empty():
 		propositions = catalogue
@@ -173,7 +174,7 @@ func _ready() -> void:
 func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
 	# Un conteneur réserve la petite taille ; le dessin conserve ses proportions.
 	var emplacement := Control.new()
-	emplacement.custom_minimum_size = Vector2(135, 210)
+	emplacement.custom_minimum_size = Vector2(125, 195)
 	parent.add_child(emplacement)
 	var booster = BOOSTER.instantiate()
 	booster.titre = proposition.titre
@@ -181,7 +182,9 @@ func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
 	booster.prix = proposition.prix
 	booster.contenu = proposition.get("contenu", "3 choix · puissance %d %%" % proposition.puissance)
 	booster.symbole = proposition.symbole
-	booster.scale = Vector2.ONE * 0.5
+	booster.niveau_eclat = [&"commun", &"rare", &"epique", &"legendaire"].find(proposition.id)
+	booster.niveau_eclat = maxi(booster.niveau_eclat, 0)
+	booster.scale = Vector2.ONE * (125.0 / 270.0)
 	booster.selectionne.connect(_selectionner.bind(proposition))
 	emplacement.add_child(booster)
 	booster.set_meta("rarete", proposition.id)
@@ -213,8 +216,14 @@ func _actualiser_budget() -> void:
 	for ligne in proposes.get_children():
 		ligne.actualiser_budget(points_demo)
 	for booster in boosters:
-		booster.modulate.a = 0.55 if booster.prix > points_demo else 1.0
-		booster.tooltip_text = "Points insuffisants" if booster.prix > points_demo else ""
+		var verrouille: bool = booster.get_meta("verrouille", false)
+		booster.modulate.a = 0.55 if booster.prix > points_demo or verrouille else 1.0
+		booster.tooltip_text = "Aucune légendaire disponible : obtenez ses prérequis ou relancez une partie." if verrouille else ("Points insuffisants" if booster.prix > points_demo else "")
+
+func actualiser_legendaire(disponible: bool) -> void:
+	for booster in boosters:
+		if booster.get_meta("rarete") == &"legendaire": booster.set_meta("verrouille", not disponible)
+	_actualiser_budget()
 
 
 func _selectionner(proposition: Dictionary) -> void:
@@ -304,15 +313,14 @@ func animer_ouverture(rarete: StringName) -> void:
 			ouverture = OUVERTURE.instantiate()
 			add_child(ouverture)
 		# Les copies prennent la place du booster pendant sa déchirure.
-		var tween: Tween = ouverture.lancer(booster)
 		booster.hide()
-		await tween.finished
+		await ouverture.ouvrir(booster)
 		booster.show()
 		return
 
 
 func ajouter_ravitaillement() -> void:
-	# En zombie, réunir les quatre boosters en haut laisse la place aux achats en pièces.
+	# Réunir les boosters en haut laisse la place aux achats en pièces.
 	for bouton in contenu.get_children():
 		if bouton is Button:
 			bouton.custom_minimum_size.y = 44

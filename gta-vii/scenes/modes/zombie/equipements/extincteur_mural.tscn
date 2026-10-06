@@ -72,7 +72,7 @@ mesh = SubResource("Lumiere")
 material_override = SubResource("Voyant")
 [node name="Indication" type="Label3D" parent="."]
 visible = false
-position = Vector3(0, 2.45, 0.3)
+position = Vector3(0, 2.45, 0.85)
 billboard = 1
 font_size = 34
 pixel_size = 0.006

@@ -12,9 +12,6 @@ pictogramme = ExtResource("icone")
 modes = 2
 type_bonus = "temporaire"
 effet = "bouclier_camion"
-valeur = 60.0
-duree = 2
-texte_effet = "Bouclier : %s PV"
-
 puissance_variable = false
-rarete = "rare"
+valeur = 60.0
+texte_effet = "Bouclier : %s PV"

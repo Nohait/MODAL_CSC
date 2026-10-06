@@ -1,6 +1,6 @@
 # Arrivées des ennemis du mode zombie
 
-MapTest possède cinq accès sous `Navigation/Decor/EntreesEnnemis` : une porte au nord, une brèche dans le mur gauche, deux fenêtres et un ascenseur au bord gauche. Les murs et leurs habillages ont été découpés pour laisser les passages visibles. Les boîtes aux lettres ont été déplacées pour dégager l'ascenseur. Le petit ascenseur condamné du mur droit reste un élément de décor distinct.
+Hall possède cinq accès sous `Navigation/Decor/EntreesEnnemis` : une porte au nord, une brèche dans le mur gauche, deux fenêtres et un ascenseur au bord gauche. Les murs et leurs habillages ont été découpés pour laisser les passages visibles. Les boîtes aux lettres ont été déplacées pour dégager l'ascenseur. Le petit ascenseur condamné du mur droit reste un élément de décor distinct.
 
 Les quatre scènes réutilisables sont dans `scenes/modes/zombie/apparitions/` : `porte_arrivee.tscn`, `breche_arrivee.tscn`, `fenetre_arrivee.tscn`, `ascenseur_arrivee.tscn`. Elles utilisent les textures et matériaux existants ; les fenêtres sont les modèles déjà installés dans le hall. La cabine et la cage sont construites avec des formes simples, sans nouvel asset externe.
 
@@ -26,7 +26,7 @@ Les volumes fixes des petits accès sont intégrés aux deux navigations, car il
 
 ## Réglages dans Godot
 
-Sélectionner une entrée dans MapTest pour modifier :
+Sélectionner une entrée dans Hall pour modifier :
 
 - Type entrée : porte, brèche, fenêtre ou ascenseur.
 - Capacité : nombre de figurants qui peuvent emprunter cet accès dans un groupe.
@@ -40,6 +40,6 @@ Pour une nouvelle map, instancier ces accès sous `Navigation/Decor/EntreesEnnem
 
 ## Vérification
 
-Chargement et navigation de MapTest, ascenseur et groupe de deux sbires, présentation des six types mobiles, filtrage des fenêtres, annulation par le debug et vagues complètes 5, 7, 10 et 15. Les compteurs et la fin du sauvetage sont synchronisés avec les créations. Le rendu de la descente et de la sortie a été inspecté ; l'aperçu du catalogue des maps est actualisé.
+Chargement et navigation de Hall, ascenseur et groupe de deux sbires, présentation des six types mobiles, filtrage des fenêtres, annulation par le debug et vagues complètes 5, 7, 10 et 15. Les compteurs et la fin du sauvetage sont synchronisés avec les créations. Le rendu de la descente et de la sortie a été inspecté ; l'aperçu du catalogue des maps est actualisé.
 
 Le rappel de l’escorte utilise **Q physique**, soit **A sur AZERTY**, au clavier (clic du stick droit à la manette). La touche physique A servait déjà au déplacement vers la gauche : sur un clavier AZERTY, appuyer sur Q annulait donc aussi l’ordre de déplacement. Le rappel utilise maintenant Q physique, un emplacement distinct du déplacement.

@@ -88,6 +88,14 @@ func _process(delta: float) -> void:
 		# Même horloge que les cartes : les braises restent animées pendant la pause.
 		temps_braises += delta
 		papier.material.set_shader_parameter("horloge", temps_braises)
+		# Les encarts suivent les vrais containers, même si la fenêtre change de taille.
+		for nom in ["Permanents", "Temporaires"]:
+			if not contenu_bonus.visible:
+				papier.material.set_shader_parameter("zone_" + nom.to_lower(), Vector4.ZERO)
+				continue
+			var section: Control = contenu_bonus.get_node(nom)
+			var debut := papier.get_global_transform().affine_inverse() * section.global_position
+			papier.material.set_shader_parameter("zone_" + nom.to_lower(), Vector4(debut.x - 8.0, debut.y - 8.0, section.size.x + 16.0, section.size.y + 16.0))
 
 
 func _input(event: InputEvent) -> void:
@@ -189,9 +197,15 @@ func actualiser_affichage() -> void:
 		if definition.effet in ["bouclier_camion", "bouclier_joueur"]:
 			carte.effet_affiche = "Bouclier : %d / %d PV" % [ceili(acquisition.bouclier_restant), ceili(acquisition.gain)]
 		carte.duree_affichee = upgrades.texte_duree(acquisition.restant) if temporaire else ""
+		if definition.effet in ["bouclier_camion", "bouclier_joueur"]:
+			carte.duree_affichee = "JUSQU’À ÉPUISEMENT"
 		carte.statut = "1 SECOURS DISPONIBLE" if definition.effet == "reserve_secours" else ("ACTIF" if temporaire else "ACQUIS POUR CETTE PARTIE")
 		var destination := cartes_temporaires if temporaire else cartes_permanents
-		destination.add_child(carte)
+		var vignette := preload("res://scenes/interfaces/menus/ameliorations/carte_carnet.gd").new()
+		vignette.carte = carte
+		# La carte garde son contenu complet ; seule sa place dans la grille est réduite.
+		vignette.add_child(carte)
+		destination.add_child(vignette)
 	vide_permanents.visible = cartes_permanents.get_child_count() == 0
 	vide_temporaires.visible = cartes_temporaires.get_child_count() == 0
 

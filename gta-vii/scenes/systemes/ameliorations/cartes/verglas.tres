@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/verglas.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"verglas"
+titre = "Verglas"
+description = "Le jet laisse une zone froide au sol."
+pictogramme = ExtResource("icone")
+modes = 3
+effet = "verglas"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 20.0
+texte_effet = "Ralentit de %s %%"
+prerequis = Array[StringName]([&"jet_givre"])

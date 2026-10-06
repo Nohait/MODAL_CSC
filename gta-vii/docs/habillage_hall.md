@@ -1,12 +1,12 @@
-# Habillage du hall de MapTest
+# Habillage du hall de Hall
 
-Le décor est ajouté à MapTest. Les nouvelles scènes sont réutilisables, mais cet agencement n'est pas ajouté aux salles du mode classique.
+Le décor est ajouté à Hall. Les nouvelles scènes sont réutilisables, mais cet agencement n'est pas ajouté aux salles du mode classique.
 
-MapTest comporte maintenant des pièces et cloisons intérieures. Leur disposition et le coin d'intervention sont détaillés dans [etage_map_test.md](etage_map_test.md).
+Hall comporte maintenant des pièces et cloisons intérieures. Leur disposition et le coin d'intervention sont détaillés dans [etage_hall.md](etage_hall.md).
 
 ## Trouver et modifier les éléments
 
-Ouvrir `scenes/decors/hall_incendie/habillage_hall.tscn` pour modifier l'agencement : les fenêtres, portes, appliques et meubles y sont placés à la main. MapTest instancie cette scène sous `Navigation/Decor/HabillageHall`.
+Ouvrir `scenes/decors/hall_incendie/habillage_hall.tscn` pour modifier l'agencement : les fenêtres, portes, appliques et meubles y sont placés à la main. Hall instancie cette scène sous `Navigation/Decor/HabillageHall`.
 
 Les nœuds `Nord`, `Gauche`, `Droit`, `SudGauche` et `SudDroit` regroupent les détails de chaque mur : soubassement sombre, plinthe métallique, baguette et joints verticaux. Ils sont construits avec des `BoxMesh`, donc éditables directement dans Godot. Les matériaux réutilisent les textures déjà présentes dans le projet.
 
@@ -80,7 +80,7 @@ Les dégâts sont visibles dans l'éditeur et pendant la partie. Les textures et
 
 ## Particules d'ambiance
 
-`atmosphere_hall.tscn` est instanciée sous MapTest. Elle contient des `CPUParticles3D` : 48 petits grains de cendre répartis dans la salle et deux émetteurs de fumée près de zones brûlées.
+`atmosphere_hall.tscn` est instanciée sous Hall. Elle contient des `CPUParticles3D` : 48 petits grains de cendre répartis dans la salle et deux émetteurs de fumée près de zones brûlées.
 
 La direction et une faible gravité positive sur Y font monter les particules lentement. Leur `color_ramp` fait varier l'opacité au cours de leur vie : elles apparaissent et disparaissent progressivement.
 
@@ -95,7 +95,7 @@ Dans `scenes/modes/zombie/victimes/refuge_zombie.gd`, `_actualiser_gyrophares()`
 
 L'émission des matériaux et l'énergie des lumières sont réglées ensemble. Les deux couleurs sont déphasées pour ne pas atteindre leur maximum simultanément. `EclairageRefuge`, ajouté à `refuge_zombie.tscn`, est une petite source chaude qui aide à lire le modèle du camion.
 
-Le camion a été agrandi uniformément de 65 % : environ 3,23 m de haut, 6,70 m de long et 2,43 m de large. Sa collision, les positions des gyrophares et l'éclairage ont été ajustés. Le script place désormais les compteurs et barres à partir de la hauteur de la collision, pour les garder au-dessus du toit. Les quatre marqueurs de spawn les plus proches du camion ont été retirés de MapTest ; il en reste 60.
+Le camion a été agrandi uniformément de 65 % : environ 3,23 m de haut, 6,70 m de long et 2,43 m de large. Sa collision, les positions des gyrophares et l'éclairage ont été ajustés. Le script place désormais les compteurs et barres à partir de la hauteur de la collision, pour les garder au-dessus du toit. Les quatre marqueurs de spawn les plus proches du camion ont été retirés de Hall ; il en reste 60.
 
 ## Navigation et vérification
 

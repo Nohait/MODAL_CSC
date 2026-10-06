@@ -14,6 +14,7 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 
 const EXPLOSION = preload("res://scenes/effets/combat/explosion_kamikaze.tscn")
 var etat := "veille"
+var explosion_declenchee := false
 var temps_activation := 0.0
 var temps_vol := 0.0
 var vitesse_actuelle := 0.0
@@ -49,6 +50,10 @@ func _ready() -> void:
 	flammes.scale = Vector3.ONE * 0.36
 
 func _physics_process(delta: float) -> void:
+	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
+	if est_gele():
+		velocity = Vector3.ZERO
+		return
 	if est_mort: return
 	temps_vol += delta
 	# La lévitation est uniquement visuelle : la collision garde une hauteur constante.
@@ -100,7 +105,8 @@ func _activer(direction: Vector3) -> void:
 	animation_frappe.tween_property(flammes, "scale", Vector3.ONE * 0.72, duree_activation)
 
 func _exploser() -> void:
-	if est_mort: return
+	if est_mort or explosion_declenchee: return
+	explosion_declenchee = true
 	var effet = EXPLOSION.instantiate()
 	effet.rayon = rayon_explosion
 	effet.position = position
@@ -120,11 +126,16 @@ func _exploser() -> void:
 		if get_world_3d().direct_space_state.intersect_ray(rayon).is_empty():
 			corps.prendre_degats(degats_explosion * multiplicateur_degats() * (1.0 + maxi(etage - 1, 0) * degats_par_etage_pourcent / 100.0))
 	# Une explosion compte comme une mort normale pour la fin de la vague.
-	# Être tué par l'extincteur appelle directement mourir(), sans explosion.
+	# mourir() ne redéclenche pas cette explosion grâce au booléen ci-dessus.
 	mourir()
 
 func mourir() -> void:
 	if est_mort: return
+	var statut := get_node_or_null("EtatMousse")
+	# Choc thermique déclenche aussi son explosion dangereuse habituelle, une seule fois.
+	if not explosion_declenchee and statut != null and statut.refroidi() and statut.effets.valeur("choc_thermique") > 0:
+		_exploser()
+		return
 	flammes.hide()
 	super.mourir()
 

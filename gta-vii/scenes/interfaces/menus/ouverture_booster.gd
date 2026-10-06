@@ -7,6 +7,62 @@ var materiaux: Array[ShaderMaterial] = []
 var temps := 0.0
 var animation: Tween
 
+# La boutique utilise cette préparation ; le Carnet garde son ouverture rapide.
+func ouvrir(source: Control) -> void:
+	masquer()
+	show()
+	var lumiere := preload("res://scenes/interfaces/menus/lumiere_ouverture.gd").new()
+	add_child(lumiere)
+	var paquet := Control.new()
+	paquet.size = source.size
+	paquet.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	paquet.pivot_offset = source.size / 2.0
+	paquet.scale = source.get_global_transform().get_scale()
+	paquet.position = source.global_position - global_position - paquet.pivot_offset * (Vector2.ONE - paquet.scale)
+	add_child(paquet)
+	var visuel: Control = source.get_node("Visuel").duplicate()
+	paquet.add_child(visuel)
+	var papier: TextureRect = visuel.get_node("Papier")
+	papier.material = papier.material.duplicate()
+	var centre := get_viewport_rect().size / 2.0 - paquet.size / 2.0
+	var preparation := create_tween()
+	preparation.tween_property(paquet, "position", centre, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	preparation.parallel().tween_property(paquet, "scale", Vector2.ONE * 0.72, 0.22)
+	_jouer(preload("res://assets/sounds/design/papier/Paper Crushed - 2.wav"), -22.0)
+	# Chaque secousse augmente l'inclinaison et le gonflement, comme une pression interne.
+	for i in range(6):
+		var sens := -1.0 if i % 2 == 0 else 1.0
+		preparation.tween_property(paquet, "rotation", deg_to_rad(sens * (2.0 + i)), 0.075)
+		preparation.parallel().tween_property(paquet, "position:x", centre.x + sens * (2.0 + i), 0.075)
+		preparation.parallel().tween_property(paquet, "scale", Vector2.ONE * (0.74 + i * 0.018), 0.075)
+		preparation.parallel().tween_method(func(valeur): papier.material.set_shader_parameter("luminosite_pochette", valeur), 1.4 + i * 0.06, 1.46 + i * 0.06, 0.075)
+		preparation.parallel().tween_method(func(valeur): papier.material.set_shader_parameter("pression", valeur), i / 6.0, (i + 1) / 6.0, 0.075)
+		preparation.parallel().tween_method(lumiere.charger, i / 6.0, (i + 1) / 6.0, 0.075)
+	preparation.tween_property(paquet, "rotation", 0.0, 0.08)
+	preparation.parallel().tween_property(paquet, "position", centre, 0.08)
+	await preparation.finished
+	lumiere.eclater()
+	_jouer(preload("res://assets/sounds/design/papier/Paper Ripped - 1.wav"), -20.0)
+	var gerbe := preload("res://scenes/interfaces/menus/ameliorations/eclat_revelation.gd").new()
+	gerbe.size = paquet.size * paquet.scale
+	gerbe.position = get_viewport_rect().size / 2.0 - gerbe.size / 2.0
+	gerbe.teinte = papier.material.get_shader_parameter("teinte_pochette")
+	gerbe.puissance = 2
+	add_child(gerbe)
+	var dechirure := lancer(paquet)
+	paquet.hide()
+	await dechirure.finished
+	paquet.queue_free()
+
+func _jouer(son: AudioStream, volume: float) -> void:
+	var lecteur := AudioStreamPlayer.new()
+	lecteur.stream = son
+	lecteur.bus = "Effets"
+	lecteur.volume_db = volume
+	add_child(lecteur)
+	lecteur.finished.connect(lecteur.queue_free)
+	lecteur.play()
+
 func lancer(source: Control) -> Tween:
 	masquer()
 	# La déchirure accompagne le départ des deux moitiés, boutique et Carnet compris.

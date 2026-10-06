@@ -147,8 +147,9 @@ func _physics_process(delta: float) -> void:
 			direction = direction.normalized()
 			#On update la dernière direction prise
 			last_direction = direction
-			velocity.x = direction.x * speed
-			velocity.z = direction.z * speed
+			var courage: float = ameliorations.effets_cartes.multiplicateur_courage() if is_instance_valid(ameliorations) else 1.0
+			velocity.x = direction.x * speed * courage
+			velocity.z = direction.z * speed * courage
 		else:
 			velocity.x = 0.0
 			velocity.z = 0.0
@@ -241,6 +242,7 @@ func prendre_degats(degats: float) -> void:
 		return
 		
 	if is_instance_valid(ameliorations):
+		degats *= ameliorations.effets_cartes.protection_joueur()
 		degats = ameliorations.absorber_degats_joueur(maxf(degats, 0.0))
 	if degats <= 0.0: return
 	flash_degats()

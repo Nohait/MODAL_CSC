@@ -98,6 +98,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta):
+	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
+	if est_gele():
+		velocity = Vector3.ZERO
+		return
 	attaque_timer -= delta 	#A chaque frame, le cooldown réduit
 	timer_apres_attaque -= delta
 
@@ -268,12 +272,16 @@ func animation_enerve():
 
 
 
-func prendre_degats(degats: float) -> void:
+func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 	# queue_free attend la fin de l'image : ignorer les impacts reçus entre-temps.
 	if est_mort:
 		return
 	degats *= 1.0 - resistance_aura
 	# Annoncer les PV réellement retirés, sans compter les dégâts au-delà de zéro.
+	# La source distingue le jet et l’eau des coups de feu pour les combos.
+	var pompier = get_tree().get_first_node_in_group("player")
+	if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations):
+		degats *= pompier.ameliorations.effets_cartes.modifier_degats(self, source)
 	var vie_avant: float = vie
 	vie -= degats
 	vie = max(vie, 0)
@@ -417,6 +425,10 @@ func appliquer_gel(pourcentage: float, duree: float) -> void:
 		gel.name = "Ralentissement"
 		add_child(gel)
 	gel.appliquer(pourcentage, duree)
+
+func est_gele() -> bool:
+	var statut := get_node_or_null("EtatMousse")
+	return statut != null and statut.gel_restant > 0
 
 func multiplicateur_vitesse() -> float:
 	var gel = get_node_or_null("Ralentissement")

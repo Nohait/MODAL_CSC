@@ -41,6 +41,10 @@ func choisir_cible() -> void:
 	cible = player if is_instance_valid(player) and not player.est_mort else null
 
 func _physics_process(delta: float) -> void:
+	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
+	if est_gele():
+		velocity = Vector3.ZERO
+		return
 	if est_mort: return
 	cooldown_frappe = maxf(0.0, cooldown_frappe - delta)
 	temps_etat -= delta
@@ -142,8 +146,8 @@ func _terminer_salve() -> void:
 	animation_frappe = create_tween()
 	animation_frappe.tween_property(visuel, "rotation:x", 0.0, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
-func prendre_degats(degats: float) -> void:
-	super.prendre_degats(degats)
+func prendre_degats(degats: float, source: StringName = &"feu") -> void:
+	super.prendre_degats(degats, source)
 	if not est_mort: _actualiser_vie()
 
 func _actualiser_vie() -> void:

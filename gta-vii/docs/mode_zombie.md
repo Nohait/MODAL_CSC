@@ -1,6 +1,6 @@
 # Mode zombie : refuge et boutique
 
-L’écran titre ouvre la sélection des maps. MapTest est un étage fixe de 40 × 40 mètres : hall central, quatre pièces latérales et entrée au sud. R et Rejouer conservent la map sélectionnée.
+L’écran titre ouvre la sélection des maps. Hall est un étage fixe de 40 × 40 mètres : hall central, quatre pièces latérales et entrée au sud. R et Rejouer conservent la map sélectionnée.
 
 ## Boucle d’une vague
 
@@ -24,7 +24,7 @@ Une vague se termine après le timer et la mort de tous ses ennemis. Chaque vict
 
 Ouvrir mode_zombie.tscn, sélectionner ModeZombie et déplier Difficulté dans l’Inspecteur. La ressource difficulte_zombie.tres expose le budget de difficulté et les nombres de victimes, la taille des groupes, la durée du timer et les deux pauses de boutique.
 
-MapTest hérite de salle.tscn pour conserver la navigation. Ses 44 Marker3D de PointsApparition fixent les emplacements possibles ; aucun n’est placé dans le couloir. Le refuge est ajouté au centre, sous Navigation/Decor, avant la construction du navmesh pour que les chemins le contournent. Les victimes rejoignent son voisinage avant d’être déposées.
+Hall hérite de salle.tscn pour conserver la navigation. Ses 44 Marker3D de PointsApparition fixent les emplacements possibles ; aucun n’est placé dans le couloir. Le refuge est ajouté au centre, sous Navigation/Decor, avant la construction du navmesh pour que les chemins le contournent. Les victimes rejoignent son voisinage avant d’être déposées.
 
 catalogue_maps.gd contient les titres, scènes et captures. selection_maps.gd construit les cartes ; carte_map.gdshader réutilise le cadre de braises et carte_map.gd anime le survol. Les captures sont statiques et doivent être refaites si le décor change. Ajouter une map consiste à adapter une scène, ses marqueurs et son image, puis l’ajouter au catalogue.
 
@@ -163,4 +163,4 @@ Le traitement du sauvetage ignore désormais les enfants qui ne sont pas dans le
 
 ## Arrivées par les accès de la map
 
-Les mobiles entrent désormais par les portes, brèches, fenêtres et l’ascenseur de MapTest. Les volants utilisent les fenêtres ; les tourelles restent générées sur leurs emplacements fixes. Le calendrier conserve sa durée et le premier mobile immédiat. Voir [arrivees_ennemis_zombie.md](arrivees_ennemis_zombie.md) pour les scènes, l’animation et les réglages.
+Les mobiles entrent désormais par les portes, brèches, fenêtres et l’ascenseur de Hall. Les volants utilisent les fenêtres ; les tourelles restent générées sur leurs emplacements fixes. Le calendrier conserve sa durée et le premier mobile immédiat. Voir [arrivees_ennemis_zombie.md](arrivees_ennemis_zombie.md) pour les scènes, l’animation et les réglages.

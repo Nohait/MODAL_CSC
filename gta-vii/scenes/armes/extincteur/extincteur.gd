@@ -71,6 +71,12 @@ var attack_timer = 0.0
 
 # Attendre que Godot ait chargé les valeurs choisies dans l'Inspecteur.
 @onready var charge: float = max_charge #Charge actuelle au démarrage
+var jet_pulse := false
+var double_lance := false
+var temps_tir := 0.0
+# Le bouton peut rester maintenu pendant le creux d’une pulsation.
+var emission_effective := false
+var particles_secondaires: GPUParticles3D
 var is_attacking := false 
 var is_overheated := false #Entre en cooldown forcé si l'extincteur tombe à 0
 
@@ -94,13 +100,20 @@ func _ready() -> void:
 func configurer_jet() -> void:
 	var simulation := particles.process_material as ParticleProcessMaterial
 	# Spread représente déjà un DEMI-angle dans Godot : ne pas le multiplier par 2.
-	simulation.spread = demi_angle_jet
+	simulation.spread = demi_angle_jet * (0.35 if double_lance else 1.0)
 	simulation.initial_velocity_min = vitesse_jet
 	simulation.initial_velocity_max = vitesse_jet
 	particles.lifetime = portee_jet / vitesse_jet
 	particles.draw_pass_1.material.albedo_color.a = opacite_particules
 	particles.visibility_aabb = AABB(Vector3.ONE * -portee_jet, Vector3.ONE * portee_jet * 2.0)
 	damage_area.get_node("CollisionShape3D").shape.radius = portee_jet
+	if is_instance_valid(particles_secondaires):
+		particles_secondaires.process_material.spread = simulation.spread
+		particles_secondaires.process_material.initial_velocity_min = vitesse_jet
+		particles_secondaires.process_material.initial_velocity_max = vitesse_jet
+		particles_secondaires.process_material.color = simulation.color
+		particles_secondaires.lifetime = particles.lifetime
+		particles_secondaires.visibility_aabb = particles.visibility_aabb
 
 
 func direction_jet() -> Vector3:
@@ -111,7 +124,10 @@ func direction_jet() -> Vector3:
 
 func actualiser_position_jet() -> void:
 	var direction := direction_jet()
-	particles.global_transform = Transform3D(Basis.looking_at(direction), muzzle.global_position)
+	var ecart := deg_to_rad(demi_angle_jet * 0.65) if double_lance else 0.0
+	particles.global_transform = Transform3D(Basis.looking_at(direction.rotated(Vector3.UP, ecart)), muzzle.global_position)
+	if is_instance_valid(particles_secondaires):
+		particles_secondaires.global_transform = Transform3D(Basis.looking_at(direction.rotated(Vector3.UP, -ecart)), muzzle.global_position)
 	damage_area.global_transform = Transform3D(Basis.IDENTITY, muzzle.global_position)
 	# local_coords reste activé : le jet déjà émis suit la visée, comme auparavant.
 
@@ -119,8 +135,11 @@ func start_primary_attack() -> void:
 	if not panne_evenement and not is_overheated and not is_attacking:
 		portions_jet.append(Vector2.ZERO)
 		is_attacking = true
+		temps_tir = 0.0
+		emission_effective = true
 		attente_recharge = delai_avant_recharge
 		particles.emitting = true
+		if is_instance_valid(particles_secondaires): particles_secondaires.emitting = double_lance
 		regler_souffle(true)
 
 
@@ -129,7 +148,9 @@ func stop_primary_attack() -> void:
 	if is_attacking:
 		regler_souffle(false)
 	is_attacking = false
+	emission_effective = false
 	particles.emitting = false
+	if is_instance_valid(particles_secondaires): particles_secondaires.emitting = false
 
 func regler_souffle(en_marche: bool) -> void:
 	# Interrompre le fondu précédent permet aussi de reprendre un tir très rapidement.
@@ -153,6 +174,9 @@ func vider_jet() -> void:
 	portions_jet.clear()
 	particles.restart()
 	particles.emitting = false
+	if is_instance_valid(particles_secondaires):
+		particles_secondaires.restart()
+		particles_secondaires.emitting = false
 
 func _physics_process(delta: float) -> void:
 	# Les délais sont indépendants par cible et disparaissent une fois expirés.
@@ -168,8 +192,16 @@ func _physics_process(delta: float) -> void:
 	if Input.is_key_label_pressed(KEY_M):
 		modifier(15,2.8)
 	if is_attacking:
+		temps_tir += delta
+		var emettre := not jet_pulse or fmod(temps_tir, 0.6) < 0.22
+		# Chaque impulsion possède sa portion ; les trous continuent d’avancer.
+		if emettre and not emission_effective: portions_jet.append(Vector2.ZERO)
+		emission_effective = emettre
+		particles.emitting = emettre
+		if is_instance_valid(particles_secondaires): particles_secondaires.emitting = emettre and double_lance
+	if is_attacking:
 		attente_recharge = delai_avant_recharge
-		charge -= consumption_rate * consommation_evenement * delta
+		if emission_effective: charge -= consumption_rate * consommation_evenement * delta
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true
@@ -178,7 +210,8 @@ func _physics_process(delta: float) -> void:
 		# Recharger uniquement la portion de cette frame située après l'attente.
 		var temps_recharge := maxf(0.0, delta - attente_recharge)
 		attente_recharge = maxf(0.0, attente_recharge - delta)
-		charge += reload_rate * temps_recharge
+		var soutien: float = porteur.ameliorations.effets_cartes.multiplicateur_recharge() if is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations) else 1.0
+		charge += reload_rate * soutien * temps_recharge
 		if charge >= max_charge:
 			charge = max_charge
 			is_overheated = false
@@ -192,7 +225,7 @@ func _physics_process(delta: float) -> void:
 	for cible in candidats:
 		if cible.is_in_group("enemies") and not cible.is_queued_for_deletion():
 			if cible_dans_jet(cible.global_position, cible.hitbox_radius):
-				attaque_1(cible)
+				attaque_1(cible, delta)
 
 
 func avancer_jet(delta: float) -> void:
@@ -202,7 +235,7 @@ func avancer_jet(delta: float) -> void:
 	for i in range(portions_jet.size() - 1, -1, -1):
 		var portion := portions_jet[i]
 		portion.y = minf(portion.y + avance, portee_jet)
-		if is_attacking and i == portions_jet.size() - 1:
+		if emission_effective and i == portions_jet.size() - 1:
 			portion.x = 0.0 # Le tir maintenu continue de remplir le départ du jet.
 		else:
 			portion.x += avance # Après relâchement, le vide avance depuis l'arme.
@@ -218,18 +251,19 @@ func cible_dans_jet(position_cible: Vector3, rayon_cible: float) -> bool:
 	var point := Vector2(decalage.x, decalage.z)
 	var direction := direction_jet()
 	var avant := Vector2(direction.x, direction.z)
-	var angle := avant.angle_to(point)
+	var directions: Array[Vector2] = [avant]
 	var angle_limite := deg_to_rad(demi_angle_jet)
-	var direction_proche := avant.rotated(clampf(angle, -angle_limite, angle_limite))
-	for portion in portions_jet:
-		if portion.y <= portion.x:
-			continue
-		# Chercher le point du secteur le plus proche du centre de l'ennemi.
-		# Sa largeur compte, mais ne doit pas combler arbitrairement les trous du jet.
-		var distance_proche := clampf(point.dot(direction_proche), portion.x, portion.y)
-		var point_proche := direction_proche * distance_proche
-		if point.distance_to(point_proche) <= rayon_cible:
-			return true
+	if double_lance:
+		directions = [avant.rotated(angle_limite * 0.65), avant.rotated(-angle_limite * 0.65)]
+		angle_limite *= 0.35
+	# Les deux jets ont un espace central ; une cible large peut toucher leur bord.
+	for axe in directions:
+		var angle := axe.angle_to(point)
+		var direction_proche := axe.rotated(clampf(angle, -angle_limite, angle_limite))
+		for portion in portions_jet:
+			if portion.y <= portion.x: continue
+			var distance_proche := clampf(point.dot(direction_proche), portion.x, portion.y)
+			if point.distance_to(direction_proche * distance_proche) <= rayon_cible: return true
 	return false
 
 
@@ -237,6 +271,8 @@ func get_degats() -> float:
 	if degats_colossaux_test:
 		return 100000.0
 	var puissance := multiplicateur_degats_ameliorations
+	if is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations):
+		puissance *= porteur.ameliorations.effets_cartes.multiplicateur_jet()
 	# Lire les PV au moment du coup prend aussi en compte les soins et la vie maximale.
 	if is_instance_valid(porteur) and porteur.BarreDeVie.value <= porteur.BarreDeVie.max_value * seuil_dernier_souffle / 100.0:
 		puissance *= 1.0 + bonus_dernier_souffle / 100.0
@@ -246,7 +282,7 @@ func get_degats() -> float:
 	return degats1 * puissance
 
 
-func attaque_1(cible):
+func attaque_1(cible, delta: float):
 	if cible != null:
 		# Créer l'éclaboussure avant les dégâts, car cet impact peut tuer la cible.
 		# Les flaques conservent leur rendu actuel ; seuls les corps reçoivent la mousse.
@@ -258,13 +294,30 @@ func attaque_1(cible):
 		var multiplier = randf_range(0.9,1.1)
 		if ralentissement_jet > 0.0 and cible.has_method("appliquer_gel"):
 			cible.appliquer_gel(ralentissement_jet, duree_gel)
-		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0)
+		if is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations):
+			porteur.ameliorations.effets_cartes.toucher_jet(cible, delta)
+		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0, &"mousse")
 		# Colorer la zone uniquement après un impact, y compris sur les flaques.
 		indicateur_attaque.signaler_impact()
 		if not steam_damage_sound.playing:
 			print('son')
 			steam_damage_sound = steam_damage.pick_random()
 			steam_damage_sound.play()
+
+func regler_variantes(pulse: bool, double: bool) -> void:
+	if double and not is_instance_valid(particles_secondaires):
+		# Dupliquer uniquement le système de particules, jamais toute l’arme.
+		particles_secondaires = particles.duplicate()
+		particles_secondaires.name = "SecondJet"
+		particles_secondaires.process_material = particles.process_material.duplicate()
+		particles_secondaires.emitting = false
+		particles.get_parent().add_child(particles_secondaires)
+	var change := jet_pulse != pulse or double_lance != double
+	jet_pulse = pulse
+	double_lance = double
+	if change: vider_jet()
+	configurer_jet()
+	actualiser_position_jet()
 
 func modifier(angle, rayon):
 	if is_equal_approx(demi_angle_jet, float(angle)) and is_equal_approx(portee_jet, float(rayon)):
