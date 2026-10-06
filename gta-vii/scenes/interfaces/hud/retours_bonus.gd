@@ -80,6 +80,7 @@ func actualiser_secours() -> void:
 
 func afficher_impact_bouclier() -> void:
 	joueur.flash_degats(Color("59bde8"))
+	joueur.get_node("FeedbackSurvie").impact_bouclier()
 	if animation_eclat: animation_eclat.kill()
 	eclat.show()
 	eclat.scale = Vector3.ONE

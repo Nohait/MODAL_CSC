@@ -25,8 +25,13 @@ func _on_player_died() -> void:
 	get_tree().paused = true
 	# Les dégâts arrivent pendant la physique : différer le changement de scène
 	# pour ne pas supprimer les corps pendant le traitement de leurs collisions.
-	call_deferred("afficher_ecran_mort")
+	call_deferred("_transition_mort")
 
+
+func _transition_mort() -> void:
+	await $player/FeedbackSurvie.jouer_mort()
+	# La méthode spécialisée du zombie conserve son bilan de fin de partie.
+	afficher_ecran_mort()
 
 func afficher_ecran_mort() -> void:
 	# Changer de scène détruit TOUT le niveau, dont ses CanvasLayer et menus.

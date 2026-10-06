@@ -270,9 +270,12 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	velocity = Vector3.ZERO
+	is_dashing = false
+	set_physics_process(false)
 	extincteur.stop_primary_attack()
+	# Garder le visuel jusqu’à la fin du fondu ; le changement de scène le libère.
 	died.emit()
-	queue_free()
 
 func animation_fleche(position):
 	if fleche_tween:

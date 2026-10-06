@@ -15,6 +15,8 @@
 [ext_resource type="AudioStream" path="res://assets/sounds/joueur/pas/pas_bottes_03.wav" id="pas_3"]
 [ext_resource type="AudioStream" path="res://assets/sounds/joueur/pas/pas_bottes_04.wav" id="pas_4"]
 
+[ext_resource type="Script" path="res://scenes/joueur/feedback_survie.gd" id="10_survie"]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sge3q"]
 
 [node name="player" type="CharacterBody3D" unique_id=1836946001 groups=["player"]]
@@ -178,5 +180,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0.81960785, 0.08235294, 0, 1)
+
+[node name="FeedbackSurvie" type="Node" parent="."]
+script = ExtResource("10_survie")
 
 [editable path="visual/pompier"]

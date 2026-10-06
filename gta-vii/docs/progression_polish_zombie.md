@@ -77,3 +77,11 @@ Le pack Assault (Luca Baradel) fournit quatre stems alignés, de 115,2 secondes 
 Les Resources `audio/couches/*.tres`, référencées dans l’Inspector du ModeZombie, exposent les volumes et seuils : synthétiseurs toujours en combat, cordes à 4 ennemis, percussions à 7, guitares à la vague 8 ou en présence d’une élite. Un boss active toutes les couches. Aucun changement de musique dans le classique.
 
 Le dash partagé utilise désormais GPUTrail (MIT, celyk), dans `addons/GPUTrail`. `scenes/joueur/feedback_dash.gd` pilote un unique ruban GPU, réinitialisé au départ et masqué après résorption. Largeur, hauteur et durée sont exportées. L’attente du rendu de l’addon est évitée sans billboard, notamment pour les tests headless.
+
+## Feedback de survie partagé
+
+`scenes/joueur/feedback_survie.gd` est attaché au nœud FeedbackSurvie du joueur commun. Il écoute les pertes réelles de PV et reçoit les impacts absorbés depuis RetoursBonus. Deux lecteurs distincts et un intervalle minimal limitent les répétitions sans confondre vie et bouclier. Les sons utilisent les assets déjà disponibles.
+
+Une pulsation des bords apparaît sous 25 % de vie, indépendamment des améliorations. La pulsation de Dernier souffle sur le cadre reste propre à cette carte. Les sons, volumes, seuil, intensité, cycle et durées de mort sont exportés dans l’Inspector.
+
+À la mort, le joueur coupe sa physique et son attaque mais reste visible. Main met le combat en pause, attend la réaction et le fondu de FeedbackSurvie (Tween autorisé en pause), puis appelle afficher_ecran_mort. La spécialisation zombie conserve son bilan. Le changement de scène détruit ensuite le joueur et les effets.
