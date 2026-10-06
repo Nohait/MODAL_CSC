@@ -108,7 +108,9 @@ func _demarrer_vague(composition_forcee: CompositionVague = null) -> void:
 	# Compter aussi les ennemis à venir empêche de finir la vague trop tôt.
 	salle_actuelle.remaining_enemies += salle_actuelle.mobiles_a_creer.size()
 	# La liste commence par le boss dans sa composition, sinon par un type mélangé.
-	if not salle_actuelle.mobiles_a_creer.is_empty():
+	# Le boss arrive seul ; une vague ordinaire commence avec le groupe réglé dans la difficulté.
+	var nombre_initial := 1 if composition_actuelle.ennemi_initial != null else difficulte.ennemis_au_depart
+	for i in range(mini(nombre_initial, salle_actuelle.mobiles_a_creer.size())):
 		creer_mobile(salle_actuelle, salle_actuelle.mobiles_a_creer.pop_front())
 	# Le dernier groupe apparaît exactement à la fin du timer de sauvetage.
 	calendrier.clear()

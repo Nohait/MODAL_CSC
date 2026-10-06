@@ -11,6 +11,7 @@ const ENNEMIS = [
 	{"id": "kamikaze", "cout_difficulte": 1, "description": "Crâne volant qui poursuit le pompier avec un retard de direction et explose au contact.", "elite_possible": true, "nom": "Kamikaze", "categorie": "Mobiles", "scene": preload("res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn"), "hauteur": 1.2},
 	{"id": "tourelle", "cout_difficulte": 1, "description": "Ennemi fixe. Son laser annonce le tir ; sortir de sa portée interrompt la visée.", "nom": "Tour enflammée", "categorie": "Immobiles", "scene": preload("res://scenes/ennemis/tourelles/tour_enflammee.tscn"), "hauteur": 0.1},
 	{"id": "flaque", "cout_difficulte": 1, "description": "Zone de feu qui blesse les personnages à son contact.", "nom": "Flaque de feu", "categorie": "Immobiles", "scene": preload("res://scenes/ennemis/dangers/flaque_de_feu.tscn"), "hauteur": 0.2},
+	{"id": "blaze", "cout_difficulte": 2, "description": "Tire trois boules de feu puis se refroidit. La mousse éteint ses flammes et interrompt sa salve.", "nom": "Blaze", "categorie": "Mobiles", "scene": preload("res://scenes/ennemis/mobiles/blaze/blaze.tscn"), "hauteur": 0.95},
 	{"id": "mini_boss", "cout_difficulte": 8, "description": "Mini-boss qui alterne une frappe proche et une salve de boules de feu.", "nom": "Monstre de lave", "categorie": "Mini-boss", "scene": preload("res://scenes/ennemis/mini_boss/monstre_lave/monstre_lave.tscn"), "hauteur": 1.45}
 ]
 

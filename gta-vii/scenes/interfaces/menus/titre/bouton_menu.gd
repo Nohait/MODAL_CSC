@@ -5,7 +5,6 @@ const REFLET = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader
 const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
 @export var taille_police := 28
 var fond: TextureRect
-var animation: Tween
 var icone: TextureRect
 
 @export var taille_minimale := Vector2(300, 74)
@@ -13,13 +12,15 @@ var icone: TextureRect
 func _ready() -> void:
 	custom_minimum_size = taille_minimale
 	# Le Button garde ses clics et son texte ; une plaque dessinée remplace son fond.
-	for etat in ["normal", "hover", "pressed", "focus"]:
+	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
 		add_theme_stylebox_override(etat, StyleBoxEmpty.new())
 	add_theme_font_override("font", POLICE)
 	add_theme_font_size_override("font_size", taille_police)
-	add_theme_color_override("font_color", Color("e9d8b4"))
+	add_theme_color_override("font_color", Color("f0e5cf"))
 	add_theme_color_override("font_hover_color", Color("fff2cc"))
 	add_theme_color_override("font_pressed_color", Color("e8b37d"))
+	add_theme_color_override("font_shadow_color", Color(0.015, 0.02, 0.025, 0.9))
+	add_theme_constant_override("shadow_offset_y", 2)
 	
 	fond = TextureRect.new()
 	fond.texture = PLAQUE
@@ -47,17 +48,22 @@ func _ready() -> void:
 	icone.position = -icone.size / 2.0
 	add_child(icone)
 	
-	mouse_entered.connect(_animer.bind(true))
 	mouse_entered.connect(grab_focus)
-	mouse_exited.connect(_animer.bind(false))
-	focus_entered.connect(_animer.bind(true))
-	focus_exited.connect(_animer.bind(false))
 	
 	
 
-func _animer(survole: bool) -> void:
-	if animation:
-		animation.kill()
-	animation = create_tween()
-	# Le reflet glisse progressivement au lieu de sauter à l'entrée de la souris.
-	animation.tween_property(fond.material, "shader_parameter/survol", 1.0 if survole else 0.0, 0.18)
+func _process(delta: float) -> void:
+	if fond == null: return
+	fond.material.set_shader_parameter("taille", size)
+	# Utiliser l'état réel évite un survol bloqué après un changement de menu.
+	var cible := 1.0 if not disabled and (is_hovered() or (has_focus() and not Input.get_connected_joypads().is_empty())) else 0.0
+	var valeur = fond.material.get_shader_parameter("survol")
+	var actuel: float = float(valeur) if valeur != null else 0.0
+	fond.material.set_shader_parameter("survol", lerpf(actuel, cible, 1.0 - exp(-12.0 * delta)))
+	fond.modulate = Color(0.8, 0.8, 0.8, 0.45) if disabled else Color(0.82, 0.82, 0.82) if is_pressed() else Color.WHITE
+
+func _make_custom_tooltip(texte: String) -> Object:
+	if texte.strip_edges().is_empty(): return null
+	var bulle = preload("res://scenes/interfaces/menus/infobulle_metal.gd").new()
+	bulle.texte = texte
+	return bulle

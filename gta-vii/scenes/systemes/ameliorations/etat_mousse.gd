@@ -52,6 +52,8 @@ func multiplier_degats(_source: StringName) -> float:
 	return 1.0 + (effets.valeur("enrobage") / 100.0 if enrobage_restant > 0 else 0.0)
 
 func repousser(direction: Vector3, force: float, duree: float = 0.2, prioritaire: bool = false) -> void:
+	# Les tourelles restent fixées au sol, même face aux ondes de recul.
+	if get_parent().is_in_group("ennemis_immobiles"): return
 	# Un petit recul continu du jet ne doit pas écraser l'impulsion de l'onde.
 	if recul_prioritaire and recul_restant > 0.0 and not prioritaire: return
 	direction.y = 0.0

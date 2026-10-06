@@ -6,7 +6,7 @@
 [ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 [ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="titre"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="papier"]
-[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/fond_menu_bonus.gdshader" id="shader"]
+[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/fond_carnet.gdshader" id="shader"]
 
 [sub_resource type="ShaderMaterial" id="Papier"]
 shader = ExtResource("shader")

@@ -93,7 +93,7 @@ material = SubResource("CercleMateriau")
 inner_radius = 0.994
 rings = 96
 
-[node name="TourEnflammee" type="CharacterBody3D" unique_id=1672808714 groups=["enemies", "obstacles_navigation"]]
+[node name="TourEnflammee" type="CharacterBody3D" unique_id=1672808714 groups=["enemies", "ennemis_immobiles", "obstacles_navigation"]]
 collision_mask = 0
 script = ExtResource("1_wegx8")
 distance_detection = 14.0

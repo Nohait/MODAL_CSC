@@ -24,6 +24,7 @@ const LIGNES = [
 var bilan: Dictionary
 var animation: Tween
 var horloge := 0.0
+var fonds_records: Array[TextureRect] = []
 @onready var papier: TextureRect = $Panneau/Papier
 
 func _ready() -> void:
@@ -34,14 +35,18 @@ func _ready() -> void:
 	papier.material = papier.material.duplicate()
 	animation = create_tween().set_parallel(true)
 	for i in range(LIGNES.size()): _creer_statistique(LIGNES[i], i)
+	preload("res://scenes/interfaces/menus/transition_panneau.gd").ouvrir(self, self, $Panneau)
 
 func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 	var bloc := PanelContainer.new()
 	bloc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color(0.03, 0.015, 0.012, 0.24)
-	fond.border_width_bottom = 1
-	fond.border_color = Color(0.66, 0.43, 0.24, 0.4)
+	fond.bg_color = Color(0.035, 0.045, 0.055, 0.82)
+	fond.set_border_width_all(1)
+	fond.set_corner_radius_all(5)
+	fond.shadow_size = 3
+	fond.shadow_color = Color(0, 0, 0, 0.25)
+	fond.border_color = Color(0.40, 0.36, 0.28, 0.6)
 	fond.content_margin_left = 16
 	fond.content_margin_right = 16
 	fond.content_margin_top = 12
@@ -81,7 +86,21 @@ func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 	if id in StatistiquesZombie.RECORDS:
 		var nouveau: bool = id in bilan.get("nouveaux_records", [])
 		record.text = "NOUVEAU RECORD" if nouveau else "Meilleur : %s" % _formater_valeur(StatistiquesZombie.records.get(id, 0.0), id)
-		if nouveau: record.add_theme_color_override("font_color", Color("f0c077"))
+		if nouveau:
+			fond.bg_color = Color.TRANSPARENT
+			record.add_theme_color_override("font_color", Color("ffe1a0"))
+			var plaque := TextureRect.new()
+			plaque.texture = preload("res://assets/textures/interfaces/titre/plaque_bouton.svg")
+			plaque.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			plaque.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			plaque.show_behind_parent = true
+			bloc.add_child(plaque)
+			plaque.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			var mat := ShaderMaterial.new()
+			mat.shader = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
+			mat.set_shader_parameter("survol", 0.5)
+			plaque.material = mat
+			fonds_records.append(plaque)
 	elif id == "victimes_perdues": record.text = "Captives, escorte et camion"
 	elif id in ["victimes_abritees", "victimes_escorte"]: record.text = "Encore en vie à la fin"
 	elif id == "degats_recus": record.text = "Après les boucliers"
@@ -98,6 +117,11 @@ func _formater_valeur(nombre: float, id: String) -> String:
 
 func _process(delta: float) -> void:
 	horloge += delta
+	for plaque in fonds_records:
+		# Le fond couvre le bloc entier, sans reprendre les marges du texte.
+		plaque.position = Vector2.ZERO
+		plaque.size = plaque.get_parent().size
+		plaque.material.set_shader_parameter("taille", plaque.size)
 	papier.material.set_shader_parameter("horloge", horloge)
 	papier.material.set_shader_parameter("taille", papier.size)
 

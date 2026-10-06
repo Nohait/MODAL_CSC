@@ -11,6 +11,7 @@ var materiau_icones: ShaderMaterial
 var lignes: Array[HBoxContainer] = []
 var infobulle: PanelContainer
 var texte_infobulle: Label
+var animation_infobulle: Tween
 
 func _ready() -> void:
 	# Les pictos des cartes sont bruns : conserver leur alpha et les teinter en crème.
@@ -97,30 +98,15 @@ func actualiser(joueur: Node, upgrades: Node) -> void:
 
 func _creer_infobulle() -> void:
 	# Dessiner dans le menu évite de dépendre de la fenêtre d'infobulle de Godot.
-	infobulle = PanelContainer.new()
+	infobulle = preload("res://scenes/interfaces/menus/infobulle_metal.gd").new()
 	infobulle.top_level = true
 	infobulle.z_index = 100
-	infobulle.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("252d34")
-	style.border_color = Color("b18c60")
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(5)
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.4)
-	style.shadow_size = 8
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
-	infobulle.add_theme_stylebox_override("panel", style)
-	texte_infobulle = Label.new()
-	texte_infobulle.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texte_infobulle.add_theme_color_override("font_color", Color("f0ddbd"))
-	texte_infobulle.add_theme_font_override("font", POLICE)
-	texte_infobulle.add_theme_font_size_override("font_size", 17)
-	infobulle.add_child(texte_infobulle)
 	add_child(infobulle)
+	texte_infobulle = infobulle.get("libelle")
 	infobulle.hide()
+	visibility_changed.connect(func():
+		if not is_visible_in_tree(): infobulle.hide()
+	)
 
 func _process(_delta: float) -> void:
 	if not is_visible_in_tree():
@@ -129,7 +115,13 @@ func _process(_delta: float) -> void:
 	var souris := get_global_mouse_position()
 	for ligne in lignes:
 		if ligne.is_visible_in_tree() and ligne.get_global_rect().has_point(souris):
-			texte_infobulle.text = ligne.get_meta("explication")
+			var texte: String = ligne.get_meta("explication")
+			if not infobulle.visible or texte_infobulle.text != texte:
+				if animation_infobulle: animation_infobulle.kill()
+				infobulle.modulate.a = 0.0
+				animation_infobulle = create_tween()
+				animation_infobulle.tween_property(infobulle, "modulate:a", 1.0, 0.12)
+			texte_infobulle.text = texte
 			infobulle.size = infobulle.get_combined_minimum_size()
 			var position_souhaitee := souris + Vector2(18, 20)
 			var limites := get_viewport_rect()

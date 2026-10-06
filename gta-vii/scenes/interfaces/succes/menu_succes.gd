@@ -51,10 +51,7 @@ func ouvrir() -> void:
 	show()
 	if animation:
 		animation.kill()
-	modulate.a = 0.0
-	# Fondu court : le catalogue arrive sans déplacer ni déformer ses textes.
-	animation = create_tween()
-	animation.tween_property(self, "modulate:a", 1.0, 0.2)
+	animation = preload("res://scenes/interfaces/menus/transition_panneau.gd").ouvrir(self, self, $Pochette)
 
 func fermer() -> void:
 	if animation:

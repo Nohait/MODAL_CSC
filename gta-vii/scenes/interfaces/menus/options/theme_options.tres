@@ -3,33 +3,27 @@
 [ext_resource type="FontFile" uid="uid://bakravhue45e3" path="res://assets/fonts/Oswald-SemiBold.ttf" id="font"]
 [ext_resource type="Texture2D" uid="uid://dk7hfr6og4bri" path="res://assets/textures/interfaces/options/poignee_reglage.svg" id="poignee"]
 
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/options/rail_reglage.svg" id="rail_texture"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/options/remplissage_reglage.svg" id="remplissage_texture"]
+
 [sub_resource type="StyleBoxFlat" id="Focus"]
 bg_color = Color(0, 0, 0, 0)
 border_width_bottom = 2
 border_color = Color(0.97, 0.8, 0.49, 1)
 
-[sub_resource type="StyleBoxFlat" id="Rempli"]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.73, 0.45, 0.23, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="StyleBoxTexture" id="Rempli"]
+texture = ExtResource("remplissage_texture")
+texture_margin_left = 6.0
+texture_margin_right = 6.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="Rail"]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.08, 0.1, 0.12, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.49, 0.39, 0.28, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="StyleBoxTexture" id="Rail"]
+texture = ExtResource("rail_texture")
+texture_margin_left = 6.0
+texture_margin_right = 6.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="Defilement"]
 content_margin_left = 3.0

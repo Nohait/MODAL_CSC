@@ -15,3 +15,8 @@ extends Resource
 @export_enum("aucune", "vitesse", "resistance", "degats") var aura := "aucune"
 @export var rayon_aura := 5.0
 @export var bonus_aura := 0.25
+
+@export_group("Signature visuelle")
+@export_range(0.0, 2.0, 0.05) var intensite_visuelle := 0.8
+@export_range(0, 30, 1) var particules_visuelles := 8
+@export_range(0.0, 1.5, 0.05) var intensite_zone_aura := 0.65

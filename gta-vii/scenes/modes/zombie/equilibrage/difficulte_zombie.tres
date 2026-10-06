@@ -4,3 +4,6 @@
 
 [resource]
 script = ExtResource("difficulte")
+budget_premiere_vague = 6
+ennemis_au_depart = 2
+taille_initiale_groupe = 1

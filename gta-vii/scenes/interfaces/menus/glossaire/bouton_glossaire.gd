@@ -41,3 +41,9 @@ func _process(delta: float) -> void:
 	papier.material.set_shader_parameter("horloge", temps)
 	papier.material.set_shader_parameter("taille", size)
 	papier.modulate.a = 0.45 if disabled else 1.0
+
+func _make_custom_tooltip(texte: String) -> Object:
+	if texte.strip_edges().is_empty(): return null
+	var bulle = preload("res://scenes/interfaces/menus/infobulle_metal.gd").new()
+	bulle.texte = texte
+	return bulle

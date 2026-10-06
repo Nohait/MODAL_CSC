@@ -7,6 +7,7 @@ const PIECE = preload("res://scenes/effets/monnaie/piece.tscn")
 var solde := 0
 var delai_son := 0.0
 var animation_compteur: Tween
+var animation_reflet: Tween
 var serie_collecte := 0
 var pause_collecte := 0.0
 @onready var joueur: Node3D = get_node("../player")
@@ -16,6 +17,9 @@ var pause_collecte := 0.0
 func _ready() -> void:
 	add_to_group("monnaie_partie")
 	compteur.text = "0"
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://scenes/interfaces/hud/reflet_piece.gdshader")
+	$HUD/Compteur/Icone.material = mat
 
 func lacher_pieces(ennemi: Node3D, valeur: int) -> void:
 	if not is_instance_valid(ennemi) or ennemi.has_meta("pieces_lachees"): return
@@ -71,6 +75,12 @@ func depenser(prix: int) -> bool:
 	return true
 
 func _animer_compteur() -> void:
+	# Le compteur garde son rebond ; un seul reflet accompagne une série de pièces.
+	if animation_reflet == null or not animation_reflet.is_running():
+		var mat: ShaderMaterial = $HUD/Compteur/Icone.material
+		mat.set_shader_parameter("eclat", 1.0)
+		animation_reflet = create_tween()
+		animation_reflet.tween_property(mat, "shader_parameter/eclat", 0.0, 0.4)
 	if animation_compteur: animation_compteur.kill()
 	compteur.pivot_offset = compteur.size / 2.0
 	compteur.scale = Vector2.ONE * 1.16

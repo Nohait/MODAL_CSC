@@ -145,6 +145,15 @@ func _physics_process(delta: float) -> void:
 						"vitesse": ennemi.vitesse_aura = maxf(ennemi.vitesse_aura, 1.0 + mod.bonus_aura)
 						"degats": ennemi.degats_aura = maxf(ennemi.degats_aura, 1.0 + mod.bonus_aura)
 						"resistance": ennemi.resistance_aura = maxf(ennemi.resistance_aura, mod.bonus_aura)
+		if ennemi.has_method("multiplicateur_degats"):
+			var retour = ennemi.get_node_or_null("InfluenceAura")
+			var influence: bool = ennemi.vitesse_aura > 1.0 or ennemi.degats_aura > 1.0 or ennemi.resistance_aura > 0.0
+			if influence and retour == null:
+				retour = preload("res://scenes/systemes/ennemis/influence_aura.gd").new()
+				retour.name = "InfluenceAura"
+				ennemi.add_child(retour)
+			if retour != null:
+				retour.actualiser(ennemi.vitesse_aura, ennemi.degats_aura, ennemi.resistance_aura)
 		if camera == null or not is_instance_valid(joueur): continue
 		if not camera.is_position_in_frustum(ennemi.global_position) or joueur.global_position.distance_to(ennemi.global_position) > 24.0: continue
 		var rayon := PhysicsRayQueryParameters3D.create(joueur.global_position, ennemi.global_position + Vector3.UP * 0.5, 1)

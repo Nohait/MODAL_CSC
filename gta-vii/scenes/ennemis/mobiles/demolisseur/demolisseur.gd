@@ -7,7 +7,7 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 
 @export_group("Démolisseur — frappe")
 @export var portee_frappe := 1.7
-@export var degats_frappe := 28.0
+@export var degats_frappe := 40.0
 @export_range(0.1, 2.0, 0.05) var preparation_frappe := 0.85
 @export_range(0.05, 0.5, 0.01) var duree_coup := 0.14
 @export var repos_frappe := 0.55

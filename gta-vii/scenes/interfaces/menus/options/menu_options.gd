@@ -155,13 +155,7 @@ func ouvrir() -> void:
 	_choisir_onglet(false)
 	menu.show()
 	if animation: animation.kill()
-	menu.modulate.a = 0.0
-	panneau.pivot_offset = panneau.size / 2.0
-	panneau.scale = Vector2(0.97, 0.97)
-	animation = create_tween().set_parallel(true)
-	# Le fondu et le léger agrandissement vivent aussi pendant la pause.
-	animation.tween_property(menu, "modulate:a", 1.0, 0.16)
-	animation.tween_property(panneau, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	animation = preload("res://scenes/interfaces/menus/transition_panneau.gd").ouvrir(self, menu, panneau)
 	if not Input.get_connected_joypads().is_empty(): onglet_reglages.grab_focus()
 
 func fermer() -> void:

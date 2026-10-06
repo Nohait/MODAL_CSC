@@ -2,6 +2,8 @@ extends Node3D
 
 # Adapter la même annonce aux différents ennemis qui préparent un tir.
 var etat_preparation := "preparation"
+# Certains ennemis, comme le Blaze, restent menaçants pendant plusieurs tirs.
+var etats_supplementaires: Array[String] = []
 var propriete_duree := "preparation_tir"
 var artilleur: Node3D
 var angle := 0.0
@@ -61,7 +63,7 @@ func _materiau(couleur: Color) -> StandardMaterial3D:
 
 func _process(delta: float) -> void:
 	var cible = artilleur.cible_attaque
-	var actif: bool = not artilleur.est_mort and artilleur.etat == etat_preparation and is_instance_valid(cible)
+	var actif: bool = not artilleur.est_mort and (artilleur.etat == etat_preparation or artilleur.etat in etats_supplementaires) and is_instance_valid(cible)
 	if not actif or not cible.is_in_group("player") or cible.est_mort:
 		hide()
 		return
@@ -69,7 +71,7 @@ func _process(delta: float) -> void:
 	var nouveau := atan2(direction.x, direction.z)
 	# Pointer immédiatement à l'apparition, puis lisser les rotations suivantes.
 	angle = lerp_angle(angle, nouveau, 1.0 - exp(-12.0 * delta)) if visible else nouveau
-	var avancee := clampf(1.0 - artilleur.temps_etat / maxf(float(artilleur.get(propriete_duree)), 0.001), 0.0, 1.0)
+	var avancee := 1.0 if artilleur.etat in etats_supplementaires else clampf(1.0 - artilleur.temps_etat / maxf(float(artilleur.get(propriete_duree)), 0.001), 0.0, 1.0)
 	global_position = cible.global_position + Vector3.UP * 0.35
 	global_rotation = Vector3(0, angle + PI, 0)
 	# La pulsation devient légèrement plus marquée vers la fin de la charge.

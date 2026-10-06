@@ -35,10 +35,10 @@ var input_victim_control_fait := false
 
 @export_group("Dash")
 ## Vitesse du dash, en unités par seconde.
-@export_range(0.0, 100.0, 0.1, "or_greater") var dash_speed: float = 50.0
+@export_range(0.0, 100.0, 0.1, "or_greater") var dash_speed: float = 42.0
 ## Durée en secondes. Vitesse × durée donne la distance approximative du dash.
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
-@export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.2
+@export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.3
 
 @onready var anim_tree: AnimationTree = $visual/pompier/visual/Armature/AnimationTree
 const PARAM_BLEND := "parameters/blend_position"

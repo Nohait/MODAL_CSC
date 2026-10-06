@@ -25,6 +25,8 @@ extends Resource
 @export_range(1, 100, 1) var intervalle_vagues_boss := 10
 
 @export_group("Groupes d'apparition")
+# Ces ennemis sont présents dès le lancement du timer, hors renforts annoncés.
+@export_range(1, 5, 1) var ennemis_au_depart := 1
 @export_range(1, 5, 1) var taille_initiale_groupe := 2
 ## Nombre de vagues entre deux augmentations de 1 du groupe d'apparition.
 @export_range(1, 10, 1) var vagues_entre_augmentations_groupe := 3
