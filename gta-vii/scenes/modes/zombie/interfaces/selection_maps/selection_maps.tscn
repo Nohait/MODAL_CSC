@@ -52,7 +52,8 @@ size_flags_vertical = 3
 [node name="Cartes" type="GridContainer" parent="Contenu/ZoneCartes/Centre"]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 1
+columns = 2
+theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 30
 
 [node name="Bas" type="HBoxContainer" parent="Contenu"]

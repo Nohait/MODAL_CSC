@@ -35,6 +35,8 @@ func demarrer_partie() -> void:
 	await get_tree().physics_frame
 	refuge = preload("res://scenes/modes/zombie/victimes/refuge_zombie.tscn").instantiate()
 	refuge.name = "Refuge"
+	# Chaque arène peut placer le camion, sans déplacer les systèmes de jeu.
+	if salle.get("position_refuge") is Vector3: refuge.position = salle.position_refuge
 	salle.get_node("Navigation/Decor").add_child(refuge)
 	refuge.escorte = victim_manager
 	refuge.victime_perdue.connect(boutique.retours_bonus.afficher_victime_perdue)

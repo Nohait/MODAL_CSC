@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_arrivee.tscn" id="base"]
+[ext_resource type="Script" path="res://scenes/modes/zombie/apparitions/entree_garage.gd" id="script"]
+[ext_resource type="Script" path="res://scenes/decors/parking/accessoire_parking.gd" id="accessoire"]
+[ext_resource type="PackedScene" path="res://assets/modeles/parking/garage_door/scene.gltf" id="modele"]
+
+[sub_resource type="StandardMaterial3D" id="ambre"]
+albedo_color = Color(1, 0.35, 0.03, 1)
+emission_enabled = true
+emission = Color(1, 0.25, 0.02, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="SphereMesh" id="cabochon"]
+radius = 0.11
+height = 0.22
+
+[node name="GarageArrivee" instance=ExtResource("base")]
+script = ExtResource("script")
+afficher_fond = false
+
+[node name="Portes" parent="."]
+visible = false
+
+[node name="Montant-2.1" parent="."]
+visible = false
+
+[node name="Montant2.1" parent="."]
+visible = false
+
+[node name="Linteau" parent="."]
+visible = false
+
+[node name="ModeleGarage" type="Node3D" parent="."]
+script = ExtResource("accessoire")
+modele = ExtResource("modele")
+largeur = 4.4
+aligner_avant = true
+
+[node name="Gyrophare" type="MeshInstance3D" parent="."]
+position = Vector3(2.05, 2.85, 0.25)
+mesh = SubResource("cabochon")
+material_override = SubResource("ambre")
+cast_shadow = 0
+
+[node name="Lumiere" type="OmniLight3D" parent="Gyrophare"]
+light_color = Color(1, 0.35, 0.04, 1)
+light_energy = 0.0
+omni_range = 4.0
+
+[node name="LumiereRampe" type="OmniLight3D" parent="."]
+position = Vector3(0, 2.6, -3.5)
+light_color = Color(0.55, 0.65, 0.75, 1)
+light_energy = 0.0
+omni_range = 7.0

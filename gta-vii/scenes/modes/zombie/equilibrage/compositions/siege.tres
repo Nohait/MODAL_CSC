@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CompositionVague" format=3 uid="uid://cff8pe5wjghiq"]
 
 [ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
-[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
+[ext_resource type="PackedScene" uid="uid://hiqoxgqogngr" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
 [ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
 [ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]

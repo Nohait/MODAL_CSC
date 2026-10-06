@@ -84,7 +84,7 @@ func _process(delta: float) -> void:
 		for passage in passages:
 			if is_instance_valid(passage.visuel):
 				# Les figurants sortent seulement une fois la cabine arrivée et ouverte.
-				passage.visuel.position = passage.depart.lerp(passage.destination, clampf((progression - 0.8) / 0.2, 0.0, 1.0))
+				passage.visuel.position = passage.depart.lerp(passage.destination, _progression_sortie(progression))
 	elif ouverture_restante > 0.0:
 		# Le premier ennemi est déjà présent : ouvrir malgré tout les battants progressivement.
 		ouverture_restante = maxf(0.0, ouverture_restante - delta)
@@ -103,6 +103,9 @@ func _process(delta: float) -> void:
 	_regler_son_mecanisme(descente_en_cours or remontee_restante > 0.0)
 	# Le glissement occupe la phase entre l'arrivée de la cabine et la sortie des mobs.
 	_regler_son_portes(occupee and temps >= duree * 0.65 and temps < duree * 0.8)
+
+func _progression_sortie(progression: float) -> float:
+	return clampf((progression - 0.8) / 0.2, 0.0, 1.0)
 
 func ouvrir_pour_arrivee_immediate() -> void:
 	# Conserver la fermeture habituelle, sans sauter directement à l'état ouvert.

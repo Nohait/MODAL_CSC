@@ -1,0 +1,14 @@
+[gd_resource type="Environment" format=3]
+
+[resource]
+background_mode = 1
+background_color = Color(0.009, 0.013, 0.019, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.54, 0.66, 0.82, 1)
+ambient_light_energy = 0.2
+reflected_light_source = 1
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.4
+ssr_enabled = true
+ssr_max_steps = 48

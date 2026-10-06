@@ -2,6 +2,8 @@ extends "res://scenes/interfaces/menus/ameliorations/upgrade_manager.gd"
 
 signal boutique_fermee
 var sprinklers: Array[Node3D] = []
+var ventilation: Node3D
+var tuile_ventilation: Button
 
 func _acheter_booster(rarete: StringName) -> void:
 	var avant := points
@@ -69,6 +71,7 @@ func _actualiser_pieces(_solde: int = 0) -> void:
 				objet.etat_change.connect(_actualiser_pieces)
 		if not sprinklers.is_empty(): boutique.ajouter_sprinklers(sprinklers)
 	boutique.actualiser_sprinklers(monnaie.solde)
+	_actualiser_ventilation()
 
 func _acheter_sprinkler(sprinkler: Node3D) -> void:
 	if not boutique_ouverte or choix_ouverts or not is_instance_valid(sprinkler): return
@@ -76,3 +79,34 @@ func _acheter_sprinkler(sprinkler: Node3D) -> void:
 	if monnaie.depenser(sprinkler.prix_activation):
 		sprinkler.armer()
 		boutique.retour.text = "Sprinkler armé · %s : le prochain ennemi déclenchera le jet." % sprinkler.emplacement
+
+func _actualiser_ventilation() -> void:
+	if not is_instance_valid(ventilation):
+		for objet in get_tree().get_nodes_in_group("ventilation_zombie"):
+			if get_parent().is_ancestor_of(objet):
+				ventilation = objet
+				ventilation.etat_change.connect(_actualiser_pieces)
+				break
+	if not is_instance_valid(ventilation): return
+	if not is_instance_valid(tuile_ventilation):
+		# Réutiliser la tuile d'équipement pour garder le même habillage.
+		tuile_ventilation = boutique.recharge_murale.duplicate(0)
+		tuile_ventilation.name = "Desenfumage"
+		tuile_ventilation.show()
+		boutique.recharge_murale.get_parent().add_child(tuile_ventilation)
+		var details := tuile_ventilation.get_child(0)
+		details.get_child(0).texture = load("res://assets/textures/interfaces/boutique/ventilation.svg")
+		details.get_child(1).text = "Préparer le\ndésenfumage"
+		tuile_ventilation.pressed.connect(_acheter_ventilation)
+	var occupe: bool = ventilation.arme or ventilation.temps_restant > 0.0
+	tuile_ventilation.disabled = occupe or monnaie.solde < ventilation.prix_activation
+	tuile_ventilation.modulate.a = 0.55 if tuile_ventilation.disabled else 1.0
+	tuile_ventilation.get_child(0).get_child(2).text = "Déjà prêt" if occupe else "%d pièces" % ventilation.prix_activation
+	tuile_ventilation.tooltip_text = "Réduit la fumée proche pendant %ds au début de la prochaine vague." % roundi(ventilation.duree)
+
+func _acheter_ventilation() -> void:
+	if not boutique_ouverte or choix_ouverts or not is_instance_valid(ventilation): return
+	if ventilation.arme or ventilation.temps_restant > 0.0: return
+	if monnaie.depenser(ventilation.prix_activation):
+		ventilation.armer()
+		boutique.retour.text = "Désenfumage prêt pour la prochaine vague."

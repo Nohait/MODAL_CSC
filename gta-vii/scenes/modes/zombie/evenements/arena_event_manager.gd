@@ -23,6 +23,9 @@ func _appliquer(palier: PalierArene, cible: Node3D) -> void:
 		"ouvrir_entree": cible.premiere_vague = palier.vague
 		"eteindre_lumiere": cible.hide()
 		"allumer_lumiere": cible.show()
+		"declencher":
+			# Le palier choisit quand ; l'objet de la map connaît son propre comportement.
+			if cible.has_method("declencher"): cible.declencher()
 
 func capturer_sauvegarde() -> Dictionary:
 	var chemins: Array[String] = []

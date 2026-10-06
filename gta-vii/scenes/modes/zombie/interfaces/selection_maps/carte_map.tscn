@@ -11,7 +11,7 @@ shader_parameter/largeur_bord = 11.0
 shader_parameter/intensite_braises = 0.65
 
 [node name="CarteMap" type="Button"]
-custom_minimum_size = Vector2(560, 315)
+custom_minimum_size = Vector2(480, 270)
 mouse_default_cursor_shape = 2
 script = ExtResource("script")
 

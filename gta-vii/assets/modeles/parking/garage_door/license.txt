@@ -1,0 +1,11 @@
+Model Information:
+* title:	Garage Door
+* source:	https://sketchfab.com/3d-models/garage-door-d5c417514e834a04b27b1a013d86a805
+* author:	FrodoUndead (https://sketchfab.com/FrodoUndead)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Garage Door" (https://sketchfab.com/3d-models/garage-door-d5c417514e834a04b27b1a013d86a805) by FrodoUndead (https://sketchfab.com/FrodoUndead) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
