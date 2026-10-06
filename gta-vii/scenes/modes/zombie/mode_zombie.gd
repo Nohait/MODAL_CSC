@@ -63,4 +63,7 @@ func _ready() -> void:
 	succes.name = "SuccesZombie"
 	succes.set_script(preload("res://scenes/modes/zombie/gestion/succes_zombie.gd"))
 	niveau.add_child(succes)
+	var point_reprise := preload("res://scenes/modes/zombie/sauvegarde/point_reprise_zombie.gd").new()
+	point_reprise.name = "PointRepriseZombie"
+	niveau.add_child(point_reprise)
 	add_child(niveau)

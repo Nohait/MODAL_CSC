@@ -2,6 +2,7 @@ extends "res://scenes/salles/room_manager.gd"
 
 var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
 var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
+var reprise_en_attente: Dictionary = {}
 var vague_actuelle := 0
 var vagues_terminees := 0
 var temps_vague := 0.0
@@ -50,9 +51,15 @@ func demarrer_partie() -> void:
 func demarrer_sauvetage(_salle: Node3D) -> void:
 	# activer_salle appelle cette fonction après la course d'entrée du joueur.
 	# Le sauvetage commence après la course d’entrée, comme dans le jeu principal.
-	_demarrer_vague()
+	if not reprise_en_attente.is_empty():
+		get_node("../../PointRepriseZombie").reprendre()
+		var reprise := reprise_en_attente
+		reprise_en_attente = {}
+		_demarrer_vague(load(reprise.composition), reprise.graine)
+	else:
+		_demarrer_vague()
 
-func _demarrer_vague(composition_forcee: CompositionVague = null) -> void:
+func _demarrer_vague(composition_forcee: CompositionVague = null, graine_reprise: int = -1) -> void:
 	phase = "combat"
 	vague_actuelle += 1
 	temps_vague = 0.0
@@ -63,6 +70,12 @@ func _demarrer_vague(composition_forcee: CompositionVague = null) -> void:
 		entree_mob.reinitialiser()
 	# Le debug peut imposer une composition pour cette vague seulement.
 	composition_actuelle = composition_forcee if composition_forcee != null else difficulte.choisir_composition(vague_actuelle)
+	var graine := graine_reprise if graine_reprise >= 0 else randi()
+	# Écrire AVANT le combat : quitter ne sauvegarde jamais les dégâts de cette vague.
+	if not get_node("../../PointRepriseZombie").enregistrer(self, composition_actuelle, graine):
+		boutique.retours_bonus._afficher_message("Sauvegarde impossible · reprise non garantie", preload("res://assets/textures/interfaces/ameliorations/pictogrammes/intervention_eclair.svg"))
+	# Rejouer le même tirage au lancement d'une vague sauvegardée.
+	seed(graine)
 	evenements.commencer(composition_actuelle)
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
 	positions.shuffle()
@@ -392,3 +405,11 @@ func _exit_tree() -> void:
 	for visuel in visuels_types.values():
 		visuel.free()
 
+
+func preparer_entree_salle() -> bool:
+	reprise_en_attente = SauvegardeZombie.consommer_reprise()
+	if reprise_en_attente.is_empty(): return true
+	var point_reprise = get_node("../../PointRepriseZombie")
+	point_reprise.restaurer(self, reprise_en_attente)
+	point_reprise.figer_pendant_fondu(self)
+	return false

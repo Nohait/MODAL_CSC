@@ -6,6 +6,7 @@ extends Node
 # Tableau ordonné : indice 0 = première victime, indice -1 = dernière victime.
 var freed_victims: Array[CharacterBody3D] = []
 var evacuated_count: int = 0
+var ordre_liberation := 0
 # null signifie suivre le joueur ; sinon conserver la destination donnée.
 var cible_deplacement: Node3D = null
 
@@ -43,6 +44,9 @@ func register_victim(victim: CharacterBody3D) -> void:
 
 	# Sortir la victime de sa salle AVANT de surveiller sa disparition.
 	# Elle continuera à suivre le joueur quand l'ancienne salle sera désactivée.
+	if not victim.has_meta("ordre_liberation"):
+		ordre_liberation += 1
+		victim.set_meta("ordre_liberation", ordre_liberation)
 	victim.reparent(get_node("../Escorte"), true)
 	if freed_victims.is_empty():
 		cible_deplacement = null
@@ -115,3 +119,65 @@ func _on_victim_exiting(victim: CharacterBody3D) -> void:
 	reorganiser_file()
 	actualiser_bonus()
 	escort_changed.emit()
+
+func capturer_sauvegarde() -> Dictionary:
+	var victimes: Array[Dictionary] = []
+	var effets = player.ameliorations.effets_cartes
+	for victime in freed_victims:
+		if not is_instance_valid(victime) or victime.est_morte: continue
+		var protection: Dictionary = effets.victimes_bouclier.get(victime.get_instance_id(), {}).duplicate()
+		protection.erase("victime")
+		victimes.append({"position": victime.global_position, "rotation": victime.rotation,
+			"vie": victime.vie, "vie_max": victime.vie_max,
+			"fragile": victime.defi_fragile, "points": victime.points_boutique,
+			"ordre": victime.get_meta("ordre_liberation", 0), "depot": _est_en_depot(victime),
+			"extraction_utilisee": victime.has_meta("extraction_utilisee"), "protection": protection,
+			"prochaine_protection": effets.prochaine_protection.get(victime.get_instance_id(), 0.0)})
+	return {"victimes": victimes, "ordre_liberation": ordre_liberation,
+		"destination": cible_deplacement.global_position if is_instance_valid(cible_deplacement) else null}
+
+func restaurer_sauvegarde(etat: Dictionary, salle: Node3D) -> void:
+	ordre_liberation = etat.ordre_liberation
+	var effets = player.ameliorations.effets_cartes
+	for donnees in etat.victimes:
+		var victime = preload("res://scenes/victimes/victime.tscn").instantiate()
+		victime.is_freed = true
+		victime.arret = false
+		victime.vie_max = donnees.vie_max
+		victime.defi_fragile = donnees.get("fragile", false)
+		victime.points_boutique = donnees.get("points", 1)
+		get_node("../Escorte").add_child(victime)
+		# vie est @onready : la restaurer après l'ajout empêche un remplissage involontaire.
+		victime.vie = donnees.vie
+		victime.global_position = donnees.position
+		victime.rotation = donnees.rotation
+		victime.set_meta("ordre_liberation", donnees.ordre)
+		if donnees.extraction_utilisee: victime.set_meta("extraction_utilisee", true)
+		victime.set_ennemis_container(salle.get_node("Ennemis"))
+		victime.playback.travel("Locomotion")
+		victime.actualiser_barre_vie()
+		victime.update_interaction_label()
+		freed_victims.append(victime)
+		victime.tree_exiting.connect(_on_victim_exiting.bind(victime))
+		if donnees.depot: _restaurer_depot(victime)
+		var id: int = victime.get_instance_id()
+		if not donnees.protection.is_empty():
+			effets.proteger_victime(victime)
+			var protection: Dictionary = donnees.protection.duplicate()
+			protection.victime = victime
+			effets.victimes_bouclier[id] = protection
+		effets.prochaine_protection[id] = donnees.prochaine_protection
+	# Conserver un ordre de déplacement en cours sans émettre une nouvelle libération.
+	if etat.destination is Vector3:
+		var destination := Marker3D.new()
+		get_node("../Escorte").add_child(destination)
+		destination.global_position = etat.destination
+		cible_deplacement = destination
+	reorganiser_file()
+	escort_changed.emit()
+
+func _est_en_depot(_victime: CharacterBody3D) -> bool:
+	return false
+
+func _restaurer_depot(_victime: CharacterBody3D) -> void:
+	pass

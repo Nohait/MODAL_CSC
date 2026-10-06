@@ -153,15 +153,63 @@ theme_override_font_sizes/font_size = 26
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 
-[node name="NouvellePartie" parent="Menu/Colonne" unique_id=1299801880 instance=ExtResource("button")]
+[node name="Classique" type="VBoxContainer" parent="Menu/Colonne"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitreClassique" type="Label" parent="Menu/Colonne/Classique"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.76, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+text = "MODE CLASSIQUE"
+
+[node name="Actions" type="HBoxContainer" parent="Menu/Colonne/Classique"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NouvellePartie" parent="Menu/Colonne/Classique/Actions" unique_id=1299801880 instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Nouvelle partie"
 
-[node name="ModeZombie" parent="Menu/Colonne" unique_id=1743227809 instance=ExtResource("button")]
+[node name="SupprimerClassique" parent="Menu/Colonne/Classique/Actions" instance=ExtResource("button")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "×"
+tooltip_text = "Supprimer la partie classique sauvegardée"
+taille_minimale = Vector2(74, 74)
+taille_police = 38
+
+[node name="Zombie" type="VBoxContainer" parent="Menu/Colonne"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitreZombie" type="Label" parent="Menu/Colonne/Zombie"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.76, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+text = "MODE ZOMBIE"
+
+[node name="Actions" type="HBoxContainer" parent="Menu/Colonne/Zombie"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ModeZombie" parent="Menu/Colonne/Zombie/Actions" instance=ExtResource("button")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Mode zombie"
+size_flags_horizontal = 3
+text = "Nouvelle partie"
+
+[node name="SupprimerZombie" parent="Menu/Colonne/Zombie/Actions" instance=ExtResource("button")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "×"
+tooltip_text = "Supprimer la partie zombie sauvegardée"
+taille_minimale = Vector2(74, 74)
+taille_police = 38
 
 [node name="Succes" parent="Menu/Colonne" unique_id=1111282242 instance=ExtResource("button")]
 unique_name_in_owner = true

@@ -72,3 +72,11 @@ func _actualiser() -> void:
 func _process(delta: float) -> void:
 	temps_voyant += delta
 	voyant.material_override.emission_energy_multiplier = 0.7 + (sin(temps_voyant * 3.0) + 1.0) * 0.4 if disponible else 0.3
+
+func capturer_sauvegarde() -> Dictionary:
+	return preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").lire_champs(self, ["disponible"])
+
+func restaurer_sauvegarde(etat: Dictionary) -> void:
+	preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").appliquer_champs(self, etat)
+	_actualiser()
+	etat_change.emit()

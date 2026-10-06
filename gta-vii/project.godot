@@ -23,6 +23,8 @@ SuccesManager="*res://scenes/systemes/succes/succes_manager.gd"
 CursorManager="*res://cursor_manager.gd"
 Reglages="*res://scenes/systemes/reglages/reglages.gd"
 StatistiquesZombie="*res://scenes/modes/zombie/statistiques/statistiques_zombie.gd"
+SauvegardeZombie="*res://scenes/modes/zombie/sauvegarde/sauvegarde_zombie.gd"
+SauvegardeClassique="*res://scenes/jeu/sauvegarde/sauvegarde_classique.gd"
 
 [display]
 

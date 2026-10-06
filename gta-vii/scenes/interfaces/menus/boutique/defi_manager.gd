@@ -149,3 +149,28 @@ func _terminer_salle(salle: Node3D) -> void:
 			# La victime fragile n'a pas de durée limite : compter les salles survécues.
 			defi.progression += 1
 	defis_changes.emit()
+
+func capturer_sauvegarde() -> Dictionary:
+	var liste: Array[Dictionary] = []
+	for defi in actifs:
+		var copie: Dictionary = defi.duplicate()
+		if copie.has("victime"):
+			copie.indice_victime = escorte.freed_victims.find(copie.victime)
+			copie.erase("victime")
+		liste.append(copie)
+	return {"actifs": liste, "gratuits": boosters_rares_gratuits, "bilan": bilan}
+
+func restaurer_sauvegarde(etat: Dictionary) -> void:
+	actifs.clear()
+	for donnees in etat.actifs:
+		var defi: Dictionary = donnees.duplicate()
+		if defi.has("indice_victime"):
+			var indice: int = defi.indice_victime
+			if indice < 0 or indice >= escorte.freed_victims.size(): continue
+			defi.victime = escorte.freed_victims[indice]
+			defi.victime.died.connect(_victime_fragile_morte)
+			defi.erase("indice_victime")
+		actifs.append(defi)
+	boosters_rares_gratuits = etat.gratuits
+	bilan = etat.bilan
+	defis_changes.emit()

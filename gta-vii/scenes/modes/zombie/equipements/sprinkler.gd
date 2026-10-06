@@ -161,3 +161,12 @@ func _process(delta: float) -> void:
 	mat.albedo_color = Color("80dfff") if actif else (Color("81dba7") if arme else Color("b76c50"))
 	mat.emission = mat.albedo_color
 	mat.emission_energy_multiplier = 2.5 if actif else (0.5 + 0.4 * sin(temps_voyant * 3.0) if arme else 0.15)
+
+func capturer_sauvegarde() -> Dictionary:
+	return preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").lire_champs(self, ["arme", "temps_restant", "temps_degats", "utilisations", "attente_rearmement", "utilise"])
+
+func restaurer_sauvegarde(etat: Dictionary) -> void:
+	preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").appliquer_champs(self, etat)
+	eau.emitting = temps_restant > 0.0
+	_actualiser()
+	etat_change.emit()

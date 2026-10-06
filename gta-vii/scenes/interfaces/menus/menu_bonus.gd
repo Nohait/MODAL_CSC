@@ -234,6 +234,14 @@ func _choisir_onglet(ouvrir_glossaire: bool) -> void:
 
 
 func _demander_retour_titre() -> void:
+	var avertissement: Label = confirmation.get_node("Contenu/Marge/Disposition/Avertissement")
+	if upgrades.mode_jeu == "zombie" and SauvegardeZombie.disponible():
+		avertissement.text = "Votre partie reprendra au début de la vague %d.\nLa progression depuis son lancement sera annulée.\nVoulez-vous retourner à l’écran titre ?" % SauvegardeZombie.dernier_point.vague
+	elif upgrades.mode_jeu == "classique" and SauvegardeClassique.disponible():
+		var indice: int = SauvegardeClassique.dernier_point.indice
+		avertissement.text = "Votre partie reprendra au début de la salle %d de l’étage %d.\nLa progression depuis son lancement sera annulée.\nVoulez-vous retourner à l’écran titre ?" % [indice % 5 + 1, indice / 5 + 1]
+	else:
+		avertissement.text = "La partie en cours sera perdue.\nVoulez-vous vraiment quitter cette partie ?"
 	# Une fenêtre exclusive bloque les clics et la navigation dans le Carnet derrière.
 	confirmation.popup_centered()
 	if not Input.get_connected_joypads().is_empty():

@@ -1,7 +1,6 @@
 extends "res://scenes/victimes/victim_manager.gd"
 
 var refuge: Node3D
-var ordre_liberation := 0
 # Le dépôt concerne seulement les victimes présentes lors du clic sur le camion.
 var victimes_en_depot: Array[CharacterBody3D] = []
 
@@ -53,3 +52,9 @@ func reorganiser_file() -> void:
 		else:
 			victime.follow_target = cible
 			cible = victime
+
+func _est_en_depot(victime: CharacterBody3D) -> bool:
+	return victimes_en_depot.has(victime)
+
+func _restaurer_depot(victime: CharacterBody3D) -> void:
+	victimes_en_depot.append(victime)

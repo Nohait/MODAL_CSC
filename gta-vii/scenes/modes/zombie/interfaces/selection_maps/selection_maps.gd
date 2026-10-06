@@ -17,6 +17,7 @@ func _ready() -> void:
 
 func _choisir(map: String) -> void:
 	# Conserver la map choisie pour rejouer la même après une mort ou avec R.
+	SauvegardeZombie.reprise.clear()
 	get_tree().set_meta("map_zombie", map)
 	_changer_scene("res://scenes/modes/zombie/mode_zombie.tscn")
 

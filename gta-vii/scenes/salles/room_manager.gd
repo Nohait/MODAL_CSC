@@ -131,7 +131,10 @@ func demarrer_partie() -> void:
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	objectifs.text = "Génération des salles…"
+	var point = get_node_or_null("../../PointRepriseClassique")
+	if point != null: point.preparer_parcours(self)
 	for i in range(nombre_salles):
+		if point != null: seed(point.graines[i])
 		var fin_etage := (i + 1) % SALLES_PAR_ETAGE == 0
 
 		# On réserve suffisamment de points d'arrivée pour toute l'escorte potentielle.
@@ -154,7 +157,7 @@ func demarrer_partie() -> void:
 		salle.sortie_franchie.connect(_on_sortie_franchie)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	await activer_salle(0)
+	await activer_salle(int(point.reprise.indice) if point != null and not point.reprise.is_empty() else 0)
 	partie_prete.emit()
 
 # Population
@@ -298,6 +301,8 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	salle.sauvetage_demarre = true
 	salle.sauvetage_en_cours = true
 	salle.sauvetage_termine = false
+	var point = get_node_or_null("../../PointRepriseClassique")
+	if point != null: point.commencer_salle(self)
 	salle.duree_sauvetage = randf_range(clampf(duree_min_vagues, 15.0, 30.0), clampf(maxf(duree_min_vagues, duree_max_vagues), 15.0, 30.0))
 	salle.temps_sauvetage_restant = salle.duree_sauvetage
 	var tailles: Array[int] = []
@@ -528,6 +533,8 @@ func activer_salle(indice: int) -> void:
 			objectifs.text = "Navigation indisponible — R pour relancer."
 			return
 
+	# Une reprise peut restaurer le joueur avant le fondu, sans rejouer son arrivée.
+	var jouer_course := preparer_entree_salle()
 	# Les ressources et la navigation sont prêtes : laisser voir la course d’entrée.
 	Reglages.chargement.terminer()
 	# Révéler la nouvelle pièce avant la course ; le combat et son timer restent gelés.
@@ -537,9 +544,10 @@ func activer_salle(indice: int) -> void:
 		await transition_etage.reveler_salle()
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.entree.commencer()
-	joueur.commencer_entree(arrivee)
 	joueur.set_physics_process(true)
-	await joueur.entree_terminee
+	if jouer_course:
+		joueur.commencer_entree(arrivee)
+		await joueur.entree_terminee
 	salle_actuelle.get_node("Ennemis").process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.get_node("Victimes").process_mode = Node.PROCESS_MODE_INHERIT
 	transition_en_cours = false
@@ -643,6 +651,7 @@ func passer_salle_suivante() -> void:
 		await activer_salle(indice_salle + 1)
 	else:
 		# Compter les victimes encore vivantes avant que la scène du niveau soit détruite.
+		SauvegardeClassique.supprimer()
 		SuccesManager.valider_victoire(compter_victimes_escorte_vivantes())
 		get_tree().change_scene_to_file("res://scenes/interfaces/menus/ecran_victoire.tscn")
 
@@ -765,3 +774,7 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 		return true
 	ennemi.free()
 	return false
+
+func preparer_entree_salle() -> bool:
+	var point = get_node_or_null("../../PointRepriseClassique")
+	return point.preparer_entree(self) if point != null else true

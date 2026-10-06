@@ -603,3 +603,38 @@ func _acheter_recharge_murale() -> void:
 	if monnaie.depenser(extincteur_mural.prix_recharge):
 		extincteur_mural.recharger()
 		boutique.retour.text = "Extincteur mural rechargé : un plein de mousse vous attend."
+
+func capturer_sauvegarde() -> Dictionary:
+	var cartes: Array[Dictionary] = []
+	for acquisition in acquisitions:
+		var copie: Dictionary = acquisition.duplicate(true)
+		copie.erase("definition")
+		cartes.append(copie)
+	return {"acquisitions": cartes, "cartes_obtenues": cartes_obtenues.duplicate(true),
+		"synergies": synergy_manager.decouvertes.duplicate(true),
+		"effets": preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").lire_champs(effets_cartes,
+			["courage_restant", "protection_restant", "position_abri", "attente_equipe", "reseau_restant", "temps_ecoule"]),
+		"branches": preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").lire_champs(branches_zombie,
+			["depuis_degats", "depuis_soin_dash"]) if branches_zombie != null else {}}
+
+func restaurer_sauvegarde(etat: Dictionary) -> void:
+	acquisitions.clear()
+	for carte in etat.acquisitions:
+		var definition := catalogue_ameliorations.trouver(StringName(carte.id))
+		if definition == null:
+			# Les cartes de synergie sont définies dans un catalogue séparé.
+			for synergie in synergies:
+				if synergie.carte.identifiant == StringName(carte.id): definition = synergie.carte
+		if definition == null:
+			push_warning("Carte sauvegardée introuvable : %s" % carte.id)
+			continue
+		var acquisition: Dictionary = carte.duplicate(true)
+		acquisition.definition = definition
+		acquisitions.append(acquisition)
+	cartes_obtenues = etat.cartes_obtenues.duplicate(true)
+	synergy_manager.decouvertes = etat.synergies.duplicate(true)
+	var copie = preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd")
+	copie.appliquer_champs(effets_cartes, etat.effets)
+	if branches_zombie != null: copie.appliquer_champs(branches_zombie, etat.branches)
+	recalculer_effets()
+	ameliorations_changees.emit()
