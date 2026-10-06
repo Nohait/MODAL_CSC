@@ -2,7 +2,6 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 
 # Réutiliser les dégâts reçus et le gel ; le crâne vole sans suivre le navmesh.
 @export_group("Kamikaze — poursuite")
-@export var hauteur_modele := 0.92
 @export var portee_detection := 12.0
 @export var vitesse_vol := 12.0
 @export var acceleration_vol := 20.0
@@ -29,17 +28,7 @@ func _ready() -> void:
 	hitbox_radius = $CollisionShape3D.shape.radius
 	cible_idle.free()
 	cible_idle = null
-	# Centrer le modèle dans sa sphère et conserver ses proportions.
-	var limites := AABB()
-	var premier := true
-	for mesh in visuel.find_children("*", "MeshInstance3D", true, false):
-		var boite: AABB = (visuel.global_transform.affine_inverse() * mesh.global_transform) * mesh.get_aabb()
-		limites = boite if premier else limites.merge(boite)
-		premier = false
-	if not premier and limites.size.y > 0.001:
-		var facteur := hauteur_modele / limites.size.y
-		visuel.scale = Vector3.ONE * facteur
-		visuel.position = -limites.get_center() * facteur
+	# Le placement du modèle est enregistré dans la scène, visible aussi dans l’éditeur.
 	origine_visuel = visuel.position
 	taille_visuel = visuel.scale
 	var particules: CPUParticles3D = flammes.get_node("Flames")

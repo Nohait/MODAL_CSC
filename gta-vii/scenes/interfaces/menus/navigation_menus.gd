@@ -32,6 +32,10 @@ func changer_scene(chemin: String) -> void:
 	if changement_en_cours:
 		return
 	changement_en_cours = true
+	if chemin in ["res://scenes/jeu/main.tscn", "res://scenes/modes/zombie/mode_zombie.tscn"]:
+		Reglages.chargement.chargement_echoue.connect(func(): changement_en_cours = false, CONNECT_ONE_SHOT)
+		Reglages.chargement.ouvrir(chemin)
+		return
 	var erreur := get_tree().change_scene_to_file(chemin)
 	if erreur != OK:
 		changement_en_cours = false

@@ -10,6 +10,11 @@ extends Resource
 @export_range(0, 100, 1) var limite_mobiles := 0
 @export var ennemi_initial: TypeEnnemiVague
 
+@export_group("Limites de groupes au début")
+# Zéro désactive la restriction ; seuls les types avec un groupe sont concernés.
+@export_range(0, 20, 1) var maximum_par_groupe_debut := 0
+@export_range(1, 100, 1) var vague_fin_limite_groupes := 10
+
 @export_group("Effet de la vague spéciale")
 @export_enum("aucun", "blackout", "double_horde", "brouillard", "chaleur", "panne", "doree", "mutation") var evenement := "aucun"
 @export var composition_base: CompositionVague
@@ -27,8 +32,8 @@ func repartir(budget: int, vague: int) -> Array[TypeEnnemiVague]:
 	for type in ennemis:
 		if type == null or type.scene == null or vague < type.premiere_vague: continue
 		comptes[type] = 0
-		for i in range(mini(type.minimum, type.maximum)):
-			if resultat.size() >= limite or type.cout_difficulte > restant: break
+		for i in range(mini(type.minimum, type.plafond(vague))):
+			if resultat.size() >= limite or type.cout_difficulte > restant or not _groupe_disponible(type, resultat, vague): break
 			resultat.append(type)
 			comptes[type] += 1
 			restant -= type.cout_difficulte
@@ -37,7 +42,7 @@ func repartir(budget: int, vague: int) -> Array[TypeEnnemiVague]:
 		var possibles: Array[TypeEnnemiVague] = []
 		var somme := 0.0
 		for type in comptes:
-			if comptes[type] < type.maximum and type.poids_tirage > 0 and type.cout_difficulte <= restant:
+			if comptes[type] < type.plafond(vague) and type.poids_tirage > 0 and type.cout_difficulte <= restant and _groupe_disponible(type, resultat, vague):
 				possibles.append(type)
 				somme += type.poids_tirage
 		if possibles.is_empty(): break
@@ -57,3 +62,10 @@ func repartir(budget: int, vague: int) -> Array[TypeEnnemiVague]:
 		resultat.erase(ennemi_initial)
 		resultat.push_front(ennemi_initial)
 	return resultat
+
+func _groupe_disponible(type: TypeEnnemiVague, resultat: Array[TypeEnnemiVague], vague: int) -> bool:
+	if type.groupe_limite.is_empty() or maximum_par_groupe_debut == 0 or vague >= vague_fin_limite_groupes: return true
+	var nombre := 0
+	for choisi in resultat:
+		if choisi.groupe_limite == type.groupe_limite: nombre += 1
+	return nombre < maximum_par_groupe_debut

@@ -4,7 +4,6 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 # Son déplacement et ses attaques sont propres à cette scène.
 @export_group("Course et bond")
 @export var vitesse_course := 7.0
-@export_range(0.5, 2.0, 0.05) var taille_modele := 1.25
 # Déclencher assez tôt : la course continue pendant les 0,3 s de préparation.
 @export var distance_declenchement_bond := 8.0
 @export var distance_minimum_bond := 2.0
@@ -66,19 +65,7 @@ func _ready() -> void:
 			rangee.add_child(dent)
 
 func _preparer_modele() -> void:
-	# Le GLB garde ses proportions. Ramener sa hauteur à celle d'un petit chien.
-	var limites := AABB()
-	var premier := true
-	for mesh in visuel.find_children("*", "MeshInstance3D", true, false):
-		var boite: AABB = (visuel.global_transform.affine_inverse() * mesh.global_transform) * mesh.get_aabb()
-		limites = boite if premier else limites.merge(boite)
-		premier = false
-	if not premier and limites.size.y > 0.001:
-		var facteur := 1.2 * taille_modele / limites.size.y
-		visuel.scale = Vector3.ONE * facteur
-		visuel.position = Vector3(-limites.get_center().x * facteur, -0.75, -limites.get_center().z * facteur)
-		# Le GLB animé a déjà ses pattes à son origine. Son AABB n'est pas fiable
-		# pour les poser au sol : compenser seulement les 0,75 m du corps physique.
+	# La taille et le placement sont dans la scène ; préparer seulement les animations.
 	for noeud in visuel.find_children("*", "AnimationPlayer", true, false):
 		animations = noeud
 		for nom in animations.get_animation_list():

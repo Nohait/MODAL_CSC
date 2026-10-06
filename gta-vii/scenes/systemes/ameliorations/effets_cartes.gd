@@ -20,10 +20,8 @@ var dernier_sprinkler: Node3D
 var victimes_bouclier: Dictionary = {}
 var prochaine_protection: Dictionary = {}
 var temps_ecoule := 0.0
-var attente_trace := 0.0
 var maximum_zones := 40
 const ONDE_DEBLAYAGE = preload("res://scenes/effets/combat/onde_deblayage.gd")
-const TRACE = preload("res://scenes/effets/combat/trace_combat.gd")
 
 func _ready() -> void:
 	joueur = get_parent()
@@ -106,18 +104,6 @@ func _physics_process(delta: float) -> void:
 		derniere_position = joueur.global_position
 		return
 	temps_ecoule += delta
-	attente_trace = maxf(0.0, attente_trace - delta)
-	if gestion.extincteur.emission_effective and attente_trace == 0:
-		attente_trace = 0.35
-		var arme = gestion.extincteur
-		if not arme.portions_jet.is_empty():
-			var depart: Vector3 = arme.muzzle.global_position
-			var fin: Vector3 = depart + arme.direction_jet() * minf(arme.portions_jet[-1].y, 3.5)
-			var rayon := PhysicsRayQueryParameters3D.create(depart, fin, 1)
-			var impact := joueur.get_world_3d().direct_space_state.intersect_ray(rayon)
-			if not impact.is_empty(): fin = impact.position - arme.direction_jet() * 0.15
-			var teinte := Color(0.65, 0.85, 1.0, 0.4) if arme.ralentissement_jet > 0 else Color(0.87, 0.94, 0.94, 0.35)
-			TRACE.sur_sol(gestion.room_manager.salle_actuelle, fin, teinte, 1.1)
 
 	depuis_dash += delta
 	courage_restant = maxf(0, courage_restant - delta)

@@ -3,7 +3,6 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 # Reprendre les dégâts reçus, le gel et les cendres ; remplacer la poursuite et le coup.
 @export_group("Démolisseur — déplacement")
 @export var vitesse_marche := 3.0
-@export var hauteur_modele := 3.0
 
 @export_group("Démolisseur — frappe")
 @export var portee_frappe := 1.7
@@ -29,18 +28,7 @@ func _ready() -> void:
 	hitbox_radius = 0.8
 	cible_idle.free()
 	cible_idle = null
-	# Ce modèle n'est pas animé : sa boîte permet de le centrer et de poser ses pieds.
-	var limites := AABB()
-	var premier := true
-	for mesh in visuel.find_children("*", "MeshInstance3D", true, false):
-		var boite: AABB = (visuel.global_transform.affine_inverse() * mesh.global_transform) * mesh.get_aabb()
-		limites = boite if premier else limites.merge(boite)
-		premier = false
-	if not premier and limites.size.y > 0.001:
-		var facteur := hauteur_modele / limites.size.y
-		visuel.scale = Vector3.ONE * facteur
-		visuel.position = Vector3(-limites.get_center().x, -limites.position.y, -limites.get_center().z) * facteur
-		visuel.position.y -= 1.35
+	# Le placement du modèle est enregistré dans la scène, visible aussi dans l’éditeur.
 	origine_visuel = visuel.position
 	taille_visuel = visuel.scale
 	# Un matériau propre à chaque ennemi : son annonce ne colore pas les autres.

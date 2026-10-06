@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/blaze/blaze.tscn" id="blaze"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn" id="chien"]
 [ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
@@ -40,6 +41,7 @@ premiere_vague = 5
 cout_difficulte = 2
 poids_tirage = 10.0
 maximum = 3
+groupe_limite = &"tireurs"
 
 [sub_resource type="Resource" id="Type_kamikaze"]
 script = ExtResource("type")
@@ -50,7 +52,21 @@ premiere_vague = 7
 poids_tirage = 12.0
 maximum = 6
 
+[sub_resource type="Resource" id="Type_blaze"]
+script = ExtResource("type")
+scene = ExtResource("blaze")
+hauteur = 0.95
+premiere_vague = 4
+cout_difficulte = 2
+poids_tirage = 6.0
+maximum = 1
+vague_augmentation_maximum = 10
+maximum_vagues_avancees = 2
+groupe_limite = &"tireurs"
+
 [resource]
 script = ExtResource("composition")
 poids = 2.0
-ennemis = Array[ExtResource("type")]([SubResource("Type_sbire"), SubResource("Type_chien"), SubResource("Type_demolisseur"), SubResource("Type_artilleur"), SubResource("Type_kamikaze")])
+maximum_par_groupe_debut = 1
+vague_fin_limite_groupes = 10
+ennemis = Array[ExtResource("type")]([SubResource("Type_sbire"), SubResource("Type_chien"), SubResource("Type_demolisseur"), SubResource("Type_artilleur"), SubResource("Type_kamikaze"), SubResource("Type_blaze")])

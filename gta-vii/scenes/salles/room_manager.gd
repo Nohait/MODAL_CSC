@@ -523,10 +523,13 @@ func activer_salle(indice: int) -> void:
 		if (victimes_pretes and ennemis_prets):
 			break
 		if tentative == 299:
+			Reglages.chargement.terminer()
 			push_error("La navigation de la salle n'a pas pu être initialisée.")
 			objectifs.text = "Navigation indisponible — R pour relancer."
 			return
 
+	# Les ressources et la navigation sont prêtes : laisser voir la course d’entrée.
+	Reglages.chargement.terminer()
 	# Révéler la nouvelle pièce avant la course ; le combat et son timer restent gelés.
 	if changer_etage:
 		await transition_etage.reveler(salle_actuelle.etage)

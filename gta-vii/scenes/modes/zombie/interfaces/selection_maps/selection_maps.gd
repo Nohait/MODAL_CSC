@@ -15,7 +15,7 @@ func _ready() -> void:
 		carte.afficher(definition)
 		carte.pressed.connect(_choisir.bind(definition.scene))
 
-func _choisir(map: PackedScene) -> void:
+func _choisir(map: String) -> void:
 	# Conserver la map choisie pour rejouer la même après une mort ou avec R.
 	get_tree().set_meta("map_zombie", map)
 	_changer_scene("res://scenes/modes/zombie/mode_zombie.tscn")
@@ -27,6 +27,10 @@ func _changer_scene(chemin: String) -> void:
 	if changement_en_cours:
 		return
 	changement_en_cours = true
+	if chemin == "res://scenes/modes/zombie/mode_zombie.tscn":
+		Reglages.chargement.chargement_echoue.connect(func(): changement_en_cours = false, CONNECT_ONE_SHOT)
+		Reglages.chargement.ouvrir(chemin)
+		return
 	var erreur := get_tree().change_scene_to_file(chemin)
 	if erreur != OK:
 		changement_en_cours = false

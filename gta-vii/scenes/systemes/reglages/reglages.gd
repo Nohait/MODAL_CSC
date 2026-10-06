@@ -7,9 +7,13 @@ var volumes := {"general": 1.0, "ambiance": 1.0, "effets": 1.0, "musique": 1.0}
 var sensibilite := 1.0
 var mode_fenetre: int
 var menu: CanvasLayer
+var graphismes = preload("res://scenes/systemes/reglages/graphismes.gd").new()
+var chargement = preload("res://scenes/systemes/reglages/chargement.gd").new()
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(graphismes)
+	add_child(chargement)
 	mode_fenetre = DisplayServer.window_get_mode()
 	charger()
 	# Le curseur est un autre autoload : attendre que tous soient prêts.
@@ -21,6 +25,7 @@ func _preparer_menu() -> void:
 	add_child(menu)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if chargement.en_cours: return
 	var raccourci: bool = event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F2
 	var bouton_start: bool = event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_START
 	if (raccourci or bouton_start) and is_instance_valid(menu):
@@ -56,6 +61,7 @@ func regler_plein_ecran(actif: bool) -> void:
 func charger() -> void:
 	var fichier := ConfigFile.new()
 	if fichier.load(FICHIER) == OK:
+		graphismes.appliquer(int(fichier.get_value("graphismes", "profil", 2)))
 		for categorie in volumes:
 			volumes[categorie] = clampf(float(fichier.get_value("audio", categorie, 1.0)), 0.0, 1.0)
 		sensibilite = clampf(float(fichier.get_value("manette", "sensibilite", 1.0)), 0.25, 2.5)
@@ -79,6 +85,7 @@ func charger() -> void:
 func sauvegarder() -> void:
 	var fichier := ConfigFile.new()
 	for categorie in volumes: fichier.set_value("audio", categorie, volumes[categorie])
+	fichier.set_value("graphismes", "profil", graphismes.indice)
 	fichier.set_value("manette", "sensibilite", sensibilite)
 	fichier.set_value("affichage", "mode", mode_fenetre)
 	# Garder les deux périphériques : changer une touche ne doit pas effacer la manette.

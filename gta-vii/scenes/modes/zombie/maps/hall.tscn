@@ -572,13 +572,13 @@ position = Vector3(0, 0, 0)
 [node name="CoinIntervention" parent="Navigation/Decor" instance=ExtResource("intervention")]
 position = Vector3(2.7, 0, 4.8)
 
-[node name="SignaletiqueEtage" parent="Navigation/Decor" instance=ExtResource("signalisation")]
+[node name="SignaletiqueEtage" parent="Navigation/Decor" instance=ExtResource("signalisation") groups=["details_decor"]]
 position = Vector3(0, 0, 0)
 
-[node name="DebrisEtage" parent="Navigation/Decor" instance=ExtResource("debris")]
+[node name="DebrisEtage" parent="Navigation/Decor" instance=ExtResource("debris") groups=["details_decor"]]
 position = Vector3(0, 0, 0)
 
-[node name="MobilierPieces" parent="Navigation/Decor" instance=ExtResource("mobilier")]
+[node name="MobilierPieces" parent="Navigation/Decor" instance=ExtResource("mobilier") groups=["details_decor"]]
 
 [node name="FeuGravatsRepos" parent="Navigation/Decor" instance=ExtResource("foyer")]
 position = Vector3(18, 0.25, 3)
@@ -612,7 +612,7 @@ premiere_vague = 100
 position = Vector3(-20, 0, 17)
 rotation = Vector3(0, 1.570796, 0)
 
-[node name="ExterieurVille" parent="." instance=ExtResource("ville")]
+[node name="ExterieurVille" parent="." instance=ExtResource("ville") groups=["details_decor"]]
 
 [node name="RubanIntervention" type="MeshInstance3D" parent="Navigation/Decor"]
 position = Vector3(0, 0.95, 24.2)
@@ -620,7 +620,7 @@ mesh = SubResource("ruban_mesh")
 material_override = SubResource("ruban_materiau")
 cast_shadow = 0
 
-[node name="AnnexesHall" parent="." instance=ExtResource("annexes")]
+[node name="AnnexesHall" parent="." instance=ExtResource("annexes") groups=["details_decor"]]
 
 [node name="ExtincteurMural" parent="Navigation/Decor" instance=ExtResource("extincteur_mural")]
 position = Vector3(-6, 0, -19.95)

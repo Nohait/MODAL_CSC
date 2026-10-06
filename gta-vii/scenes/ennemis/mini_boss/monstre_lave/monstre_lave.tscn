@@ -32,7 +32,6 @@ collision_layer = 4
 collision_mask = 3
 script = ExtResource("1")
 vie_max = 600.0
-hauteur_modele = 3.6
 vitesse_marche = 2.5
 preparation_frappe = 0.6
 repos_frappe = 0.7
@@ -44,6 +43,8 @@ path_desired_distance = 1.5
 target_desired_distance = 0.7
 radius = 1.1
 [node name="Sketchfab_Scene" type="Node3D" parent="."]
+position = Vector3(-0.00032746969373, -1.34662902355, 0.00372030213475)
+scale = Vector3(1.91496324539, 1.91496324539, 1.91496324539)
 [node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
 [node name="droplet" type="Node3D" parent="."]
 [node name="SurfaceDetection" type="Area3D" parent="."]

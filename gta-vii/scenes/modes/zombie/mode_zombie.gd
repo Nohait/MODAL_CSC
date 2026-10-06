@@ -37,7 +37,9 @@ func _ready() -> void:
 	var vagues = niveau.get_node("Salles/RoomManager")
 	vagues.set_script(GESTIONNAIRE)
 	vagues.difficulte = difficulte
-	vagues.map = get_tree().get_meta("map_zombie", map)
+	# Le catalogue conserve un chemin ; le chargement a déjà mis le Hall en cache.
+	var choix = get_tree().get_meta("map_zombie", map)
+	vagues.map = load(choix) if choix is String else choix
 	niveau.get_node("MenuDebug").set_script(DEBUG)
 	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
 	# La musique appartient Ã  cette partie : quitter le mode arrÃªte aussi les morceaux.

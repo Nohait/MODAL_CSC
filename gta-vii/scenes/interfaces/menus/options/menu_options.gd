@@ -10,6 +10,7 @@ const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
 @onready var onglet_controles: Button = %OngletControles
 var curseurs: Dictionary = {}
 var plein_ecran: Button
+var boutons_profils: Array[Button] = []
 var pause_avant := false
 var souris_avant: int
 var focus_avant: Control
@@ -25,6 +26,23 @@ func _ready() -> void:
 	_creer_curseur("ambiance", "Crépitement des incendies", 0.0, 100.0, 1.0)
 	_creer_curseur("effets", "Effets sonores", 0.0, 100.0, 1.0)
 	_creer_curseur("musique", "Musique", 0.0, 100.0, 1.0)
+	_creer_titre("QUALITÉ GRAPHIQUE")
+	var profils := HBoxContainer.new()
+	profils.add_theme_constant_override("separation", 14)
+	contenu.add_child(profils)
+	for i in range(Reglages.graphismes.profils.size()):
+		var bouton: Button = BOUTON.instantiate()
+		bouton.taille_minimale = Vector2(210, 48)
+		bouton.taille_police = 22
+		bouton.text = Reglages.graphismes.profils[i].titre
+		bouton.toggle_mode = true
+		profils.add_child(bouton)
+		boutons_profils.append(bouton)
+		bouton.pressed.connect(_choisir_profil.bind(i))
+	var aide := Label.new()
+	aide.text = "Résolution 3D et détails éloignés · éclairage conservé"
+	aide.add_theme_font_size_override("font_size", 16)
+	contenu.add_child(aide)
 	_creer_titre("AFFICHAGE ET VISÉE")
 	var ligne := HBoxContainer.new()
 	contenu.add_child(ligne)
@@ -129,7 +147,18 @@ func _changer_affichage(actif: bool) -> void:
 	Reglages.regler_plein_ecran(actif)
 	plein_ecran.text = "Plein écran" if actif else "Fenêtré"
 
+func _choisir_profil(indice: int) -> void:
+	Reglages.graphismes.appliquer(indice)
+	Reglages.sauvegarder()
+	_actualiser_profils()
+
+func _actualiser_profils() -> void:
+	for i in range(boutons_profils.size()):
+		boutons_profils[i].set_pressed_no_signal(i == Reglages.graphismes.indice)
+
 func ouvrir() -> void:
+	if Reglages.chargement.en_cours: return
+	_actualiser_profils()
 	if menu.visible or get_tree().current_scene == null: return
 	var joueur := get_tree().get_first_node_in_group("player")
 	if is_instance_valid(joueur):

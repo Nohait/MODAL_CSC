@@ -4,7 +4,7 @@ extends RefCounted
 const MAPS = [
 	{
 		"titre": "Hall",
-		"scene": preload("res://scenes/modes/zombie/maps/hall.tscn"),
+		"scene": "res://scenes/modes/zombie/maps/hall.tscn",
 		"image": preload("res://assets/textures/interfaces/maps/hall.png")
 	}
 ]

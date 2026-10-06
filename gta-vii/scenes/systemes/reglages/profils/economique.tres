@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ProfilGraphique" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/reglages/profil_graphique.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titre = "Économique"
+resolution_3d = 0.65
+distance_details = 55.0

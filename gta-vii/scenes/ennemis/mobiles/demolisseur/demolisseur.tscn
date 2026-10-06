@@ -29,6 +29,8 @@ path_desired_distance = 1.5
 target_desired_distance = 0.7
 radius = 0.8
 [node name="Sketchfab_Scene" type="Node3D" parent="."]
+position = Vector3(0.0143956886604, 0.66960299015, 0.0862070247531)
+scale = Vector3(0.255239188671, 0.255239188671, 0.255239188671)
 [node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
 [node name="droplet" type="Node3D" parent="."]
 [node name="SurfaceDetection" type="Area3D" parent="."]

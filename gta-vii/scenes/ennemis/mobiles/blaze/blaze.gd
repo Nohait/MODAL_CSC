@@ -3,7 +3,7 @@ extends "res://scenes/ennemis/mobiles/prototype_elementaire.gd"
 const PROJECTILE = preload("res://scenes/ennemis/mobiles/artilleur/projectile_artilleur.tscn")
 @export_group("Blaze — salve")
 @export_range(2.0, 30.0, 0.5) var portee_tir := 14.0
-@export_range(0.1, 3.0, 0.1) var preparation_salve := 0.7
+@export_range(0.1, 3.0, 0.1) var preparation_salve := 0.9
 @export_range(1, 10, 1) var nombre_boules := 3
 @export_range(0.05, 1.0, 0.05) var intervalle_boules := 0.25
 @export_range(0.0, 20.0, 0.5) var dispersion_degres := 4.0

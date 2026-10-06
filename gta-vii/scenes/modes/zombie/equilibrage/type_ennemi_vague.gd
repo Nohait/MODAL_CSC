@@ -14,3 +14,13 @@ extends Resource
 @export_range(0, 100, 1) var maximum := 30
 # Certains ennemis reprennent une variante d'aggro adaptée au camion.
 @export var script_zombie: Script
+
+@export_group("Plafond aux vagues avancées")
+# Zéro conserve le plafond initial pendant toute la partie.
+@export_range(0, 100, 1) var vague_augmentation_maximum := 0
+@export_range(0, 100, 1) var maximum_vagues_avancees := 0
+# Plusieurs types peuvent partager une limite de groupe au début de la partie.
+@export var groupe_limite: StringName = &""
+
+func plafond(vague: int) -> int:
+	return maximum_vagues_avancees if vague_augmentation_maximum > 0 and vague >= vague_augmentation_maximum else maximum

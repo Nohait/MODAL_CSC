@@ -393,12 +393,12 @@ func afficher_degats(degats: float) -> void:
 	var rd2 = randf_range(-0.1,0.1)
 	var rd3 = randf_range(-0.1,0.1)
 
-	# Arrondir seulement le texte : les dégâts réels gardent leur précision.
-	$PopUpDegats.text = "-%d" % roundi(degats)
+	# Afficher deux décimales sans modifier les dégâts réellement infligés.
+	$PopUpDegats.text = "-%.2f" % degats
 	$PopUpDegats.modulate = couleur_degats(degats)
 	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
 	# Garder la police stable : le grossissement vient de l'échelle du nœud.
-	$PopUpDegats.font_size = 40
+	$PopUpDegats.font_size = 46
 	$PopUpDegats.scale = Vector3.ONE * (1.0 + rd2)
 	$PopUpDegats.outline_size = 4
 	$PopUpDegats.visible = true

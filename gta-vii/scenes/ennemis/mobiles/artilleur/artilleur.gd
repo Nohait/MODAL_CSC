@@ -3,7 +3,6 @@ extends "res://scenes/ennemis/mobiles/sbire.gd"
 # Garder les dégâts reçus, le gel et les cendres du sbire.
 @export_group("Artilleur — déplacement")
 @export var vitesse_marche := 3.5
-@export var hauteur_modele := 2.4
 @export var portee_tir := 12.0
 @export_range(0.1, 1.0, 0.05) var intervalle_navigation := 0.3
 @export_range(0.1, 3.0, 0.1) var deplacement_avant_recalcul := 0.6
@@ -34,18 +33,7 @@ func _ready() -> void:
 	hitbox_radius = 0.8
 	cible_idle.free()
 	cible_idle = null
-	# Ce modèle n'est pas animé : sa boîte permet de le centrer et de poser ses pieds.
-	var limites := AABB()
-	var premier := true
-	for mesh in visuel.find_children("*", "MeshInstance3D", true, false):
-		var boite: AABB = (visuel.global_transform.affine_inverse() * mesh.global_transform) * mesh.get_aabb()
-		limites = boite if premier else limites.merge(boite)
-		premier = false
-	if not premier and limites.size.y > 0.001:
-		var facteur := hauteur_modele / limites.size.y
-		visuel.scale = Vector3.ONE * facteur
-		visuel.position = Vector3(-limites.get_center().x, -limites.position.y, -limites.get_center().z) * facteur
-		visuel.position.y -= 1.35
+	# Le placement du modèle est enregistré dans la scène, visible aussi dans l’éditeur.
 	origine_visuel = visuel.position
 	taille_visuel = visuel.scale
 	_colorier_modele()
