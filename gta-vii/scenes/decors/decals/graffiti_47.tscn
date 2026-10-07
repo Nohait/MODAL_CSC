@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/decals/graffiti_mural.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/decals/graffiti_47.png" id="couleur"]
+
+[node name="Graffiti47" type="MeshInstance3D"]
+editor_description = "Peinture murale sur plan transparent. Placer légèrement devant le mur ; taille X/Y = largeur/hauteur. Teinte règle couleur et opacité."
+script = ExtResource("script")
+texture = ExtResource("couleur")
+cast_shadow = 0

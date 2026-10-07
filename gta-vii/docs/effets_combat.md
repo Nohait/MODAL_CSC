@@ -98,3 +98,26 @@ les chemins. Les ennemis, victimes et le joueur restent gelés séparément pend
 l'animation. transition_en_cours empêche le timer de progresser.
 Le premier lancement et les passages dans le même étage n'ont pas cette animation.
 Les sauts d'étage du debug utilisent la même transition.
+
+## Pulvérisation de l'extincteur
+
+Le jet commun aux deux modes utilise des images transparentes (`QuadMesh`) orientées vers la caméra, à la place des petites sphères. La texture Kenney `assets/textures/extincteur/pulverisation.png` apporte les contours irréguliers ; sa licence CC0 est conservée à côté.
+
+Dans `scenes/armes/extincteur/extincteur.tscn`, le matériau affiche cette texture et la couleur des particules. Le dégradé `FonduJet` adoucit leur apparition puis leur disparition. Une rotation aléatoire évite que toutes les images se superposent de la même façon.
+
+Dans `extincteur.gd`, `configurer_jet()` construit la courbe de taille : les particules sont petites à la buse et s'élargissent au cours du trajet. Les réglages sont sur le nœud Extincteur, groupe Jet / Aspect de la pulvérisation : nombre de particules, taille de départ et taille de fin, en mètres avant la variation aléatoire. L'opacité reste dans Jet.
+
+La portée, le demi-angle, la vitesse et les portions actives de dégâts gardent leur fonctionnement. Le double jet reprend la même courbe ; la couleur du jet givré reste pilotée par les améliorations. Aucun dépôt de mousse au sol n'est ajouté.
+
+Polish partagé du jet et des victimes :
+
+- `scenes/effets/combat/contact_jet_murs.tscn` est ajouté sous chaque extincteur. Cinq rayons répartis dans le cône détectent les corps physiques toutes les 0,08 s, sur toutes les couches. Le porteur est exclu, ainsi que les Area3D de détection. Le nombre de rayons et le masque sont réglables. Leurs BoxShape3D sont copiées dans des GPUParticlesCollisionBox3D temporaires ; seule la pulvérisation utilise leur couche visuelle 18. Les particules disparaissent au contact, avec deux petites bouffées latérales utilisant la texture existante. Les volumes sont conservés le temps des derniers fragments du jet puis supprimés. Pour les autres formes (sphères, capsules, polygones, meshes), une petite boîte fine orientée selon la normale représente la surface au point de contact. Ce volume est approximatif, sans recopier tout le mesh. Les volumes suivent leur objet ; une référence faible permet de les retirer si celui-ci disparaît. Taille de contact réglable. Aucun dégât ni trace au sol ajouté. Réglages sur la scène ContactJetMurs.
+- `extincteur.gd`, groupe Souffle sonore : sous 25 % de réserve, le volume diminue progressivement jusqu'à -4 dB supplémentaires. Le fichier audio et sa vitesse restent inchangés ; les fondus de démarrage et d'arrêt sont conservés.
+- `zone_mousse.gd` et son shader : les zones gelées fondent depuis leurs bords pendant les dernières 0,9 s. Le paramètre `fonte` réduit la couverture, sans réduire la collision ou la durée des effets. Les zones non gelées gardent leur ancien fondu.
+- `victime.gd`, groupe Appel au secours : délai aléatoire de 0,1 à 0,9 s après le seuil de 50 % des PV. Un Timer enfant respecte la pause et disparaît avec la victime. Avant le cri, vérifier qu'elle est encore captive et vivante. L'appel reste unique et spatialisé ; le hasard du délai ne modifie pas les graines des combats.
+
+Verglas utilise désormais `scenes/systemes/ameliorations/depot_verglas.tscn`, ajouté sous EffetsCartes. Son script relève les portions actives du jet toutes les 0,18 s et construit leur empreinte au sol : longueur actuelle, angle et direction, avec découpe contre les obstacles de la couche sélectionnée. Le double jet dépose deux empreintes. Les traces restent dans la salle lorsque le joueur tourne ; des dépôts successifs dessinent donc son balayage. Une trace identique est rafraîchie plutôt que dupliquée. Intervalle, durée (4 s), précision du contour et masque d'obstacles sont réglables sur DepotVerglas.
+
+`zone_mousse.gd` transforme ce contour en ArrayMesh et utilise le même polygone pour vérifier quels ennemis sont réellement dedans. Le cylindre de détection ne sert qu'à obtenir une première liste de corps proches. Le shader conserve la couleur glacée et érode les bords en fin de vie. Mousse expansive agrandit aussi ces empreintes ; sa croissance possède son propre chronomètre pour ne pas repartir de zéro à chaque rafraîchissement. La silhouette suit l'enveloppe du jet, pas chaque particule individuelle. Les autres zones de mousse gardent leur forme circulaire.
+
+Les zones gelées utilisent le matériau `assets/materiaux/verglas.tres` et le shader `verglas.gdshader`. Les textures Ice003 d'ambientCG (CC0, licence à côté des images) apportent couleur, normale OpenGL et rugosité. Le matériau reçoit les lumières, avec un relief discret et une faible rugosité ; il n'est pas métallique. Les coordonnées de texture sont calculées dans le monde pour garder une échelle constante entre dépôts. Dans Shader Parameters du matériau, taille_texture règle la largeur du motif en mètres, relief l'intensité de la normale, rugosite les brillances et transparence l'opacité (1 = opaque). Chaque zone duplique le matériau pour conserver sa propre fonte. La mousse ordinaire et les abris gardent leur shader précédent.

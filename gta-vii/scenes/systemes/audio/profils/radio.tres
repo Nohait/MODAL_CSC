@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ProfilAmbiance" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/audio/profil_ambiance.gd" id="profil"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_1.wav" id="son0"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_2.wav" id="son1"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_3.wav" id="son2"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_4.wav" id="son3"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_5.wav" id="son4"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/radio_6.wav" id="son5"]
+
+[resource]
+script = ExtResource("profil")
+sons = Array[AudioStream]([ExtResource("son0"), ExtResource("son1"), ExtResource("son2"), ExtResource("son3"), ExtResource("son4"), ExtResource("son5")])
+nom = "RadioCamion"
+attente_min = 180.0
+attente_max = 300.0
+volume_db = -10.0
+distance_reference = 7.0
+portee = 24.0
+hauteur = 1.5
+vitesse_min = 1.0
+vitesse_max = 1.0

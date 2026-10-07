@@ -1,56 +1,156 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://lhsrvxyf0qf8"]
 
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/eclairage_pieces.tscn" id="eclairage_pieces"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/spots_plafond.tscn" id="spots_plafond"]
 
-[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_arrivee.tscn" id="arrivee_porte"]
-
-[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/breche_arrivee.tscn" id="arrivee_breche"]
-
-[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/fenetre_arrivee.tscn" id="arrivee_fenetre"]
-
-[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/ascenseur_arrivee.tscn" id="arrivee_ascenseur"]
-
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier_pieces.tscn" id="mobilier"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/debris_etage.tscn" id="debris"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/signaletique_etage.tscn" id="signalisation"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_intervention.tscn" id="intervention"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/cloisons_etage.tscn" id="cloisons"]
-
-[ext_resource type="PackedScene" path="res://scenes/salles/salle.tscn" id="salle"]
-[ext_resource type="Script" path="res://scenes/modes/zombie/maps/hall.gd" id="map"]
-[ext_resource type="Script" path="res://scenes/salles/entree_salle.gd" id="entree"]
-[ext_resource type="PackedScene" path="res://scenes/decors/porte_entree.tscn" id="porte"]
-[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
-[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_hall.tscn" id="hall"]
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/piliers_hall.tscn" id="piliers"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/habillage_hall.tscn" id="habillage"]
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/atmosphere_hall.tscn" id="atmosphere"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/ville/exterieur_ville.tscn" id="ville"]
-
-[ext_resource type="Shader" path="res://assets/shaders/decors/ruban_securite.gdshader" id="ruban_shader"]
-
+[ext_resource type="Texture2D" uid="uid://lik33dpc3pxm" path="res://assets/textures/decors/decals/graffiti_collage.png" id="35_4e5dy"]
 [ext_resource type="PackedScene" path="res://scenes/decors/ville/annexes_hall.tscn" id="annexes"]
-
-[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_appartements.tscn" id="porte_appartements"]
-
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/ascenseur_arrivee.tscn" id="arrivee_ascenseur"]
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/fenetre_arrivee.tscn" id="arrivee_fenetre"]
+[ext_resource type="PackedScene" uid="uid://c5frdt427ejaf" path="res://scenes/modes/zombie/apparitions/porte_arrivee.tscn" id="arrivee_porte"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/atmosphere_hall.tscn" id="atmosphere"]
+[ext_resource type="PackedScene" path="res://scenes/systemes/audio/ambiance_locale.tscn" id="audio_local"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/cloisons_etage.tscn" id="cloisons"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/debris_etage.tscn" id="debris"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_02.tscn" id="decal_fissure_02"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_03.tscn" id="decal_fissure_03"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_08.tscn" id="decal_fissure_08"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_09.tscn" id="decal_fissure_09"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_05.tscn" id="decal_graffiti_05"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_67.tscn" id="decal_graffiti_67"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_115.tscn" id="decal_graffiti_115"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_collage.tscn" id="decal_graffiti_collage"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/eclairage_pieces.tscn" id="eclairage_pieces"]
+[ext_resource type="Script" uid="uid://b1qr633buoptw" path="res://scenes/salles/entree_salle.gd" id="entree"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/extincteur_mural.tscn" id="extincteur_mural"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/habillage_hall.tscn" id="habillage"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_hall.tscn" id="hall"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_intervention.tscn" id="intervention"]
+[ext_resource type="Script" uid="uid://brxohn0l2fuo0" path="res://scenes/modes/zombie/maps/hall.gd" id="map"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier_pieces.tscn" id="mobilier"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/piliers_hall.tscn" id="piliers"]
+[ext_resource type="PackedScene" path="res://scenes/decors/porte_entree.tscn" id="porte"]
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_appartements.tscn" id="porte_appartements"]
+[ext_resource type="Shader" uid="uid://bpg6ualol4mmi" path="res://assets/shaders/decors/ruban_securite.gdshader" id="ruban_shader"]
+[ext_resource type="PackedScene" uid="uid://b7nmp862ll38o" path="res://scenes/salles/salle.tscn" id="salle"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/signaletique_etage.tscn" id="signalisation"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/radio.tres" id="son_radio"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/sirene.tres" id="son_sirene"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/sprinkler.tscn" id="sprinkler"]
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/exterieur_ville.tscn" id="ville"]
 
 [sub_resource type="BoxMesh" id="MeshSol"]
 size = Vector3(40, 0.2, 40)
 
 [sub_resource type="BoxShape3D" id="CollisionSol"]
 size = Vector3(40, 0.2, 40)
+
+[sub_resource type="BoxMesh" id="MurNordPartie0"]
+size = Vector3(7.47, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordPartie0Collision"]
+size = Vector3(7.47, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordPartie1"]
+size = Vector3(1.56, 0.8, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordPartie1Collision"]
+size = Vector3(1.56, 0.8, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordPartie2"]
+size = Vector3(1.56, 0.3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordPartie2Collision"]
+size = Vector3(1.56, 0.3, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordPartie3"]
+size = Vector3(8.97, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordPartie3Collision"]
+size = Vector3(8.97, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordPartie4Collision"]
+size = Vector3(18, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurNordFenetre0"]
+size = Vector3(1.56, 1.9, 0.05)
+
+[sub_resource type="BoxMesh" id="MurNordIncendieGauche"]
+size = Vector3(8.97, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordIncendieDroite"]
+size = Vector3(7.47, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordIncendieBas"]
+size = Vector3(1.56, 0.8, 0.5)
+
+[sub_resource type="BoxMesh" id="MurNordIncendieHaut"]
+size = Vector3(1.56, 0.3, 0.5)
+
+[sub_resource type="BoxShape3D" id="MurGauchePartie0Collision"]
+size = Vector3(0.5, 3, 15)
+
+[sub_resource type="BoxMesh" id="MurGauchePartie1"]
+size = Vector3(0.5, 3, 15.5)
+
+[sub_resource type="BoxShape3D" id="MurGauchePartie1Collision"]
+size = Vector3(0.5, 3, 15.5)
+
+[sub_resource type="BoxMesh" id="MurGauchePartie2"]
+size = Vector3(0.5, 3, 1)
+
+[sub_resource type="BoxShape3D" id="MurGauchePartie2Collision"]
+size = Vector3(0.5, 3, 1)
+
+[sub_resource type="BoxMesh" id="MurGaucheFenetreGauche"]
+size = Vector3(0.5, 3, 11.47)
+
+[sub_resource type="BoxMesh" id="MurGaucheFenetreDroite"]
+size = Vector3(0.5, 3, 1.97)
+
+[sub_resource type="BoxMesh" id="MurGaucheFenetreBas"]
+size = Vector3(0.5, 0.8, 1.56)
+
+[sub_resource type="BoxMesh" id="MurGaucheFenetreHaut"]
+size = Vector3(0.5, 0.3, 1.56)
+
+[sub_resource type="BoxShape3D" id="MurDroitPartie0Collision"]
+size = Vector3(0.5, 3, 27.47)
+
+[sub_resource type="BoxMesh" id="MurDroitPartie1"]
+size = Vector3(0.5, 0.8, 1.56)
+
+[sub_resource type="BoxShape3D" id="MurDroitPartie1Collision"]
+size = Vector3(0.5, 0.8, 1.56)
+
+[sub_resource type="BoxMesh" id="MurDroitPartie2"]
+size = Vector3(0.5, 0.3, 1.56)
+
+[sub_resource type="BoxShape3D" id="MurDroitPartie2Collision"]
+size = Vector3(0.5, 0.3, 1.56)
+
+[sub_resource type="BoxMesh" id="MurDroitPartie3"]
+size = Vector3(0.5, 3, 11.47)
+
+[sub_resource type="BoxShape3D" id="MurDroitPartie3Collision"]
+size = Vector3(0.5, 3, 11.47)
+
+[sub_resource type="BoxShape3D" id="MurDroitFenetre0"]
+size = Vector3(0.05, 1.9, 1.56)
+
+[sub_resource type="BoxMesh" id="MurDroitIncendieGauche"]
+size = Vector3(0.5, 3, 9.47)
+
+[sub_resource type="BoxMesh" id="MurDroitIncendieDroite"]
+size = Vector3(0.5, 3, 16.44)
+
+[sub_resource type="BoxMesh" id="MurDroitIncendieBas"]
+size = Vector3(0.5, 0.8, 1.56)
+
+[sub_resource type="BoxMesh" id="MurDroitIncendieHaut"]
+size = Vector3(0.5, 0.3, 1.56)
 
 [sub_resource type="BoxMesh" id="MeshMurSudGauche"]
 size = Vector3(18.75, 3, 0.5)
@@ -82,624 +182,568 @@ size = Vector3(0.5, 3, 4)
 [sub_resource type="BoxShape3D" id="CollisionCouloirDroit"]
 size = Vector3(0.5, 3, 4)
 
-[sub_resource type="BoxMesh" id="MeshFondCouloir"]
-size = Vector3(2.5, 3, 0.5)
-
 [sub_resource type="BoxShape3D" id="CollisionFondCouloir"]
 size = Vector3(2.5, 3, 0.5)
 
-[sub_resource type="BoxMesh" id="MurNordPartie0"]
-size = Vector3(7.47, 3, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordPartie0Collision"]
-size = Vector3(7.47, 3, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordPartie1"]
-size = Vector3(1.56, 0.8, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordPartie1Collision"]
-size = Vector3(1.56, 0.8, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordPartie2"]
-size = Vector3(1.56, 0.3, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordPartie2Collision"]
-size = Vector3(1.56, 0.3, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordPartie3"]
-size = Vector3(8.97, 3, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordPartie3Collision"]
-size = Vector3(8.97, 3, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordPartie4"]
-size = Vector3(18.0, 3, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordPartie4Collision"]
-size = Vector3(18.0, 3, 0.5)
-
-[sub_resource type="BoxShape3D" id="MurNordFenetre0"]
-size = Vector3(1.56, 1.9, 0.05)
-
-[sub_resource type="BoxMesh" id="MurGauchePartie0"]
-size = Vector3(0.5, 3, 15.0)
-
-[sub_resource type="BoxShape3D" id="MurGauchePartie0Collision"]
-size = Vector3(0.5, 3, 15.0)
-
-[sub_resource type="BoxMesh" id="MurGauchePartie1"]
-size = Vector3(0.5, 3, 15.5)
-
-[sub_resource type="BoxShape3D" id="MurGauchePartie1Collision"]
-size = Vector3(0.5, 3, 15.5)
-
-[sub_resource type="BoxMesh" id="MurGauchePartie2"]
-size = Vector3(0.5, 3, 1.0)
-
-[sub_resource type="BoxShape3D" id="MurGauchePartie2Collision"]
-size = Vector3(0.5, 3, 1.0)
-
-[sub_resource type="BoxMesh" id="MurDroitPartie0"]
-size = Vector3(0.5, 3, 27.47)
-
-[sub_resource type="BoxShape3D" id="MurDroitPartie0Collision"]
-size = Vector3(0.5, 3, 27.47)
-
-[sub_resource type="BoxMesh" id="MurDroitPartie1"]
-size = Vector3(0.5, 0.8, 1.56)
-
-[sub_resource type="BoxShape3D" id="MurDroitPartie1Collision"]
-size = Vector3(0.5, 0.8, 1.56)
-
-[sub_resource type="BoxMesh" id="MurDroitPartie2"]
-size = Vector3(0.5, 0.3, 1.56)
-
-[sub_resource type="BoxShape3D" id="MurDroitPartie2Collision"]
-size = Vector3(0.5, 0.3, 1.56)
-
-[sub_resource type="BoxMesh" id="MurDroitPartie3"]
-size = Vector3(0.5, 3, 11.47)
-
-[sub_resource type="BoxShape3D" id="MurDroitPartie3Collision"]
-size = Vector3(0.5, 3, 11.47)
-
-[sub_resource type="BoxShape3D" id="MurDroitFenetre0"]
-size = Vector3(0.05, 1.9, 1.56)
-
 [sub_resource type="ShaderMaterial" id="ruban_materiau"]
+render_priority = 0
 shader = ExtResource("ruban_shader")
 
 [sub_resource type="BoxMesh" id="ruban_mesh"]
-subdivide_width = 24
 size = Vector3(2.5, 0.13, 0.015)
+subdivide_width = 24
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oonme"]
+transparency = 1
+albedo_color = Color(0.68, 0.65, 0.6, 0.48)
+albedo_texture = ExtResource("35_4e5dy")
+metallic_specular = 0.0
 
-[sub_resource type="BoxMesh" id="MurNordIncendieGauche"]
-size = Vector3(8.97, 3, 0.5)
+[sub_resource type="PlaneMesh" id="PlaneMesh_gq3w5"]
+size = Vector2(1.8, 2.1)
 
-[sub_resource type="BoxMesh" id="MurNordIncendieDroite"]
-size = Vector3(7.47, 3, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordIncendieBas"]
-size = Vector3(1.56, 0.8, 0.5)
-
-[sub_resource type="BoxMesh" id="MurNordIncendieHaut"]
-size = Vector3(1.56, 0.3, 0.5)
-
-
-[sub_resource type="BoxMesh" id="MurDroitIncendieGauche"]
-size = Vector3(0.5, 3, 9.47)
-
-[sub_resource type="BoxMesh" id="MurDroitIncendieDroite"]
-size = Vector3(0.5, 3, 16.44)
-
-[sub_resource type="BoxMesh" id="MurDroitIncendieBas"]
-size = Vector3(0.5, 0.8, 1.56)
-
-[sub_resource type="BoxMesh" id="MurDroitIncendieHaut"]
-size = Vector3(0.5, 0.3, 1.56)
-
-
-[sub_resource type="BoxMesh" id="MurGaucheFenetreGauche"]
-size = Vector3(0.5, 3, 11.47)
-
-[sub_resource type="BoxMesh" id="MurGaucheFenetreDroite"]
-size = Vector3(0.5, 3, 1.97)
-
-[sub_resource type="BoxMesh" id="MurGaucheFenetreBas"]
-size = Vector3(0.5, 0.8, 1.56)
-
-[sub_resource type="BoxMesh" id="MurGaucheFenetreHaut"]
-size = Vector3(0.5, 0.3, 1.56)
-
-[node name="Hall" instance=ExtResource("salle")]
+[node name="Hall" unique_id=1947887531 instance=ExtResource("salle")]
 script = ExtResource("map")
 
-[node name="CoinHall" parent="Navigation/Decor" instance=ExtResource("hall")]
-position = Vector3(-19.8, 0, 12)
-rotation = Vector3(0, -1.5707963, 0)
+[node name="CoinHall" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="0" unique_id=1487042102 instance=ExtResource("hall")]
+transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, -19.8, 0, 12)
 
-[node name="PiliersHall" parent="Navigation/Decor" instance=ExtResource("piliers")]
+[node name="PiliersHall" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="1" unique_id=3110866 instance=ExtResource("piliers")]
 
-[node name="HabillageHall" parent="Navigation/Decor" instance=ExtResource("habillage")]
+[node name="HabillageHall" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="2" unique_id=1802389771 instance=ExtResource("habillage")]
 
-[node name="Atmosphere" parent="." instance=ExtResource("atmosphere")]
-
-[node name="Sol" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(0, -0.1, 0)
-collision_layer = 1
+[node name="Sol" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="3" unique_id=621505533 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Sol"]
-mesh = SubResource("MeshSol")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Sol" index="0" unique_id=1910290152]
+layers = 524289
 material_override = ExtResource("sol")
+mesh = SubResource("MeshSol")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/Sol"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/Sol" index="1" unique_id=1957329417]
 shape = SubResource("CollisionSol")
 
-[node name="MurNord" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(0, 1.5, -20.25)
-collision_layer = 1
+[node name="MurNord" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="4" unique_id=1449285124 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -20.25)
 collision_mask = 0
 
-[node name="Partie0" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-16.515, 0, 0)
-mesh = SubResource("MurNordPartie0")
+[node name="Partie0" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="0" unique_id=740924887]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.515, 0, 0)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurNordPartie0")
 
-[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-16.515, 0, 0)
+[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="1" unique_id=871050244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.515, 0, 0)
 shape = SubResource("MurNordPartie0Collision")
 
-[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-12, -1.1, 0)
-mesh = SubResource("MurNordPartie1")
+[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="2" unique_id=1220598548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -1.1, 0)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurNordPartie1")
 
-[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-12, -1.1, 0)
+[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="3" unique_id=477968265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -1.1, 0)
 shape = SubResource("MurNordPartie1Collision")
 
-[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-12, 1.35, 0)
-mesh = SubResource("MurNordPartie2")
+[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="4" unique_id=790638621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.35, 0)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurNordPartie2")
 
-[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-12, 1.35, 0)
+[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="5" unique_id=437211679]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.35, 0)
 shape = SubResource("MurNordPartie2Collision")
 
-[node name="Partie3" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-6.735, 0, 0)
-mesh = SubResource("MurNordPartie3")
+[node name="Partie3" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="6" unique_id=1234647571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.735, 0, 0)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurNordPartie3")
 
-[node name="Collision3" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-6.735, 0, 0)
+[node name="Collision3" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="7" unique_id=2044633384]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.735, 0, 0)
 shape = SubResource("MurNordPartie3Collision")
 
-
-[node name="Collision4" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(11.25, 0.0, 0)
+[node name="Collision4" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="8" unique_id=1055726301]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.25, 0, 0)
 shape = SubResource("MurNordPartie4Collision")
 
-[node name="GardeFenetre0" type="CollisionShape3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(-12.0, 0.25, 0)
+[node name="GardeFenetre0" type="CollisionShape3D" parent="Navigation/Decor/MurNord" index="9" unique_id=1032985648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.25, 0)
 shape = SubResource("MurNordFenetre0")
 
-[node name="MurGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(-20.25, 1.5, 0)
-collision_layer = 1
+[node name="FenetreIncendieGauche" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="10" unique_id=873942810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.735, 0, 0)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurNordIncendieGauche")
+
+[node name="FenetreIncendieDroite" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="11" unique_id=177946064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.515, 0, 0)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurNordIncendieDroite")
+
+[node name="FenetreIncendieBas" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="12" unique_id=409555390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -1.1, 0)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurNordIncendieBas")
+
+[node name="FenetreIncendieHaut" type="MeshInstance3D" parent="Navigation/Decor/MurNord" index="13" unique_id=1744388193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.35, 0)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurNordIncendieHaut")
+
+[node name="MurGauche" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="5" unique_id=662352217 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.25, 1.5, 0)
 collision_mask = 0
 
-
-[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0.0, -12.75)
+[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurGauche" index="0" unique_id=1675262650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12.75)
 shape = SubResource("MurGauchePartie0Collision")
 
-[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0.0, 7.0)
-mesh = SubResource("MurGauchePartie1")
+[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="1" unique_id=1757383129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurGauchePartie1")
 
-[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0.0, 7.0)
+[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurGauche" index="2" unique_id=1005794343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 shape = SubResource("MurGauchePartie1Collision")
 
-[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0.0, 19.75)
-mesh = SubResource("MurGauchePartie2")
+[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="3" unique_id=1349421616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19.75)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurGauchePartie2")
 
-[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0.0, 19.75)
+[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurGauche" index="4" unique_id=269529936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19.75)
 shape = SubResource("MurGauchePartie2Collision")
 
-[node name="MurDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(20.25, 1.5, 0)
-collision_layer = 1
+[node name="FenetreGauche" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="5" unique_id=1257550417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14.515)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurGaucheFenetreGauche")
+
+[node name="FenetreDroite" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="6" unique_id=1882559344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.235)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurGaucheFenetreDroite")
+
+[node name="FenetreBas" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="7" unique_id=1784723106]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, -8)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurGaucheFenetreBas")
+
+[node name="FenetreHaut" type="MeshInstance3D" parent="Navigation/Decor/MurGauche" index="8" unique_id=1229831748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -8)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurGaucheFenetreHaut")
+
+[node name="MurDroit" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="6" unique_id=1129419200 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.25, 1.5, 0)
 collision_mask = 0
 
-
-[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0, -6.515)
+[node name="Collision0" type="CollisionShape3D" parent="Navigation/Decor/MurDroit" index="0" unique_id=1881639069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.515)
 shape = SubResource("MurDroitPartie0Collision")
 
-[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, -1.1, 8)
-mesh = SubResource("MurDroitPartie1")
+[node name="Partie1" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="1" unique_id=956538007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 8)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurDroitPartie1")
 
-[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, -1.1, 8)
+[node name="Collision1" type="CollisionShape3D" parent="Navigation/Decor/MurDroit" index="2" unique_id=1758955983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 8)
 shape = SubResource("MurDroitPartie1Collision")
 
-[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 1.35, 8)
-mesh = SubResource("MurDroitPartie2")
+[node name="Partie2" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="3" unique_id=1685534922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 8)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurDroitPartie2")
 
-[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 1.35, 8)
+[node name="Collision2" type="CollisionShape3D" parent="Navigation/Decor/MurDroit" index="4" unique_id=452818056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 8)
 shape = SubResource("MurDroitPartie2Collision")
 
-[node name="Partie3" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0, 14.515)
-mesh = SubResource("MurDroitPartie3")
+[node name="Partie3" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="5" unique_id=1182306063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14.515)
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MurDroitPartie3")
 
-[node name="Collision3" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0, 14.515)
+[node name="Collision3" type="CollisionShape3D" parent="Navigation/Decor/MurDroit" index="6" unique_id=1933125773]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14.515)
 shape = SubResource("MurDroitPartie3Collision")
 
-[node name="GardeFenetre0" type="CollisionShape3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0.25, 8.0)
+[node name="GardeFenetre0" type="CollisionShape3D" parent="Navigation/Decor/MurDroit" index="7" unique_id=1918959906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 8)
 shape = SubResource("MurDroitFenetre0")
 
-[node name="MurSudGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(-10.625, 1.5, 20.25)
-collision_layer = 1
+[node name="FenetreIncendieGauche" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="8" unique_id=461297275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15.515)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurDroitIncendieGauche")
+
+[node name="FenetreIncendieDroite" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="9" unique_id=1604915084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurDroitIncendieDroite")
+
+[node name="FenetreIncendieBas" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="10" unique_id=1161948586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, -10)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurDroitIncendieBas")
+
+[node name="FenetreIncendieHaut" type="MeshInstance3D" parent="Navigation/Decor/MurDroit" index="11" unique_id=902093535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -10)
+layers = 524289
+material_override = ExtResource("mur")
+mesh = SubResource("MurDroitIncendieHaut")
+
+[node name="MurSudGauche" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="7" unique_id=1310446947 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.625, 1.5, 20.25)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudGauche"]
-mesh = SubResource("MeshMurSudGauche")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudGauche" index="0" unique_id=27444491]
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MeshMurSudGauche")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudGauche"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudGauche" index="1" unique_id=1558818624]
 shape = SubResource("CollisionMurSudGauche")
 
-[node name="MurSudDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(10.625, 1.5, 20.25)
-collision_layer = 1
+[node name="MurSudDroit" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="8" unique_id=1040686517 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.625, 1.5, 20.25)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudDroit"]
-mesh = SubResource("MeshMurSudDroit")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/MurSudDroit" index="0" unique_id=531644008]
+layers = 524289
 material_override = ExtResource("mur")
+mesh = SubResource("MeshMurSudDroit")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudDroit"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/MurSudDroit" index="1" unique_id=1058351399]
 shape = SubResource("CollisionMurSudDroit")
 
-[node name="SolEntree" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(0, -0.1, 22)
-collision_layer = 1
+[node name="SolEntree" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="9" unique_id=646000255 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 22)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/SolEntree"]
-mesh = SubResource("MeshSolEntree")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/SolEntree" index="0" unique_id=709303250]
+layers = 524289
 material_override = ExtResource("sol")
+mesh = SubResource("MeshSolEntree")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/SolEntree"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/SolEntree" index="1" unique_id=731099250]
 shape = SubResource("CollisionSolEntree")
 
-[node name="CouloirGauche" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(-1.5, 1.5, 22)
-collision_layer = 1
+[node name="CouloirGauche" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="10" unique_id=1414659702 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.5, 22)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirGauche"]
-mesh = SubResource("MeshCouloirGauche")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirGauche" index="0" unique_id=1470743963]
 material_override = ExtResource("mur")
+mesh = SubResource("MeshCouloirGauche")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirGauche"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirGauche" index="1" unique_id=2119867434]
 shape = SubResource("CollisionCouloirGauche")
 
-[node name="CouloirDroit" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
-position = Vector3(1.5, 1.5, 22)
-collision_layer = 1
+[node name="CouloirDroit" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="11" unique_id=1431903282 groups=["collider"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1.5, 22)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirDroit"]
-mesh = SubResource("MeshCouloirDroit")
+[node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/CouloirDroit" index="0" unique_id=1054046716]
 material_override = ExtResource("mur")
+mesh = SubResource("MeshCouloirDroit")
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirDroit"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/CouloirDroit" index="1" unique_id=1977410385]
 shape = SubResource("CollisionCouloirDroit")
 
-[node name="FondCouloir" type="StaticBody3D" parent="Navigation/Decor" groups=["collider"]]
+[node name="FondCouloir" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="12" unique_id=12677789 groups=["collider"]]
 editor_description = "Limite invisible derrière le ruban : garder la collision pour empêcher la sortie, sans fermer visuellement l’entrée."
-position = Vector3(0, 1.5, 24.25)
-collision_layer = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 24.25)
 collision_mask = 0
 
-[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/FondCouloir"]
+[node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/FondCouloir" index="0" unique_id=1330349640]
 shape = SubResource("CollisionFondCouloir")
 
-[node name="Entree" type="Node3D" parent="."]
-position = Vector3(0, 0, 20)
-script = ExtResource("entree")
+[node name="CloisonsEtage" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="13" unique_id=2092857178 instance=ExtResource("cloisons")]
 
-[node name="PorteCassee" parent="Entree" instance=ExtResource("porte")]
+[node name="CoinIntervention" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="14" unique_id=1297944483 instance=ExtResource("intervention")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0, 4.8)
 
-[node name="PointsApparition" type="Node3D" parent="."]
+[node name="SignaletiqueEtage" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="15" unique_id=389515918 groups=["details_decor"] instance=ExtResource("signalisation")]
 
-[node name="Point0_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, -14)
+[node name="DebrisEtage" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="16" unique_id=786106837 groups=["details_decor"] instance=ExtResource("debris")]
 
-[node name="Point4_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, -14)
+[node name="MobilierPieces" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="17" unique_id=469663727 groups=["details_decor"] instance=ExtResource("mobilier")]
 
-[node name="Point6_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, -14)
-
-[node name="Point8_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, -14)
-
-[node name="Point10_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, -14)
-
-[node name="Point14_0" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, -14)
-
-[node name="Point0_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, -10)
-
-[node name="Point4_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, -10)
-
-[node name="Point6_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, -10)
-
-[node name="Point8_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, -10)
-
-[node name="Point10_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, -10)
-
-[node name="Point14_2" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, -10)
-
-[node name="Point0_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, -6)
-
-[node name="Point4_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, -6)
-
-[node name="Point6_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, -6)
-
-[node name="Point8_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, -6)
-
-[node name="Point10_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, -6)
-
-[node name="Point14_4" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, -6)
-
-[node name="Point0_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, -2)
-
-[node name="Point4_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, -2)
-
-[node name="Point10_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, -2)
-
-[node name="Point14_6" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, -2)
-
-[node name="Point0_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, 2)
-
-[node name="Point4_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, 2)
-
-[node name="Point10_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, 2)
-
-[node name="Point14_8" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, 2)
-
-[node name="Point0_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, 6)
-
-[node name="Point4_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, 6)
-
-[node name="Point6_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, 6)
-
-[node name="Point8_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, 6)
-
-[node name="Point10_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, 6)
-
-[node name="Point14_10" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, 6)
-
-[node name="Point0_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, 10)
-
-[node name="Point4_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, 10)
-
-[node name="Point6_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, 10)
-
-[node name="Point8_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, 10)
-
-[node name="Point10_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, 10)
-
-[node name="Point14_12" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, 10)
-
-[node name="Point0_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-14, 0, 14)
-
-[node name="Point4_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-6, 0, 14)
-
-[node name="Point6_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(-2, 0, 14)
-
-[node name="Point8_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(2, 0, 14)
-
-[node name="Point10_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(6, 0, 14)
-
-[node name="Point14_14" type="Marker3D" parent="PointsApparition"]
-position = Vector3(14, 0, 14)
-
-
-[node name="CloisonsEtage" parent="Navigation/Decor" instance=ExtResource("cloisons")]
-position = Vector3(0, 0, 0)
-
-[node name="CoinIntervention" parent="Navigation/Decor" instance=ExtResource("intervention")]
-position = Vector3(2.7, 0, 4.8)
-
-[node name="SignaletiqueEtage" parent="Navigation/Decor" instance=ExtResource("signalisation") groups=["details_decor"]]
-position = Vector3(0, 0, 0)
-
-[node name="DebrisEtage" parent="Navigation/Decor" instance=ExtResource("debris") groups=["details_decor"]]
-position = Vector3(0, 0, 0)
-
-[node name="MobilierPieces" parent="Navigation/Decor" instance=ExtResource("mobilier") groups=["details_decor"]]
-
-[node name="FeuGravatsRepos" parent="Navigation/Decor" instance=ExtResource("foyer")]
-position = Vector3(18, 0.25, 3)
+[node name="FeuGravatsRepos" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="18" unique_id=82479746 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.25, 3)
 taille = 0.65
 energie = 1.5
 
-[node name="EntreesEnnemis" type="Node3D" parent="Navigation/Decor"]
+[node name="EntreesEnnemis" type="Node3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="19" unique_id=309786979]
 
-[node name="PorteNord" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_porte")]
+[node name="PorteNord" parent="Navigation/Decor/EntreesEnnemis" index="0" unique_id=679061047 instance=ExtResource("arrivee_porte")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
 afficher_fond = false
-position = Vector3(0, 0, -20)
-rotation = Vector3(0, 0, 0)
 
-[node name="PorteAppartements" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("porte_appartements")]
-afficher_fond = false
+[node name="PorteAppartements" parent="Navigation/Decor/EntreesEnnemis" index="1" unique_id=892123221 instance=ExtResource("porte_appartements")]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -20, 0, -3)
 distance_sortie = 4.8
-position = Vector3(-20, 0, -3)
-rotation = Vector3(0, 1.570796, 0)
 
-[node name="FenetreNord" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_fenetre")]
-position = Vector3(-12, 0, -19.96)
-rotation = Vector3(0, 0, 0)
+[node name="FenetreNord" parent="Navigation/Decor/EntreesEnnemis" index="2" unique_id=1477605153 instance=ExtResource("arrivee_fenetre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -19.96)
 
-[node name="FenetreDroite" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_fenetre")]
+[node name="FenetreDroite" parent="Navigation/Decor/EntreesEnnemis" index="3" unique_id=1171138255 instance=ExtResource("arrivee_fenetre")]
+transform = Transform3D(3.1391647e-07, 0, -1, 0, 1, 0, 1, 0, 3.1391647e-07, 19.96, 0, 8)
 premiere_vague = 100
-position = Vector3(19.96, 0, 8)
-rotation = Vector3(0, -1.570796, 0)
 
-[node name="AscenseurGauche" parent="Navigation/Decor/EntreesEnnemis" instance=ExtResource("arrivee_ascenseur")]
+[node name="AscenseurGauche" parent="Navigation/Decor/EntreesEnnemis" index="4" unique_id=916717117 instance=ExtResource("arrivee_ascenseur")]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -20, 0, 17)
 premiere_vague = 100
-position = Vector3(-20, 0, 17)
-rotation = Vector3(0, 1.570796, 0)
 
-[node name="ExterieurVille" parent="." instance=ExtResource("ville") groups=["details_decor"]]
-
-[node name="RubanIntervention" type="MeshInstance3D" parent="Navigation/Decor"]
-position = Vector3(0, 0.95, 24.2)
-mesh = SubResource("ruban_mesh")
+[node name="RubanIntervention" type="MeshInstance3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="20" unique_id=530770044]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 24.2)
 material_override = SubResource("ruban_materiau")
 cast_shadow = 0
+mesh = SubResource("ruban_mesh")
 
-[node name="AnnexesHall" parent="." instance=ExtResource("annexes") groups=["details_decor"]]
+[node name="ExtincteurMural" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="21" unique_id=1864416384 instance=ExtResource("extincteur_mural")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -19.95)
 
-[node name="ExtincteurMural" parent="Navigation/Decor" instance=ExtResource("extincteur_mural")]
-position = Vector3(-6, 0, -19.95)
-
-[node name="SprinklerEntree" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
-position = Vector3(-2, 0, -19.9)
+[node name="SprinklerEntree" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="22" unique_id=628345293 instance=ExtResource("sprinkler")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -19.9)
 emplacement = "Porte du fond"
 
-[node name="SprinklerAppartements" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
-position = Vector3(-9.4, 0, -7.6)
-rotation = Vector3(0, 1.570796, 0)
+[node name="SprinklerAppartements" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="23" unique_id=2081454771 instance=ExtResource("sprinkler")]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -9.4, 0, -7.6)
 emplacement = "Passage appartements"
 sur_pied = true
 
-[node name="SprinklerAscenseur" parent="Navigation/Decor" instance=ExtResource("sprinkler")]
-position = Vector3(-9.4, 0, 12.4)
-rotation = Vector3(0, 1.570796, 0)
+[node name="SprinklerAscenseur" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="24" unique_id=970122525 instance=ExtResource("sprinkler")]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -9.4, 0, 12.4)
 emplacement = "Passage ascenseur"
 sur_pied = true
 
+[node name="EclairagePieces" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="25" unique_id=1784385051 instance=ExtResource("eclairage_pieces")]
 
-[node name="EclairagePieces" parent="Navigation/Decor" instance=ExtResource("eclairage_pieces")]
+[node name="Atmosphere" parent="." index="7" unique_id=893849101 instance=ExtResource("atmosphere")]
 
-[node name="FenetreIncendieGauche" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(6.735, 0, 0)
-mesh = SubResource("MurNordIncendieGauche")
-material_override = ExtResource("mur")
+[node name="Entree" type="Node3D" parent="." index="8" unique_id=120138778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+script = ExtResource("entree")
 
-[node name="FenetreIncendieDroite" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(16.515, 0, 0)
-mesh = SubResource("MurNordIncendieDroite")
-material_override = ExtResource("mur")
+[node name="PorteCassee" parent="Entree" index="0" unique_id=175404582 instance=ExtResource("porte")]
 
-[node name="FenetreIncendieBas" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(12, -1.1, 0)
-mesh = SubResource("MurNordIncendieBas")
-material_override = ExtResource("mur")
+[node name="PointsApparition" type="Node3D" parent="." index="9" unique_id=794214184]
 
-[node name="FenetreIncendieHaut" type="MeshInstance3D" parent="Navigation/Decor/MurNord"]
-position = Vector3(12, 1.35, 0)
-mesh = SubResource("MurNordIncendieHaut")
-material_override = ExtResource("mur")
+[node name="Point0_0" type="Marker3D" parent="PointsApparition" index="0" unique_id=141875522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -14)
 
-[node name="FenetreIncendieGauche" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0, -15.515)
-mesh = SubResource("MurDroitIncendieGauche")
-material_override = ExtResource("mur")
+[node name="Point4_0" type="Marker3D" parent="PointsApparition" index="1" unique_id=520456635]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -14)
 
-[node name="FenetreIncendieDroite" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 0, -1)
-mesh = SubResource("MurDroitIncendieDroite")
-material_override = ExtResource("mur")
+[node name="Point6_0" type="Marker3D" parent="PointsApparition" index="2" unique_id=568427763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -14)
 
-[node name="FenetreIncendieBas" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, -1.1, -10)
-mesh = SubResource("MurDroitIncendieBas")
-material_override = ExtResource("mur")
+[node name="Point8_0" type="Marker3D" parent="PointsApparition" index="3" unique_id=1055431373]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -14)
 
-[node name="FenetreIncendieHaut" type="MeshInstance3D" parent="Navigation/Decor/MurDroit"]
-position = Vector3(0, 1.35, -10)
-mesh = SubResource("MurDroitIncendieHaut")
-material_override = ExtResource("mur")
+[node name="Point10_0" type="Marker3D" parent="PointsApparition" index="4" unique_id=2045786370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -14)
 
-[node name="FenetreGauche" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0, -14.515)
-mesh = SubResource("MurGaucheFenetreGauche")
-material_override = ExtResource("mur")
+[node name="Point14_0" type="Marker3D" parent="PointsApparition" index="5" unique_id=2142713068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -14)
 
-[node name="FenetreDroite" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 0, -6.235)
-mesh = SubResource("MurGaucheFenetreDroite")
-material_override = ExtResource("mur")
+[node name="Point0_2" type="Marker3D" parent="PointsApparition" index="6" unique_id=892089983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -10)
 
-[node name="FenetreBas" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, -1.1, -8)
-mesh = SubResource("MurGaucheFenetreBas")
-material_override = ExtResource("mur")
+[node name="Point4_2" type="Marker3D" parent="PointsApparition" index="7" unique_id=2049586140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -10)
 
-[node name="FenetreHaut" type="MeshInstance3D" parent="Navigation/Decor/MurGauche"]
-position = Vector3(0, 1.35, -8)
-mesh = SubResource("MurGaucheFenetreHaut")
-material_override = ExtResource("mur")
+[node name="Point6_2" type="Marker3D" parent="PointsApparition" index="8" unique_id=185315756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
+
+[node name="Point8_2" type="Marker3D" parent="PointsApparition" index="9" unique_id=1763952331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -10)
+
+[node name="Point10_2" type="Marker3D" parent="PointsApparition" index="10" unique_id=84198791]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -10)
+
+[node name="Point14_2" type="Marker3D" parent="PointsApparition" index="11" unique_id=1286820640]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -10)
+
+[node name="Point0_4" type="Marker3D" parent="PointsApparition" index="12" unique_id=737717492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -6)
+
+[node name="Point4_4" type="Marker3D" parent="PointsApparition" index="13" unique_id=731582749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
+
+[node name="Point6_4" type="Marker3D" parent="PointsApparition" index="14" unique_id=1918768784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -6)
+
+[node name="Point8_4" type="Marker3D" parent="PointsApparition" index="15" unique_id=97396824]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -6)
+
+[node name="Point10_4" type="Marker3D" parent="PointsApparition" index="16" unique_id=1251920460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6)
+
+[node name="Point14_4" type="Marker3D" parent="PointsApparition" index="17" unique_id=1051939927]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -6)
+
+[node name="Point0_6" type="Marker3D" parent="PointsApparition" index="18" unique_id=973424486]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
+
+[node name="Point4_6" type="Marker3D" parent="PointsApparition" index="19" unique_id=1312066190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -2)
+
+[node name="Point10_6" type="Marker3D" parent="PointsApparition" index="20" unique_id=1195183551]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -2)
+
+[node name="Point14_6" type="Marker3D" parent="PointsApparition" index="21" unique_id=713022230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -2)
+
+[node name="Point0_8" type="Marker3D" parent="PointsApparition" index="22" unique_id=2067654542]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 2)
+
+[node name="Point4_8" type="Marker3D" parent="PointsApparition" index="23" unique_id=815111957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 2)
+
+[node name="Point10_8" type="Marker3D" parent="PointsApparition" index="24" unique_id=1885766891]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 2)
+
+[node name="Point14_8" type="Marker3D" parent="PointsApparition" index="25" unique_id=565867690]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 2)
+
+[node name="Point0_10" type="Marker3D" parent="PointsApparition" index="26" unique_id=1619807095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 6)
+
+[node name="Point4_10" type="Marker3D" parent="PointsApparition" index="27" unique_id=1218562784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 6)
+
+[node name="Point6_10" type="Marker3D" parent="PointsApparition" index="28" unique_id=2136785715]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 6)
+
+[node name="Point8_10" type="Marker3D" parent="PointsApparition" index="29" unique_id=676023671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
+
+[node name="Point10_10" type="Marker3D" parent="PointsApparition" index="30" unique_id=286161150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 6)
+
+[node name="Point14_10" type="Marker3D" parent="PointsApparition" index="31" unique_id=1642079424]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 6)
+
+[node name="Point0_12" type="Marker3D" parent="PointsApparition" index="32" unique_id=1952611356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 10)
+
+[node name="Point4_12" type="Marker3D" parent="PointsApparition" index="33" unique_id=13612665]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 10)
+
+[node name="Point6_12" type="Marker3D" parent="PointsApparition" index="34" unique_id=1952201369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 10)
+
+[node name="Point8_12" type="Marker3D" parent="PointsApparition" index="35" unique_id=786789566]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 10)
+
+[node name="Point10_12" type="Marker3D" parent="PointsApparition" index="36" unique_id=162818774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 10)
+
+[node name="Point14_12" type="Marker3D" parent="PointsApparition" index="37" unique_id=613345133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 10)
+
+[node name="Point0_14" type="Marker3D" parent="PointsApparition" index="38" unique_id=1322958220]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 14)
+
+[node name="Point4_14" type="Marker3D" parent="PointsApparition" index="39" unique_id=583372191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 14)
+
+[node name="Point6_14" type="Marker3D" parent="PointsApparition" index="40" unique_id=709655141]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 14)
+
+[node name="Point8_14" type="Marker3D" parent="PointsApparition" index="41" unique_id=710430709]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 14)
+
+[node name="Point10_14" type="Marker3D" parent="PointsApparition" index="42" unique_id=1113695438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 14)
+
+[node name="Point14_14" type="Marker3D" parent="PointsApparition" index="43" unique_id=293849260]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 14)
+
+[node name="ExterieurVille" parent="." index="10" unique_id=651774185 groups=["details_decor"] instance=ExtResource("ville")]
+
+[node name="AnnexesHall" parent="." index="11" unique_id=231643330 groups=["details_decor"] instance=ExtResource("annexes")]
+
+[node name="TracesLocales" type="Node3D" parent="." index="12" unique_id=106511516]
+editor_description = "Quelques fissures et tags placés à la main. Aucun effet sur les collisions ni la navigation."
+
+[node name="FissureSolCentre" parent="TracesLocales" index="0" unique_id=665091892 instance=ExtResource("decal_fissure_08")]
+transform = Transform3D(0.921061, 0, 0.38941833, 0, 1, 0, -0.38941833, 0, 0.921061, -5, 0, -2)
+size = Vector3(3.2, 0.14, 3.2)
+
+[node name="FissureSolEst" parent="TracesLocales" index="1" unique_id=1716435688 instance=ExtResource("decal_fissure_03")]
+transform = Transform3D(0.6967067, 0, -0.7173561, 0, 1, 0, 0.7173561, 0, 0.6967067, 10, 0, 9)
+size = Vector3(2.4, 0.14, 2.4)
+
+[node name="FissureSolOuest" parent="TracesLocales" index="2" unique_id=2124041685 instance=ExtResource("decal_fissure_02")]
+transform = Transform3D(0.4535961, 0, 0.8912074, 0, 1, 0, -0.8912074, 0, 0.4535961, -13, 0, 15)
+size = Vector3(2.6, 0.14, 2.6)
+
+[node name="FissureMurNord" parent="TracesLocales" index="3" unique_id=57435793 instance=ExtResource("decal_fissure_09")]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, -1, 0, 1, 7.54979e-08, -4, 1.5, -20.02)
+size = Vector3(1.8, 0.14, 1.8)
+
+[node name="GraffitiAncienTag" parent="TracesLocales" index="4" unique_id=2095664728 instance=ExtResource("decal_graffiti_05")]
+transform = Transform3D(0.9612617, 0, -0.2756374, -0.2756374, 0, -0.9612617, 0, 1, 0, -7.6, 1.15, -19.982)
+
+[node name="GraffitiAppelSauvetage" parent="TracesLocales" index="5" unique_id=548846593 instance=ExtResource("decal_graffiti_115")]
+transform = Transform3D(0.9925462, 0, 0.1218693, 0.1218693, 0, -0.9925462, 0, 1, 0, -8.65, 1.65, -19.978)
+
+[node name="GraffitiZoneBrulee" parent="TracesLocales" index="6" unique_id=781614723 instance=ExtResource("decal_graffiti_67")]
+transform = Transform3D(0.9876883, 0, -0.1564345, -0.1564345, 0, -0.9876883, 0, 1, 0, 15.1, 1.7, -19.978)
+
+[node name="FissureMurOuest" parent="TracesLocales" index="7" unique_id=2130027979 instance=ExtResource("decal_fissure_02")]
+transform = Transform3D(7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 0, 0, 1, -20.02, 1.65, 3)
+size = Vector3(1.6, 0.14, 1.6)
+
+[node name="FissureMurNordEst" parent="TracesLocales" index="8" unique_id=1773335746 instance=ExtResource("decal_fissure_03")]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, -1, 0, 1, 7.54979e-08, 7.6, 1.9, -20.02)
+size = Vector3(1.9, 0.14, 1.9)
+
+[node name="GraffitiCollageTechnique" parent="TracesLocales" index="9" unique_id=446475209 instance=ExtResource("decal_graffiti_collage")]
+transform = Transform3D(0.9702957, 0, -0.2419219, -0.2419219, 0, -0.9702957, 0, 1, 0, 14.3, 1.25, -19.982)
+material_override = SubResource("StandardMaterial3D_oonme")
+mesh = SubResource("PlaneMesh_gq3w5")
+taille = Vector2(1.8, 2.1)
+teinte = Color(0.68, 0.65, 0.6, 0.48)
+
+[node name="Ambiances" type="Node3D" parent="." index="13" unique_id=1680983766]
+
+[node name="SireneLointaine" parent="Ambiances" index="0" unique_id=1618939545 instance=ExtResource("audio_local")]
+profil = ExtResource("son_sirene")
+diffusion = 1
+
+[node name="RadioCamion" parent="Ambiances" index="1" unique_id=1648772067 instance=ExtResource("audio_local")]
+profil = ExtResource("son_radio")
+cible = NodePath("../../Navigation/Decor/Refuge")
+
+
+[node name="SpotsPlafond" parent="Navigation/Decor" instance=ExtResource("spots_plafond")]

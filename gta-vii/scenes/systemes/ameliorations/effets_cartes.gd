@@ -20,7 +20,7 @@ var dernier_sprinkler: Node3D
 var victimes_bouclier: Dictionary = {}
 var prochaine_protection: Dictionary = {}
 var temps_ecoule := 0.0
-var maximum_zones := 40
+@export_range(8, 100, 1) var maximum_zones := 40
 const ONDE_DEBLAYAGE = preload("res://scenes/effets/combat/onde_deblayage.gd")
 
 func _ready() -> void:
@@ -29,8 +29,10 @@ func _ready() -> void:
 	derniere_position = joueur.global_position
 	gestion.escorte.escort_changed.connect(_suivre_victimes)
 	_suivre_victimes()
+	add_child(preload("res://scenes/systemes/ameliorations/depot_verglas.tscn").instantiate())
 
 func reinitialiser_etape() -> void:
+	if has_node("DepotVerglas"): $DepotVerglas.reinitialiser()
 	depuis_dash = 100.0
 	etait_dash = false
 	derniere_position = joueur.global_position
@@ -131,7 +133,7 @@ func _physics_process(delta: float) -> void:
 	etait_dash = joueur.is_dashing
 	derniere_position = joueur.global_position
 	attente_zone -= delta
-	if gestion.extincteur.emission_effective and not gestion.extincteur.portions_jet.is_empty() and attente_zone <= 0 and (valeur("mousse_persistante") > 0 or valeur("verglas") > 0):
+	if gestion.extincteur.emission_effective and not gestion.extincteur.portions_jet.is_empty() and attente_zone <= 0 and valeur("mousse_persistante") > 0:
 		attente_zone = 0.4
 		var arme = gestion.extincteur
 		# La plaque suit le front du jet : elle n'apparaît pas avant son arrivée.
@@ -141,7 +143,7 @@ func _physics_process(delta: float) -> void:
 		var rayon := PhysicsRayQueryParameters3D.create(origine, position, 1)
 		var contact := joueur.get_world_3d().direct_space_state.intersect_ray(rayon)
 		if not contact.is_empty(): position = contact.position - arme.direction_jet() * 0.3
-		creer_zone(position, "mousse", valeur("mousse_persistante"), 0.9, 4.0, valeur("verglas"))
+		creer_zone(position, "mousse", valeur("mousse_persistante"), 0.9, 4.0)
 	attente_equipe -= delta
 	if attente_equipe <= 0:
 		attente_equipe = 0.2
@@ -176,8 +178,8 @@ func _traverser_dash() -> void:
 			if point.distance_to(victime.global_position) <= 1.6 and visible_depuis(joueur.global_position + Vector3.UP, victime):
 				victime.free_victim()
 
-func creer_zone(position: Vector3, type: String, degats: float, rayon: float, duree: float, gel: float = 0.0) -> void:
-	if not is_instance_valid(gestion.room_manager.salle_actuelle): return
+func creer_zone(position: Vector3, type: String, degats: float, rayon: float, duree: float, gel: float = 0.0, empreinte: PackedVector2Array = PackedVector2Array(), uv: PackedVector2Array = PackedVector2Array()) -> Area3D:
+	if not is_instance_valid(gestion.room_manager.salle_actuelle): return null
 	var zones: Array[Node] = []
 	for actuelle in get_tree().get_nodes_in_group("zones_mousse"):
 		if not actuelle.is_queued_for_deletion() and gestion.room_manager.salle_actuelle.is_ancestor_of(actuelle): zones.append(actuelle)
@@ -193,10 +195,19 @@ func creer_zone(position: Vector3, type: String, degats: float, rayon: float, du
 	zone.rayon = rayon
 	zone.duree = duree
 	zone.gel = gel
+	zone.empreinte = empreinte
+	zone.coordonnees_empreinte = uv
+	# Les traces glacées reprennent la teinte du jet, avec leur transparence au sol.
+	zone.couleur_gel = Color(gestion.extincteur.couleur_jet_givre, 0.4)
 	zone.expansive = valeur("mousse_expansive") > 0 and type != "abri"
 	# La salle possède ces effets : un changement de salle ne les emporte pas.
 	gestion.room_manager.salle_actuelle.add_child(zone)
-	zone.global_position = Vector3(position.x, 0.04, position.z)
+	# Le centre du sol n'est pas sa surface : chercher le dessus de sa collision.
+	var requete := PhysicsRayQueryParameters3D.create(position + Vector3.UP * 0.5, position + Vector3.DOWN * 3.0, 1)
+	var contact := joueur.get_world_3d().direct_space_state.intersect_ray(requete)
+	var hauteur_sol: float = contact.position.y if not contact.is_empty() else joueur.global_position.y
+	zone.global_position = Vector3(position.x, hauteur_sol, position.z)
+	return zone
 
 func bouffee(position: Vector3) -> void:
 	if not is_instance_valid(gestion.room_manager.salle_actuelle): return
@@ -226,7 +237,7 @@ func onde(position: Vector3, rayon: float, glace: bool = false) -> void:
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(0.2, 0.7, 1, 0.7) if glace else Color(0.9, 0.9, 0.75, 0.7)
+	mat.albedo_color = Color(gestion.extincteur.couleur_jet_givre, 0.7) if glace else Color(0.9, 0.9, 0.75, 0.7)
 	anneau.material_override = mat
 	gestion.room_manager.salle_actuelle.add_child(anneau)
 	anneau.global_position = position + Vector3.UP * 0.1

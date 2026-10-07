@@ -19,7 +19,8 @@ const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 
 @export_group("Ã‰clairage")
 @export var ambiance: Environment = preload("res://assets/materiaux/hall_incendie/ambiance_hall.tres")
-@export_range(0.0, 1.0, 0.05) var energie_soleil := 0.3
+# Une faible lumière générale garde les ombres lisibles sans effacer les lampes locales.
+@export_range(0.0, 1.0, 0.01) var energie_soleil := 0.16
 
 func _ready() -> void:
 	# Reprendre main sans copier le joueur, le dÃ©cor, les lumiÃ¨res ni leurs scripts.
@@ -44,6 +45,10 @@ func _ready() -> void:
 	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
 	# La musique appartient Ã  cette partie : quitter le mode arrÃªte aussi les morceaux.
 	niveau.add_child(preload("res://scenes/modes/zombie/audio/musique_zombie.tscn").instantiate())
+	var ambiance_arene := Node.new()
+	ambiance_arene.name = "AmbianceArene"
+	ambiance_arene.set_script(preload("res://scenes/modes/zombie/audio/environnement/ambiance_arene.gd"))
+	niveau.add_child(ambiance_arene)
 	var sons_vagues := preload("res://scenes/modes/zombie/audio/feedback_vagues.tscn").instantiate()
 	niveau.add_child(sons_vagues)
 	var musique_adaptative := Node.new()

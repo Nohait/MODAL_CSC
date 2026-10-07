@@ -13,6 +13,9 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @onready var souffle: AudioStreamPlayer3D = $Sons/Souffle
 @onready var volume_souffle: float = souffle.volume_db
 var fondu_souffle: Tween
+@export_group("Souffle sonore")
+@export_range(0.05, 0.5, 0.01) var seuil_reserve_souffle := 0.25
+@export_range(0.0, 12.0, 0.5) var baisse_souffle_db := 4.0
 
 
 @export_group("Jet")
@@ -24,6 +27,12 @@ var fondu_souffle: Tween
 ## Vitesse commune aux particules et aux limites de la zone de dégâts.
 @export_range(0.1, 30.0, 0.1) var vitesse_jet := 5.6
 @export_range(0.0, 1.0, 0.01) var opacite_particules := 0.8
+@export_subgroup("Aspect de la pulvérisation")
+@export_range(50, 800, 10) var nombre_particules := 340
+@export_range(0.02, 0.3, 0.01) var taille_depart := 0.09
+@export_range(0.1, 1.0, 0.01) var taille_fin := 0.48
+@export_range(1.0, 2.0, 0.05) var luminosite_jet := 1.5
+@export var couleur_jet_givre := Color(0.74, 0.94, 1.0)
 
 # Chaque appui crée une portion : X = distance du début, Y = distance de fin.
 # Plusieurs portions permettent de conserver les espaces entre des tirs brefs.
@@ -95,6 +104,8 @@ func _ready() -> void:
 	porteur = get_tree().get_first_node_in_group("player")
 	configurer_jet()
 	actualiser_position_jet()
+	# Le composant visuel reste indépendant du calcul des dégâts.
+	add_child(preload("res://scenes/effets/combat/contact_jet_murs.tscn").instantiate())
 
 
 func configurer_jet() -> void:
@@ -103,11 +114,23 @@ func configurer_jet() -> void:
 	simulation.spread = demi_angle_jet * (0.35 if double_lance else 1.0)
 	simulation.initial_velocity_min = vitesse_jet
 	simulation.initial_velocity_max = vitesse_jet
+	# Le diamètre augmente au cours du trajet : fin à la buse, plus diffus au loin.
+	# La courbe agit sur l'image de chaque particule, sans changer sa trajectoire.
+	var expansion := Curve.new()
+	expansion.add_point(Vector2(0.0, taille_depart))
+	expansion.add_point(Vector2(0.25, lerpf(taille_depart, taille_fin, 0.35)))
+	expansion.add_point(Vector2(1.0, taille_fin))
+	var texture_expansion := CurveTexture.new()
+	texture_expansion.curve = expansion
+	simulation.scale_curve = texture_expansion
+	particles.amount = nombre_particules
 	particles.lifetime = portee_jet / vitesse_jet
-	particles.draw_pass_1.material.albedo_color.a = opacite_particules
+	particles.draw_pass_1.material.albedo_color = Color(luminosite_jet, luminosite_jet, luminosite_jet, opacite_particules)
 	particles.visibility_aabb = AABB(Vector3.ONE * -portee_jet, Vector3.ONE * portee_jet * 2.0)
 	damage_area.get_node("CollisionShape3D").shape.radius = portee_jet
 	if is_instance_valid(particles_secondaires):
+		particles_secondaires.amount = nombre_particules
+		particles_secondaires.process_material.scale_curve = texture_expansion
 		particles_secondaires.process_material.spread = simulation.spread
 		particles_secondaires.process_material.initial_velocity_min = vitesse_jet
 		particles_secondaires.process_material.initial_velocity_max = vitesse_jet
@@ -161,11 +184,15 @@ func regler_souffle(en_marche: bool) -> void:
 			souffle.volume_db = -60.0
 			souffle.play()
 		# Le Tween monte le volume en 80 ms, sans changer la vitesse du son.
-		fondu_souffle.tween_property(souffle, "volume_db", volume_souffle, 0.08)
+		fondu_souffle.tween_property(souffle, "volume_db", volume_cible_souffle(), 0.08)
 	else:
 		# Baisser le volume avant stop() évite une coupure sèche du souffle.
 		fondu_souffle.tween_property(souffle, "volume_db", -60.0, 0.12)
 		fondu_souffle.tween_callback(souffle.stop)
+
+func volume_cible_souffle() -> float:
+	var reserve := clampf(charge / maxf(max_charge, 0.01), 0.0, 1.0)
+	return volume_souffle - baisse_souffle_db * (1.0 - smoothstep(0.0, seuil_reserve_souffle, reserve))
 
 
 func vider_jet() -> void:
@@ -218,6 +245,8 @@ func _physics_process(delta: float) -> void:
 	
 	actualiser_position_jet()
 	avancer_jet(delta)
+	if is_attacking and souffle.playing and (fondu_souffle == null or not fondu_souffle.is_running()):
+		souffle.volume_db = move_toward(souffle.volume_db, volume_cible_souffle(), delta * 12.0)
 	if portions_jet.is_empty():
 		return
 	# Même test pour les personnages (bodies) et les flaques (areas).

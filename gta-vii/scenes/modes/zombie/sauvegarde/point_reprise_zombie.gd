@@ -52,7 +52,6 @@ func restaurer(vagues: Node, point: Dictionary) -> void:
 	StatistiquesZombie.compteurs = point.statistiques.duplicate(true)
 	StatistiquesZombie.solde_precedent = monnaie.solde
 	ETAT.appliquer_champs(niveau.get_node("ScoreComboManager"), point.score)
-	niveau.get_node("ScoreComboManager")._actualiser()
 	ETAT.appliquer_champs(niveau.get_node("SuccesZombie"), point.succes)
 	niveau.get_node("ArenaEventManager").restaurer_sauvegarde(point.arene, vagues.salle_actuelle)
 	for etat in point.get("equipements", []):
@@ -66,7 +65,7 @@ func restaurer(vagues: Node, point: Dictionary) -> void:
 
 func _capturer_equipements(salle: Node) -> Array[Dictionary]:
 	var resultat: Array[Dictionary] = []
-	for groupe in ["sprinkler", "extincteur_mural", "ventilation_zombie"]:
+	for groupe in ["sprinkler", "extincteur_mural"]:
 		for objet in get_tree().get_nodes_in_group(groupe):
 			if salle.is_ancestor_of(objet) and objet.has_method("capturer_sauvegarde"):
 				resultat.append({"chemin": str(salle.get_path_to(objet)), "etat": objet.capturer_sauvegarde()})
@@ -75,7 +74,7 @@ func _capturer_equipements(salle: Node) -> Array[Dictionary]:
 func figer_pendant_fondu(vagues: Node) -> void:
 	# La reprise apparaît déjà à la bonne place ; ses réserves ne bougent pas pendant le fondu.
 	var noeuds: Array[Node] = [vagues.joueur, vagues.refuge, get_parent().get_node("ScoreComboManager")]
-	for groupe in ["sprinkler", "extincteur_mural", "ventilation_zombie"]:
+	for groupe in ["sprinkler", "extincteur_mural"]:
 		for objet in get_tree().get_nodes_in_group(groupe):
 			if vagues.salle_actuelle.is_ancestor_of(objet): noeuds.append(objet)
 	for noeud in noeuds:
@@ -88,3 +87,4 @@ func reprendre() -> void:
 		if is_instance_valid(etat.noeud): etat.noeud.process_mode = etat.mode
 	noeuds_figes.clear()
 	StatistiquesZombie.actif = true
+

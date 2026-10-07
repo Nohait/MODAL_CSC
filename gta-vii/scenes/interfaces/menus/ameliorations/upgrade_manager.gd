@@ -435,7 +435,7 @@ func recalculer_effets() -> void:
 	effets_actifs = totaux
 	extincteur.ralentissement_jet = minf(80.0, totaux.get("jet_givre", 0.0))
 	extincteur.bonus_dernier_souffle = totaux.get("dernier_souffle", 0.0)
-	extincteur.particles.process_material.color = Color(0.06, 0.48, 1.0) if extincteur.ralentissement_jet > 0.0 else extincteur.couleur_jet_initiale
+	extincteur.particles.process_material.color = extincteur.couleur_jet_givre if extincteur.ralentissement_jet > 0.0 else extincteur.couleur_jet_initiale
 	extincteur.regler_variantes(totaux.get("jet_pulse", 0.0) > 0, totaux.get("double_lance", 0.0) > 0)
 	bonus_vitesse_escorte = 1.0 + totaux.get("escorte_agile", 0.0) / 100.0
 	_actualiser_vitesse_escorte()

@@ -1,5 +1,14 @@
 [gd_scene format=3]
 
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/sirene.tres" id="son_sirene"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/radio.tres" id="son_radio"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/metal.tres" id="son_metal"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/alarme.tres" id="son_alarme"]
+
+[ext_resource type="PackedScene" path="res://scenes/systemes/audio/ambiance_locale.tscn" id="audio_local"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/ruissellement.tres" id="son_eau"]
+[ext_resource type="Resource" path="res://scenes/systemes/audio/profils/gouttes.tres" id="son_gouttes"]
+
 [ext_resource type="Texture2D" path="res://assets/textures/decors/parking/pmr.svg" id="logo_pmr"]
 
 [ext_resource type="PackedScene" path="res://assets/modeles/parking/moto.glb" id="moto"]
@@ -15,7 +24,6 @@
 
 [ext_resource type="Script" path="res://scenes/decors/parking/feux_detresse.gd" id="feux_detresse"]
 
-[ext_resource type="Script" path="res://scenes/modes/zombie/equipements/ventilation.gd" id="commande_ventilation"]
 
 [ext_resource type="Script" path="res://scenes/modes/zombie/evenements/incendie_progressif.gd" id="incendie_progressif"]
 
@@ -59,6 +67,22 @@
 [ext_resource type="PackedScene" path="res://assets/modeles/parking/epave.glb" id="epave"]
 [ext_resource type="PackedScene" path="res://assets/modeles/parking/barriere.glb" id="barriere"]
 [ext_resource type="PackedScene" path="res://assets/modeles/parking/ventilation.glb" id="ventilation"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_02.tscn" id="decal_fissure_02"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_03.tscn" id="decal_fissure_03"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_07.tscn" id="decal_fissure_07"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_08.tscn" id="decal_fissure_08"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_05.tscn" id="decal_graffiti_05"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_114.tscn" id="decal_graffiti_114"]
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_67.tscn" id="decal_graffiti_67"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_115.tscn" id="decal_graffiti_115"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_47.tscn" id="decal_graffiti_47"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_09.tscn" id="decal_fissure_09"]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/decals/fissure_10.tscn" id="decal_fissure_10"]
 
 [sub_resource type="StandardMaterial3D" id="noir"]
 albedo_color = Color(0.008, 0.012, 0.015, 1)
@@ -1492,6 +1516,7 @@ collision_mask = 0
 shape = SubResource("shape1")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/SolOuest"]
+layers = 524289
 mesh = SubResource("mesh1")
 material_override = ExtResource("sol")
 
@@ -1504,6 +1529,7 @@ collision_mask = 0
 shape = SubResource("shape2")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/SolEst"]
+layers = 524289
 mesh = SubResource("mesh2")
 material_override = ExtResource("sol")
 
@@ -1516,6 +1542,7 @@ collision_mask = 0
 shape = SubResource("shape3")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/SolCentral"]
+layers = 524289
 mesh = SubResource("mesh3")
 material_override = ExtResource("sol")
 
@@ -1528,6 +1555,7 @@ collision_mask = 0
 shape = SubResource("shape4")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/SolRampe"]
+layers = 524289
 mesh = SubResource("mesh4")
 material_override = ExtResource("sol")
 
@@ -1540,6 +1568,7 @@ collision_mask = 0
 shape = SubResource("shape5")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurInterieurOuest"]
+layers = 524289
 mesh = SubResource("mesh5")
 material_override = ExtResource("mur")
 
@@ -1552,6 +1581,7 @@ collision_mask = 0
 shape = SubResource("shape6")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurInterieurEst"]
+layers = 524289
 mesh = SubResource("mesh6")
 material_override = ExtResource("mur")
 
@@ -1564,6 +1594,7 @@ collision_mask = 0
 shape = SubResource("shape7")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurTechniqueGauche"]
+layers = 524289
 mesh = SubResource("mesh7")
 material_override = ExtResource("mur")
 
@@ -1576,6 +1607,7 @@ collision_mask = 0
 shape = SubResource("shape8")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurTechniqueDroite"]
+layers = 524289
 mesh = SubResource("mesh8")
 material_override = ExtResource("mur")
 
@@ -1588,6 +1620,7 @@ collision_mask = 0
 shape = SubResource("shape9")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurOuestNord"]
+layers = 524289
 mesh = SubResource("mesh9")
 material_override = ExtResource("mur")
 
@@ -1600,6 +1633,7 @@ collision_mask = 0
 shape = SubResource("shape10")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurOuestSud"]
+layers = 524289
 mesh = SubResource("mesh10")
 material_override = ExtResource("mur")
 
@@ -1612,6 +1646,7 @@ collision_mask = 0
 shape = SubResource("shape11")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/LinteauOuest"]
+layers = 524289
 mesh = SubResource("mesh11")
 material_override = ExtResource("mur")
 
@@ -1624,6 +1659,7 @@ collision_mask = 0
 shape = SubResource("shape12")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurEstCentre"]
+layers = 524289
 mesh = SubResource("mesh12")
 material_override = ExtResource("mur")
 
@@ -1636,6 +1672,7 @@ collision_mask = 0
 shape = SubResource("shape13")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/LinteauPorteEst"]
+layers = 524289
 mesh = SubResource("mesh13")
 material_override = ExtResource("mur")
 
@@ -1648,6 +1685,7 @@ collision_mask = 0
 shape = SubResource("shape14")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurEstSud"]
+layers = 524289
 mesh = SubResource("mesh14")
 material_override = ExtResource("mur")
 
@@ -1660,6 +1698,7 @@ collision_mask = 0
 shape = SubResource("shape15")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/LinteauEst"]
+layers = 524289
 mesh = SubResource("mesh15")
 material_override = ExtResource("mur")
 
@@ -1672,6 +1711,7 @@ collision_mask = 0
 shape = SubResource("shape16")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurEstHaut"]
+layers = 524289
 mesh = SubResource("mesh16")
 material_override = ExtResource("mur")
 
@@ -1684,6 +1724,7 @@ collision_mask = 0
 shape = SubResource("shape17")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurNordOuestA"]
+layers = 524289
 mesh = SubResource("mesh17")
 material_override = ExtResource("mur")
 
@@ -1696,6 +1737,7 @@ collision_mask = 0
 shape = SubResource("shape18")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurNordOuestB"]
+layers = 524289
 mesh = SubResource("mesh18")
 material_override = ExtResource("mur")
 
@@ -1708,6 +1750,7 @@ collision_mask = 0
 shape = SubResource("shape19")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MurNordEst"]
+layers = 524289
 mesh = SubResource("mesh19")
 material_override = ExtResource("mur")
 
@@ -1720,6 +1763,7 @@ collision_mask = 0
 shape = SubResource("shape20")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MuretSudOuest"]
+layers = 524289
 mesh = SubResource("mesh20")
 material_override = ExtResource("mur")
 
@@ -1732,6 +1776,7 @@ collision_mask = 0
 shape = SubResource("shape21")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/MuretSudEst"]
+layers = 524289
 mesh = SubResource("mesh21")
 material_override = ExtResource("mur")
 
@@ -1744,6 +1789,7 @@ collision_mask = 0
 shape = SubResource("shape22")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/RampeGauche"]
+layers = 524289
 mesh = SubResource("mesh22")
 material_override = ExtResource("mur")
 
@@ -1756,6 +1802,7 @@ collision_mask = 0
 shape = SubResource("shape23")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/RampeDroite"]
+layers = 524289
 mesh = SubResource("mesh23")
 material_override = ExtResource("mur")
 
@@ -1768,6 +1815,7 @@ collision_mask = 0
 shape = SubResource("shape24")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/LimiteRampe"]
+layers = 524289
 mesh = SubResource("mesh24")
 material_override = ExtResource("mur")
 
@@ -1780,6 +1828,7 @@ collision_mask = 0
 shape = SubResource("shape25")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Allège-30"]
+layers = 524289
 mesh = SubResource("mesh25")
 material_override = ExtResource("mur")
 
@@ -1792,6 +1841,7 @@ collision_mask = 0
 shape = SubResource("shape26")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Jambage-30-1.75"]
+layers = 524289
 mesh = SubResource("mesh26")
 material_override = ExtResource("mur")
 
@@ -1804,6 +1854,7 @@ collision_mask = 0
 shape = SubResource("shape27")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Jambage-301.75"]
+layers = 524289
 mesh = SubResource("mesh27")
 material_override = ExtResource("mur")
 
@@ -1824,6 +1875,7 @@ collision_mask = 0
 shape = SubResource("shape28")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Allège30"]
+layers = 524289
 mesh = SubResource("mesh28")
 material_override = ExtResource("mur")
 
@@ -1836,6 +1888,7 @@ collision_mask = 0
 shape = SubResource("shape29")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Jambage30-1.75"]
+layers = 524289
 mesh = SubResource("mesh29")
 material_override = ExtResource("mur")
 
@@ -1848,6 +1901,7 @@ collision_mask = 0
 shape = SubResource("shape30")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Jambage301.75"]
+layers = 524289
 mesh = SubResource("mesh30")
 material_override = ExtResource("mur")
 
@@ -1863,6 +1917,7 @@ centrer_verticalement = true
 
 
 [node name="FondNoir" type="MeshInstance3D" parent="Navigation/Decor/Architecture/NoyauTechnique"]
+layers = 524289
 position = Vector3(0, 0, -18)
 mesh = SubResource("mesh31")
 material_override = SubResource("noir")
@@ -1877,6 +1932,7 @@ collision_mask = 0
 shape = SubResource("shape32")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_M30_M22"]
+layers = 524289
 mesh = SubResource("mesh32")
 material_override = ExtResource("mur")
 
@@ -1895,6 +1951,7 @@ collision_mask = 0
 shape = SubResource("shape34")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_M30_8"]
+layers = 524289
 mesh = SubResource("mesh34")
 material_override = ExtResource("mur")
 
@@ -1913,6 +1970,7 @@ collision_mask = 0
 shape = SubResource("shape36")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_M30_23"]
+layers = 524289
 mesh = SubResource("mesh36")
 material_override = ExtResource("mur")
 
@@ -1931,6 +1989,7 @@ collision_mask = 0
 shape = SubResource("shape38")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_M10_M22"]
+layers = 524289
 mesh = SubResource("mesh38")
 material_override = ExtResource("mur")
 
@@ -1949,6 +2008,7 @@ collision_mask = 0
 shape = SubResource("shape40")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_M10_M8"]
+layers = 524289
 mesh = SubResource("mesh40")
 material_override = ExtResource("mur")
 
@@ -1967,6 +2027,7 @@ collision_mask = 0
 shape = SubResource("shape42")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_10_M22"]
+layers = 524289
 mesh = SubResource("mesh42")
 material_override = ExtResource("mur")
 
@@ -1985,6 +2046,7 @@ collision_mask = 0
 shape = SubResource("shape44")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_10_M8"]
+layers = 524289
 mesh = SubResource("mesh44")
 material_override = ExtResource("mur")
 
@@ -2003,6 +2065,7 @@ collision_mask = 0
 shape = SubResource("shape46")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_30_M22"]
+layers = 524289
 mesh = SubResource("mesh46")
 material_override = ExtResource("mur")
 
@@ -2021,6 +2084,7 @@ collision_mask = 0
 shape = SubResource("shape48")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_30_8"]
+layers = 524289
 mesh = SubResource("mesh48")
 material_override = ExtResource("mur")
 
@@ -2039,6 +2103,7 @@ collision_mask = 0
 shape = SubResource("shape50")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Pilier_30_23"]
+layers = 524289
 mesh = SubResource("mesh50")
 material_override = ExtResource("mur")
 
@@ -2173,6 +2238,7 @@ collision_mask = 0
 shape = SubResource("shape69")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_0"]
+layers = 524289
 mesh = SubResource("mesh69")
 material_override = SubResource("jaune")
 
@@ -2196,6 +2262,7 @@ collision_mask = 0
 shape = SubResource("shape70")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_1"]
+layers = 524289
 mesh = SubResource("mesh70")
 material_override = SubResource("jaune")
 
@@ -2219,6 +2286,7 @@ collision_mask = 0
 shape = SubResource("shape71")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_2"]
+layers = 524289
 mesh = SubResource("mesh71")
 material_override = SubResource("jaune")
 
@@ -2242,6 +2310,7 @@ collision_mask = 0
 shape = SubResource("shape72")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_3"]
+layers = 524289
 mesh = SubResource("mesh72")
 material_override = SubResource("jaune")
 
@@ -2265,6 +2334,7 @@ collision_mask = 0
 shape = SubResource("shape73")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_4"]
+layers = 524289
 mesh = SubResource("mesh73")
 material_override = SubResource("jaune")
 
@@ -2288,6 +2358,7 @@ collision_mask = 0
 shape = SubResource("shape74")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_5"]
+layers = 524289
 mesh = SubResource("mesh74")
 material_override = SubResource("jaune")
 
@@ -2311,6 +2382,7 @@ collision_mask = 0
 shape = SubResource("shape75")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_6"]
+layers = 524289
 mesh = SubResource("mesh75")
 material_override = SubResource("jaune")
 
@@ -2334,6 +2406,7 @@ collision_mask = 0
 shape = SubResource("shape76")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_7"]
+layers = 524289
 mesh = SubResource("mesh76")
 material_override = SubResource("jaune")
 
@@ -2357,6 +2430,7 @@ collision_mask = 0
 shape = SubResource("shape77")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_8"]
+layers = 524289
 mesh = SubResource("mesh77")
 material_override = SubResource("jaune")
 
@@ -2380,6 +2454,7 @@ collision_mask = 0
 shape = SubResource("shape78")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_9"]
+layers = 524289
 mesh = SubResource("mesh78")
 material_override = SubResource("jaune")
 
@@ -2403,6 +2478,7 @@ collision_mask = 0
 shape = SubResource("shape79")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_10"]
+layers = 524289
 mesh = SubResource("mesh79")
 material_override = SubResource("jaune")
 
@@ -2426,6 +2502,7 @@ collision_mask = 0
 shape = SubResource("shape80")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_11"]
+layers = 524289
 mesh = SubResource("mesh80")
 material_override = SubResource("jaune")
 
@@ -2449,6 +2526,7 @@ collision_mask = 0
 shape = SubResource("shape81")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_12"]
+layers = 524289
 mesh = SubResource("mesh81")
 material_override = SubResource("jaune")
 
@@ -2472,6 +2550,7 @@ collision_mask = 0
 shape = SubResource("shape82")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_13"]
+layers = 524289
 mesh = SubResource("mesh82")
 material_override = SubResource("jaune")
 
@@ -2495,6 +2574,7 @@ collision_mask = 0
 shape = SubResource("shape83")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/ButeeM1_14"]
+layers = 524289
 mesh = SubResource("mesh83")
 material_override = SubResource("jaune")
 
@@ -2668,6 +2748,7 @@ collision_mask = 0
 shape = SubResource("shape111")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_0"]
+layers = 524289
 mesh = SubResource("mesh111")
 material_override = SubResource("jaune")
 
@@ -2691,6 +2772,7 @@ collision_mask = 0
 shape = SubResource("shape112")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_1"]
+layers = 524289
 mesh = SubResource("mesh112")
 material_override = SubResource("jaune")
 
@@ -2714,6 +2796,7 @@ collision_mask = 0
 shape = SubResource("shape113")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_2"]
+layers = 524289
 mesh = SubResource("mesh113")
 material_override = SubResource("jaune")
 
@@ -2737,6 +2820,7 @@ collision_mask = 0
 shape = SubResource("shape114")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_3"]
+layers = 524289
 mesh = SubResource("mesh114")
 material_override = SubResource("jaune")
 
@@ -2760,6 +2844,7 @@ collision_mask = 0
 shape = SubResource("shape115")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_4"]
+layers = 524289
 mesh = SubResource("mesh115")
 material_override = SubResource("jaune")
 
@@ -2783,6 +2868,7 @@ collision_mask = 0
 shape = SubResource("shape116")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_5"]
+layers = 524289
 mesh = SubResource("mesh116")
 material_override = SubResource("jaune")
 
@@ -2806,6 +2892,7 @@ collision_mask = 0
 shape = SubResource("shape117")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_6"]
+layers = 524289
 mesh = SubResource("mesh117")
 material_override = SubResource("jaune")
 
@@ -2829,6 +2916,7 @@ collision_mask = 0
 shape = SubResource("shape118")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_7"]
+layers = 524289
 mesh = SubResource("mesh118")
 material_override = SubResource("jaune")
 
@@ -2852,6 +2940,7 @@ collision_mask = 0
 shape = SubResource("shape119")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_8"]
+layers = 524289
 mesh = SubResource("mesh119")
 material_override = SubResource("jaune")
 
@@ -2875,6 +2964,7 @@ collision_mask = 0
 shape = SubResource("shape120")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_9"]
+layers = 524289
 mesh = SubResource("mesh120")
 material_override = SubResource("jaune")
 
@@ -2898,6 +2988,7 @@ collision_mask = 0
 shape = SubResource("shape121")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_10"]
+layers = 524289
 mesh = SubResource("mesh121")
 material_override = SubResource("jaune")
 
@@ -2921,6 +3012,7 @@ collision_mask = 0
 shape = SubResource("shape122")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_11"]
+layers = 524289
 mesh = SubResource("mesh122")
 material_override = SubResource("jaune")
 
@@ -2944,6 +3036,7 @@ collision_mask = 0
 shape = SubResource("shape123")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_12"]
+layers = 524289
 mesh = SubResource("mesh123")
 material_override = SubResource("jaune")
 
@@ -2967,6 +3060,7 @@ collision_mask = 0
 shape = SubResource("shape124")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/Butee1_13"]
+layers = 524289
 mesh = SubResource("mesh124")
 material_override = SubResource("jaune")
 
@@ -3493,6 +3587,7 @@ collision_mask = 0
 shape = SubResource("shape147")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/PilierCentral0"]
+layers = 524289
 mesh = SubResource("mesh147")
 material_override = ExtResource("mur")
 
@@ -3517,6 +3612,7 @@ collision_mask = 0
 shape = SubResource("shape150")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/PilierCentral1"]
+layers = 524289
 mesh = SubResource("mesh150")
 material_override = ExtResource("mur")
 
@@ -3541,6 +3637,7 @@ collision_mask = 0
 shape = SubResource("shape153")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/PilierCentral2"]
+layers = 524289
 mesh = SubResource("mesh153")
 material_override = ExtResource("mur")
 
@@ -3565,6 +3662,7 @@ collision_mask = 0
 shape = SubResource("shape156")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/PilierCentral3"]
+layers = 524289
 mesh = SubResource("mesh156")
 material_override = ExtResource("mur")
 
@@ -3601,6 +3699,7 @@ collision_mask = 0
 shape = SubResource("shape159")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/PosteBarriere"]
+layers = 524289
 mesh = SubResource("mesh159")
 material_override = SubResource("metal")
 
@@ -3613,6 +3712,7 @@ collision_mask = 0
 shape = SubResource("shape160")
 
 [node name="Visuel" type="MeshInstance3D" parent="Navigation/Decor/Architecture/BrasBarriere"]
+layers = 524289
 mesh = SubResource("mesh160")
 material_override = SubResource("ligne")
 
@@ -5633,12 +5733,18 @@ script = ExtResource("fuite")
 position = Vector3(28.8, 0, 13)
 script = ExtResource("fuite")
 
+[node name="Ruissellement" parent="Navigation/Decor/FinitionsParking/FuiteOuest" instance=ExtResource("audio_local")]
+profil = ExtResource("son_eau")
+
+[node name="Gouttes" parent="Navigation/Decor/FinitionsParking/FuiteOuest" instance=ExtResource("audio_local")]
+profil = ExtResource("son_gouttes")
+
+[node name="Ruissellement" parent="Navigation/Decor/FinitionsParking/FuiteEst" instance=ExtResource("audio_local")]
+profil = ExtResource("son_eau")
+
 [node name="IncendieProgressif" type="Node3D" parent="Navigation/Decor"]
 position = Vector3(25, 0, 13.2)
 script = ExtResource("incendie_progressif")
-
-[node name="Commande" type="Node3D" parent="Navigation/Decor/FinitionsParking/VentilateurDesenfumage"]
-script = ExtResource("commande_ventilation")
 
 [node name="LogoPMR" type="MeshInstance3D" parent="Navigation/Decor/Marquages"]
 position = Vector3(-25, 0.04, 19.8)
@@ -5775,3 +5881,100 @@ position = Vector3(-1.8, 1.5, -7)
 rotation = Vector3(0, 0.8, 0)
 scale = Vector3(0.4, 0.4, 0.4)
 collision_layer = 0
+
+
+[node name="TracesLocales" type="Node3D" parent="."]
+editor_description = "Quelques fissures et tags placés à la main. Aucun effet sur les collisions ni la navigation."
+
+[node name="FissureSolOuest" parent="TracesLocales" instance=ExtResource("decal_fissure_07")]
+position = Vector3(-16, 0, -10)
+rotation = Vector3(0, 0.7, 0)
+size = Vector3(3, 0.14, 3)
+
+[node name="FissureSolSud" parent="TracesLocales" instance=ExtResource("decal_fissure_08")]
+position = Vector3(12, 0, 23)
+rotation = Vector3(0, -0.6, 0)
+size = Vector3(3.4, 0.14, 3.4)
+
+[node name="FissureMurNord" parent="TracesLocales" instance=ExtResource("decal_fissure_03")]
+position = Vector3(-17, 2.2, -27.71)
+rotation = Vector3(1.5707963, 0, 0)
+size = Vector3(2.5, 0.14, 2.5)
+
+[node name="FissureMurOuest" parent="TracesLocales" instance=ExtResource("decal_fissure_02")]
+position = Vector3(-29.71, 2.2, -18)
+rotation = Vector3(0, 0, -1.5707963)
+size = Vector3(2.4, 0.14, 2.4)
+
+[node name="GraffitiAncienTagNord" parent="TracesLocales" instance=ExtResource("decal_graffiti_47")]
+transform = Transform3D(0.9781476, 0.0000000, -0.2079117, -0.2079117, 0.0000000, -0.9781476, 0.0000000, 1.0000000, 0.0000000, 18.1000000, 1.3000000, -27.6820000)
+taille = Vector2(3, 3)
+teinte = Color(0.6, 0.57, 0.52, 0.48)
+
+ordre = 0
+[node name="GraffitiZoneBruleeNord" parent="TracesLocales" instance=ExtResource("decal_graffiti_67")]
+transform = Transform3D(0.9902681, 0.0000000, 0.1391731, 0.1391731, 0.0000000, -0.9902681, 0.0000000, 1.0000000, 0.0000000, 17.2000000, 2.1500000, -27.6770000)
+taille = Vector2(3.1, 3.1)
+teinte = Color(0.84, 0.77, 0.68, 0.8)
+
+ordre = 1
+[node name="GraffitiRejetNord" parent="TracesLocales" instance=ExtResource("decal_graffiti_114")]
+transform = Transform3D(0.9510565, 0.0000000, -0.3090170, -0.3090170, 0.0000000, -0.9510565, 0.0000000, 1.0000000, 0.0000000, 19.2000000, 2.5000000, -27.6770000)
+taille = Vector2(2, 2)
+teinte = Color(0.73, 0.67, 0.62, 0.6)
+
+ordre = 2
+[node name="GraffitiAncienTagOuest" parent="TracesLocales" instance=ExtResource("decal_graffiti_05")]
+transform = Transform3D(0.0000000, 1.0000000, 0.0000000, -0.9702957, 0.0000000, -0.2419219, -0.2419219, 0.0000000, 0.9702957, -29.6820000, 1.6500000, 11.8000000)
+taille = Vector2(2.9, 2.9)
+teinte = Color(0.65, 0.62, 0.57, 0.53)
+
+ordre = 0
+[node name="GraffitiAppelOuest" parent="TracesLocales" instance=ExtResource("decal_graffiti_115")]
+transform = Transform3D(0.0000000, 1.0000000, 0.0000000, -0.9876883, 0.0000000, 0.1564345, 0.1564345, 0.0000000, 0.9876883, -29.6770000, 2.3000000, 11.0000000)
+taille = Vector2(2.2, 2.2)
+teinte = Color(0.85, 0.78, 0.7, 0.78)
+ordre = 1
+
+[node name="FissureSolAlleeEst" parent="TracesLocales" instance=ExtResource("decal_fissure_09")]
+position = Vector3(16, 0, -8)
+rotation = Vector3(0, 1.2, 0)
+size = Vector3(2.6, 0.14, 2.6)
+
+[node name="FissureSolAlleeOuest" parent="TracesLocales" instance=ExtResource("decal_fissure_02")]
+position = Vector3(-15, 0, 12)
+rotation = Vector3(0, -0.3, 0)
+size = Vector3(2.1, 0.14, 2.1)
+
+[node name="FissureSolAcces" parent="TracesLocales" instance=ExtResource("decal_fissure_10")]
+position = Vector3(3.2, 0, 25)
+rotation = Vector3(0, 0.85, 0)
+size = Vector3(1.8, 0.14, 1.8)
+
+[node name="Ambiances" type="Node3D" parent="."]
+
+[node name="SireneLointaine" parent="Ambiances" instance=ExtResource("audio_local")]
+profil = ExtResource("son_sirene")
+diffusion = 1
+
+[node name="RadioCamion" parent="Ambiances" instance=ExtResource("audio_local")]
+profil = ExtResource("son_radio")
+cible = NodePath("../../Navigation/Decor/Refuge")
+
+[node name="Alarme" parent="Navigation/Decor/Vehicules/BerlineBordeaux" instance=ExtResource("audio_local")]
+profil = ExtResource("son_alarme")
+
+[node name="Alarme" parent="Navigation/Decor/Vehicules/BerlineIvoire" instance=ExtResource("audio_local")]
+profil = ExtResource("son_alarme")
+
+[node name="Alarme" parent="Navigation/Decor/Vehicules/BerlineNoire" instance=ExtResource("audio_local")]
+profil = ExtResource("son_alarme")
+
+[node name="Grincement" parent="Navigation/Decor/InstallationsTechniques/ConduitM1_2" instance=ExtResource("audio_local")]
+profil = ExtResource("son_metal")
+
+[node name="Grincement" parent="Navigation/Decor/InstallationsTechniques/Conduit1_9" instance=ExtResource("audio_local")]
+profil = ExtResource("son_metal")
+
+[node name="Grincement" parent="Navigation/Decor/FinitionsParking/VentilateurDesenfumage" instance=ExtResource("audio_local")]
+profil = ExtResource("son_metal")

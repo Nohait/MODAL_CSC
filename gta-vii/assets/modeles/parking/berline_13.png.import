@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qr52hlartu4k"
-path="res://.godot/imported/berline_13.png-83a6019a4205ac2b7e246e0983e0cda0.ctex"
+path.s3tc="res://.godot/imported/berline_13.png-83a6019a4205ac2b7e246e0983e0cda0.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "275990312969db14b110da79e10a37a0"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/parking/berline_13.png"
-dest_files=["res://.godot/imported/berline_13.png-83a6019a4205ac2b7e246e0983e0cda0.ctex"]
+dest_files=["res://.godot/imported/berline_13.png-83a6019a4205ac2b7e246e0983e0cda0.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -28,8 +29,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=8
+roughness/src_normal="res://assets/modeles/parking/berline_14.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -1,0 +1,1 @@
+Flamme de chargement : davididev — https://opengameart.org/content/flame-particle-system — CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/). Fichier original flameparticle.png, utilisé sans modification ; animation et atténuation réalisées par le shader du jeu.

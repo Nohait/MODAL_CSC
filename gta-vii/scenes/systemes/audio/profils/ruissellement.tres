@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ProfilAmbiance" format=3 uid="uid://dmmcwj3nnf6cl"]
+
+[ext_resource type="Script" uid="uid://c3wyar50x3myr" path="res://scenes/systemes/audio/profil_ambiance.gd" id="profil"]
+[ext_resource type="AudioStream" uid="uid://bokan8onvaa1x" path="res://assets/sounds/ambiance/environnement/ruissellement_beton.mp3" id="son0"]
+
+[resource]
+script = ExtResource("profil")
+nom = "Ruissellement"
+sons = Array[AudioStream]([ExtResource("son0")])
+boucle = true
+attente_min = 0.5
+attente_max = 2.0
+volume_db = -6.0
+portee = 14.0
+hauteur = 0.15
+vitesse_min = 0.97
+vitesse_max = 1.03
+fondu = 1.0

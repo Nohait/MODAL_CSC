@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/audio/ambiance_locale.gd" id="script"]
+
+[node name="AmbianceLocale" type="Node3D"]
+script = ExtResource("script")

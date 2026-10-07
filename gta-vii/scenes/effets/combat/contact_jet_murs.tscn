@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/effets/combat/contact_jet_murs.gd" id="script"]
+
+[node name="ContactJetMurs" type="Node3D"]
+script = ExtResource("script")

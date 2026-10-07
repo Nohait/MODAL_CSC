@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ProfilAmbiance" format=3 uid="uid://qg3a3ng778tc"]
+
+[ext_resource type="Script" uid="uid://c3wyar50x3myr" path="res://scenes/systemes/audio/profil_ambiance.gd" id="profil"]
+[ext_resource type="AudioStream" uid="uid://bcgekftxdpvq1" path="res://assets/sounds/ambiance/environnement/grincement_metal.wav" id="son0"]
+
+[resource]
+script = ExtResource("profil")
+nom = "Grincements"
+sons = Array[AudioStream]([ExtResource("son0")])
+attente_min = 30.0
+attente_max = 30.0
+volume_db = -14.0
+distance_reference = 15.0
+portee = 55.0
+hauteur = 0.0
+vitesse_min = 0.8
+vitesse_max = 0.88
+resonance = true

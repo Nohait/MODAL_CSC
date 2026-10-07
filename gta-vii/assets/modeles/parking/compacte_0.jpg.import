@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8a251j8aa25w"
-path="res://.godot/imported/compacte_0.jpg-2a3f0bd0025890ae9e4e7c5cc4b97c33.ctex"
+path.s3tc="res://.godot/imported/compacte_0.jpg-2a3f0bd0025890ae9e4e7c5cc4b97c33.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "799f5f09f81a2cf0cd6888cae9b81867"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/parking/compacte_0.jpg"
-dest_files=["res://.godot/imported/compacte_0.jpg-2a3f0bd0025890ae9e4e7c5cc4b97c33.ctex"]
+dest_files=["res://.godot/imported/compacte_0.jpg-2a3f0bd0025890ae9e4e7c5cc4b97c33.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

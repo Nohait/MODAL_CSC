@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ProfilAmbiance" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/audio/profil_ambiance.gd" id="profil"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/sirene_lointaine.wav" id="son"]
+
+[resource]
+script = ExtResource("profil")
+nom = "SireneLointaine"
+sons = Array[AudioStream]([ExtResource("son")])
+attente_min = 300.0
+attente_max = 600.0
+volume_db = -22.0
+fondu = 3.0
+vitesse_min = 1.0
+vitesse_max = 1.0

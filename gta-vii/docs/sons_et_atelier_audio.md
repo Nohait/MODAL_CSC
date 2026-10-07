@@ -47,3 +47,21 @@ Troisième variante de l’archive (upshort.wav), conservée sans modification. 
 
 Volumes actuels de révélation : commune -18 dB, rare -16 dB, épique -2 dB, légendaire -14 dB. Ces réglages compensent les différences de niveau des fichiers et passent toujours par le bus Effets.
 
+
+Sirène lointaine (mode zombie) : le nœud `Ambiances/SireneLointaine` de chaque map utilise le lecteur commun en diffusion Global, avec le profil `scenes/systemes/audio/profils/sirene.tres`. Délai de 300 à 600 secondes après chaque passage, premier passage également retardé, volume -22 dB, fondus de 3 secondes. Le gestionnaire la coordonne avec les autres sons ponctuels et l'interrompt en fondu pendant la boutique.
+
+Appels des victimes (deux modes) : `scenes/victimes/victime.gd` déclenche une seule des deux voix « help me » quand une victime encore captive atteint 50 % de ses PV. Chaque victime mémorise son propre appel pour éviter les répétitions. Les lecteurs 3D sont placés à 1,2 m au-dessus d'elle et utilisent le bus Effets ; les WAV sont importés en mono pour la localisation spatiale. Réglages dans le groupe Inspector « Appel au secours » : volume -12 dB, distance de référence 6 m, portée maximale 35 m. Le RoomManager ne déclenche plus lui-même les cris à mi-timer.
+
+Organisation des ambiances :
+
+- Les sources sont placées dans les maps. Les ambiances globales sont sous le dossier `Ambiances` ; les sources locales restent sous les voitures, fuites et installations qui les produisent.
+- Glisser `scenes/systemes/audio/ambiance_locale.tscn` à l'endroit souhaité, puis choisir son Profil et sa Diffusion (Local ou Global) dans l'Inspector. Le son local utilise la position de ce nœud : on peut le décaler librement. Global utilise un AudioStreamPlayer, Local un AudioStreamPlayer3D.
+- Les profils partagés sont dans `scenes/systemes/audio/profils/`. Ils contiennent sons, boucle, délais, volume, portée, hauteur, vitesse et fondu. Aucun filtre de map ni liste d'emplacements dans les profils.
+- Cible est facultatif : la RadioCamion référence `../../Navigation/Decor/Refuge`, car le camion est créé après la map. Les autres sources n'en ont pas besoin.
+- `scenes/modes/zombie/audio/environnement/ambiance_arene.gd` recense les sources de la map prête via le groupe `ambiances_locales`. Il ne crée pas les sources et ne connaît pas leurs chemins.
+- Un seul son ponctuel est autorisé à la fois, puis 15 secondes de silence séparent les passages. Les sources utilisant le même profil partagent une horloge ; ajouter une voiture ne multiplie pas la fréquence des alarmes. Le gestionnaire évite de reprendre deux fois de suite la même source lorsqu'il y en a plusieurs.
+- Les boucles locales restent indépendantes. La pause suspend lectures et délais. La boutique interrompt toutes les sources avec un fondu de 0,6 seconde malgré la pause, puis les réactive à sa fermeture. Les sons ponctuels repartent avec un nouveau délai.
+
+Réglages actuels : métal -14 dB / 55 m (délai 30 s actuellement ; 180–360 s conseillé pour des passages rares), alarmes -16 dB / 50 m / 300–600 s, radio -10 dB / 24 m / 180–300 s, ruissellement -6 dB / 14 m, gouttes -18 dB / 10 m. La radio et la sirène sont dans les deux maps ; eau, métal et alarmes uniquement dans le Parking.
+
+Fichiers audio dans `assets/sounds/ambiance/environnement/`, crédits et découpes dans `CREDITS.md`. Aucun craquement de bois ni ancien Pipe leak utilisé ; les craquements minéraux du bâtiment restent à sélectionner. Pour un essai rapide, baisser temporairement les délais d'un profil, puis les rétablir après écoute. Les générateurs aléatoires sonores n'affectent pas les graines des combats.

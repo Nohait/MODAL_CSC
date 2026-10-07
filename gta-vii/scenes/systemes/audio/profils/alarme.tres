@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ProfilAmbiance" format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/audio/profil_ambiance.gd" id="profil"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/alarme_voiture_1.wav" id="son0"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/alarme_voiture_2.wav" id="son1"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ambiance/environnement/alarme_voiture_3.wav" id="son2"]
+
+[resource]
+script = ExtResource("profil")
+sons = Array[AudioStream]([ExtResource("son0"), ExtResource("son1"), ExtResource("son2")])
+nom = "AlarmesVoitures"
+attente_min = 300.0
+attente_max = 600.0
+volume_db = -16.0
+distance_reference = 12.0
+portee = 50.0
+hauteur = 0.9
+vitesse_min = 0.98
+vitesse_max = 1.02

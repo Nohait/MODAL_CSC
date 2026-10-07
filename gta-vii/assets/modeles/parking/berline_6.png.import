@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxfrxe4ou3gtu"
-path="res://.godot/imported/berline_6.png-90e15cab0b9a5a66fde7e3b04a4b03b0.ctex"
+path.s3tc="res://.godot/imported/berline_6.png-90e15cab0b9a5a66fde7e3b04a4b03b0.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "52e9289a24f6a92c519ed9e7dc037acc"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/modeles/parking/berline_6.png"
-dest_files=["res://.godot/imported/berline_6.png-90e15cab0b9a5a66fde7e3b04a4b03b0.ctex"]
+dest_files=["res://.godot/imported/berline_6.png-90e15cab0b9a5a66fde7e3b04a4b03b0.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

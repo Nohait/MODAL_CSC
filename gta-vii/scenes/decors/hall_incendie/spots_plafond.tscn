@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/eclairage/eclairage_defaillant.gd" id="vacillement"]
+
+[node name="SpotsPlafond" type="Node3D"]
+editor_description = "Trois spots dans l'allée centrale. Celui du fond subit une ou deux brèves coupures, suivies de 4 à 7 secondes de calme."
+
+[node name="SpotEntree" type="SpotLight3D" parent="."]
+position = Vector3(0, 4.2, 11)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.6
+spot_range = 10.0
+spot_angle = 55.0
+spot_angle_attenuation = 1.5
+shadow_enabled = false
+
+[node name="SpotCentre" type="SpotLight3D" parent="."]
+position = Vector3(0, 4.2, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.6
+spot_range = 10.0
+spot_angle = 55.0
+spot_angle_attenuation = 1.5
+shadow_enabled = false
+
+[node name="SpotFond" type="SpotLight3D" parent="."]
+position = Vector3(0, 4.2, -11)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.6
+spot_range = 10.0
+spot_angle = 55.0
+spot_angle_attenuation = 1.5
+shadow_enabled = false
+script = ExtResource("vacillement")
+intervalle_min = 4.0
+intervalle_max = 7.0
+intensite_faible = 0.03
+duree_coupure = 0.14
+coupures_max = 2
+pause_entre_coupures = 0.12

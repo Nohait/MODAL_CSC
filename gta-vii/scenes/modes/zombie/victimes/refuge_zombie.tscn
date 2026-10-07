@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/modes/zombie/victimes/refuge_zombie.gd" id="script"]
 [ext_resource type="PackedScene" path="res://assets/modeles/camion_pompier/camion_pompier.glb" id="camion"]
+[ext_resource type="Script" path="res://scenes/modes/zombie/victimes/retour_perte_refuge.gd" id="retour_perte"]
 
 [sub_resource type="BoxShape3D" id="collision"]
 size = Vector3(2.4255, 3.234, 6.699)
@@ -66,3 +67,6 @@ position = Vector3(1.8, 3.8, 2.2)
 light_color = Color(1, 0.87, 0.69, 1)
 light_energy = 0.4
 omni_range = 4.5
+
+[node name="RetourPerte" type="Node3D" parent="."]
+script = ExtResource("retour_perte")

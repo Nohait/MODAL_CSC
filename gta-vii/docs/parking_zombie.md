@@ -60,11 +60,7 @@ Les ressources `scenes/modes/zombie/evenements/paliers/parking_ventilation.tres`
 
 La sauvegarde des paliers conserve cet événement ; sa restauration ne crée pas de doublon. `tests/incendie_parking.gd` vérifie le déclenchement et l’absence de dégâts au joueur, aux victimes et aux ennemis.
 
-## Désenfumage
-
-`scenes/modes/zombie/equipements/ventilation.gd` conserve l'achat et écoute `salle_commencee`. Pour 5 pièces, le ventilateur se prépare pour la prochaine vague et réduit pendant 30 secondes la fumée dans un rayon de 18 m. Les flammes et les dégâts restent actifs. Un scan par seconde prend en compte les nouveaux foyers ; les quantités initiales de fumée sont rétablies à la fin. Prix, durée, rayon et proportion de fumée sont exportés sur le nœud `Commande`.
-
-La tuile est ajoutée par `boutique_zombie.gd` uniquement si la map contient cet équipement. Son pictogramme est `assets/textures/interfaces/boutique/ventilation.svg`. `point_reprise_zombie.gd` capture et restaure son état comme les autres équipements. Le mode classique et le Hall ne reçoivent pas cette offre.
+Le ventilateur de désenfumage reste un élément décoratif du parking, sans achat ni effet sur la fumée.
 
 ## Marquages de stationnement
 
@@ -85,4 +81,5 @@ La berline abandonnée près de l'entrée utilise `feux_detresse.gd` : les maté
 La borne près de la sortie piétonne utilise borne_paiement.gd, qui étend le script d'accessoire pour conserver le recentrage et la collision simple. Le morceau Object_4 correspond à la machine ; la sphère de présentation est exclue. Le shader borne_paiement.gdshader désature la couleur d'origine et rend uniquement l'écran lumineux avec un masque UV de l'atlas. Un sac supplémentaire accompagne la Clio à portière ouverte.
 
 Chaque rampe possède une lumière froide au niveau supérieur, des gravats sur le côté et le script fumee_rampe.gd. Celui-ci extrait uniquement les particules de fumée du foyer existant : aucun son, lumière ou flamme n'est dupliqué. Quantité et taille sont exportées. Le seuil reste fermé au joueur et les allées du parking conservent leur circulation.
+
 

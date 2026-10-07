@@ -12,22 +12,11 @@ var score := 0
 var serie := 0
 var restant := 0.0
 var dernier_palier := 1
-var texte: Label
 
 func _ready() -> void:
 	CatalogueEnnemis.ennemi_enregistre.connect(_suivre)
 	vagues.salle_terminee.connect(func(_salle): _rompre())
 	get_parent().get_node("player").degats_recus.connect(func(_quantite): _rompre())
-	var hud := CanvasLayer.new()
-	add_child(hud)
-	texte = Label.new()
-	texte.position = Vector2(20, 150)
-	texte.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
-	texte.add_theme_font_size_override("font_size", 18)
-	texte.add_theme_color_override("font_color", Color("e8cc91"))
-	texte.add_theme_constant_override("outline_size", 3)
-	hud.add_child(texte)
-	_actualiser()
 
 func _suivre(ennemi: Node3D) -> void:
 	if not get_parent().is_ancestor_of(ennemi) or ennemi.is_in_group("flaque"): return
@@ -52,7 +41,6 @@ func _eliminer(ennemi: Node3D) -> void:
 		son.finished.connect(son.queue_free)
 		son.play()
 	dernier_palier = palier
-	_actualiser()
 
 func _physics_process(delta: float) -> void:
 	if restant <= 0.0: return
@@ -63,7 +51,4 @@ func _rompre() -> void:
 	serie = 0
 	restant = 0.0
 	dernier_palier = 1
-	_actualiser()
 
-func _actualiser() -> void:
-	texte.text = "%d · ×%d" % [score, multiplicateur()]

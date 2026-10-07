@@ -2,17 +2,28 @@ extends CanvasLayer
 
 signal chargement_echoue
 
+@export_range(4, 40, 1) var nombre_braises := 24
+@export_range(0.1, 2.0, 0.1) var vitesse_braises := 0.5
+@export_range(0.1, 3.0, 0.1) var vitesse_feu := 0.8
+@export_range(2.0, 20.0, 1.0) var debordement_feu := 20.0
+
 var en_cours := false
 var fond: ColorRect
 var etape: Label
 var barre: ProgressBar
 var echec: Button
+var feu_barre: ColorRect
 
 func _ready() -> void:
 	layer = 110
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	fond = ColorRect.new()
 	fond.color = Color("11151c")
+	var ambiance := ShaderMaterial.new()
+	ambiance.shader = preload("res://assets/shaders/interfaces/chargement_braises.gdshader")
+	ambiance.set_shader_parameter("nombre_braises", nombre_braises)
+	ambiance.set_shader_parameter("vitesse", vitesse_braises)
+	fond.material = ambiance
 	add_child(fond)
 	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var centre := CenterContainer.new()
@@ -34,14 +45,46 @@ func _ready() -> void:
 	etape.add_theme_font_size_override("font_size", 22)
 	colonne.add_child(etape)
 	barre = ProgressBar.new()
-	barre.custom_minimum_size.y = 8
+	barre.custom_minimum_size.y = 34
 	barre.show_percentage = false
 	for nom in ["background", "fill"]:
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color("d99851") if nom == "fill" else Color("303640")
+		style.bg_color = Color.TRANSPARENT if nom == "fill" else Color("171b22")
 		style.set_corner_radius_all(4)
+		if nom == "background":
+			style.set_border_width_all(2)
+			style.border_color = Color("685346")
 		barre.add_theme_stylebox_override(nom, style)
 	colonne.add_child(barre)
+	feu_barre = ColorRect.new()
+	feu_barre.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	barre.add_child(feu_barre)
+	feu_barre.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	# Le rectangle dépasse du cadre pour laisser de la place aux flammes et à leur lueur.
+	feu_barre.offset_left = -debordement_feu
+	feu_barre.offset_right = debordement_feu
+	feu_barre.offset_top = -debordement_feu
+	feu_barre.offset_bottom = debordement_feu
+	var feu := ShaderMaterial.new()
+	feu.shader = preload("res://assets/shaders/interfaces/chargement_barre.gdshader")
+	feu_barre.material = feu
+	feu.set_shader_parameter("vitesse", vitesse_feu)
+	feu.set_shader_parameter("debordement", debordement_feu)
+	feu.set_shader_parameter("animation_flamme", load("res://assets/textures/feu/flamme_chargement.png"))
+	# Texture continue et filtrée : les flammes ne reposent plus sur des pointes répétées.
+	var bruit := FastNoiseLite.new()
+	bruit.seed = 73
+	bruit.frequency = 0.006
+	bruit.fractal_octaves = 2
+	var texture_bruit := NoiseTexture2D.new()
+	texture_bruit.width = 512
+	texture_bruit.height = 512
+	texture_bruit.seamless = true
+	texture_bruit.noise = bruit
+	feu.set_shader_parameter("noise_tex", texture_bruit)
+	feu_barre.resized.connect(func(): feu.set_shader_parameter("dimensions", feu_barre.size))
+	# Le shader suit la valeur réelle, y compris lors de la remise à zéro.
+	barre.value_changed.connect(func(valeur: float): feu.set_shader_parameter("progression", valeur / barre.max_value))
 	echec = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
 	echec.text = "Retour"
 	echec.pressed.connect(terminer)
@@ -96,3 +139,5 @@ func _signaler_echec() -> void:
 func _input(_evenement: InputEvent) -> void:
 	if en_cours and not echec.visible:
 		get_viewport().set_input_as_handled()
+
+

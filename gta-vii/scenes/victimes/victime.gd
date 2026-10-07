@@ -17,6 +17,16 @@ signal died(victim: CharacterBody3D)
 @onready var materiau := (visuel.get_active_material(0).duplicate()as StandardMaterial3D)
 
 @onready var cris = $"Sons/cris".get_children()
+@onready var appels_secours: Array[AudioStreamPlayer3D] = [$Sons/cris/man_helpme1, $Sons/cris/man_helpme2]
+@export_group("Appel au secours")
+@export_range(-30.0, 0.0, 1.0) var volume_appel_db := -12.0
+@export_range(1.0, 15.0, 0.5) var distance_appel := 6.0
+@export_range(10.0, 60.0, 1.0) var portee_appel := 35.0
+@export_range(-30.0, 0.0, 1.0) var volume_mort_captive_db := -12.0
+var appel_secours_joue := false
+@export_range(0.0, 3.0, 0.05) var delai_appel_min := 0.1
+@export_range(0.0, 3.0, 0.05) var delai_appel_max := 0.9
+var hasard_appel := RandomNumberGenerator.new()
 @onready var victim_death = [
 	 preload("res://assets/sounds/victimes/victim_death2.wav")
 ]
@@ -108,6 +118,13 @@ var is_freed := false
 var ennemis: Node = null
 
 func _ready() -> void:
+	hasard_appel.randomize()
+	# Chaque cri part de la victime, avec la même atténuation pour les deux enregistrements.
+	for appel in appels_secours:
+		appel.position.y = 1.2
+		appel.volume_db = volume_appel_db
+		appel.unit_size = distance_appel
+		appel.max_distance = portee_appel
 	# Le même signal prévient le VictimManager et déclenche le retour visuel local.
 	freed.connect(_jouer_effet_liberation)
 	stop_distance_player = stop_distance
@@ -311,9 +328,7 @@ func prendre_degats(degats: float) -> void:
 	actualiser_barre_vie()
 	flash_degats()
 	print("Victime : -", degats, " PV (", vie, " / ", vie_max, ")")
-	if vie <= vie_max/2 and vie +degats >=vie_max/2:
-		var stream = cris.pick_random()
-		stream.play()
+	_verifier_appel_secours()
 	if vie <= 0.0:
 		mourir()
 
@@ -334,8 +349,25 @@ func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
 	# À zéro seconde, éviter un reliquat de PV dû aux arrondis des nombres décimaux.
 	vie = 0.0 if proportion_ecoulee >= 1.0 else maxf(vie - difference, 0.0)
 	actualiser_barre_vie()
+	_verifier_appel_secours()
 	if vie <= 0.0:
 		mourir()
+
+func _verifier_appel_secours() -> void:
+	# La santé réelle déclenche l'appel, même si des dégâts ont précédé la moitié du timer.
+	if is_freed or est_morte or appel_secours_joue or vie <= 0.0 or vie > vie_max * 0.5:
+		return
+	appel_secours_joue = true
+	# Le timer est un enfant : il disparaît avec la victime et respecte la pause.
+	var delai := Timer.new()
+	delai.one_shot = true
+	add_child(delai)
+	delai.timeout.connect(func():
+		delai.queue_free()
+		if not is_freed and not est_morte and vie > 0.0:
+			appels_secours.pick_random().play()
+	)
+	delai.start(maxf(0.01, hasard_appel.randf_range(minf(delai_appel_min, delai_appel_max), maxf(delai_appel_min, delai_appel_max))))
 
 # Barre de vie
 
@@ -354,12 +386,19 @@ func mourir() -> void:
 	est_morte = true
 	vie = 0.0
 	actualiser_barre_vie()
-	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
+	# Le lecteur reste dans la salle pour terminer le cri après la suppression de la victime.
 	var victim_death_sound =  AudioStreamPlayer3D.new()
 	victim_death_sound.bus = &"Effets"
+	if not is_freed:
+		# Même portée que l'appel au secours : le cri vient bien de cette victime.
+		victim_death_sound.volume_db = volume_mort_captive_db
+		victim_death_sound.unit_size = distance_appel
+		victim_death_sound.max_distance = portee_appel
 	get_parent().add_child(victim_death_sound)
 	victim_death_sound.stream = victim_death.pick_random()
-	victim_death_sound.global_position = global_position
+	victim_death_sound.global_position = global_position + Vector3.UP * 1.2
+	# Ne pas accumuler des lecteurs silencieux au fil des morts.
+	victim_death_sound.finished.connect(victim_death_sound.queue_free)
 	victim_death_sound.play()
 	
 	died.emit(self)

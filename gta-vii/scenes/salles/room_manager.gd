@@ -327,7 +327,6 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 
 func actualiser_sauvetage(delta: float) -> void:
 	var salle := salle_actuelle
-	var temps_precedent: float = salle.temps_sauvetage_restant
 	salle.temps_sauvetage_restant = maxf(salle.temps_sauvetage_restant - delta, 0.0)
 	timer_bar.value = salle.temps_sauvetage_restant
 
@@ -336,10 +335,6 @@ func actualiser_sauvetage(delta: float) -> void:
 	for victime in (salle.get_node("Victimes").get_children()):
 		if not is_instance_valid(victime) or victime.is_queued_for_deletion() or not victime.is_in_group("victime") or victime.est_morte or victime.is_freed:
 			continue
-		# Un seul cri au passage de la moitié du timer, quelle que soit la durée de la salle.
-		var mi_parcours: float = salle.duree_sauvetage / 2.0
-		if temps_precedent > mi_parcours and salle.temps_sauvetage_restant <= mi_parcours and not victime.cris.is_empty():
-			victime.cris.pick_random().play()
 		victime.actualiser_degats_sauvetage(proportion_ecoulee)
 		
 	if salle.temps_sauvetage_restant <= 0.0:

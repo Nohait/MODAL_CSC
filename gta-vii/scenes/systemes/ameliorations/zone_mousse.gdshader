@@ -3,6 +3,8 @@ render_mode unshaded, cull_disabled, shadows_disabled;
 
 uniform vec4 couleur : source_color = vec4(0.85, 0.9, 0.8, 0.35);
 uniform float opacite = 1.0;
+uniform float fonte : hint_range(0.0, 1.0) = 0.0;
+uniform bool forme_libre = false;
 varying vec2 point_sol;
 
 void vertex() {
@@ -13,7 +15,16 @@ void fragment() {
 	float angle = atan(point_sol.y, point_sol.x);
 	// Quelques ondulations cassent le cercle parfait, sans déplacer la collision.
 	float bord = 0.9 + sin(angle * 5.0) * 0.035 + sin(angle * 9.0 + 1.7) * 0.025;
-	float couverture = 1.0 - smoothstep(bord - 0.12, bord, length(point_sol));
+	// La frontière se retire vers le centre et ondule légèrement pendant la fonte.
+	bord *= 1.0 - fonte;
+	bord += sin(angle * 7.0 + fonte * 5.0) * 0.035 * sin(fonte * 3.14159);
+	float couverture = (1.0 - smoothstep(bord - 0.12, bord, length(point_sol))) * (1.0 - smoothstep(0.85, 1.0, fonte));
+	if (forme_libre) {
+		// UV décrit les côtés et les deux extrémités de l'empreinte du jet.
+		float distance_bord = min(min(UV.x, 1.0 - UV.x), min(UV.y, 1.0 - UV.y));
+		float irregularite = sin(point_sol.x * 37.0 + sin(point_sol.y * 23.0)) * 0.008;
+		couverture = smoothstep(fonte * 0.5, fonte * 0.5 + 0.035, distance_bord + irregularite);
+	}
 	// De petites bulles éclaircissent la mousse ; aucun système de particules nécessaire.
 	vec2 grille = point_sol * 13.0;
 	vec2 cellule = floor(grille);

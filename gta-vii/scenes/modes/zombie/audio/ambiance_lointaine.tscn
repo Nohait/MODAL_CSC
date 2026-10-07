@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cud734ix2enev"]
+
+[ext_resource type="Script" path="res://scenes/modes/zombie/audio/ambiance_lointaine.gd" id="script"]
+[ext_resource type="AudioStream" uid="uid://htdrphco75hi" path="res://assets/sounds/ambiance/sirene_lointaine.wav" id="son"]
+
+[node name="AmbianceLointaine" type="Node" unique_id=1413669859]
+script = ExtResource("script")
+son = ExtResource("son")
