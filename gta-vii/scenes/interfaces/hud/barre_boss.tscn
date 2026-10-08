@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/hud/barre_boss.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="2"]
+[sub_resource type="StyleBoxFlat" id="Fond"]
+bg_color = Color(0.045, 0.05, 0.055, 0.95)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.43, 0.44, 0.46, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+[sub_resource type="StyleBoxFlat" id="Vide"]
+bg_color = Color(0, 0, 0, 0)
+[sub_resource type="StyleBoxFlat" id="Degats"]
+bg_color = Color(0.7, 0.29, 0.07, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+[sub_resource type="StyleBoxFlat" id="Invisible"]
+bg_color = Color(0, 0, 0, 0)
+
+[node name="BarreBoss" type="CanvasLayer"]
+layer = 4
+script = ExtResource("1")
+[node name="Interface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+[node name="Panneau" type="Control" parent="Interface"]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 12.0
+offset_right = 300.0
+offset_bottom = 88.0
+mouse_filter = 2
+[node name="Titre" type="Label" parent="Interface/Panneau"]
+offset_right = 600.0
+offset_bottom = 38.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.89, 0.81, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 18
+text = "LE CŒUR DU BRASIER"
+horizontal_alignment = 1
+[node name="Cadre" type="Panel" parent="Interface/Panneau"]
+offset_left = 18.0
+offset_top = 46.0
+offset_right = 582.0
+offset_bottom = 68.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Fond")
+[node name="Retard" type="ProgressBar" parent="Interface/Panneau"]
+offset_left = 20.0
+offset_top = 48.0
+offset_right = 580.0
+offset_bottom = 66.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("Vide")
+theme_override_styles/fill = SubResource("Degats")
+max_value = 1.0
+step = 0.001
+value = 1.0
+show_percentage = false
+[node name="Vie" type="ProgressBar" parent="Interface/Panneau"]
+offset_left = 20.0
+offset_top = 48.0
+offset_right = 580.0
+offset_bottom = 66.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("Invisible")
+theme_override_styles/fill = SubResource("Invisible")
+max_value = 1.0
+step = 0.001
+value = 1.0
+show_percentage = false
+[node name="Incandescence" type="ColorRect" parent="Interface/Panneau"]
+offset_left = 20.0
+offset_top = 48.0
+offset_right = 580.0
+offset_bottom = 66.0
+mouse_filter = 2

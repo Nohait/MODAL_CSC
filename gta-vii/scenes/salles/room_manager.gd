@@ -440,13 +440,15 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 	# Le mode classique conserve ses sbires ; le mode zombie spécialise ce choix.
 	creer_sbire(salle, emplacement)
 
-func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
+func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	var sbire = SBIRE_SCENE.instantiate()
 	sbire.etage = salle.etage
 	sbire.position = emplacement + Vector3.UP * 0.75
 	salle.get_node("Ennemis").add_child(sbire)
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	return sbire
 
 # Activation d'une salle
 
@@ -541,8 +543,7 @@ func activer_salle(indice: int) -> void:
 	salle_actuelle.entree.commencer()
 	joueur.set_physics_process(true)
 	if jouer_course:
-		joueur.commencer_entree(arrivee)
-		await joueur.entree_terminee
+		await jouer_entree_salle(arrivee)
 	salle_actuelle.get_node("Ennemis").process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.get_node("Victimes").process_mode = Node.PROCESS_MODE_INHERIT
 	transition_en_cours = false
@@ -763,6 +764,7 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 			if identifiant == "tourelle": ennemi.projectiles_tour = salle_actuelle.get_node("ProjectilesTour")
 			ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 			salle_actuelle.get_node("Ennemis").add_child(ennemi)
+			relier_invocation(ennemi, salle_actuelle)
 			var agent = ennemi.get_node_or_null("NavigationAgent")
 			if agent: agent.set_navigation_map(salle_actuelle.carte_ennemis)
 		actualiser_objectifs()
@@ -770,6 +772,34 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 	ennemi.free()
 	return false
 
+func jouer_entree_salle(arrivee: Vector3) -> void:
+	# Le mode zombie peut prolonger l'arrivée, sans changer celle du mode classique.
+	joueur.commencer_entree(arrivee)
+	await joueur.entree_terminee
+
 func preparer_entree_salle() -> bool:
 	var point = get_node_or_null("../../PointRepriseClassique")
 	return point.preparer_entree(self) if point != null else true
+
+func relier_invocation(ennemi: Node3D, salle: Node3D) -> void:
+	var invocation := ennemi.get_node_or_null("InvocationBoss")
+	if invocation != null:
+		invocation.invocation_demandee.connect(_invoquer_ennemis.bind(ennemi, salle))
+
+func _invoquer_ennemis(invocations: Array[Dictionary], boss: Node3D, salle: Node3D) -> void:
+	if not is_instance_valid(boss) or boss.est_mort or salle != salle_actuelle: return
+	for demande in invocations:
+		# Compter avant l'ajout : la vague attend aussi la mort des invocations.
+		salle.remaining_enemies += 1
+		var ennemi: Node3D
+		if demande.scene == SBIRE_SCENE:
+			ennemi = creer_sbire(salle, salle.to_local(demande.position))
+		else:
+			ennemi = demande.scene.instantiate()
+			ennemi.etage = boss.etage
+			ennemi.position = salle.to_local(demande.position) + Vector3.UP * demande.hauteur
+			ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+			salle.get_node("Ennemis").add_child(ennemi)
+			ennemi.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+		ennemi.set_meta("boss_invocateur", boss.get_instance_id())
+	actualiser_objectifs()

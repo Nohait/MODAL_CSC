@@ -247,7 +247,7 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 		return
 	super.creer_mobile(salle, emplacement)
 
-func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
+func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	# Un sbire ajouté par le debug n'appartient pas au calendrier de la vague.
 	var sbire = SBIRE_SCENE.instantiate()
 	sbire.set_script(preload("res://scenes/modes/zombie/ennemis/sbire_zombie.gd"))
@@ -256,6 +256,8 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> void:
 	salle.get_node("Ennemis").add_child(sbire)
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	return sbire
 
 func peut_creer_ennemi_debug() -> bool:
 	return is_instance_valid(salle_actuelle) and not transition_en_cours and vague_en_cours
@@ -288,6 +290,7 @@ func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> 
 	ennemi.position = emplacement + Vector3.UP * type.hauteur
 	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	salle.get_node("Ennemis").add_child(ennemi)
+	relier_invocation(ennemi, salle)
 	var agent = ennemi.get_node_or_null("NavigationAgent")
 	if agent != null: agent.set_navigation_map(salle.carte_ennemis)
 	return ennemi
@@ -410,8 +413,23 @@ func _exit_tree() -> void:
 
 func preparer_entree_salle() -> bool:
 	reprise_en_attente = SauvegardeZombie.consommer_reprise()
-	if reprise_en_attente.is_empty(): return true
+	if reprise_en_attente.is_empty():
+		var introduction := salle_actuelle.get_node_or_null("IntroductionHall")
+		if introduction != null:
+			introduction.preparer(joueur)
+			camera_rig.recentrer()
+		return true
 	var point_reprise = get_node("../../PointRepriseZombie")
 	point_reprise.restaurer(self, reprise_en_attente)
 	point_reprise.figer_pendant_fondu(self)
+	var introduction := salle_actuelle.get_node_or_null("IntroductionHall")
+	if introduction != null: introduction.retablir_grille()
 	return false
+
+func jouer_entree_salle(arrivee: Vector3) -> void:
+	var introduction := salle_actuelle.get_node_or_null("IntroductionHall")
+	if introduction != null and introduction.preparee:
+		get_node("../../MusiqueZombie").commencer_introduction()
+		await introduction.jouer(arrivee)
+	else:
+		await super.jouer_entree_salle(arrivee)

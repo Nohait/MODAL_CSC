@@ -305,6 +305,8 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	var apparition := get_node_or_null("ApparitionSbire")
+	if apparition != null: apparition.annuler()
 	if animation_feux:
 		animation_feux.kill()
 	if animation_frappe:
@@ -377,46 +379,8 @@ func _jouer_frappe() -> void:
 	animation_frappe.tween_property(modele, "position", origine + impulsion, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	animation_frappe.tween_property(modele, "position", origine, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
-func couleur_degats(degats: float) -> Color:
-
-	var t = clamp((degats - 0.9*degats_sbire) / 1.0, 0.0, 1.0)
-
-	var blanc = Color(0.998, 1.0, 0.29, 1.0)
-	var orange = Color(1.0, 0.388, 0.0, 1.0)
-
-	return blanc.lerp(orange, t)
-
-#On affiche les dégats
-var popup_tween: Tween
 func afficher_degats(degats: float) -> void:
-	var rd1 = randf_range(-0.1,0.1)
-	var rd2 = randf_range(-0.1,0.1)
-	var rd3 = randf_range(-0.1,0.1)
-
-	# Afficher deux décimales sans modifier les dégâts réellement infligés.
-	$PopUpDegats.text = "-%.2f" % degats
-	$PopUpDegats.modulate = couleur_degats(degats)
-	$PopUpDegats.position = Vector3(rd1,2.5+rd2 ,0+rd3)
-	# Garder la police stable : le grossissement vient de l'échelle du nœud.
-	$PopUpDegats.font_size = 46
-	$PopUpDegats.scale = Vector3.ONE * (1.0 + rd2)
-	$PopUpDegats.outline_size = 4
-	$PopUpDegats.visible = true
-
-	if popup_tween:
-		popup_tween.kill()
-
-	var position_depart = Vector3(rd1,2.5+rd2 ,0+rd3)
-	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
-	var taille_fin = Vector3.ONE * (1.2 * (1.0 + rd1))
-	popup_tween = create_tween() #Fonction qui permet de faire un gradient
-
-	popup_tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)
-	popup_tween.parallel().tween_property($PopUpDegats,"scale",taille_fin,0.2)
-	popup_tween.parallel().tween_property($PopUpDegats,"modulate:a",0.0,0.4)
-
-	# Une animation tuée n'émet pas finished : ne pas laisser une fonction l'attendre.
-	popup_tween.tween_callback($PopUpDegats.hide)
+	preload("res://scenes/interfaces/indications/nombre_degats.gd").afficher($PopUpDegats, degats, 2.5)
 
 func appliquer_gel(pourcentage: float, duree: float) -> void:
 	if est_mort: return

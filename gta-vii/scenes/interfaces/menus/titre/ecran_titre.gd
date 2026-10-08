@@ -16,6 +16,15 @@ func _ready() -> void:
 	SauvegardeZombie.charger()
 	SauvegardeZombie.sauvegarde_changee.connect(_actualiser_zombie)
 	for bouton in [%SupprimerZombie, %SupprimerClassique]:
+		# Une icône remplit le bouton sans dépendre de la taille du caractère dans la police.
+		bouton.text = ""
+		bouton.icone.texture = preload("res://assets/textures/interfaces/titre/croix_suppression.svg")
+		bouton.icone.custom_minimum_size = Vector2.ZERO
+		bouton.icone.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bouton.icone.offset_left = 22.0
+		bouton.icone.offset_top = 22.0
+		bouton.icone.offset_right = -22.0
+		bouton.icone.offset_bottom = -22.0
 		var fond: TextureRect = bouton.fond
 		fond.material = ShaderMaterial.new()
 		fond.material.shader = preload("res://scenes/interfaces/menus/titre/bouton_supprimer.gdshader")

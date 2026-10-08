@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://sixfdwrop3v"
+path="res://.godot/imported/Rescue Mission_Trailer Hits Stem.ogg-a0f8389404d7bba6caf4f87ab4b8f74a.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Trailer Hits Stem.ogg"
+dest_files=["res://.godot/imported/Rescue Mission_Trailer Hits Stem.ogg-a0f8389404d7bba6caf4f87ab4b8f74a.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

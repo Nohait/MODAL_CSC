@@ -130,7 +130,7 @@ Un arc rouge et un chevron près du joueur annoncent la préparation de la salve
 
 `monstre_lave.gd` hérite du démolisseur pour conserver ses fonctions de navigation, de ligne de vue, de gel et de dégâts reçus, ainsi que les tweens de la frappe. Il remplace le choix des attaques et les dégâts de zone. Les réglages sont exportés dans l'inspecteur ; le label au-dessus affiche sa vie actuelle.
 
-Le modèle original et ses crédits restent dans `assets/modeles/ennemis/mini_boss/`. `monstre_lave_jeu.glb` est une copie statique de sa pose, allégée de 388 398 à 58 267 triangles. Le modèle original avec son squelette est conservé pour de futures animations ; celles du prototype sont des mouvements du corps entier réalisés par tweens.
+Le modèle original et ses crédits restent dans `assets/modeles/ennemis/mini_boss/`. Le boss utilise désormais `monstre_lave_anime.glb`, une version allégée qui conserve son squelette et quatre animations Mixamo transférées. Voir `docs/animations_boss.md` pour la synchronisation des attaques.
 
 ### Catalogue des ennemis pour les tests
 

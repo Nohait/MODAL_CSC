@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b4qnfiuiowiv2"
+path="res://.godot/imported/Rescue Mission_Brass Stem.ogg-f6f0225b12adbba74bde3a77a22b71c1.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Brass Stem.ogg"
+dest_files=["res://.godot/imported/Rescue Mission_Brass Stem.ogg-f6f0225b12adbba74bde3a77a22b71c1.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

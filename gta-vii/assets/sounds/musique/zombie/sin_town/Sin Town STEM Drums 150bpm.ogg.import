@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cnxhh1qg4jher"
+path="res://.godot/imported/Sin Town STEM Drums 150bpm.ogg-5e9c3612ec20b05b2390ce5876fc6d82.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Drums 150bpm.ogg"
+dest_files=["res://.godot/imported/Sin Town STEM Drums 150bpm.ogg-5e9c3612ec20b05b2390ce5876fc6d82.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

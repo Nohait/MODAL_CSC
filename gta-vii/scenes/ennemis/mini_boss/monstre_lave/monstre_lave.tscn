@@ -1,8 +1,13 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/monstre_lave.gd" id="1"]
-[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mini_boss/monstre_lave_jeu.glb" id="2"]
+[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mini_boss/monstre_lave_anime.glb" id="2"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/animations_boss.gd" id="animations"]
 [ext_resource type="PackedScene" path="res://scenes/effets/feu/flames.tscn" id="3"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/sons_boss.gd" id="sons"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/invocation_boss.gd" id="invocation"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/phase_boss.gd" id="phase"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/fissure_boss.gd" id="fissure"]
 [sub_resource type="CapsuleShape3D" id="Corps"]
 radius = 1.1
 height = 2.6
@@ -31,7 +36,7 @@ emission_energy_multiplier = 2.0
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1")
-vie_max = 600.0
+vie_max = 2400.0
 vitesse_marche = 2.5
 preparation_frappe = 0.6
 repos_frappe = 0.7
@@ -46,6 +51,8 @@ radius = 1.1
 position = Vector3(-0.00032746969373, -1.34662902355, 0.00372030213475)
 scale = Vector3(1.91496324539, 1.91496324539, 1.91496324539)
 [node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
+[node name="AnimationsBoss" type="Node" parent="."]
+script = ExtResource("animations")
 [node name="droplet" type="Node3D" parent="."]
 [node name="SurfaceDetection" type="Area3D" parent="."]
 collision_layer = 0
@@ -78,3 +85,15 @@ pixel_size = 0.005
 billboard = 1
 no_depth_test = true
 modulate = Color(1, 0.75, 0.45, 1)
+
+[node name="SonsBoss" type="Node3D" parent="."]
+script = ExtResource("sons")
+
+[node name="InvocationBoss" type="Node3D" parent="."]
+script = ExtResource("invocation")
+
+[node name="PhaseBoss" type="Node3D" parent="."]
+script = ExtResource("phase")
+
+[node name="FissureBoss" type="Node3D" parent="."]
+script = ExtResource("fissure")

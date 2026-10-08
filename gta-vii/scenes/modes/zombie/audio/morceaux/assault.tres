@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="MorceauMusicalZombie" format=3 uid="uid://dflb7ntiqs3js"]
+
+[ext_resource type="Script" uid="uid://d2ihgt1e87jou" path="res://scenes/modes/zombie/audio/couche_musicale.gd" id="couche"]
+[ext_resource type="Script" uid="uid://b4mmx0ibqesu4" path="res://scenes/modes/zombie/audio/morceau_musical.gd" id="morceau"]
+[ext_resource type="AudioStream" uid="uid://dggibpg65vk1o" path="res://assets/sounds/musique/zombie/assault/MUS_Combat_Incoming_Loop_Guitar_100BPM.wav" id="p0"]
+[ext_resource type="AudioStream" uid="uid://bg6h7icumw07i" path="res://assets/sounds/musique/zombie/assault/MUS_Combat_Incoming_Loop_Strings_100BPM.wav" id="p1"]
+[ext_resource type="AudioStream" uid="uid://cvecvuxhfkxwy" path="res://assets/sounds/musique/zombie/assault/MUS_Combat_Incoming_Loop_Percussion_100BPM.wav" id="p2"]
+[ext_resource type="AudioStream" uid="uid://bwjfgh6t5w6sg" path="res://assets/sounds/musique/zombie/assault/MUS_Combat_Incoming_Loop_Synth_100BPM.wav" id="p3"]
+
+[sub_resource type="Resource" id="c0"]
+script = ExtResource("couche")
+titre = "Guitares"
+piste = ExtResource("p0")
+volume_db = -10.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c1"]
+script = ExtResource("couche")
+titre = "Cordes"
+piste = ExtResource("p1")
+volume_db = -10.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c2"]
+script = ExtResource("couche")
+piste = ExtResource("p2")
+volume_db = -10.0
+ennemis_minimum = 7
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c3"]
+script = ExtResource("couche")
+titre = "Synthétiseurs"
+piste = ExtResource("p3")
+volume_db = -10.0
+vague_minimum = 8
+activer_si_elite = true
+activer_si_boss = true
+
+[resource]
+script = ExtResource("morceau")
+titre = "Assault"
+couches = Array[ExtResource("couche")]([SubResource("c0"), SubResource("c1"), SubResource("c2"), SubResource("c3")])

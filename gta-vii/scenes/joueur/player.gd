@@ -57,13 +57,19 @@ const REDUCTION_DASH_ESCORTE: float = 0.2 #20 % de réduction
 
 # Secousse caméra
 var camera_tremble := 0.0
+var force_tremblement := 0.3
+var duree_tremblement := 0.15
+var hasard_camera := RandomNumberGenerator.new()
 var sauvegarde_position = Vector3()
 var camera_retour := false
 	
 	
-func secouer_camera() -> void:
-	sauvegarde_position = camera.position
-	camera_tremble = 0.15
+func secouer_camera(force: float = 0.3, duree: float = 0.15) -> void:
+	hasard_camera.randomize()
+	if camera_tremble <= 0.0: sauvegarde_position = camera.position
+	force_tremblement = force
+	duree_tremblement = maxf(duree, 0.01)
+	camera_tremble = duree_tremblement
 	camera_retour = false
 
 func get_dash_cooldown() -> float:
@@ -114,7 +120,9 @@ func _physics_process(delta: float) -> void:
 	#Secousse si attaque (on a besoin de delta donc on le met dans le physique process)
 	if camera_tremble > 0.0:
 		camera_tremble -= delta
-		camera.position += Vector3(randf_range(-0.3, 0.3),randf_range(-0.3, 0.3),0.0)
+		# Osciller autour de la position initiale évite une dérive à chaque secousse.
+		var amplitude := force_tremblement * maxf(camera_tremble, 0.0) / duree_tremblement
+		camera.position = sauvegarde_position + Vector3(hasard_camera.randf_range(-amplitude, amplitude), hasard_camera.randf_range(-amplitude, amplitude), 0.0)
 	elif not camera_retour and camera_tremble<0:
 		camera_retour = true
 		var tween_camera = create_tween()

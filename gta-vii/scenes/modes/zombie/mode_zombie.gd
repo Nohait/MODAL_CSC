@@ -6,15 +6,15 @@ const DEBUG = preload("res://scenes/modes/zombie/interfaces/debug/debug_zombie.g
 @export var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
 @export var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
 @export_group("Musique adaptative")
-@export var couches_musicales: Array[CoucheMusicaleZombie] = [
-	preload("res://scenes/modes/zombie/audio/couches/base.tres"),
-	preload("res://scenes/modes/zombie/audio/couches/cordes.tres"),
-	preload("res://scenes/modes/zombie/audio/couches/percussions.tres"),
-	preload("res://scenes/modes/zombie/audio/couches/guitares.tres")
+@export var playlist_musicale: Array[MorceauMusicalZombie] = [
+	preload("res://scenes/modes/zombie/audio/morceaux/assault.tres"),
+	preload("res://scenes/modes/zombie/audio/morceaux/unfed.tres"),
+	preload("res://scenes/modes/zombie/audio/morceaux/sin_town.tres"),
+	preload("res://scenes/modes/zombie/audio/morceaux/rescue_mission.tres")
 ]
 @export_group("Progression et builds")
 @export var synergies_zombie: Array[Synergie] = [preload("res://scenes/systemes/ameliorations/synergies/belier.tres"), preload("res://scenes/systemes/ameliorations/synergies/samu.tres")]
-@export var paliers_arene: Array[PalierArene] = [preload("res://scenes/modes/zombie/evenements/paliers/fenetre.tres"), preload("res://scenes/modes/zombie/evenements/paliers/ascenseur.tres"), preload("res://scenes/modes/zombie/evenements/paliers/lumiere.tres")]
+@export var paliers_arene: Array[PalierArene] = [preload("res://scenes/modes/zombie/evenements/paliers/fenetre.tres"), preload("res://scenes/modes/zombie/evenements/paliers/ascenseur.tres"), preload("res://scenes/modes/zombie/evenements/paliers/lumiere.tres"), preload("res://scenes/modes/zombie/evenements/paliers/hall_explosion_voiture.tres")]
 const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 
 @export_group("Ã‰clairage")
@@ -54,7 +54,7 @@ func _ready() -> void:
 	var musique_adaptative := Node.new()
 	musique_adaptative.set_script(preload("res://scenes/modes/zombie/audio/couches_dynamiques.gd"))
 	musique_adaptative.name = "CouchesMusicales"
-	musique_adaptative.couches = couches_musicales
+	musique_adaptative.morceaux = playlist_musicale
 	niveau.add_child(musique_adaptative)
 	var arene := Node.new()
 	arene.name = "ArenaEventManager"

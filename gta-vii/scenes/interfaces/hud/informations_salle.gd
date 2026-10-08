@@ -12,8 +12,12 @@ var remplissage: StyleBoxFlat
 var temps := 0.0
 var victimes_a_liberer := 0
 var salle_liberee := false
+var boss_affiches: Array[int] = []
+var opacite_habituelle := 1.0
 
 func _ready() -> void:
+	if not Engine.is_editor_hint():
+		add_to_group("informations_combat")
 	# Dupliquer le style permet de changer la couleur sans toucher aux autres barres.
 	remplissage = timer.get_theme_stylebox("fill").duplicate()
 	timer.add_theme_stylebox_override("fill", remplissage)
@@ -81,3 +85,16 @@ func _process(delta: float) -> void:
 		encart.modulate.a = 1.0 - pulsation * 0.45
 	else:
 		_reinitialiser_alerte()
+
+func masquer_pour_boss(interface: Node) -> void:
+	if boss_affiches.is_empty():
+		opacite_habituelle = modulate.a
+	if not boss_affiches.has(interface.get_instance_id()):
+		boss_affiches.append(interface.get_instance_id())
+	modulate.a = 0.0
+
+func retablir_apres_boss(interface: Node) -> void:
+	# Plusieurs boss de debug peuvent coexister : attendre la dernière jauge.
+	boss_affiches.erase(interface.get_instance_id())
+	if boss_affiches.is_empty():
+		modulate.a = opacite_habituelle

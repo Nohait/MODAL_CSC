@@ -229,41 +229,5 @@ func choisir_cible():
 		chargement_ecoule = duree_chargement/1.2
 
 
-func couleur_degats(degats: float) -> Color:
-	var t = clamp((degats - 0.9*degats_ennemi) / 1.0, 0.0, 1.0)
-	
-	var blanc = Color(0.998, 1.0, 0.29, 1.0)
-	var orange = Color(1.0, 0.388, 0.0, 1.0)
-	
-	return blanc.lerp(orange, t)
-	
-#On affiche les dégats
-var popup_tween: Tween
 func afficher_degats(degats: float) -> void:
-	var rd1 = randf_range(-0.1,0.1)
-	var rd2 = randf_range(-0.1,0.1)
-	var rd3 = randf_range(-0.1,0.1)
-	
-	# Afficher deux décimales sans modifier les dégâts réellement infligés.
-	$PopUpDegats.text = "-%.2f" % degats
-	$PopUpDegats.modulate = couleur_degats(degats)
-	$PopUpDegats.position = Vector3(rd1,4.5+rd2 ,0+rd3)
-	$PopUpDegats.font_size = roundi(46 * (1 + rd2))
-	$PopUpDegats.outline_size = 4
-	$PopUpDegats.visible = true
-	
-	if popup_tween:
-		popup_tween.kill()
-	
-	var position_depart = Vector3(rd1,4.5+rd2 ,0+rd3)
-	var position_fin = position_depart + Vector3(rd2, 1+ rd3, 0+ rd1)
-	var taille_fin = roundi(48 * (1 + rd1))
-	popup_tween = create_tween() #Fonction qui permet de faire un gradient
-
-	popup_tween.parallel().tween_property($PopUpDegats,"position",position_fin,0.2)
-	popup_tween.parallel().tween_property($PopUpDegats,"font_size",taille_fin,0.2)
-	popup_tween.parallel().tween_property($PopUpDegats,"modulate:a",0.0,0.4)
-
-	await popup_tween.finished
-
-	$PopUpDegats.visible = false
+	preload("res://scenes/interfaces/indications/nombre_degats.gd").afficher($PopUpDegats, degats, 4.5)

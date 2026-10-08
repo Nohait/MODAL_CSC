@@ -39,7 +39,6 @@ Les douze cartes marquées **nouvelle** viennent d'être ajoutées. Les autres �
 | Zone | Mousse persistante | Ajouter une composante de terrain au jet. |
 | Zone | Mousse expansive | Étendre les plaques existantes. |
 | Zone | Choc thermique | Transformer la mort d'une cible refroidie en explosion. |
-| Zone | Éclats de glace | Exploiter les cibles immobilisées. |
 | Zone | Enrobage | Préparer une cible pour les dégâts suivants. |
 | Zone | Réaction en chaîne | Propager l'enrobage. |
 | Survie | Service après-incendie — nouvelle | Récupérer 8 PV à la fin d'une vague. |

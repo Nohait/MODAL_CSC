@@ -201,8 +201,6 @@ editor_description = "Décor non accessible : cour de service nord, aile ouest a
 
 [node name="AileAppartements" type="Node3D" parent="."]
 
-[node name="SupportsRubalise" type="Node3D" parent="."]
-
 [node name="SolCour" type="MeshInstance3D" parent="LocalPoubelles"]
 position = Vector3(0, 0.03, -26)
 mesh = SubResource("mesh1")
@@ -351,27 +349,6 @@ position = Vector3(-43, 2.3, -3)
 light_color = Color(1, 0.73, 0.45, 1)
 light_energy = 0.9
 omni_range = 8.0
-
-[node name="Poteau0" type="MeshInstance3D" parent="SupportsRubalise"]
-position = Vector3(-1.25, 0.55, 24.2)
-mesh = SubResource("mesh36")
-material_override = SubResource("metal")
-
-[node name="Socle0" type="MeshInstance3D" parent="SupportsRubalise"]
-position = Vector3(-1.25, 0.04, 24.2)
-mesh = SubResource("mesh37")
-material_override = SubResource("metal")
-
-[node name="Poteau1" type="MeshInstance3D" parent="SupportsRubalise"]
-position = Vector3(1.25, 0.55, 24.2)
-mesh = SubResource("mesh38")
-material_override = SubResource("metal")
-
-[node name="Socle1" type="MeshInstance3D" parent="SupportsRubalise"]
-position = Vector3(1.25, 0.04, 24.2)
-mesh = SubResource("mesh39")
-material_override = SubResource("metal")
-
 
 [node name="Volee0Marche0" type="MeshInstance3D" parent="AileAppartements"]
 position = Vector3(-42.5, 0.09, -4.1)

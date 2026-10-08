@@ -74,7 +74,7 @@ Les rÃ©glages de sons, les probabilitÃ©s et la puissance des nouvelles carte
 
 Le pack Assault (Luca Baradel) fournit quatre stems alignés, de 115,2 secondes à 100 BPM. `audio/couches_dynamiques.gd` les lance dans un seul AudioStreamSynchronized ; les volumes changent à chaque image, les conditions sont réévaluées toutes les 0,3 seconde. Les pistes restent en lecture silencieuse dans la boutique pour préserver la synchronisation et la progression. La musique de boutique conserve son gestionnaire existant.
 
-Les Resources `audio/couches/*.tres`, référencées dans l’Inspector du ModeZombie, exposent les volumes et seuils : synthétiseurs toujours en combat, cordes à 4 ennemis, percussions à 7, guitares à la vague 8 ou en présence d’une élite. Un boss active toutes les couches. Aucun changement de musique dans le classique.
+Les Resources `audio/couches/*.tres`, référencées dans l’Inspector du ModeZombie, exposent les volumes et seuils : guitares dès l’introduction et toujours en combat, cordes à 4 ennemis, percussions à 7, synthétiseurs à la vague 8 ou en présence d’une élite. Un boss active toutes les couches. Aucun changement de musique dans le classique.
 
 Le dash partagé utilise désormais GPUTrail (MIT, celyk), dans `addons/GPUTrail`. `scenes/joueur/feedback_dash.gd` pilote un unique ruban GPU, réinitialisé au départ et masqué après résorption. Largeur, hauteur et durée sont exportées. L’attente du rendu de l’addon est évitée sans billboard, notamment pour les tests headless.
 

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dhk6bpuwhdne4"
+path="res://.godot/imported/Sin Town STEM WaveRazor Synth 150bpm.ogg-3a0c7d83d1348aac51ec1d1b642b870a.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM WaveRazor Synth 150bpm.ogg"
+dest_files=["res://.godot/imported/Sin Town STEM WaveRazor Synth 150bpm.ogg-3a0c7d83d1348aac51ec1d1b642b870a.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

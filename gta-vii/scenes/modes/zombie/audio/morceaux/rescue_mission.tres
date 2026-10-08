@@ -1,0 +1,110 @@
+[gd_resource type="Resource" script_class="MorceauMusicalZombie" format=3 uid="uid://cfsncfv4w1w37"]
+
+[ext_resource type="Script" uid="uid://d2ihgt1e87jou" path="res://scenes/modes/zombie/audio/couche_musicale.gd" id="couche"]
+[ext_resource type="Script" uid="uid://b4mmx0ibqesu4" path="res://scenes/modes/zombie/audio/morceau_musical.gd" id="morceau"]
+[ext_resource type="AudioStream" uid="uid://dri6l7frxj0gk" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Strings Stem.ogg" id="p0"]
+[ext_resource type="AudioStream" uid="uid://ddh7shy4jtpg2" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Piano Stem.ogg" id="p1"]
+[ext_resource type="AudioStream" uid="uid://c7cxpvmprmmei" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Pads & Synthes Stem.ogg" id="p2"]
+[ext_resource type="AudioStream" uid="uid://bim1icecyoo4d" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Woodwinds Stem.ogg" id="p3"]
+[ext_resource type="AudioStream" uid="uid://dp3prebhliys6" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Percussion Stem.ogg" id="p4"]
+[ext_resource type="AudioStream" uid="uid://nvqu5p3ktyjc" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Pitched Perc. Stem.ogg" id="p5"]
+[ext_resource type="AudioStream" uid="uid://b4qnfiuiowiv2" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Brass Stem.ogg" id="p6"]
+[ext_resource type="AudioStream" uid="uid://po1sta20tw88" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Synth Orchestra Stem.ogg" id="p7"]
+[ext_resource type="AudioStream" uid="uid://cu4gvo302dyuq" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Riser & Swell Stem.ogg" id="p8"]
+[ext_resource type="AudioStream" uid="uid://sixfdwrop3v" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Trailer Hits Stem.ogg" id="p9"]
+[ext_resource type="AudioStream" uid="uid://c06p3lt3w25we" path="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Trailer SoundDesign Stem.ogg" id="p10"]
+
+[sub_resource type="Resource" id="c0"]
+script = ExtResource("couche")
+titre = "Cordes"
+piste = ExtResource("p0")
+volume_db = -10.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c1"]
+script = ExtResource("couche")
+titre = "Piano"
+piste = ExtResource("p1")
+volume_db = -10.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c2"]
+script = ExtResource("couche")
+titre = "Nappes et synthétiseurs"
+piste = ExtResource("p2")
+volume_db = -10.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c3"]
+script = ExtResource("couche")
+titre = "Bois"
+piste = ExtResource("p3")
+volume_db = -10.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c4"]
+script = ExtResource("couche")
+piste = ExtResource("p4")
+volume_db = -10.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c5"]
+script = ExtResource("couche")
+titre = "Percussions mélodiques"
+piste = ExtResource("p5")
+volume_db = -10.0
+ennemis_minimum = 7
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c6"]
+script = ExtResource("couche")
+titre = "Cuivres"
+piste = ExtResource("p6")
+volume_db = -10.0
+ennemis_minimum = 9
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c7"]
+script = ExtResource("couche")
+titre = "Orchestre synthétique"
+piste = ExtResource("p7")
+volume_db = -10.0
+ennemis_minimum = 12
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c8"]
+script = ExtResource("couche")
+titre = "Montées"
+piste = ExtResource("p8")
+volume_db = -10.0
+ennemis_minimum = 12
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c9"]
+script = ExtResource("couche")
+titre = "Impacts"
+piste = ExtResource("p9")
+volume_db = -10.0
+ennemis_minimum = 15
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c10"]
+script = ExtResource("couche")
+titre = "Effets cinématiques"
+piste = ExtResource("p10")
+volume_db = -10.0
+ennemis_minimum = 15
+activer_si_elite = true
+activer_si_boss = true
+
+[resource]
+script = ExtResource("morceau")
+titre = "Rescue Mission"
+couches = Array[ExtResource("couche")]([SubResource("c0"), SubResource("c1"), SubResource("c2"), SubResource("c3"), SubResource("c4"), SubResource("c5"), SubResource("c6"), SubResource("c7"), SubResource("c8"), SubResource("c9"), SubResource("c10")])
+debut_lecture = 8.8

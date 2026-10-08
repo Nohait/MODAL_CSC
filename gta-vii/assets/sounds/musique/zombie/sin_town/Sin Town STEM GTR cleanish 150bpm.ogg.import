@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cjjtqvkrex8d7"
+path="res://.godot/imported/Sin Town STEM GTR cleanish 150bpm.ogg-dd6bb392cd9e67410eead6e5fb7453f1.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM GTR cleanish 150bpm.ogg"
+dest_files=["res://.godot/imported/Sin Town STEM GTR cleanish 150bpm.ogg-dd6bb392cd9e67410eead6e5fb7453f1.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,47 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scenes/modes/zombie/evenements/introduction_hall/introduction_hall.gd" id="script"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="son"]
+[ext_resource type="AudioStream" path="res://assets/sounds/joueur/douleur/douleur_03.wav" id="cri"]
+[node name="IntroductionHall" type="Node3D"]
+script = ExtResource("script")
+editor_description = "Introduction de nouvelle partie uniquement. Les collègues sont des figurants, la vague attend leur passage dans les appartements."
+
+[node name="Grognement" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("son")
+volume_db = -12.0
+max_distance = 18.0
+unit_size = 4.0
+bus = &"Effets"
+
+[node name="Cri" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("cri")
+volume_db = -9.0
+max_distance = 18.0
+unit_size = 4.0
+bus = &"Effets"
+
+[node name="ApprochePorte" type="Node3D" parent="."]
+[node name="ContourPiliers" type="Marker3D" parent="ApprochePorte"]
+position = Vector3(-7, 0, 12)
+[node name="AlleeGauche" type="Marker3D" parent="ApprochePorte"]
+position = Vector3(-15, 0, 4)
+[node name="DevantPorte" type="Marker3D" parent="ApprochePorte"]
+position = Vector3(-18.9, 0, -3.65)
+[node name="AttentePorte" type="Marker3D" parent="."]
+position = Vector3(-17.3, 0, -1.5)
+[node name="ApresPorte" type="Marker3D" parent="."]
+position = Vector3(-23, 0, -3)
+[node name="VersEscalier" type="Node3D" parent="."]
+[node name="FondCouloir" type="Marker3D" parent="VersEscalier"]
+position = Vector3(-41.8, 0, -3.5)
+[node name="PremiereMarche" type="Marker3D" parent="VersEscalier"]
+position = Vector3(-42.4, 0.18, -4.1)
+[node name="HautPremiereVolee" type="Marker3D" parent="VersEscalier"]
+position = Vector3(-46, 1.26, -4.1)
+[node name="DemiTourPalier" type="Marker3D" parent="VersEscalier"]
+position = Vector3(-46, 1.26, -2.1)
+[node name="Disparition" type="Marker3D" parent="."]
+position = Vector3(-43, 2.34, -2.1)
+
+[node name="DepartRue" type="Marker3D" parent="."]
+position = Vector3(0, 0, 29)

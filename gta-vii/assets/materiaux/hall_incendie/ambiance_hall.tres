@@ -1,4 +1,4 @@
-[gd_resource type="Environment" format=3]
+[gd_resource type="Environment" format=3 uid="uid://b2nfyvdsh3vta"]
 
 [resource]
 background_mode = 1
@@ -10,4 +10,3 @@ reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
 glow_intensity = 0.35
-glow_bloom = 0.0

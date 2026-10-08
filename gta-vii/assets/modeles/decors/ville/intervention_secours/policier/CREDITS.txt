@@ -1,0 +1,14 @@
+Model Information:
+* title:	Police 3D Model
+* source:	https://sketchfab.com/3d-models/police-3d-model-c02d07f380f74bd485a4820f0f5f7541
+* author:	Aayush.Bhattarai (https://sketchfab.com/Aayush.Bhattarai)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+Adaptation pour GTA VII : taille normalisée à 1,8 m, posture d'attente avec
+coudes pliés, pieds légèrement écartés et tête tournée. Modèle statique.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Police 3D Model" (https://sketchfab.com/3d-models/police-3d-model-c02d07f380f74bd485a4820f0f5f7541) by Aayush.Bhattarai (https://sketchfab.com/Aayush.Bhattarai) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

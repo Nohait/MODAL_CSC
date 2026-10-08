@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="MorceauMusicalZombie" format=3 uid="uid://bwgrjwmju3p5b"]
+
+[ext_resource type="Script" uid="uid://d2ihgt1e87jou" path="res://scenes/modes/zombie/audio/couche_musicale.gd" id="couche"]
+[ext_resource type="Script" uid="uid://b4mmx0ibqesu4" path="res://scenes/modes/zombie/audio/morceau_musical.gd" id="morceau"]
+[ext_resource type="AudioStream" uid="uid://b4w1pvut560gw" path="res://assets/sounds/musique/zombie/unfed/PorchCat - 03Unfed - DISTORTGUITAR.mp3" id="p0"]
+[ext_resource type="AudioStream" uid="uid://c63jajhubohfj" path="res://assets/sounds/musique/zombie/unfed/PorchCat - 01Unfed - BASS.mp3" id="p1"]
+[ext_resource type="AudioStream" uid="uid://cv64dhki11w07" path="res://assets/sounds/musique/zombie/unfed/PorchCat - 02Unfed - DRUMS.mp3" id="p2"]
+[ext_resource type="AudioStream" uid="uid://6o6hxnlad5dh" path="res://assets/sounds/musique/zombie/unfed/PorchCat - 04Unfed - 2NDGUITAR.mp3" id="p3"]
+
+[sub_resource type="Resource" id="c0"]
+script = ExtResource("couche")
+titre = "Guitare principale"
+piste = ExtResource("p0")
+volume_db = -12.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c1"]
+script = ExtResource("couche")
+titre = "Basse"
+piste = ExtResource("p1")
+volume_db = -12.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c2"]
+script = ExtResource("couche")
+titre = "Batterie"
+piste = ExtResource("p2")
+volume_db = -12.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c3"]
+script = ExtResource("couche")
+titre = "Seconde guitare"
+piste = ExtResource("p3")
+volume_db = -12.0
+ennemis_minimum = 9
+activer_si_elite = true
+activer_si_boss = true
+
+[resource]
+script = ExtResource("morceau")
+titre = "Unfed"
+couches = Array[ExtResource("couche")]([SubResource("c0"), SubResource("c1"), SubResource("c2"), SubResource("c3")])
+debut_lecture = 16.5

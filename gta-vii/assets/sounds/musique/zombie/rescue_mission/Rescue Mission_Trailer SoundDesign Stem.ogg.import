@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c06p3lt3w25we"
+path="res://.godot/imported/Rescue Mission_Trailer SoundDesign Stem.ogg-47e3938d323ae250a243be74ab4aefcd.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/musique/zombie/rescue_mission/Rescue Mission_Trailer SoundDesign Stem.ogg"
+dest_files=["res://.godot/imported/Rescue Mission_Trailer SoundDesign Stem.ogg-47e3938d323ae250a243be74ab4aefcd.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

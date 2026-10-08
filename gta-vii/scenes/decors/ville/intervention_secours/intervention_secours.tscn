@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention_secours/crown_victoria/crown_victoria.glb" id="police"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/ville/intervention_secours/policier/policier.glb" id="policier"]
+[ext_resource type="PackedScene" path="res://assets/modeles/camion_pompier/camion_pompier.glb" id="camion"]
+[ext_resource type="Script" path="res://scenes/decors/ville/intervention_secours/gyrophares.gd" id="gyro"]
+
+[node name="InterventionSecours" type="Node3D" groups=["details_decor"]]
+editor_description = "Véhicules stationnés sur la rue devant l'entrée sud du Hall, sans collision ni navigation."
+
+[node name="Camion" type="Node3D" parent="."]
+position = Vector3(-7, -0.08, 28)
+rotation = Vector3(0, 1.5707963, 0)
+
+[node name="Modele" parent="Camion" instance=ExtResource("camion")]
+scale = Vector3(9.61653, 9.61653, 9.61653)
+
+[node name="Gyrophares" type="Node3D" parent="Camion"]
+position = Vector3(0, 2.75, 2.1)
+script = ExtResource("gyro")
+couleur_droite = Color(0.04, 0.2, 1, 1)
+
+[node name="Police1" type="Node3D" parent="."]
+position = Vector3(5.5, -0.08, 27)
+rotation = Vector3(0, -1.2, 0)
+
+[node name="Modele" parent="Police1" instance=ExtResource("police")]
+
+[node name="Gyrophares" type="Node3D" parent="Police1"]
+position = Vector3(0, 1.54, -0.08)
+script = ExtResource("gyro")
+decalage = 0.15
+
+[node name="Police2" type="Node3D" parent="."]
+position = Vector3(13, -0.08, 30)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="Modele" parent="Police2" instance=ExtResource("police")]
+
+[node name="Gyrophares" type="Node3D" parent="Police2"]
+position = Vector3(0, 1.54, -0.08)
+script = ExtResource("gyro")
+decalage = 0.45
+
+[node name="SecondCamion" type="Node3D" parent="."]
+position = Vector3(-17, -0.08, 31.5)
+rotation = Vector3(0, 1.5707963, 0)
+[node name="Modele" parent="SecondCamion" instance=ExtResource("camion")]
+scale = Vector3(9.61653, 9.61653, 9.61653)
+[node name="Gyrophares" type="Node3D" parent="SecondCamion"]
+position = Vector3(0, 2.75, 2.1)
+script = ExtResource("gyro")
+decalage = 0.3
+couleur_droite = Color(0.04, 0.2, 1, 1)
+
+[node name="Policier1" parent="." instance=ExtResource("policier")]
+position = Vector3(3.6, -0.08, 24.8)
+rotation = Vector3(0, -0.45, 0)
+
+[node name="Policier2" parent="." instance=ExtResource("policier")]
+position = Vector3(10.8, -0.08, 27.2)
+rotation = Vector3(0, -1.8, 0)

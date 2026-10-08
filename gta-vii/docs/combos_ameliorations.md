@@ -29,7 +29,6 @@ L'extincteur transmet aussi la durée de contact avec une cible. Les ennemis acc
 | Choc thermique | Légendaire | Un ennemi refroidi qui meurt provoque une explosion de 25 dégâts dans 2,5 m, réservée aux ennemis proches. | Jet givré |
 | Verglas | Rare | Plaques froides de 4 s ; ralentissement de 20 %. | Jet givré |
 | Gel profond | Épique | Après 1,2 s de jet continu, immobilisation de 0,6 s ; délai de 5 s entre deux gels. | Jet givré |
-| Éclats de glace | Épique | Mort pendant le gel profond : explosion de 25 dégâts dans 2,5 m. | Gel profond |
 | Brise-glace | Rare | Un dash au contact d'un ennemi refroidi inflige 30 dégâts et retire son ralentissement. | Jet givré |
 | Mousse persistante | Rare | Plaques de 4 s, 8 dégâts/s. | — |
 | Mousse expansive | Rare | Le rayon des plaques double progressivement en 2 s. | Mousse persistante |
@@ -89,6 +88,6 @@ Les valeurs chiffrées des cartes sont dans leurs ressources. Les rayons, seuils
 
 ## Choc thermique et légendaires
 
-Choc thermique fonctionne avec le ralentissement de Jet givré : Gel profond n'est pas nécessaire. Il n'a plus de lien avec les flaques de feu. Éclats de glace ajoute ses 25 dégâts si l'ennemi meurt pendant son immobilisation : les deux cartes produisent une seule explosion de 50 dégâts. Le joueur, les victimes et le camion sont exclus des cibles. Un kamikaze refroidi déclenche cependant aussi son explosion habituelle, dangereuse pour les alliés, une seule fois.
+Choc thermique fonctionne avec le ralentissement de Jet givré : Gel profond n'est pas nécessaire. Il n'a plus de lien avec les flaques de feu. Le joueur, les victimes et le camion sont exclus des cibles. Un kamikaze refroidi déclenche cependant aussi son explosion habituelle, dangereuse pour les alliés, une seule fois.
 
 Le booster légendaire coûte 5 points : ses poids sont 20 % rares, 50 % épiques et 30 % légendaires avant redistribution selon le pool disponible. Les trois premières légendaires sont Choc thermique, Réaction en chaîne et Extraction d'urgence. Elles sont dorées, fixes, uniques et disponibles dans les deux modes. Le booster est grisé et l'achat est refusé sans paiement si aucune légendaire n'est disponible.

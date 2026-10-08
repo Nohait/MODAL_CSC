@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://lhsrvxyf0qf8"]
 
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/spots_plafond.tscn" id="spots_plafond"]
-
+[ext_resource type="Texture2D" uid="uid://dva813wbxwyfg" path="res://assets/textures/decors/decals/graffiti_05.png" id="32_ryh6v"]
+[ext_resource type="Texture2D" uid="uid://61ff5y0q1bq4" path="res://assets/textures/decors/decals/graffiti_115.png" id="34_5hwo1"]
 [ext_resource type="Texture2D" uid="uid://lik33dpc3pxm" path="res://assets/textures/decors/decals/graffiti_collage.png" id="35_4e5dy"]
+[ext_resource type="Texture2D" uid="uid://djx7wb5b32u8m" path="res://assets/textures/decors/decals/graffiti_67.png" id="36_7njbw"]
 [ext_resource type="PackedScene" path="res://scenes/decors/ville/annexes_hall.tscn" id="annexes"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/ascenseur_arrivee.tscn" id="arrivee_ascenseur"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/fenetre_arrivee.tscn" id="arrivee_fenetre"]
@@ -21,23 +22,26 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/decals/graffiti_collage.tscn" id="decal_graffiti_collage"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/eclairage_pieces.tscn" id="eclairage_pieces"]
 [ext_resource type="Script" uid="uid://b1qr633buoptw" path="res://scenes/salles/entree_salle.gd" id="entree"]
+[ext_resource type="Script" uid="uid://dp8w3wgpj21ew" path="res://scenes/modes/zombie/evenements/explosion_voiture.gd" id="explosion_voiture"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/extincteur_mural.tscn" id="extincteur_mural"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/grille_entree.tscn" id="grille_entree"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/habillage_hall.tscn" id="habillage"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_hall.tscn" id="hall"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/coin_intervention.tscn" id="intervention"]
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/intervention_secours/intervention_secours.tscn" id="intervention_secours"]
+[ext_resource type="PackedScene" path="res://scenes/modes/zombie/evenements/introduction_hall/introduction_hall.tscn" id="introduction_hall"]
 [ext_resource type="Script" uid="uid://brxohn0l2fuo0" path="res://scenes/modes/zombie/maps/hall.gd" id="map"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/mobilier_pieces.tscn" id="mobilier"]
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/mur_beton.tres" id="mur"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/piliers_hall.tscn" id="piliers"]
-[ext_resource type="PackedScene" path="res://scenes/decors/porte_entree.tscn" id="porte"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/apparitions/porte_appartements.tscn" id="porte_appartements"]
-[ext_resource type="Shader" uid="uid://bpg6ualol4mmi" path="res://assets/shaders/decors/ruban_securite.gdshader" id="ruban_shader"]
 [ext_resource type="PackedScene" uid="uid://b7nmp862ll38o" path="res://scenes/salles/salle.tscn" id="salle"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/signaletique_etage.tscn" id="signalisation"]
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/sol_carrelage.tres" id="sol"]
 [ext_resource type="Resource" path="res://scenes/systemes/audio/profils/radio.tres" id="son_radio"]
 [ext_resource type="Resource" path="res://scenes/systemes/audio/profils/sirene.tres" id="son_sirene"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/spots_plafond.tscn" id="spots_plafond"]
 [ext_resource type="PackedScene" path="res://scenes/modes/zombie/equipements/sprinkler.tscn" id="sprinkler"]
 [ext_resource type="PackedScene" path="res://scenes/decors/ville/exterieur_ville.tscn" id="ville"]
 
@@ -185,21 +189,44 @@ size = Vector3(0.5, 3, 4)
 [sub_resource type="BoxShape3D" id="CollisionFondCouloir"]
 size = Vector3(2.5, 3, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ruban_materiau"]
-render_priority = 0
-shader = ExtResource("ruban_shader")
+[sub_resource type="BoxMesh" id="LinteauGrille"]
+material = ExtResource("mur")
+size = Vector3(3.2, 0.22, 0.4)
 
-[sub_resource type="BoxMesh" id="ruban_mesh"]
-size = Vector3(2.5, 0.13, 0.015)
-subdivide_width = 24
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62g5r"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.85)
+albedo_texture = ExtResource("32_ryh6v")
+metallic_specular = 0.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oonme"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_gmw0h"]
+size = Vector2(3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1f74"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.85)
+albedo_texture = ExtResource("34_5hwo1")
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_w6qns"]
+size = Vector2(3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hfmtg"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.85)
+albedo_texture = ExtResource("36_7njbw")
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_y6tge"]
+size = Vector2(3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enskg"]
 transparency = 1
 albedo_color = Color(0.68, 0.65, 0.6, 0.48)
 albedo_texture = ExtResource("35_4e5dy")
 metallic_specular = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_gq3w5"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_3pyxs"]
 size = Vector2(1.8, 2.1)
 
 [node name="Hall" unique_id=1947887531 instance=ExtResource("salle")]
@@ -477,12 +504,15 @@ mesh = SubResource("MeshCouloirDroit")
 shape = SubResource("CollisionCouloirDroit")
 
 [node name="FondCouloir" type="StaticBody3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="12" unique_id=12677789 groups=["collider"]]
-editor_description = "Limite invisible derrière le ruban : garder la collision pour empêcher la sortie, sans fermer visuellement l’entrée."
+editor_description = "La grille matérialise cette collision après le passage du groupe. Elle reste fermée lors d’une reprise."
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 24.25)
 collision_mask = 0
 
 [node name="Collision" type="CollisionShape3D" parent="Navigation/Decor/FondCouloir" index="0" unique_id=1330349640]
 shape = SubResource("CollisionFondCouloir")
+
+[node name="Grille" parent="Navigation/Decor/FondCouloir" index="1" unique_id=2044518592 instance=ExtResource("grille_entree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
 
 [node name="CloisonsEtage" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="13" unique_id=2092857178 instance=ExtResource("cloisons")]
 
@@ -521,38 +551,37 @@ premiere_vague = 100
 transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -20, 0, 17)
 premiere_vague = 100
 
-[node name="RubanIntervention" type="MeshInstance3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="20" unique_id=530770044]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 24.2)
-material_override = SubResource("ruban_materiau")
-cast_shadow = 0
-mesh = SubResource("ruban_mesh")
-
-[node name="ExtincteurMural" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="21" unique_id=1864416384 instance=ExtResource("extincteur_mural")]
+[node name="ExtincteurMural" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="20" unique_id=1864416384 instance=ExtResource("extincteur_mural")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -19.95)
 
-[node name="SprinklerEntree" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="22" unique_id=628345293 instance=ExtResource("sprinkler")]
+[node name="SprinklerEntree" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="21" unique_id=628345293 instance=ExtResource("sprinkler")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -19.9)
 emplacement = "Porte du fond"
 
-[node name="SprinklerAppartements" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="23" unique_id=2081454771 instance=ExtResource("sprinkler")]
+[node name="SprinklerAppartements" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="22" unique_id=2081454771 instance=ExtResource("sprinkler")]
 transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -9.4, 0, -7.6)
 emplacement = "Passage appartements"
 sur_pied = true
 
-[node name="SprinklerAscenseur" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="24" unique_id=970122525 instance=ExtResource("sprinkler")]
+[node name="SprinklerAscenseur" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="23" unique_id=970122525 instance=ExtResource("sprinkler")]
 transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, -9.4, 0, 12.4)
 emplacement = "Passage ascenseur"
 sur_pied = true
 
-[node name="EclairagePieces" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="25" unique_id=1784385051 instance=ExtResource("eclairage_pieces")]
+[node name="EclairagePieces" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="24" unique_id=1784385051 instance=ExtResource("eclairage_pieces")]
+
+[node name="SpotsPlafond" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="25" unique_id=1744743731 instance=ExtResource("spots_plafond")]
+
+[node name="LinteauGrille" type="MeshInstance3D" parent="Navigation/Decor" parent_id_path=PackedInt32Array(1386229444) index="26" unique_id=1631863393]
+editor_description = "Portion de mur au-dessus de l’entrée : masque et supporte la grille enroulée en position haute."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.11, 24)
+mesh = SubResource("LinteauGrille")
 
 [node name="Atmosphere" parent="." index="7" unique_id=893849101 instance=ExtResource("atmosphere")]
 
 [node name="Entree" type="Node3D" parent="." index="8" unique_id=120138778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
 script = ExtResource("entree")
-
-[node name="PorteCassee" parent="Entree" index="0" unique_id=175404582 instance=ExtResource("porte")]
 
 [node name="PointsApparition" type="Node3D" parent="." index="9" unique_id=794214184]
 
@@ -713,12 +742,18 @@ size = Vector3(1.8, 0.14, 1.8)
 
 [node name="GraffitiAncienTag" parent="TracesLocales" index="4" unique_id=2095664728 instance=ExtResource("decal_graffiti_05")]
 transform = Transform3D(0.9612617, 0, -0.2756374, -0.2756374, 0, -0.9612617, 0, 1, 0, -7.6, 1.15, -19.982)
+material_override = SubResource("StandardMaterial3D_62g5r")
+mesh = SubResource("PlaneMesh_gmw0h")
 
 [node name="GraffitiAppelSauvetage" parent="TracesLocales" index="5" unique_id=548846593 instance=ExtResource("decal_graffiti_115")]
 transform = Transform3D(0.9925462, 0, 0.1218693, 0.1218693, 0, -0.9925462, 0, 1, 0, -8.65, 1.65, -19.978)
+material_override = SubResource("StandardMaterial3D_a1f74")
+mesh = SubResource("PlaneMesh_w6qns")
 
 [node name="GraffitiZoneBrulee" parent="TracesLocales" index="6" unique_id=781614723 instance=ExtResource("decal_graffiti_67")]
 transform = Transform3D(0.9876883, 0, -0.1564345, -0.1564345, 0, -0.9876883, 0, 1, 0, 15.1, 1.7, -19.978)
+material_override = SubResource("StandardMaterial3D_hfmtg")
+mesh = SubResource("PlaneMesh_y6tge")
 
 [node name="FissureMurOuest" parent="TracesLocales" index="7" unique_id=2130027979 instance=ExtResource("decal_fissure_02")]
 transform = Transform3D(7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 0, 0, 1, -20.02, 1.65, 3)
@@ -730,8 +765,8 @@ size = Vector3(1.9, 0.14, 1.9)
 
 [node name="GraffitiCollageTechnique" parent="TracesLocales" index="9" unique_id=446475209 instance=ExtResource("decal_graffiti_collage")]
 transform = Transform3D(0.9702957, 0, -0.2419219, -0.2419219, 0, -0.9702957, 0, 1, 0, 14.3, 1.25, -19.982)
-material_override = SubResource("StandardMaterial3D_oonme")
-mesh = SubResource("PlaneMesh_gq3w5")
+material_override = SubResource("StandardMaterial3D_enskg")
+mesh = SubResource("PlaneMesh_3pyxs")
 taille = Vector2(1.8, 2.1)
 teinte = Color(0.68, 0.65, 0.6, 0.48)
 
@@ -745,5 +780,10 @@ diffusion = 1
 profil = ExtResource("son_radio")
 cible = NodePath("../../Navigation/Decor/Refuge")
 
+[node name="ExplosionVoiture" type="Node3D" parent="." index="14" unique_id=938830631]
+script = ExtResource("explosion_voiture")
+voiture = NodePath("../ExterieurVille/VoitureIncendieNord")
 
-[node name="SpotsPlafond" parent="Navigation/Decor" instance=ExtResource("spots_plafond")]
+[node name="InterventionSecours" parent="." index="15" unique_id=1624324985 instance=ExtResource("intervention_secours")]
+
+[node name="IntroductionHall" parent="." index="16" unique_id=289483457 instance=ExtResource("introduction_hall")]

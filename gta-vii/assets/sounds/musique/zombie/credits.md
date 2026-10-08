@@ -16,3 +16,9 @@ Cipher remplace Industrial Music Box dans la boutique zombie. Fichier officiel `
 ## Assault — Incoming
 Luca Baradel : https://lucabaradel.itch.io/assault-free-modern-warfare-sample-pack
 Quatre stems synchronisés à 100 BPM. Licence fournie dans assault/LICENSE.txt ; usage dans les jeux autorisé par la page du pack gratuit. Ne pas redistribuer les fichiers audio séparément du jeu.
+
+
+## Playlist instrumentale
+- Unfed (Don’t Make Me), PorchCat / Hungry Kitties of the World : https://ccmixter.org/files/PorchCat/66772 — CC BY 4.0. Pistes instrumentales seules.
+- Sin Town, Zenboy1955 : https://ccmixter.org/files/Zenboy1955/65999 — CC BY 3.0. Version instrumentale adaptée ; voix et rap exclus, stems FLAC convertis en OGG.
+- Rescue Mission, Zhanko : https://zhankoepic.itch.io/epic-battle-music-pack-customizable-stems-for-game-devs — pack gratuit, usage dans les jeux commerciaux autorisé. Stems WAV convertis en OGG, aucune redistribution comme pack audio indépendant. Source alternative et licence : https://www.gamedevmarket.net/asset/epic-battle-music-pack-customizable-stems-for-game-devs-2.

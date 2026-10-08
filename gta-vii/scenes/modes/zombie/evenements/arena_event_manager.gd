@@ -38,5 +38,8 @@ func restaurer_sauvegarde(etat: Dictionary, salle: Node3D) -> void:
 		if not etat.paliers.has(palier.resource_path): continue
 		var cible := salle.get_node_or_null(palier.cible) as Node3D
 		if cible == null: continue
-		_appliquer(palier, cible)
+		if cible.has_method("restaurer_palier"):
+			cible.restaurer_palier()
+		else:
+			_appliquer(palier, cible)
 		effectues[palier] = true

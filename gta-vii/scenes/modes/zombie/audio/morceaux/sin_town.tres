@@ -1,0 +1,83 @@
+[gd_resource type="Resource" script_class="MorceauMusicalZombie" format=3 uid="uid://dsdhblx75o3f5"]
+
+[ext_resource type="Script" uid="uid://d2ihgt1e87jou" path="res://scenes/modes/zombie/audio/couche_musicale.gd" id="couche"]
+[ext_resource type="Script" uid="uid://b4mmx0ibqesu4" path="res://scenes/modes/zombie/audio/morceau_musical.gd" id="morceau"]
+[ext_resource type="AudioStream" uid="uid://crlijp6dhcaaw" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Metal GTR  150bpm.ogg" id="p0"]
+[ext_resource type="AudioStream" uid="uid://cbvjos0g1ngyo" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Bass GTR  150bpm.ogg" id="p1"]
+[ext_resource type="AudioStream" uid="uid://cnxhh1qg4jher" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Drums 150bpm.ogg" id="p2"]
+[ext_resource type="AudioStream" uid="uid://c50io6m2o3l0g" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Crunchy GTR  150bpm.ogg" id="p3"]
+[ext_resource type="AudioStream" uid="uid://x3x242qmkcwm" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Mesa Boogie GTR  150bpm.ogg" id="p4"]
+[ext_resource type="AudioStream" uid="uid://c2em3rxpcufms" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM Lead-Solo GTR  150bpm.ogg" id="p5"]
+[ext_resource type="AudioStream" uid="uid://dhk6bpuwhdne4" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM WaveRazor Synth 150bpm.ogg" id="p6"]
+[ext_resource type="AudioStream" uid="uid://cjjtqvkrex8d7" path="res://assets/sounds/musique/zombie/sin_town/Sin Town STEM GTR cleanish 150bpm.ogg" id="p7"]
+
+[sub_resource type="Resource" id="c0"]
+script = ExtResource("couche")
+titre = "Guitare métal"
+piste = ExtResource("p0")
+volume_db = -12.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c1"]
+script = ExtResource("couche")
+titre = "Basse"
+piste = ExtResource("p1")
+volume_db = -12.0
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c2"]
+script = ExtResource("couche")
+titre = "Batterie"
+piste = ExtResource("p2")
+volume_db = -12.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c3"]
+script = ExtResource("couche")
+titre = "Guitare rythmique"
+piste = ExtResource("p3")
+volume_db = -12.0
+ennemis_minimum = 7
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c4"]
+script = ExtResource("couche")
+titre = "Guitare Mesa Boogie"
+piste = ExtResource("p4")
+volume_db = -12.0
+ennemis_minimum = 9
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c5"]
+script = ExtResource("couche")
+titre = "Solo"
+piste = ExtResource("p5")
+volume_db = -12.0
+ennemis_minimum = 12
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c6"]
+script = ExtResource("couche")
+titre = "Synthétiseur"
+piste = ExtResource("p6")
+volume_db = -12.0
+ennemis_minimum = 12
+activer_si_elite = true
+activer_si_boss = true
+
+[sub_resource type="Resource" id="c7"]
+script = ExtResource("couche")
+titre = "Guitare claire"
+piste = ExtResource("p7")
+volume_db = -12.0
+ennemis_minimum = 4
+activer_si_boss = true
+
+[resource]
+script = ExtResource("morceau")
+titre = "Sin Town"
+couches = Array[ExtResource("couche")]([SubResource("c0"), SubResource("c1"), SubResource("c2"), SubResource("c3"), SubResource("c4"), SubResource("c5"), SubResource("c6"), SubResource("c7")])
+debut_lecture = 16.1

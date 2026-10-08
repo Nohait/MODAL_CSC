@@ -82,9 +82,8 @@ func _mort() -> void:
 	var position: Vector3 = get_parent().global_position
 	effets.ennemi_tue()
 	var degats_explosion: float = effets.valeur("choc_thermique") if refroidi() else 0.0
-	if gel_restant > 0: degats_explosion += effets.valeur("eclats_glace")
 	if degats_explosion > 0:
-		# Une seule explosion réunit les cartes ; elle ne cible que les ennemis.
+		# L'explosion de Choc thermique ne cible que les ennemis.
 		# Différer l'appel évite une autre mort au milieu du signal died actuel.
 		effets.call_deferred("explosion", position, 2.5, degats_explosion, true)
 	if enrobage_restant > 0 and effets.valeur("reaction_chaine") > 0:

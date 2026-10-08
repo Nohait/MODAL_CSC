@@ -46,7 +46,7 @@ func _process(_delta: float) -> void:
 	var composition: CompositionVague = gestionnaire.composition_actuelle
 	if composition == null:
 		return
-	if not get_parent().get_node("CouchesMusicales").couches.is_empty():
+	if not get_parent().get_node("CouchesMusicales").morceaux.is_empty():
 		if fondu: fondu.kill()
 		for lecteur in lecteurs:
 			lecteur.volume_db = move_toward(lecteur.volume_db, -60.0, _delta * 30.0)
@@ -59,6 +59,13 @@ func _process(_delta: float) -> void:
 		_changer_piste(obscurite)
 	else:
 		_changer_piste(vagues)
+
+func commencer_introduction() -> void:
+	var couches = get_parent().get_node("CouchesMusicales")
+	if couches.morceaux.is_empty():
+		_changer_piste(vagues)
+	else:
+		couches.commencer_introduction()
 
 func _changer_piste(piste: AudioStream, duree: float = -1.0) -> void:
 	# Ne pas redémarrer le morceau à chaque frame ni entre deux vagues similaires.

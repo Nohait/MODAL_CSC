@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_color = Color(0.19, 0.22, 0.24, 1)
+metallic = 0.75
+roughness = 0.45
+
+[sub_resource type="BoxMesh" id="barreau"]
+size = Vector3(0.035, 3, 0.045)
+material = SubResource("metal")
+
+[sub_resource type="BoxMesh" id="traverse"]
+size = Vector3(2.5, 0.06, 0.06)
+material = SubResource("metal")
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(2.5, 3, 0.12)
+
+[node name="GrilleEntree" type="Node3D"]
+editor_description = "Grille de sécurité ajourée, enroulée derrière le linteau pendant l’arrivée. Sa collision est activée après la fermeture."
+
+[node name="Barreau0" type="MeshInstance3D" parent="."]
+position = Vector3(-1.20, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau1" type="MeshInstance3D" parent="."]
+position = Vector3(-1.00, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau2" type="MeshInstance3D" parent="."]
+position = Vector3(-0.80, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau3" type="MeshInstance3D" parent="."]
+position = Vector3(-0.60, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.40, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau5" type="MeshInstance3D" parent="."]
+position = Vector3(-0.20, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau6" type="MeshInstance3D" parent="."]
+position = Vector3(0.00, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau7" type="MeshInstance3D" parent="."]
+position = Vector3(0.20, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau8" type="MeshInstance3D" parent="."]
+position = Vector3(0.40, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau9" type="MeshInstance3D" parent="."]
+position = Vector3(0.60, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau10" type="MeshInstance3D" parent="."]
+position = Vector3(0.80, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau11" type="MeshInstance3D" parent="."]
+position = Vector3(1.00, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Barreau12" type="MeshInstance3D" parent="."]
+position = Vector3(1.20, 0, 0)
+mesh = SubResource("barreau")
+
+[node name="Traverse0" type="MeshInstance3D" parent="."]
+position = Vector3(0, -1.45, 0)
+mesh = SubResource("traverse")
+
+[node name="Traverse1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 0)
+mesh = SubResource("traverse")
+
+[node name="Traverse2" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.45, 0)
+mesh = SubResource("traverse")
+
+[node name="Corps" type="StaticBody3D" parent="."]
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="Corps"]
+shape = SubResource("collision")
+disabled = true

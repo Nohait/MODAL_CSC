@@ -1,16 +1,21 @@
-[gd_resource type="ShaderMaterial" load_steps=5 format=3]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://y6fdffnkh44d"]
 
-[ext_resource type="Shader" path="res://scenes/systemes/ameliorations/verglas.gdshader" id="shader"]
-[ext_resource type="Texture2D" path="res://assets/textures/effets/verglas/Ice003_Color.png" id="couleur"]
-[ext_resource type="Texture2D" path="res://assets/textures/effets/verglas/Ice003_NormalGL.png" id="normale"]
-[ext_resource type="Texture2D" path="res://assets/textures/effets/verglas/Ice003_Roughness.png" id="rugosite"]
+[ext_resource type="Texture2D" uid="uid://cg4wl82rqfdh8" path="res://assets/textures/effets/verglas/Ice003_Color.png" id="couleur"]
+[ext_resource type="Texture2D" uid="uid://cucssybuebk7q" path="res://assets/textures/effets/verglas/Ice003_NormalGL.png" id="normale"]
+[ext_resource type="Texture2D" uid="uid://dy530vcqrs830" path="res://assets/textures/effets/verglas/Ice003_Roughness.png" id="rugosite"]
+[ext_resource type="Shader" uid="uid://btb3yq4b8v0wl" path="res://scenes/systemes/ameliorations/verglas.gdshader" id="shader"]
 
 [resource]
+render_priority = 0
 shader = ExtResource("shader")
 shader_parameter/texture_glace = ExtResource("couleur")
 shader_parameter/texture_normale = ExtResource("normale")
 shader_parameter/texture_rugosite = ExtResource("rugosite")
+shader_parameter/couleur = Color(0.74, 0.94, 1, 0.4)
 shader_parameter/taille_texture = 1.5
 shader_parameter/relief = 0.3
 shader_parameter/rugosite = 0.2
 shader_parameter/transparence = 0.9
+shader_parameter/opacite = 1.0
+shader_parameter/fonte = 0.0
+shader_parameter/forme_libre = false

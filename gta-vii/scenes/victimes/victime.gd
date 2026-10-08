@@ -85,6 +85,8 @@ var est_morte := false
 ## Poids maximal du vecteur de fuite face aux ennemis mobiles.
 @export_range(0.0, 10.0, 0.1, "or_greater")
 var force_fuite_max: float = 2.5
+@export_range(0.2, 2.0, 0.05) var anticipation_fuite := 0.6
+@export_range(0.01, 0.2, 0.01) var marge_fuite := 0.05
 
 # Ancien système de bonus
 
@@ -301,7 +303,7 @@ func follow_target_node(delta: float) -> void:
 		direction.y = 0.0
 
 		if direction.length() > 0.01:
-			direction = (direction.normalized() + vecteur_fuite()).normalized()
+			direction = _direction_sur_navigation(direction.normalized())
 			# 0 à stop_distance, 1 à stop_distance + distance_ralentissement
 			var facteur := clampf((distance - stop_distance) / distance_ralentissement, 0.0, 1.0)
 			vitesse_voulue = direction * speed * multiplicateur_vitesse * facteur
@@ -313,6 +315,17 @@ func follow_target_node(delta: float) -> void:
 	velocity.x = horizontale.x
 	velocity.z = horizontale.z
 	move_and_slide()
+
+func _direction_sur_navigation(direction_chemin: Vector3) -> Vector3:
+	# Fuir ne doit pas envoyer la victime dans un meuble ou derrière une cloison.
+	var direction_fuite := (direction_chemin + vecteur_fuite()).normalized()
+	var carte := navigation_agent.get_navigation_map()
+	var depart := NavigationServer3D.map_get_closest_point(carte, global_position)
+	var arrivee := depart + direction_fuite * anticipation_fuite
+	var point_navigable := NavigationServer3D.map_get_closest_point(carte, arrivee)
+	if point_navigable.distance_to(arrivee) > marge_fuite:
+		return direction_chemin
+	return direction_fuite
 
 # Dégâts normaux
 
