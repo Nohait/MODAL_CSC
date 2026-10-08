@@ -29,15 +29,27 @@ func lacher_pieces(ennemi: Node3D, valeur: int) -> void:
 	var nombre := valeur * (2 if ennemi.has_node("Elite") else 1)
 	# Cinq fois le butin habituel, donc dix fois la base pour une élite dorée.
 	if ennemi.has_node("Dore"): nombre *= 5
+	var origine := ennemi.global_position
+	var dispersion: float = ennemi.get_meta("rayon_butin", rayon_dispersion)
+	var delai: float = ennemi.get_meta("delai_butin", 0.0)
+	# Capturer la position avant la suppression du boss ; les pièces arrivent à sa chute.
+	if delai > 0.0:
+		var sequence := create_tween()
+		sequence.tween_interval(delai)
+		sequence.tween_callback(_deposer_pieces.bind(origine, nombre, dispersion))
+	else:
+		_deposer_pieces(origine, nombre, dispersion)
+
+func _deposer_pieces(origine: Vector3, nombre: int, dispersion: float) -> void:
 	for i in range(nombre):
 		var piece = PIECE.instantiate()
 		piece.joueur = joueur
 		piece.decalage = i * 0.04
-		piece.position = to_local(ennemi.global_position + Vector3.UP * 0.2)
+		piece.position = to_local(origine + Vector3.UP * 0.2)
 		var angle := randf() * TAU
-		var ecart := Vector3(cos(angle), 0, sin(angle)) * randf_range(0.2, rayon_dispersion)
+		var ecart := Vector3(cos(angle), 0, sin(angle)) * randf_range(0.2, maxf(0.2, dispersion))
 		# Chercher le sol réel : le point d'origine peut être un crâne volant.
-		var cible := ennemi.global_position + ecart
+		var cible := origine + ecart
 		var requete := PhysicsRayQueryParameters3D.create(cible + Vector3.UP * 5.0, cible - Vector3.UP * 8.0, 1)
 		var resultat := get_world_3d().direct_space_state.intersect_ray(requete)
 		piece.point_sol = resultat.get("position", Vector3(cible.x, 0, cible.z)) + Vector3.UP * 0.2

@@ -122,7 +122,7 @@ func mourir() -> void:
 	if est_mort: return
 	var statut := get_node_or_null("EtatMousse")
 	# Choc thermique déclenche aussi son explosion dangereuse habituelle, une seule fois.
-	if not explosion_declenchee and statut != null and statut.refroidi() and statut.effets.valeur("choc_thermique") > 0:
+	if not get_meta("fin_invocation", false) and not explosion_declenchee and statut != null and statut.refroidi() and statut.effets.valeur("choc_thermique") > 0:
 		_exploser()
 		return
 	flammes.hide()

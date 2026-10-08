@@ -1,5 +1,9 @@
 extends Node3D
 
+signal preparation_commencee(position: Vector3)
+signal portion_ouverte(position: Vector3)
+signal fissure_terminee
+
 # Une seule attaque planifiée ; ses segments restent fixes même si le joueur bouge.
 @export var active := true
 @export_range(4.0, 24.0, 0.5) var portee := 14.0
@@ -77,6 +81,7 @@ func preparer(origine: Vector3, direction: Vector3) -> void:
 	# La pointe doit se placer au bout réel, même si un mur a raccourci le trajet.
 	for segment in segments:
 		segment.materiau.set_shader_parameter("longueur_totale", float(segments.size()) * longueur_segment / largeur)
+	if not segments.is_empty(): preparation_commencee.emit(origine)
 
 func lancer() -> void:
 	lancee = true
@@ -103,6 +108,7 @@ func _physics_process(delta: float) -> void:
 				segment.materiau.set_shader_parameter("eruption", 1.0)
 				_creer_braises(segment.surface)
 				_creer_projections(segment.surface)
+				portion_ouverte.emit(segment.position)
 			# Un pic lumineux très bref souligne la libération de pression.
 			var eclat := exp(-maxf(0.0, age - avertissement) * 18.0)
 			segment.materiau.set_shader_parameter("eruption", 1.0 + eclat * eclat_ouverture)
@@ -125,6 +131,7 @@ func _blesser(point: Vector3) -> void:
 		corps.prendre_degats(degats * (1.0 + maxi(boss.etage - 1, 0) * boss.degats_par_etage_pourcent / 100.0))
 
 func _nettoyer() -> void:
+	if not segments.is_empty(): fissure_terminee.emit()
 	for segment in segments: segment.surface.queue_free()
 	segments.clear()
 	touches.clear()

@@ -195,6 +195,7 @@ func _acheter_booster(rarete: StringName) -> void:
 	if rarete == &"legendaire" and not _legendaire_disponible():
 		_actualiser_boutique("Aucune légendaire disponible : ses prérequis manquent ou vous les possédez déjà toutes.")
 		return
+	var rarete_animation := rarete
 	if rarete == &"rare_gratuit":
 		if defis.boosters_rares_gratuits <= 0: return
 		defis.boosters_rares_gratuits -= 1
@@ -218,7 +219,7 @@ func _acheter_booster(rarete: StringName) -> void:
 		&"temporaire": poids = poids_booster_temporaire
 	# Chaque carte reçoit sa propre rareté ; la couleur du booster ne l'impose plus.
 	var choix := TIRAGE.tirer(propositions, poids, Vector4(puissance_commune, puissance_rare, puissance_epique, 200.0))
-	await boutique.animer_ouverture(rarete)
+	await boutique.animer_ouverture(rarete_animation)
 	_afficher_cartes(choix, true)
 
 func _afficher_cartes(propositions: Array, avec_revelation := false) -> void:

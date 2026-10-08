@@ -4,6 +4,7 @@ signal impact_sol
 signal charge_salve
 signal boule_projetee
 signal salve_terminee
+signal mort_mise_en_scene(effet: Node3D)
 
 # Réutiliser la navigation, le gel, les dégâts reçus et les mouvements du golem.
 @export_group("Mini-boss — coup au sol")
@@ -308,10 +309,14 @@ func mourir() -> void:
 		$Sketchfab_Scene.position.y = $AnimationsBoss.hauteur_visuel
 		$AnimationsBoss.set_physics_process(false)
 		effet.commencer($Sketchfab_Scene)
+		set_meta("delai_butin", effet.duree_chute * effet.moment_choc)
+		set_meta("rayon_butin", effet.rayon_butin)
+		mort_mise_en_scene.emit(effet)
 		# Le parent peut encore accéder à ce nœud pendant mourir(), donc garder un repère vide.
 		var repere := Node3D.new()
 		repere.name = "Sketchfab_Scene"
 		add_child(repere)
 		afficher_cendres = false
 	# Le signal died et les récompenses restent immédiats ; seule la mise en scène dure.
+	invocations.eliminer_invocations()
 	super.mourir()

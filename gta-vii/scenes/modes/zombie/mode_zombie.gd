@@ -56,6 +56,7 @@ func _ready() -> void:
 	musique_adaptative.name = "CouchesMusicales"
 	musique_adaptative.morceaux = playlist_musicale
 	niveau.add_child(musique_adaptative)
+	niveau.add_child(preload("res://scenes/modes/zombie/evenements/victoire_boss.tscn").instantiate())
 	var arene := Node.new()
 	arene.name = "ArenaEventManager"
 	arene.set_script(preload("res://scenes/modes/zombie/evenements/arena_event_manager.gd"))

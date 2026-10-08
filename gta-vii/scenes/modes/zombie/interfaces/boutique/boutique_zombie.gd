@@ -45,9 +45,10 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 
 func _actualiser_boutique(message: String = "") -> void:
 	if message.is_empty():
-		message = "Chaque victime abritée rapporte un point par vague terminée. Les points non dépensés sont perdus en quittant la boutique."
+		message = defis.bilan + "Chaque victime abritée rapporte un point par vague terminée. Les points non dépensés sont perdus en quittant la boutique."
 	var liste_vide: Array[Dictionary] = []
-	boutique.actualiser_boutique(points, liste_vide, liste_vide, 0, message)
+	# Les défis restent masqués, mais les cadeaux de boss utilisent le compteur commun.
+	boutique.actualiser_boutique(points, liste_vide, liste_vide, defis.boosters_rares_gratuits, message)
 	_actualiser_pieces()
 
 func _continuer() -> void:

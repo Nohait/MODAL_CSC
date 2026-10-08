@@ -58,6 +58,15 @@ func _nombre_vivants() -> int:
 			nombre += 1
 	return nombre
 
+func eliminer_invocations() -> void:
+	# L'identifiant distingue ses renforts des ennemis naturels et de ceux d'un autre boss.
+	for ennemi in boss.get_parent().get_children():
+		if ennemi.get_meta("boss_invocateur", 0) != boss.get_instance_id(): continue
+		if ennemi.is_queued_for_deletion() or ennemi.est_mort: continue
+		ennemi.set_meta("fin_invocation", true)
+		# Une vraie mort garde les cendres, les signaux et le compteur de vague cohérents.
+		ennemi.mourir()
+
 func commencer(ralliement := false, duree_ralliement := 0.0) -> bool:
 	if (attente > 0.0 and not ralliement) or invocation_demandee.get_connections().is_empty(): return false
 	var limite := maximum_vivants_phase_deux if phase_deux else maximum_vivants

@@ -186,6 +186,9 @@ func actualiser_objectifs() -> void:
 		vagues_terminees += 1
 		phase = "avant_boutique"
 		pause_restante = difficulte.delai_avant_boutique
+		var victoire = get_node("../../VictoireBoss")
+		if victoire.temps_restant > 0.0:
+			pause_restante = maxf(pause_restante, victoire.temps_restant + victoire.marge_avant_boutique)
 		# Compter au moment de la victoire, avant la pause et les dépôts suivants.
 		salle_terminee.emit(salle_actuelle)
 		boutique.points = refuge.victimes.size()
@@ -290,6 +293,8 @@ func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> 
 	ennemi.position = emplacement + Vector3.UP * type.hauteur
 	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	salle.get_node("Ennemis").add_child(ennemi)
+	if ennemi.has_signal("mort_mise_en_scene"):
+		get_node("../../VictoireBoss").suivre(ennemi)
 	relier_invocation(ennemi, salle)
 	var agent = ennemi.get_node_or_null("NavigationAgent")
 	if agent != null: agent.set_navigation_map(salle.carte_ennemis)

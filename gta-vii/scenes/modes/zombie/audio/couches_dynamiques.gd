@@ -12,6 +12,12 @@ var dernier: MorceauMusicalZombie
 var introduction := false
 var attente := 0.0
 var generateur := RandomNumberGenerator.new()
+var accalmie_restante := 0.0
+var volume_accalmie := 0.0
+
+func accalmie(duree: float, volume: float) -> void:
+	accalmie_restante = maxf(accalmie_restante, duree)
+	volume_accalmie = minf(0.0, volume)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -20,13 +26,16 @@ func _ready() -> void:
 	morceaux = morceaux.filter(func(morceau): return morceau != null and not morceau.couches.is_empty())
 
 func _process(delta: float) -> void:
+	if not get_tree().paused:
+		accalmie_restante = maxf(0.0, accalmie_restante - delta)
 	if morceaux.is_empty(): return
 	var combat: bool = introduction or (vagues.vague_actuelle > 0 and vagues.phase == "combat")
 	if combat and courant.is_empty(): _suivant()
 	if courant.is_empty(): return
 	var lecteur: AudioStreamPlayer = courant.lecteur
 	var duree := fondu_introduction if introduction else duree_fondu
-	lecteur.volume_db = move_toward(lecteur.volume_db, 0.0 if combat else -60.0, 60.0 * delta / duree)
+	var cible_volume := volume_accalmie if accalmie_restante > 0.0 else 0.0
+	lecteur.volume_db = move_toward(lecteur.volume_db, cible_volume if combat else -60.0, 60.0 * delta / duree)
 	if combat and lecteur.stream_paused:
 		# Reprendre tous les instruments ensemble, à leur position conservée.
 		lecteur.stream_paused = false

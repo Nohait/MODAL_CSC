@@ -7,6 +7,8 @@ extends Node3D
 @export_range(0.2, 2.0, 0.1) var duree_dissolution := 1.0
 @export_range(-30.0, 6.0, 1.0) var volume_chute := 0.0
 @export_range(0.0, 1.0, 0.05) var secousse_chute := 0.25
+@export_range(0.5, 4.0, 0.1) var rayon_butin := 2.2
+@export_range(0, 80, 1) var braises_chute := 36
 
 var visuel: Node3D
 var lecteur: AnimationPlayer
@@ -57,7 +59,7 @@ func _choc() -> void:
 		joueur.secouer_camera(secousse_chute, 0.3)
 	# Réutiliser les braises de contact, à faible intensité et sans second son.
 	var braises = preload("res://scenes/effets/combat/impact_boule_feu.tscn").instantiate()
-	braises.nombre_braises = 22
+	braises.nombre_braises = braises_chute
 	braises.son_impact = null
 	add_child(braises)
 	var point_chute := global_position + global_basis.z

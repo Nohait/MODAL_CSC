@@ -78,6 +78,8 @@ func _physics_process(delta: float) -> void:
 		get_parent().move_and_collide(recul * pas * frein)
 
 func _mort() -> void:
+	# La disparition des renforts à la mort du boss ne déclenche pas de réactions en chaîne.
+	if get_parent().get_meta("fin_invocation", false): return
 	if not is_instance_valid(effets): return
 	var position: Vector3 = get_parent().global_position
 	effets.ennemi_tue()

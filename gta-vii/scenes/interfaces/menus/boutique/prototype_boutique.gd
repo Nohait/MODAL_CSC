@@ -26,7 +26,8 @@ const POLICE_ITALIQUE = preload("res://assets/fonts/Almendra-BoldItalic.ttf")
 @export var mode_demonstration := true
 # Fourni par l’UpgradeManager avant l’ajout à l’arbre, dans la vraie boutique.
 var catalogue: Array[Dictionary] = []
-var bouton_gratuit: Button
+var cadeau: Control
+var booster_gratuit: Control
 
 @onready var contenu: VBoxContainer = $Marge/Contenu
 var compteur: Label
@@ -109,12 +110,23 @@ func _ready() -> void:
 	for proposition in propositions:
 		if proposition.get("categorie", "permanent") == "permanent":
 			_ajouter_booster(pochettes, proposition)
-	bouton_gratuit = Button.new()
-	bouton_gratuit.text = "Ouvrir le booster rare offert"
-	bouton_gratuit.focus_mode = Control.FOCUS_NONE
-	bouton_gratuit.hide()
-	bouton_gratuit.pressed.connect(func(): achat_demande.emit(&"rare_gratuit"))
-	renforts.add_child(bouton_gratuit)
+	# Le cadeau garde le même dessin, le même survol et la même ouverture que les achats.
+	var bloc_cadeau := _panneau(gauche, "VOTRE BOOSTER OFFERT")
+	cadeau = bloc_cadeau.get_parent()
+	var cadre_cadeau := cadeau.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	cadre_cadeau.bg_color = Color("d3e1e7")
+	cadre_cadeau.border_color = Color("569ccb")
+	cadeau.add_theme_stylebox_override("panel", cadre_cadeau)
+	bloc_cadeau.get_child(0).horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var centre := HBoxContainer.new()
+	centre.alignment = BoxContainer.ALIGNMENT_CENTER
+	bloc_cadeau.add_child(centre)
+	_ajouter_booster(centre, {"id": &"rare_gratuit", "titre": "Rare", "couleur": Color("569ccb"), "prix": 0, "puissance": puissance_rare, "symbole": "II", "contenu": "Un cadeau bien mérité"})
+	booster_gratuit = boosters.back()
+	booster_gratuit.niveau_eclat = 1
+	booster_gratuit.get_node("Visuel/Papier").material.set_shader_parameter("niveau_eclat", 1.0)
+	booster_gratuit.get_node("%Prix").text = "GRATUIT"
+	cadeau.hide()
 	var temporaires := _panneau(gauche, "SOINS ET BONUS TEMPORAIRES")
 	var interventions := HBoxContainer.new()
 	interventions.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -284,8 +296,8 @@ func actualiser_boutique(points: int, defis_actifs: Array[Dictionary], offres: A
 		_creer_ligne_defi(defi, false)
 	if actifs.get_child_count() == 0:
 		actifs.add_child(_texte("Aucun défi en cours.", 15))
-	bouton_gratuit.visible = cadeaux > 0
-	bouton_gratuit.text = "Ouvrir un booster rare offert (%d)" % cadeaux
+	cadeau.visible = cadeaux > 0
+	booster_gratuit.get_node("%Prix").text = "GRATUIT" if cadeaux <= 1 else "GRATUIT · %d disponibles" % cadeaux
 	_actualiser_budget()
 	if not message.is_empty():
 		retour.text = message
@@ -329,6 +341,7 @@ func ajouter_ravitaillement() -> void:
 	var panneau_temporaire := temporaires.get_parent().get_parent()
 	for booster in boosters:
 		var emplacement := booster.get_parent()
+		if booster == booster_gratuit: continue
 		if emplacement.get_parent() != ligne: emplacement.reparent(ligne)
 	if temporaires != ligne:
 		colonne_offres.remove_child(panneau_temporaire)

@@ -27,6 +27,10 @@ AnimationsBoss émet `pas_pose` lorsque la marche franchit les instants de conta
 
 ## Mort du mini-boss
 
+La mort élimine aussi ses invocations encore vivantes : `InvocationBoss.eliminer_invocations()` filtre les ennemis par la métadonnée `boss_invocateur`. Les autres ennemis sont conservés. La vraie méthode `mourir()` émet leurs signaux habituels ; `fin_invocation` évite les explosions de kamikaze et réactions de Choc thermique lors de cette disparition. Les pièces gardent leur quantité habituelle, mais celles du boss apparaissent au choc du corps et sur un rayon plus large (`rayon_butin`). La monnaie capture sa position avant sa suppression.
+
+Dans le mode zombie, `VictoireBoss` reçoit `mort_mise_en_scene` pour les boss des vagues. Il baisse la musique pendant la chute et la dissolution, retarde la musique de boutique, puis accorde un booster rare gratuit à la fin de la vague. Le cadeau réutilise le bouton de booster offert existant et ne consomme aucun point. La boutique attend au minimum la fin de cette mise en scène. Nombre de cadeaux, baisse musicale et marge d'attente sont exportés dans `scenes/modes/zombie/evenements/victoire_boss.tscn`. Les boss créés individuellement par le debug ne donnent pas ce cadeau ; le debug qui lance une vraie vague de boss suit son fonctionnement normal.
+
 Le signal de mort et les récompenses sont déclenchés immédiatement par le fonctionnement existant. Avant cela, `monstre_lave.gd` transfère son modèle vers `mort_boss.tscn`, un effet voisin sans collision ni comportement d'ennemi. `mort_boss.gd` joue le clip Mixamo mort, refroidit des copies des matériaux, déclenche le choc de réception, puis utilise le shader de cendres sur les vrais maillages animés. Le squelette reste en place, ce qui conserve la pose couchée pendant la dissolution. La pause suspend l'animation et les tweens.
 
 Durée de chute, fraction du clip où le choc arrive, attente au sol, dissolution, volume et secousse se règlent sur la racine de `mort_boss.tscn`. Modifier le choc permet d'affiner sa synchronisation avec le clip. Aucun ennemi ne reste actif pendant la séquence ; les projectiles déjà tirés conservent leur fonctionnement habituel.
@@ -74,6 +78,8 @@ Le signal d’invocation transmet désormais pour chaque demande une position, u
 Le cri de colère reste spatial, mais son atténuation de volume est désactivée et sa portée vaut 0 : aucune coupure selon la distance. Il est ainsi audible dans toute la salle ; ces réglages sont exportés sur PhaseBoss.
 
 ## Fissure de feu
+
+`FissureBoss/SonsFissure` porte `sons_fissure.gd`. Le signal `preparation_commencee` lance un extrait de six secondes d'Earth Rumble avec montée progressive du volume. `portion_ouverte` déclenche Lava Splash à la position de l'éruption, avec 0,3 s entre lectures et deux voix au maximum. `fissure_terminee` fait disparaître le grondement en fondu. Le gel suspend les lecteurs ; la pause du jeu les suspend normalement. Les fichiers, volumes, fondus et portées sont réglables sur SonsFissure. Les sources et transformations audio figurent dans les crédits des sons du monstre de lave.
 
 `FissureBoss`, dans `monstre_lave.tscn`, porte `fissure_boss.gd`. À distance, le boss alterne cette attaque avec les salves, selon les délais disponibles. Au corps à corps, il conserve son coup circulaire. La fissure réutilise le clip de frappe au sol, sans avancée du corps ; elle remplace les dégâts circulaires pour cette attaque.
 

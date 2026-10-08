@@ -30,6 +30,15 @@ func _process(_delta: float) -> void:
 	var phase: String = gestionnaire.phase
 	var changement_phase := phase != phase_precedente
 	phase_precedente = phase
+	var victoire = get_parent().get_node_or_null("VictoireBoss")
+	if victoire != null and victoire.temps_restant > 0.0:
+		# Laisser entendre la chute avant de faire entrer la musique de boutique.
+		if fondu: fondu.kill()
+		for lecteur in lecteurs:
+			lecteur.volume_db = move_toward(lecteur.volume_db, -60.0, _delta * 40.0)
+			if lecteur.volume_db <= -60.0: _memoriser_et_arreter(lecteur)
+		piste_actuelle = null
+		return
 	if phase in ["avant_boutique", "boutique"]:
 		# La pause de victoire sert au fondu : la boutique est déjà calme à son ouverture.
 		_changer_piste(boutique, maxf(duree_fondu, gestionnaire.pause_restante))

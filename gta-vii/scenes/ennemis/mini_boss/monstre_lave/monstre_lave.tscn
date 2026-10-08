@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/monstre_lave.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mini_boss/monstre_lave_anime.glb" id="2"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/invocation_boss.gd" id="invocation"]
 [ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/phase_boss.gd" id="phase"]
 [ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/fissure_boss.gd" id="fissure"]
+[ext_resource type="Script" path="res://scenes/ennemis/mini_boss/monstre_lave/sons_fissure.gd" id="sons_fissure"]
 [sub_resource type="CapsuleShape3D" id="Corps"]
 radius = 1.1
 height = 2.6
@@ -97,3 +98,6 @@ script = ExtResource("phase")
 
 [node name="FissureBoss" type="Node3D" parent="."]
 script = ExtResource("fissure")
+
+[node name="SonsFissure" type="Node3D" parent="FissureBoss"]
+script = ExtResource("sons_fissure")
