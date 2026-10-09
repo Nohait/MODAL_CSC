@@ -18,7 +18,6 @@ signal died(victim: CharacterBody3D)
 @onready var visuel: MeshInstance3D = $MeshInstance3D
 @onready var materiau := (visuel.get_active_material(0).duplicate()as StandardMaterial3D)
 
-@onready var cris = $"Sons/cris".get_children()
 @onready var appels_secours: Array[AudioStreamPlayer3D] = [$Sons/cris/man_helpme1, $Sons/cris/man_helpme2]
 @export_group("Appel au secours")
 @export_range(-30.0, 0.0, 1.0) var volume_appel_db := -12.0
@@ -29,9 +28,20 @@ var appel_secours_joue := false
 @export_range(0.0, 3.0, 0.05) var delai_appel_min := 0.1
 @export_range(0.0, 3.0, 0.05) var delai_appel_max := 0.9
 var hasard_appel := RandomNumberGenerator.new()
-@onready var victim_death = [
-	 preload("res://assets/sounds/victimes/victim_death2.wav")
-]
+
+@onready var douleur: Array[AudioStreamPlayer3D] = [
+	$"Sons/douleur/douleur1",
+	$"Sons/douleur/douleur2",
+	$"Sons/douleur/douleur3",
+	$"Sons/douleur/douleur4",
+	$"Sons/douleur/douleur5",
+	$"Sons/douleur/douleur6",
+	$"Sons/douleur/douleur7",
+	$"Sons/douleur/douleur8",
+	$"Sons/douleur/douleur9",
+	$"Sons/douleur/douleur10"]
+
+@onready var victim_death = [preload("res://assets/sounds/victimes/mort/victim_death3.wav")]
 
 ## Gestion de l'animation
 @onready var anim_tree: AnimationTree = $victime/Armature/AnimationTree
@@ -108,14 +118,18 @@ var force_fuite_max: float = 2.5
 var speed: float = 6.0
 # Le bonus multiplie la vitesse de base, sans la modifier à chaque recalcul.
 var multiplicateur_vitesse := 1.0
-## Distance à laquelle la victime s'arrête de suivre sa cible.
-@export_range(0.0, 10.0, 0.1, "or_greater")
-var stop_distance: float = 1.5
-var stop_distance_player: float
+# Distance à laquelle la victime s'arrête de suivre sa cible.
+@export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance_player:= 1.5
+@export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance_fleche:= 0.1
+@export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance_victime := 0.5
+var stop_distance: float = stop_distance_player
+
+#Variables de décompte de l'attente
 var waiting := true
 var waiting_cooldown := 3.0
 var waiting_timer := 3.0
 signal waiting_termine
+
 var follow_target: Node3D = null
 var player_nearby := false
 var is_freed := false
@@ -132,9 +146,12 @@ func _ready() -> void:
 		appel.volume_db = volume_appel_db
 		appel.unit_size = distance_appel
 		appel.max_distance = portee_appel
+	
+	#on met en place les sons 
+	for douleur_sound in douleur:
+		douleur_sound.volume_db -= 15	
 	# Le même signal prévient le VictimManager et déclenche le retour visuel local.
 	freed.connect(_jouer_effet_liberation)
-	stop_distance_player = stop_distance
 
 	# Chaque victime possède son propre matériau.
 	# Sinon le flash rouge pourrait modifier plusieurs victimes partageant la même ressource.
@@ -290,7 +307,9 @@ func follow_target_node(delta: float) -> void:
 	to_target.y = 0.0
 
 	if follow_target.is_in_group("fleche"):
-		stop_distance = 0.1
+		stop_distance = stop_distance_fleche
+	elif follow_target.is_in_group("victims"):
+		stop_distance = stop_distance_victime
 	else:
 		stop_distance = stop_distance_player
 	
@@ -361,7 +380,9 @@ func prendre_degats(degats: float) -> void:
 	vie = maxf(vie - degats, 0.0)
 	actualiser_barre_vie()
 	flash_degats()
-	print("Victime : -", degats, " PV (", vie, " / ", vie_max, ")")
+	var douleur_sound = douleur.pick_random()
+	print(douleur_sound,douleur_sound.volume_db)
+	douleur_sound.play()
 	_verifier_appel_secours()
 	if vie <= 0.0:
 		mourir()
@@ -433,6 +454,7 @@ func mourir() -> void:
 	victim_death_sound.global_position = global_position + Vector3.UP * 1.2
 	# Ne pas accumuler des lecteurs silencieux au fil des morts.
 	victim_death_sound.finished.connect(victim_death_sound.queue_free)
+	victim_death_sound.volume_db = -12
 	victim_death_sound.play()
 	
 	died.emit(self)

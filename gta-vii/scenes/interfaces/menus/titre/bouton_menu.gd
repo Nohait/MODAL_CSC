@@ -3,6 +3,8 @@ extends Button
 const PLAQUE = preload("res://assets/textures/interfaces/titre/plaque_bouton.svg")
 const REFLET = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
 const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
+
+
 @export var taille_police := 28
 var fond: TextureRect
 var icone: TextureRect
@@ -48,8 +50,8 @@ func _ready() -> void:
 	icone.position = -icone.size / 2.0
 	add_child(icone)
 	
+	# Connexion des événements
 	mouse_entered.connect(grab_focus)
-	
 	
 
 func _process(delta: float) -> void:
@@ -67,3 +69,4 @@ func _make_custom_tooltip(texte: String) -> Object:
 	var bulle = preload("res://scenes/interfaces/menus/infobulle_metal.gd").new()
 	bulle.texte = texte
 	return bulle
+	

@@ -132,6 +132,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and (not is_dashing) and dash_cooldown_left <= 0.0:
 		#initialise le dash
 		is_dashing = true
+		$"Dash".play()
 		# Chaque nouveau dash utilise le délai effectif, avec ou sans escorte.
 		# Un délai déjà commencé n'est pas recalculé en cours de route.
 		dash_cooldown_left = get_dash_cooldown()
