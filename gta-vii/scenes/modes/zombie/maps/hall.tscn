@@ -193,40 +193,40 @@ size = Vector3(2.5, 3, 0.5)
 material = ExtResource("mur")
 size = Vector3(3.2, 0.22, 0.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62g5r"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ryh6v"]
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.85)
 albedo_texture = ExtResource("32_ryh6v")
 metallic_specular = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_gmw0h"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_5hwo1"]
 size = Vector2(3, 3)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1f74"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7njbw"]
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.85)
 albedo_texture = ExtResource("34_5hwo1")
 metallic_specular = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_w6qns"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_62g5r"]
 size = Vector2(3, 3)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hfmtg"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gmw0h"]
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.85)
 albedo_texture = ExtResource("36_7njbw")
 metallic_specular = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_y6tge"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_a1f74"]
 size = Vector2(3, 3)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enskg"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w6qns"]
 transparency = 1
 albedo_color = Color(0.68, 0.65, 0.6, 0.48)
 albedo_texture = ExtResource("35_4e5dy")
 metallic_specular = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_3pyxs"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_hfmtg"]
 size = Vector2(1.8, 2.1)
 
 [node name="Hall" unique_id=1947887531 instance=ExtResource("salle")]
@@ -742,18 +742,18 @@ size = Vector3(1.8, 0.14, 1.8)
 
 [node name="GraffitiAncienTag" parent="TracesLocales" index="4" unique_id=2095664728 instance=ExtResource("decal_graffiti_05")]
 transform = Transform3D(0.9612617, 0, -0.2756374, -0.2756374, 0, -0.9612617, 0, 1, 0, -7.6, 1.15, -19.982)
-material_override = SubResource("StandardMaterial3D_62g5r")
-mesh = SubResource("PlaneMesh_gmw0h")
+material_override = SubResource("StandardMaterial3D_ryh6v")
+mesh = SubResource("PlaneMesh_5hwo1")
 
 [node name="GraffitiAppelSauvetage" parent="TracesLocales" index="5" unique_id=548846593 instance=ExtResource("decal_graffiti_115")]
 transform = Transform3D(0.9925462, 0, 0.1218693, 0.1218693, 0, -0.9925462, 0, 1, 0, -8.65, 1.65, -19.978)
-material_override = SubResource("StandardMaterial3D_a1f74")
-mesh = SubResource("PlaneMesh_w6qns")
+material_override = SubResource("StandardMaterial3D_7njbw")
+mesh = SubResource("PlaneMesh_62g5r")
 
 [node name="GraffitiZoneBrulee" parent="TracesLocales" index="6" unique_id=781614723 instance=ExtResource("decal_graffiti_67")]
 transform = Transform3D(0.9876883, 0, -0.1564345, -0.1564345, 0, -0.9876883, 0, 1, 0, 15.1, 1.7, -19.978)
-material_override = SubResource("StandardMaterial3D_hfmtg")
-mesh = SubResource("PlaneMesh_y6tge")
+material_override = SubResource("StandardMaterial3D_gmw0h")
+mesh = SubResource("PlaneMesh_a1f74")
 
 [node name="FissureMurOuest" parent="TracesLocales" index="7" unique_id=2130027979 instance=ExtResource("decal_fissure_02")]
 transform = Transform3D(7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 0, 0, 1, -20.02, 1.65, 3)
@@ -765,8 +765,8 @@ size = Vector3(1.9, 0.14, 1.9)
 
 [node name="GraffitiCollageTechnique" parent="TracesLocales" index="9" unique_id=446475209 instance=ExtResource("decal_graffiti_collage")]
 transform = Transform3D(0.9702957, 0, -0.2419219, -0.2419219, 0, -0.9702957, 0, 1, 0, 14.3, 1.25, -19.982)
-material_override = SubResource("StandardMaterial3D_enskg")
-mesh = SubResource("PlaneMesh_3pyxs")
+material_override = SubResource("StandardMaterial3D_w6qns")
+mesh = SubResource("PlaneMesh_hfmtg")
 taille = Vector2(1.8, 2.1)
 teinte = Color(0.68, 0.65, 0.6, 0.48)
 

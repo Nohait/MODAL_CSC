@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/appartements/salon_abandonne.tscn" id="base"]
+
+[node name="SalonBouscule" instance=ExtResource("base")]
+brulure = 0.55
+intensite_braises = 1.0
+taille_foyer = 0.6
+
+[node name="Canape" parent="Mobilier" index="0"]
+rotation = Vector3(0, 0.08, 0)
+
+[node name="TableBasse" parent="Mobilier" index="1"]
+position = Vector3(-0.8, 0, 0.8)
+rotation = Vector3(0, -0.35, 0)
+
+[node name="CollisionCanape" parent="." index="1"]
+rotation = Vector3(0, 0.08, 0)
+
+[node name="CollisionTable" parent="." index="2"]
+position = Vector3(-0.8, 0.32, 0.8)
+rotation = Vector3(0, -0.35, 0)

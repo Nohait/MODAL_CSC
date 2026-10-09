@@ -1,0 +1,136 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/porte_decorative.gd" id="1_htjdy"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/weathered_brown_planks_nor_gl_2k.png" id="2_hf6qi"]
+[ext_resource type="Material" path="res://assets/materiaux/poignee_porte.tres" id="3_rn5um"]
+[ext_resource type="PackedScene" path="res://assets/modeles/appartements/modern_wooden_cabinet/modern_wooden_cabinet_1k.gltf" id="4_435dr"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/bois_carbonise.tres" id="5_okj3h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dainl"]
+shading_mode = 0
+albedo_color = Color(0.008, 0.006, 0.005, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wcrgn"]
+material = SubResource("StandardMaterial3D_dainl")
+size = Vector3(1.6, 2.4, 0.015)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_si4jv"]
+albedo_color = Color(0.24, 0.23, 0.2, 1)
+roughness = 0.75
+normal_enabled = true
+normal_scale = 0.7
+normal_texture = ExtResource("2_hf6qi")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_nt0bm"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(0.1, 2.5, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ygkun"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(0.1, 2.5, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aatgx"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(1.8, 0.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_be8jj"]
+size = Vector3(1.85, 2.5, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mofpc"]
+albedo_color = Color(0.36, 0.34, 0.3, 1)
+roughness = 0.75
+normal_enabled = true
+normal_scale = 0.7
+normal_texture = ExtResource("2_hf6qi")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_x2ck3"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.54, 2.35, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_da3iy"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.25, 0.8, 0.018)
+
+[sub_resource type="BoxMesh" id="BoxMesh_knlq3"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.25, 0.8, 0.018)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vyl7g"]
+material = ExtResource("3_rn5um")
+size = Vector3(0.18, 0.035, 0.06)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vg2pf"]
+size = Vector3(2.44, 0.68, 0.52)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wg6dg"]
+material = ExtResource("5_okj3h")
+size = Vector3(1.8, 0.14, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_litq1"]
+material = ExtResource("5_okj3h")
+size = Vector3(1.8, 0.14, 0.07)
+
+[node name="PorteBloquee" type="StaticBody3D" unique_id=1684947292 groups=["collider"]]
+editor_description = "Porte décorative : +Z vers la salle. Le mur reste solide derrière ; aucun passage, aucun voyant de sortie."
+collision_mask = 0
+script = ExtResource("1_htjdy")
+energie_lueur = 0.0
+nombre_particules_fumee = 0
+
+[node name="FondSombre" type="MeshInstance3D" parent="." unique_id=2038896606]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.04)
+mesh = SubResource("BoxMesh_wcrgn")
+
+[node name="MontantGauche" type="MeshInstance3D" parent="." unique_id=2124908658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 1.25, 0.14)
+mesh = SubResource("BoxMesh_nt0bm")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="." unique_id=2145086454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1.25, 0.14)
+mesh = SubResource("BoxMesh_ygkun")
+
+[node name="Linteau" type="MeshInstance3D" parent="." unique_id=980748162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 0.14)
+mesh = SubResource("BoxMesh_aatgx")
+
+[node name="CollisionPorte" type="CollisionShape3D" parent="." unique_id=697931305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.38)
+shape = SubResource("BoxShape3D_be8jj")
+
+[node name="Charniere" type="Node3D" parent="." unique_id=2026898022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77, 0, 0.12)
+
+[node name="Battant" type="MeshInstance3D" parent="Charniere" unique_id=1918335855]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 1.2, 0)
+mesh = SubResource("BoxMesh_x2ck3")
+
+[node name="Panneau0" type="MeshInstance3D" parent="Charniere" unique_id=285468368]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 0.67, 0.045)
+mesh = SubResource("BoxMesh_da3iy")
+
+[node name="Panneau1" type="MeshInstance3D" parent="Charniere" unique_id=136703528]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 1.67, 0.045)
+mesh = SubResource("BoxMesh_knlq3")
+
+[node name="Poignee" type="MeshInstance3D" parent="Charniere" unique_id=1416680737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 1.13, 0.09)
+mesh = SubResource("BoxMesh_vyl7g")
+
+[node name="BuffetBarricade" type="Node3D" parent="." unique_id=26574357 instance=ExtResource("4_435dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.05)
+
+[node name="CollisionBuffet" type="CollisionShape3D" parent="." unique_id=245349729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 1.05)
+shape = SubResource("BoxShape3D_vg2pf")
+
+[node name="Planche0" type="MeshInstance3D" parent="." unique_id=2005070230]
+transform = Transform3D(0.9393727, -0.3428978, 0, 0.3428978, 0.9393727, 0, 0, 0, 1, 0, 1.1, 0.25)
+mesh = SubResource("BoxMesh_wg6dg")
+
+[node name="Planche1" type="MeshInstance3D" parent="." unique_id=1814103647]
+transform = Transform3D(0.9689124, 0.24740396, 0, -0.24740396, 0.9689124, 0, 0, 0, 1, 0, 1.5, 0.33)
+mesh = SubResource("BoxMesh_litq1")

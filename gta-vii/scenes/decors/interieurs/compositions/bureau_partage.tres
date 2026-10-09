@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" format=3 uid="uid://30tifo8s1n3i"]
+
+[ext_resource type="PackedScene" uid="uid://csg6j0fxv353" path="res://assets/modeles/appartements/metal_office_desk/metal_office_desk_1k.gltf" id="m1"]
+[ext_resource type="PackedScene" uid="uid://bk2nw70hjm1np" path="res://assets/modeles/interieurs/dining_chair_02/dining_chair_02_1k.gltf" id="m3"]
+[ext_resource type="PackedScene" uid="uid://m8o7n5poybyx" path="res://assets/modeles/appartements/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf" id="nouveau"]
+[ext_resource type="Script" uid="uid://hud8yex5xpuq" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/wood_floor.tres" id="sol"]
+
+[resource]
+script = ExtResource("script")
+titre = "bureau_partage"
+modeles = Array[PackedScene]([ExtResource("m1"), ExtResource("m1"), ExtResource("m3"), ExtResource("m3"), ExtResource("nouveau")])
+positions = Array[Vector3]([Vector3(-1.4, 0, 0), Vector3(1.4, 0, 0), Vector3(-0.3, 0, 0), Vector3(0.3, 0, 0), Vector3(-1.4, 0.8, -0.45)])
+hauteurs = Array[float]([0.8, 0.8, 0.95, 0.95, 0.45])
+orientations = Array[float]([90.0, -90.0, 90.0, -90.0, 90.0])
+sol = ExtResource("sol")
+lampes = Array[int]([4])

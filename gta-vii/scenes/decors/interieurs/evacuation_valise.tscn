@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/trace_evacuation.gd" id="script"]
+[ext_resource type="PackedScene" path="res://assets/modeles/parking/valise/vintage_suitcase_2k.gltf" id="modele"]
+
+[node name="EvacuationValise" type="Node3D"]
+script = ExtResource("script")
+modele = ExtResource("modele")
+largeur_objet = 0.85

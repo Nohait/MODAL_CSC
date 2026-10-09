@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="NiveauIncendie" format=3 uid="uid://cnjgs7bnrfj6x"]
+
+[ext_resource type="Script" uid="uid://bksq08ryoa3hx" path="res://scenes/salles/incendies/niveaux/niveau_incendie.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+titre = "Salle embrasée"
+poids = 0.3
+ampleur = 1.25
+lumiere = 1.15
+fumee = 1.25
+chance_couvant = 0.0
+foyers_supplementaires = 3
+braises = 80
+force_vent = 1.1
+force_rafales = 0.8
+foyers_annexes = 4
+couleur_ambiante = Color(1, 0.5, 0.36, 1)
+couleur_soleil = Color(1, 0.77, 0.64, 1)
