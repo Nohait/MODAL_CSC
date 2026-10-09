@@ -128,6 +128,10 @@ func _physics_process(delta: float) -> void:
 			phase = "presence"
 			temps = 0.0
 			corps.collision_layer = 1
+			# Les deux cartes de navigation doivent contourner la bouche posée.
+			corps.add_to_group("obstacles_navigation")
+			corps.set_meta("salle_navigation", salle_depart)
+			salle_depart.demander_navigation()
 			# Tout le disque frappe à l'atterrissage ; l'onde suivante est visuelle.
 			_frapper(rayon)
 			_eclabousser()
@@ -195,6 +199,7 @@ func _lancer() -> void:
 	dessin.scale *= facteur
 	dessin.position = -Vector3(boite.get_center().x, boite.position.y, boite.get_center().z) * facteur
 	var forme := CollisionShape3D.new()
+	forme.name = "CollisionShape3D"
 	var cylindre := CylinderShape3D.new()
 	cylindre.radius = rayon_collision
 	cylindre.height = hauteur_modele
@@ -237,7 +242,10 @@ func _frapper(distance: float) -> void:
 			effets.etat(ennemi).repousser(direction, force_recul, duree_recul, true)
 
 func _terminer() -> void:
-	if is_instance_valid(corps): corps.queue_free()
+	if is_instance_valid(corps):
+		corps.remove_from_group("obstacles_navigation")
+		corps.queue_free()
+		if is_instance_valid(salle_depart): salle_depart.demander_navigation()
 	phase = "disponible"
 	disque.hide()
 	icone.modulate = Color.WHITE

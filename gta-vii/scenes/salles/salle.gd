@@ -67,6 +67,7 @@ var geometrie_decor: NavigationMeshSourceGeometryData3D
 var navigation_a_actualiser := false
 
 var navigation_active := false
+var cuisson_en_cours := false
 
 var carte_ennemis: RID
 
@@ -125,14 +126,32 @@ func activer_navigation(active: bool) -> void:
 		$Navigation.navigation_mesh = null
 		$NavigationEnnemis.navigation_mesh = null
 
+func preparer_regions_navigation() -> void:
+	# Publier les maillages cuits dans des régions du monde actif.
+	# Le décor garde sa place et les agents continuent d'utiliser les mêmes cartes.
+	for nom in ["Navigation", "NavigationEnnemis"]:
+		var ancienne := get_node(nom) as NavigationRegion3D
+		var region := NavigationRegion3D.new()
+		region.transform = ancienne.transform
+		region.navigation_layers = ancienne.navigation_layers
+		region.enter_cost = ancienne.enter_cost
+		region.travel_cost = ancienne.travel_cost
+		region.use_edge_connections = ancienne.use_edge_connections
+		remove_child(ancienne)
+		region.name = nom
+		add_child(region)
+		region.navigation_mesh = ancienne.navigation_mesh
+		for enfant in ancienne.get_children(): enfant.reparent(region, false)
+		ancienne.queue_free()
+	$NavigationEnnemis.set_navigation_map(carte_ennemis)
+
 
 func _sur_obstacle_modifie(noeud: Node) -> void:
-	if (
-		not noeud.is_in_group("obstacles_navigation")
-		or geometrie_decor == null
-	):
-		return
+	if not noeud.is_in_group("obstacles_navigation"): return
+	demander_navigation()
 
+func demander_navigation() -> void:
+	if geometrie_decor == null: return
 	if (
 		navigation_a_actualiser
 		or not navigation_active
@@ -145,13 +164,31 @@ func _sur_obstacle_modifie(noeud: Node) -> void:
 
 
 func _actualiser_navigation() -> void:
+	if cuisson_en_cours: return
 	navigation_a_actualiser = false
+	if not is_inside_tree() or not navigation_active: return
+	cuisson_en_cours = true
+	# Les changements en combat sont cuits hors du thread principal.
+	await _cuire_region_async($Navigation, true)
+	if is_inside_tree() and navigation_active:
+		await _cuire_region_async($NavigationEnnemis, false)
+	cuisson_en_cours = false
+	if navigation_a_actualiser: _actualiser_navigation.call_deferred()
 
-	if (
-		is_inside_tree()
-		and navigation_active
-	):
-		cuire_navigation()
+func _cuire_region_async(region: NavigationRegion3D, eviter_flaques: bool) -> void:
+	var maillage := NavigationMesh.new()
+	maillage.agent_radius = 0.5
+	maillage.agent_height = 2.0
+	maillage.agent_max_climb = 0.25
+	var geometrie := NavigationMeshSourceGeometryData3D.new()
+	geometrie.merge(geometrie_decor)
+	_ajouter_obstacles_navigation(geometrie, region, eviter_flaques)
+	var travail := RefCounted.new()
+	travail.set_meta("termine", false)
+	NavigationServer3D.bake_from_source_geometry_data_async(maillage, geometrie, func(): travail.set_meta("termine", true))
+	while not travail.get_meta("termine"):
+		await get_tree().process_frame
+	if is_instance_valid(region) and navigation_active: region.navigation_mesh = maillage
 
 
 func _on_passage(corps: Node3D) -> void:
@@ -235,7 +272,7 @@ func _ajouter_obstacles_navigation(
 			continue
 
 		if (
-			not is_ancestor_of(obstacle)
+			not is_ancestor_of(obstacle) and (not obstacle.has_meta("salle_navigation") or obstacle.get_meta("salle_navigation") != self)
 			or obstacle.is_queued_for_deletion()
 		):
 			continue

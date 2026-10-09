@@ -150,7 +150,7 @@ func _afficher_version(id: String) -> void:
 	for variante in boutons_versions:
 		boutons_versions[variante].set_pressed_no_signal(variante == id)
 	_vider(pivot)
-	var visuel := APERCU.creer(fiche_actuelle.scene, viewport)
+	var visuel := APERCU.creer(load(fiche_actuelle.scene), viewport)
 	pivot.add_child(visuel)
 	var boite := AABB()
 	var premier := true

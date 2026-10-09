@@ -29,6 +29,10 @@ func _ready() -> void:
 	fond.material = mat
 	libelle = Label.new()
 	libelle.text = texte
+	# Les explications longues restent dans une plaque lisible à l'écran.
+	if texte.length() > 65:
+		libelle.custom_minimum_size.x = 380
+		libelle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	libelle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	libelle.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
 	libelle.add_theme_font_size_override("font_size", 17)

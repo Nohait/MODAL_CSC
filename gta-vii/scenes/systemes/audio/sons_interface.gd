@@ -1,6 +1,6 @@
 extends Node
 
-@export_range(-40.0, 0.0, 1.0) var volume_clic_db := -18.0
+@export_range(-40.0, 0.0, 1.0) var volume_clic_db := -5.0
 @export_range(-40.0, 0.0, 1.0) var volume_booster_db := -16.0
 var clic: AudioStreamPlayer
 var booster: AudioStreamPlayer

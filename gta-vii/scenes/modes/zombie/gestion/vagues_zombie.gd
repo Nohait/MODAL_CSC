@@ -1,7 +1,7 @@
 extends "res://scenes/salles/room_manager.gd"
 
 var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
-var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
+var map: PackedScene
 var reprise_en_attente: Dictionary = {}
 var vague_actuelle := 0
 var vagues_terminees := 0
@@ -28,6 +28,7 @@ func demarrer_partie() -> void:
 	guidage_sortie = GUIDAGE_SORTIE.new()
 	add_child(guidage_sortie)
 	# Une scène fixe remplace le générateur ; l’entrée et la navigation restent communes.
+	if map == null: map = load("res://scenes/modes/zombie/maps/hall.tscn")
 	var salle = map.instantiate()
 	salle.process_mode = Node.PROCESS_MODE_DISABLED
 	salle.hide()

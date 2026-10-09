@@ -23,7 +23,7 @@ func _ready() -> void:
 
 func actualiser(salle: Node3D) -> void:
 	if environnement == null: return
-	var niveau: NiveauIncendie = salle.get_meta("ambiance_incendie", null)
+	var niveau: NiveauIncendie = salle.get_meta("ambiance_incendie") if salle.has_meta("ambiance_incendie") else null
 	# Le signal arrive avant l'entrée du joueur : la nouvelle teinte est prête pendant le fondu.
 	environnement.ambient_light_color = niveau.couleur_ambiante if niveau != null else couleur_ambiante_initiale
 	lumiere.light_color = niveau.couleur_soleil if niveau != null else couleur_soleil_initiale

@@ -136,34 +136,48 @@ func demarrer_partie() -> void:
 	objectifs.text = "Génération des salles…"
 	var point = get_node_or_null("../../PointRepriseClassique")
 	if point != null: point.preparer_parcours(self)
+	# Les graines sont prêtes pour tout le parcours, pas les milliers de décors.
+	# Construire uniquement la salle visitée réduit le chargement initial.
 	for i in range(nombre_salles):
-		if point != null: seed(point.graines[i])
-		var fin_etage := (i + 1) % SALLES_PAR_ETAGE == 0
-
-		# On réserve suffisamment de points d'arrivée pour toute l'escorte potentielle.
-		var salle = generateur.generer_salle(
-			2 # Le joueur et une éventuelle victime fragile.
-			+ nombre_salles
-			* (victimes_supplementaires_reserve + maxi(nombre_min_victimes, nombre_max_victimes)),
-			fin_etage,
-			etage_pour_salle(i),
-			i > 0 and i % SALLES_PAR_ETAGE == 0
-		)
-		salle.etage = etage_pour_salle(i)
-		salle.numero_dans_etage = i % SALLES_PAR_ETAGE + 1
-		salle.name = "Salle%d" % (i + 1)
-		salle.position.x = i * 150.0
-		salle.process_mode = Node.PROCESS_MODE_DISABLED
-		salle.hide()
-		salles.add_child(salle)
-		peupler_salle(salle)
-		salle.sortie_franchie.connect(_on_sortie_franchie)
+		var reserve := Node3D.new()
+		reserve.name = "Salle%d" % (i + 1)
+		reserve.set_meta("salle_a_generer", true)
+		salles.add_child(reserve)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	await activer_salle(int(point.reprise.indice) if point != null and not point.reprise.is_empty() else 0)
 	partie_prete.emit()
 
 # Population
+
+func _preparer_salle(indice: int) -> void:
+	var reserve := salles.get_child(indice)
+	if not reserve.get_meta("salle_a_generer", false): return
+	var point = get_node_or_null("../../PointRepriseClassique")
+	var i := indice
+	if point != null: seed(point.graines[i])
+	var fin_etage := (i + 1) % SALLES_PAR_ETAGE == 0
+
+	# On réserve suffisamment de points d'arrivée pour toute l'escorte potentielle.
+	var salle = generateur.generer_salle(
+		2 # Le joueur et une éventuelle victime fragile.
+		+ nombre_salles
+		* (victimes_supplementaires_reserve + maxi(nombre_min_victimes, nombre_max_victimes)),
+		fin_etage,
+		etage_pour_salle(i),
+		i > 0 and i % SALLES_PAR_ETAGE == 0
+	)
+	salle.etage = etage_pour_salle(i)
+	salle.numero_dans_etage = i % SALLES_PAR_ETAGE + 1
+	salle.name = "Salle%d" % (i + 1)
+	salle.position.x = i * 150.0
+	# Remplacer le marqueur en gardant le même index pour portes et sauvegardes.
+	salles.remove_child(reserve)
+	reserve.queue_free()
+	salles.add_child(salle)
+	salles.move_child(salle, indice)
+	peupler_salle(salle)
+	salle.sortie_franchie.connect(_on_sortie_franchie)
 
 func ennemi_autorise(scene: PackedScene, salle: Node3D) -> bool:
 	if not seuils_apparition.has(scene):
@@ -473,6 +487,7 @@ func activer_salle(indice: int) -> void:
 		salle_actuelle.process_mode = Node.PROCESS_MODE_DISABLED
 		salle_actuelle.hide()
 		salle_actuelle.activer_navigation(false)
+	_preparer_salle(indice)
 	indice_salle = indice
 	salle_actuelle = salles.get_child(indice)
 	ville_exterieure = VILLE_CLASSIQUE.actualiser(salle_actuelle, ville_exterieure, salles.get_parent())
@@ -492,6 +507,7 @@ func activer_salle(indice: int) -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	salle_actuelle.cuire_navigation()
+	salle_actuelle.preparer_regions_navigation()
 
 	# Joueur
 	joueur.extincteur.vider_jet()

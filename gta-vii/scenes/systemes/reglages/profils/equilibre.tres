@@ -7,3 +7,6 @@ script = ExtResource("1")
 titre = "Équilibré"
 resolution_3d = 0.85
 distance_details = 85.0
+
+reflets_ecran = false
+seuil_lod = 2.0

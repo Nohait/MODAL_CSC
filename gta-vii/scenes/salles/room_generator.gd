@@ -23,6 +23,10 @@ var bords_habillage: Array = []
 @export var sol_etage_3: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_3.tres")
 @export var murs_etage_3: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_3.tres")
 
+@export_group("Reflets du sol classique")
+@export_range(0.0, 1.0, 0.05) var rugosite_minimale_sol := 0.85
+@export_range(0.0, 1.0, 0.05) var intensite_reflets_sol := 0.25
+
 @export_group("Trous du plancher")
 
 # Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
@@ -81,7 +85,10 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 	# L'aperçu utilise l'étage 1 par défaut ; le RoomManager fournit l'étage en jeu.
 	# Au-delà de 3, conserver le béton en attendant de nouveaux décors.
 	var indice := clampi(etage - 1, 0, 2)
-	sol_actuel = [materiau_sol, sol_etage_2, sol_etage_3][indice]
+	# Une copie locale atténue les reflets classiques sans changer les matériaux du mode zombie.
+	sol_actuel = [materiau_sol, sol_etage_2, sol_etage_3][indice].duplicate()
+	sol_actuel.roughness = maxf(sol_actuel.roughness, rugosite_minimale_sol)
+	sol_actuel.metallic_specular = intensite_reflets_sol
 	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
 
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.

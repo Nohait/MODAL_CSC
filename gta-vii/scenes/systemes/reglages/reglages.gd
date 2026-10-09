@@ -62,6 +62,9 @@ func charger() -> void:
 	var fichier := ConfigFile.new()
 	if fichier.load(FICHIER) == OK:
 		graphismes.appliquer(int(fichier.get_value("graphismes", "profil", 2)))
+		if fichier.get_value("graphismes", "personnalise", false):
+			for nom in graphismes.parametres.keys():
+				graphismes.regler(nom, fichier.get_value("video", nom, graphismes.parametres[nom]))
 		for categorie in volumes:
 			volumes[categorie] = clampf(float(fichier.get_value("audio", categorie, 1.0)), 0.0, 1.0)
 		sensibilite = clampf(float(fichier.get_value("manette", "sensibilite", 1.0)), 0.25, 2.5)
@@ -86,6 +89,8 @@ func sauvegarder() -> void:
 	var fichier := ConfigFile.new()
 	for categorie in volumes: fichier.set_value("audio", categorie, volumes[categorie])
 	fichier.set_value("graphismes", "profil", graphismes.indice)
+	fichier.set_value("graphismes", "personnalise", graphismes.personnalise)
+	for nom in graphismes.parametres: fichier.set_value("video", nom, graphismes.parametres[nom])
 	fichier.set_value("manette", "sensibilite", sensibilite)
 	fichier.set_value("affichage", "mode", mode_fenetre)
 	# Garder les deux périphériques : changer une touche ne doit pas effacer la manette.

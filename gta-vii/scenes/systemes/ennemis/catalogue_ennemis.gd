@@ -80,7 +80,7 @@ func _gestionnaire(ennemi: Node) -> Node:
 
 func fiche_scene(chemin: String) -> Dictionary:
 	for fiche in CATALOGUE.ENNEMIS:
-		if fiche.scene.resource_path == chemin: return fiche
+		if fiche.scene == chemin: return fiche
 	return {}
 
 func appliquer_elite(ennemi: Node3D, mod: ModificateurElite) -> void:

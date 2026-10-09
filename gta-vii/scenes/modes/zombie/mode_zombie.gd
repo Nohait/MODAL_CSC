@@ -4,7 +4,7 @@ const NIVEAU = preload("res://scenes/jeu/main.tscn")
 const GESTIONNAIRE = preload("res://scenes/modes/zombie/gestion/vagues_zombie.gd")
 const DEBUG = preload("res://scenes/modes/zombie/interfaces/debug/debug_zombie.gd")
 @export var difficulte: DifficulteZombie = preload("res://scenes/modes/zombie/equilibrage/difficulte_zombie.tres")
-@export var map: PackedScene = preload("res://scenes/modes/zombie/maps/hall.tscn")
+@export var map: PackedScene
 @export_group("Musique adaptative")
 @export var playlist_musicale: Array[MorceauMusicalZombie] = [
 	preload("res://scenes/modes/zombie/audio/morceaux/assault.tres"),
@@ -39,8 +39,11 @@ func _ready() -> void:
 	vagues.set_script(GESTIONNAIRE)
 	vagues.difficulte = difficulte
 	# Le catalogue conserve un chemin ; le chargement a déjà mis le Hall en cache.
-	var choix = get_tree().get_meta("map_zombie", map)
-	vagues.map = load(choix) if choix is String else choix
+	var choix = get_tree().get_meta("map_zombie", map if map != null else "res://scenes/modes/zombie/maps/hall.tscn")
+	vagues.map = get_tree().get_meta("map_zombie_chargee") if get_tree().has_meta("map_zombie_chargee") else null
+	if vagues.map == null or (choix is String and vagues.map.resource_path != choix):
+		vagues.map = load(choix) if choix is String else choix
+	if get_tree().has_meta("map_zombie_chargee"): get_tree().remove_meta("map_zombie_chargee")
 	niveau.get_node("MenuDebug").set_script(DEBUG)
 	niveau.add_child(preload("res://scenes/modes/zombie/evenements/evenements_vague.tscn").instantiate())
 	# La musique appartient Ã  cette partie : quitter le mode arrÃªte aussi les morceaux.

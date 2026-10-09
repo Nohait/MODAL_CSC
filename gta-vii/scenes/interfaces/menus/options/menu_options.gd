@@ -9,6 +9,9 @@ const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
 @onready var onglet_reglages: Button = %OngletReglages
 @onready var onglet_controles: Button = %OngletControles
 var curseurs: Dictionary = {}
+var page_video: VBoxContainer
+var onglet_video: Button
+var commandes_video: Dictionary = {}
 var plein_ecran: Button
 var boutons_profils: Array[Button] = []
 var pause_avant := false
@@ -19,6 +22,19 @@ var animation: Tween
 var horloge := 0.0
 var boutons_graphite: Array[Button] = []
 
+const AIDE_VIDEO = {
+	"resolution_3d": "Résolution interne de la 3D. 50 % calcule quatre fois moins de pixels que 100 %. L'interface reste nette.",
+	"distance_details": "Distance depuis la caméra au-delà de laquelle les détails décoratifs sont masqués. 0 signifie illimitée ; 5 m est le réglage le plus léger. Les obstacles restent solides.",
+	"seuil_lod": "Utilise plus tôt les modèles simplifiés disponibles dans les assets. Une valeur élevée réduit le nombre de triangles ; elle ne simplifie pas les modèles dépourvus de LOD.",
+	"ombres": "Active les ombres des lumières qui en possèdent. Les couper réduit le coût du rendu sans supprimer l'éclairage.",
+	"lumieres_decor": "Active les sources de lumière décoratives. Les effets lumineux de combat restent actifs. Désactiver cette option peut fortement assombrir le décor.",
+	"lueur": "Halo autour des surfaces lumineuses. Désactiver la lueur réduit le post-traitement, mais ne supprime ni les lumières ni leur brillance sur les matériaux.",
+	"reflets_ecran": "SSR : reflets des objets visibles à l'écran, si la scène les utilise. Ne contrôle pas les points brillants produits directement par les lumières.",
+	"sondes_reflets": "Reflets du décor capturés par les sondes. Les couper supprime ces captures, mais ne supprime pas la brillance directe des lumières.",
+	"brillance_lumieres": "Points et plages brillants produits directement par les lumières sur les sols et les objets. Les couper conserve l'éclairage diffus. Pour retirer aussi les images réfléchies du décor, désactivez SSR et Sondes.",
+	"textures_decor": "Remplace les textures et le relief du décor opaque par des matériaux unis. Les textures restent chargées en mémoire : ce réglage allège leur rendu, pas leur chargement."
+}
+
 func _ready() -> void:
 	menu.hide()
 	_creer_titre("AMBIANCE SONORE")
@@ -26,23 +42,6 @@ func _ready() -> void:
 	_creer_curseur("ambiance", "Crépitement des incendies", 0.0, 100.0, 1.0)
 	_creer_curseur("effets", "Effets sonores", 0.0, 100.0, 1.0)
 	_creer_curseur("musique", "Musique", 0.0, 100.0, 1.0)
-	_creer_titre("QUALITÉ GRAPHIQUE")
-	var profils := HBoxContainer.new()
-	profils.add_theme_constant_override("separation", 14)
-	contenu.add_child(profils)
-	for i in range(Reglages.graphismes.profils.size()):
-		var bouton: Button = BOUTON.instantiate()
-		bouton.taille_minimale = Vector2(210, 48)
-		bouton.taille_police = 22
-		bouton.text = Reglages.graphismes.profils[i].titre
-		bouton.toggle_mode = true
-		profils.add_child(bouton)
-		boutons_profils.append(bouton)
-		bouton.pressed.connect(_choisir_profil.bind(i))
-	var aide := Label.new()
-	aide.text = "Résolution 3D et détails éloignés · éclairage conservé"
-	aide.add_theme_font_size_override("font_size", 16)
-	contenu.add_child(aide)
 	_creer_titre("AFFICHAGE ET VISÉE")
 	var ligne := HBoxContainer.new()
 	contenu.add_child(ligne)
@@ -54,14 +53,15 @@ func _ready() -> void:
 	ligne.add_child(plein_ecran)
 	plein_ecran.toggled.connect(_changer_affichage)
 	_creer_curseur("sensibilite", "Sensibilité de visée · manette", 0.25, 2.5, 0.05)
+	_creer_page_video()
 	%Fermer.pressed.connect(fermer)
-	onglet_reglages.pressed.connect(_choisir_onglet.bind(false))
-	onglet_controles.pressed.connect(_choisir_onglet.bind(true))
+	onglet_reglages.pressed.connect(_choisir_page.bind("reglages"))
+	onglet_controles.pressed.connect(_choisir_page.bind("controles"))
 	controles.commandes_changees.connect(Reglages.sauvegarder)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	papier.material = papier.material.duplicate()
 	_habiller_boutons(menu)
-	_choisir_onglet(false)
+	_choisir_page("reglages")
 
 func _habiller_boutons(parent: Node) -> void:
 	for enfant in parent.get_children():
@@ -151,10 +151,11 @@ func _choisir_profil(indice: int) -> void:
 	Reglages.graphismes.appliquer(indice)
 	Reglages.sauvegarder()
 	_actualiser_profils()
+	_actualiser_video()
 
 func _actualiser_profils() -> void:
 	for i in range(boutons_profils.size()):
-		boutons_profils[i].set_pressed_no_signal(i == Reglages.graphismes.indice)
+		boutons_profils[i].set_pressed_no_signal(boutons_profils[i].get_meta("profil") == Reglages.graphismes.indice and not Reglages.graphismes.personnalise)
 
 func ouvrir() -> void:
 	if Reglages.chargement.en_cours: return
@@ -181,7 +182,7 @@ func ouvrir() -> void:
 	plein_ecran.text = "Plein écran" if actif else "Fenêtré"
 	controles.mettre_a_jour_affichage_clavier()
 	controles.mettre_a_jour_affichage_manette()
-	_choisir_onglet(false)
+	_choisir_page("reglages")
 	menu.show()
 	if animation: animation.kill()
 	animation = preload("res://scenes/interfaces/menus/transition_panneau.gd").ouvrir(self, menu, panneau)
@@ -215,16 +216,16 @@ func _suspendre_entrees(noeud: Node) -> void:
 	if noeud is NavigationManette: noeud.set_process(false)
 	for enfant in noeud.get_children(): _suspendre_entrees(enfant)
 
-func _choisir_onglet(commandes: bool) -> void:
+func _choisir_page(page: String) -> void:
 	controles.annuler_rebind()
-	contenu.visible = not commandes
-	%PageControles.visible = commandes
-	controles.visible = commandes
-	onglet_reglages.set_pressed_no_signal(not commandes)
-	onglet_controles.set_pressed_no_signal(commandes)
-	onglet_reglages.modulate = Color.WHITE if not commandes else Color(0.75, 0.8, 0.85)
-	onglet_controles.modulate = Color.WHITE if commandes else Color(0.75, 0.8, 0.85)
+	contenu.visible = page == "reglages"
+	page_video.visible = page == "video"
+	%PageControles.visible = page == "controles"
+	controles.visible = page == "controles"
+	for entree in [[onglet_reglages, "reglages"], [onglet_video, "video"], [onglet_controles, "controles"]]:
+		entree[0].set_pressed_no_signal(page == entree[1])
 	%Defilement.scroll_vertical = 0
+	_actualiser_video()
 
 func _input(event: InputEvent) -> void:
 	if not menu.visible or event.is_echo() or controles.rebind_en_cours(): return
@@ -246,3 +247,100 @@ func _process(delta: float) -> void:
 		fond.material.set_shader_parameter("selection", lerpf(actuel, cible, 1.0 - exp(-12.0 * delta)))
 		fond.material.set_shader_parameter("horloge", horloge)
 		fond.material.set_shader_parameter("taille", bouton.size)
+
+func _creer_page_video() -> void:
+	onglet_video = BOUTON.instantiate()
+	onglet_video.text = "Vidéo"
+	onglet_video.toggle_mode = true
+	onglet_video.taille_minimale = Vector2(220, 50)
+	onglet_video.taille_police = 24
+	onglet_reglages.get_parent().add_child(onglet_video)
+	onglet_reglages.get_parent().move_child(onglet_video, 1)
+	onglet_video.pressed.connect(_choisir_page.bind("video"))
+	page_video = VBoxContainer.new()
+	page_video.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	page_video.add_theme_constant_override("separation", 12)
+	contenu.get_parent().add_child(page_video)
+	var ancien_contenu := contenu
+	contenu = page_video
+	_creer_titre("PROFILS GRAPHIQUES")
+	var ligne := HBoxContainer.new()
+	ligne.add_theme_constant_override("separation", 14)
+	page_video.add_child(ligne)
+	# L'ordre visuel ne change pas les indices enregistrés dans les options.
+	for i in [3, 0, 1, 2]:
+		var bouton: Button = BOUTON.instantiate()
+		bouton.taille_minimale = Vector2(170, 48)
+		bouton.taille_police = 22
+		bouton.text = Reglages.graphismes.profils[i].titre
+		bouton.toggle_mode = true
+		bouton.set_meta("profil", i)
+		bouton.tooltip_text = ["Économique : résolution réduite, ombres et reflets du décor désactivés.", "Équilibré : résolution légèrement réduite, modèles simplifiés plus tôt, sans SSR.", "Complet : conserve la qualité et les effets prévus par les scènes.", "Grille-pain : rendu 3D à 50 %, décor détaillé limité à 5 m, simplification maximale, sans ombres, reflets, lueur, lumières décoratives ni textures détaillées."][i]
+		ligne.add_child(bouton)
+		boutons_profils.append(bouton)
+		bouton.pressed.connect(_choisir_profil.bind(i))
+	_creer_titre("RÉGLAGES INDIVIDUELS")
+	_ajouter_curseur_video("resolution_3d", "Résolution 3D", 0.5, 1.0, 0.05)
+	_ajouter_curseur_video("distance_details", "Distance du décor", 0.0, 150.0, 5.0)
+	_ajouter_curseur_video("seuil_lod", "Détails des modèles", 1.0, 6.0, 0.5)
+	for entree in [["ombres", "Ombres"], ["lumieres_decor", "Éclairage décoratif"], ["lueur", "Lueur"], ["reflets_ecran", "Reflets SSR"], ["sondes_reflets", "Sondes"], ["brillance_lumieres", "Brillance"], ["textures_decor", "Textures"]]:
+		var rangee := HBoxContainer.new()
+		page_video.add_child(rangee)
+		var nom := _libelle(entree[1])
+		nom.set_script(preload("res://scenes/interfaces/menus/options/libelle_video.gd"))
+		nom.mouse_filter = Control.MOUSE_FILTER_STOP
+		nom.tooltip_text = AIDE_VIDEO[entree[0]]
+		rangee.add_child(nom)
+		var bouton: Button = BOUTON.instantiate()
+		bouton.taille_minimale = Vector2(180, 42)
+		bouton.taille_police = 20
+		bouton.toggle_mode = true
+		bouton.tooltip_text = AIDE_VIDEO[entree[0]]
+		rangee.add_child(bouton)
+		commandes_video[entree[0]] = bouton
+		bouton.toggled.connect(_modifier_video.bind(entree[0]))
+	var aide := Label.new()
+	aide.text = "Changer un réglage crée un profil personnalisé. Les textures désactivées restent chargées en mémoire."
+	aide.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	aide.add_theme_font_size_override("font_size", 16)
+	page_video.add_child(aide)
+	contenu = ancien_contenu
+
+func _ajouter_curseur_video(nom: String, texte: String, minimum: float, maximum: float, pas: float) -> void:
+	var ligne := HBoxContainer.new()
+	page_video.add_child(ligne)
+	var libelle := _libelle(texte)
+	libelle.set_script(preload("res://scenes/interfaces/menus/options/libelle_video.gd"))
+	libelle.mouse_filter = Control.MOUSE_FILTER_STOP
+	libelle.tooltip_text = AIDE_VIDEO[nom]
+	ligne.add_child(libelle)
+	var curseur := HSlider.new()
+	curseur.custom_minimum_size = Vector2(300, 36)
+	curseur.min_value = minimum
+	curseur.max_value = maximum
+	curseur.step = pas
+	ligne.add_child(curseur)
+	var valeur := Label.new()
+	valeur.custom_minimum_size.x = 100
+	ligne.add_child(valeur)
+	commandes_video[nom] = {"curseur": curseur, "valeur": valeur}
+	curseur.value_changed.connect(_modifier_video.bind(nom))
+
+func _modifier_video(valeur: Variant, nom: String) -> void:
+	Reglages.graphismes.regler(nom, valeur)
+	Reglages.sauvegarder()
+	_actualiser_video()
+
+func _actualiser_video() -> void:
+	_actualiser_profils()
+	for nom in commandes_video:
+		var valeur: Variant = Reglages.graphismes.parametres[nom]
+		var commande: Variant = commandes_video[nom]
+		if commande is Button:
+			commande.set_pressed_no_signal(valeur)
+			commande.text = "Activé" if valeur else "Désactivé"
+		else:
+			commande.curseur.set_value_no_signal(valeur)
+			if nom == "resolution_3d": commande.valeur.text = "%d %%" % roundi(valeur * 100)
+			elif nom == "seuil_lod": commande.valeur.text = "× %.1f" % valeur
+			else: commande.valeur.text = "Illimitée" if valeur == 0 else "%d m" % valeur

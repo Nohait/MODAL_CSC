@@ -117,6 +117,24 @@ func ouvrir(chemin: String) -> void:
 			return
 		await get_tree().process_frame
 	var scene := ResourceLoader.load_threaded_get(chemin) as PackedScene
+	if chemin == "res://scenes/modes/zombie/mode_zombie.tscn":
+		var carte: Variant = get_tree().get_meta("map_zombie", "res://scenes/modes/zombie/maps/hall.tscn")
+		if carte is String:
+			etape.text = "Chargement de l’arène…"
+			barre.value = 0.0
+			if ResourceLoader.load_threaded_request(carte, "PackedScene") != OK:
+				_signaler_echec()
+				return
+			while ResourceLoader.load_threaded_get_status(carte) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+				var progression_carte: Array = []
+				ResourceLoader.load_threaded_get_status(carte, progression_carte)
+				if not progression_carte.is_empty(): barre.value = progression_carte[0] * 100.0
+				await get_tree().process_frame
+			if ResourceLoader.load_threaded_get_status(carte) != ResourceLoader.THREAD_LOAD_LOADED:
+				_signaler_echec()
+				return
+			# Une référence forte garde l'arène en cache jusqu'à son instanciation.
+			get_tree().set_meta("map_zombie_chargee", ResourceLoader.load_threaded_get(carte))
 	etape.text = "Préparation du niveau et de la navigation…"
 	# La barre mesure les ressources, pas une estimation fictive de la navigation.
 	barre.hide()
