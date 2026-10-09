@@ -71,31 +71,21 @@ script = ExtResource("1_i8ure")
 [node name="sbire" parent="." unique_id=1554498629 instance=ExtResource("2_65l3k")]
 transform = Transform3D(0.295, 0, 0, 0, 0.295, 0, 0, 0, 0.295, 0, 0.6291781, 0)
 
-[node name="Skeleton3D" parent="sbire/Armature" parent_id_path=PackedInt32Array(1554498629, 1812361681) index="0" unique_id=1964473862]
-bones/0/position = Vector3(0, 0.10093869, 0)
-bones/3/rotation = Quaternion(0.6123747, -0.005233435, 0.011667447, 0.7904643)
-bones/4/rotation = Quaternion(0.0204555, 0.012782218, -0.5833039, 0.81189585)
-bones/6/rotation = Quaternion(0.11092118, -0.05333708, -0.46868718, 0.874748)
-bones/9/rotation = Quaternion(0.06721616, -0.026409362, 0.36473426, 0.9283068)
-
-[node name="RHand" type="BoneAttachment3D" parent="sbire/Armature/Skeleton3D" index="1" unique_id=1427563485]
-transform = Transform3D(-0.87084925, 0.046058457, -0.48938757, -0.3568349, -0.74397, 0.564958, -0.33806866, 0.66662395, 0.6643208, -1.9632792, 1.051013, -0.2788639)
+[node name="RHand" type="BoneAttachment3D" parent="sbire/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1554498629, 1964473862) index="1" unique_id=1427563485]
+transform = Transform3D(-0.80750716, 0.13464287, -0.57428527, -0.44773442, -0.7737513, 0.4481548, -0.38401318, 0.6190156, 0.6850938, -1.917012, 0.8895612, -0.2203359)
 bone_name = "Forearm.R"
 bone_idx = 9
 
 [node name="vfx_fire" parent="sbire/Armature/Skeleton3D/RHand" unique_id=1348524129 instance=ExtResource("2_r3twd")]
 transform = Transform3D(-6.8385124, -1.2677803, -2.0017607, 0.4838116, -2.5296178, 3.8834739, -3.9886992, 1.8667417, 3.903011, -0.28140295, 1.7339394, 0.9160092)
 
-[node name="LHand" type="BoneAttachment3D" parent="sbire/Armature/Skeleton3D" index="2" unique_id=173907264]
-transform = Transform3D(-0.9272565, -0.3660561, 0.0787283, 0.3550207, -0.7927312, 0.49551734, -0.118976764, 0.48742193, 0.8650227, 2.1329627, 1.1414657, -0.11576977)
+[node name="LHand" type="BoneAttachment3D" parent="sbire/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1554498629, 1964473862) index="2" unique_id=173907264]
+transform = Transform3D(-0.8918044, -0.41927177, 0.16998848, 0.45041132, -0.78741485, 0.42084146, -0.04259543, 0.45187303, 0.8910647, 2.071164, 0.95893705, -0.032847762)
 bone_name = "Forearm.L"
 bone_idx = 6
 
 [node name="vfx_fire" parent="sbire/Armature/Skeleton3D/LHand" unique_id=1657664350 instance=ExtResource("2_r3twd")]
 transform = Transform3D(-5.3671765, 1.8775775, 0.5335307, -2.9985015, -2.5898685, 2.6734483, 2.0607555, 1.1217093, 5.27956, 0.56700575, 1.7470553, 0.82247543)
-
-[node name="AnimationTree" parent="sbire/Armature" parent_id_path=PackedInt32Array(1554498629, 1812361681) index="2" unique_id=13786943]
-active = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=308344845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0059127808, 1.3987525, 0.104985714)

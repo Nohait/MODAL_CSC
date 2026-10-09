@@ -8,7 +8,7 @@ var teinte: ShaderMaterial
 func _ready() -> void:
 	teinte = ShaderMaterial.new()
 	teinte.shader = preload("res://scenes/effets/combat/teinte_givree.gdshader")
-	for mesh in get_parent().get_node("Sketchfab_Scene").find_children("*", "MeshInstance3D", true, false):
+	for mesh in get_parent().get_node("sbire/Armature/Skeleton3D/defaultMaterial").find_children("*", "MeshInstance3D", true, false):
 		overlays[mesh] = mesh.material_overlay
 		mesh.material_overlay = teinte
 
