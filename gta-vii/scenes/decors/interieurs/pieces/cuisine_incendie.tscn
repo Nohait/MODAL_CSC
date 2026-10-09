@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/pieces/piece_decorative.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="sol"]
+[ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="mur"]
+[ext_resource type="PackedScene" path="res://scenes/decors/interieurs/coin_cuisine.tscn" id="meuble1"]
+[ext_resource type="PackedScene" path="res://scenes/decors/interieurs/coin_repas.tscn" id="meuble2"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="feu"]
+
+[sub_resource type="BoxMesh" id="Sol"]
+material = ExtResource("sol")
+size = Vector3(4.4, 0.2, 8.2)
+
+[sub_resource type="BoxMesh" id="Mur1"]
+material = ExtResource("mur")
+size = Vector3(0.2, 3, 8.399999999999999)
+
+[sub_resource type="BoxMesh" id="Mur2"]
+material = ExtResource("mur")
+size = Vector3(4.6000000000000005, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="Mur3"]
+material = ExtResource("mur")
+size = Vector3(0.2, 3, 8.399999999999999)
+
+[node name="CuisineIncendie" type="Node3D"]
+script = ExtResource("script")
+editor_description = "Pièce décorative allongée, profondeur 8,3 m avec les murs."
+
+[node name="Sol" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.1, -4.1)
+layers = 524289
+mesh = SubResource("Sol")
+
+[node name="Mur1" type="MeshInstance3D" parent="."]
+position = Vector3(2.2, 1.5, -4.1)
+layers = 524289
+mesh = SubResource("Mur1")
+
+[node name="Mur2" type="MeshInstance3D" parent="."]
+position = Vector3(0.0, 1.5, -8.2)
+layers = 524289
+mesh = SubResource("Mur2")
+
+[node name="Mur3" type="MeshInstance3D" parent="."]
+position = Vector3(-2.2, 1.5, -4.1)
+layers = 524289
+mesh = SubResource("Mur3")
+
+[node name="Mobilier1" parent="." instance=ExtResource("meuble1")]
+position = Vector3(0, 0, -2)
+collision_layer = 0
+collision_mask = 0
+
+[node name="Mobilier2" parent="." instance=ExtResource("meuble2")]
+position = Vector3(0, 0, -6.3)
+collision_layer = 0
+collision_mask = 0
+
+[node name="Foyer0" parent="." instance=ExtResource("feu")]
+position = Vector3(-1.15, 0.4, -2.8)
+taille = 0.7
+energie = 1.4
+densite_fumee = 0.3
+
+[node name="Foyer1" parent="." instance=ExtResource("feu")]
+position = Vector3(0.8, 0.15, -6.2)
+taille = 0.7
+energie = 1.4
+densite_fumee = 0.3

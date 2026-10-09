@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/beige_wall_001/textures/beige_wall_001_diff_2k.jpg" id="couleur"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/beige_wall_001/textures/beige_wall_001_nor_gl_2k.png" id="relief"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/beige_wall_001/textures/beige_wall_001_rough_2k.jpg" id="rugosite"]
+[resource]
+albedo_texture = ExtResource("couleur")
+roughness = 0.85
+roughness_texture = ExtResource("rugosite")
+normal_enabled = true
+normal_scale = 0.18
+normal_texture = ExtResource("relief")
+uv1_scale = Vector3(0.33, 0.33, 0.33)
+uv1_triplanar = true
+uv1_world_triplanar = true

@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/porte_manteau_chapeau/modele.glb" id="1_di674"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21ms7"]
+size = Vector3(0.48453277, 1.75, 0.48568448)
+
+[node name="PorteManteau" type="StaticBody3D" unique_id=585705860 groups=["collider"]]
+collision_mask = 0
+
+[node name="Mobilier" type="Node3D" parent="." unique_id=1911433736]
+
+[node name="Modele" type="Node3D" parent="Mobilier" unique_id=1429030141 instance=ExtResource("1_di674")]
+transform = Transform3D(0.17918953, 0, 0, 0, 0.17918953, 0, 0, 0, 0.17918953, 0.034950215, 0.1589965, 0.0011399328)
+
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=165914024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("BoxShape3D_21ms7")

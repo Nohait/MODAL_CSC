@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/mobilier_incendie.gd" id="1_wmgjj"]
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/worn_metal_rack/worn_metal_rack_1k.gltf" id="2_6aqsa"]
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/tool_cart/tool_cart_1k.gltf" id="3_sq500"]
+[ext_resource type="PackedScene" path="res://assets/modeles/decors/hall_incendie/mobilier/cartons.glb" id="4_6aqsa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sfbkr"]
+size = Vector3(0.92, 1.9, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7hia1"]
+size = Vector3(0.92, 1.9, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nm4mu"]
+size = Vector3(1.28, 0.97, 0.76)
+
+[node name="StockageTechnique" type="StaticBody3D" unique_id=1971444146 groups=["collider"]]
+collision_mask = 0
+script = ExtResource("1_wmgjj")
+brulure = 0.5
+intensite_braises = 1.0
+taille_foyer = 0.7
+point_foyer = Vector3(-1.25, 0.6, -0.8)
+
+[node name="Mobilier" type="Node3D" parent="." unique_id=13586638]
+
+[node name="EtagereGauche" type="Node3D" parent="Mobilier" unique_id=1027820593 instance=ExtResource("2_6aqsa")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.25, 0, -0.95)
+
+[node name="EtagereDroite" type="Node3D" parent="Mobilier" unique_id=2001710021 instance=ExtResource("2_6aqsa")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.25, 0, -0.95)
+
+[node name="Chariot" type="Node3D" parent="Mobilier" unique_id=1500175797 instance=ExtResource("3_sq500")]
+transform = Transform3D(-0.9915619, 0, -0.12963411, 0, 1, 0, 0.12963411, 0, -0.9915619, 0, 0.004, 0.55)
+
+[node name="CartonsEtagereGauche" type="Node3D" parent="Mobilier" unique_id=677532376 instance=ExtResource("4_6aqsa")]
+transform = Transform3D(0.29904053, 0, 0.023974407, 0, 0.3, 0, -0.023974407, 0, 0.29904053, -1.25, 0.92, -0.95)
+
+[node name="CartonsEtagereDroite" type="Node3D" parent="Mobilier" unique_id=1504371580 instance=ExtResource("4_6aqsa")]
+transform = Transform3D(0.29904053, 0, 0.023974407, 0, 0.3, 0, -0.023974407, 0, 0.29904053, 1.25, 0.92, -0.95)
+
+[node name="CollisionEtagereGauche" type="CollisionShape3D" parent="." unique_id=927364453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 0.95, -0.95)
+shape = SubResource("BoxShape3D_sfbkr")
+
+[node name="CollisionEtagereDroite" type="CollisionShape3D" parent="." unique_id=2144795298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0.95, -0.95)
+shape = SubResource("BoxShape3D_7hia1")
+
+[node name="CollisionChariot" type="CollisionShape3D" parent="." unique_id=1342802586]
+transform = Transform3D(0.9915619, 0, 0.12963414, 0, 1, 0, -0.12963414, 0, 0.9915619, 0, 0.48900002, 0.55)
+shape = SubResource("BoxShape3D_nm4mu")

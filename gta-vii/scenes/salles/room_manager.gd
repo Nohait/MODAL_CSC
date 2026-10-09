@@ -1,5 +1,8 @@
 extends Node
 
+const VILLE_CLASSIQUE = preload("res://scenes/decors/interieurs/ville_etage.gd")
+var ville_exterieure: Node3D
+
 signal room_cleared
 
 # Les défis suivent une salle depuis son activation jusqu’au passage de sa porte.
@@ -473,6 +476,7 @@ func activer_salle(indice: int) -> void:
 		salle_actuelle.activer_navigation(false)
 	indice_salle = indice
 	salle_actuelle = salles.get_child(indice)
+	ville_exterieure = VILLE_CLASSIQUE.actualiser(salle_actuelle, ville_exterieure, salles.get_parent())
 
 	# Les défis peuvent compléter la population avant le démarrage du timer.
 	salle_preparee.emit(salle_actuelle)

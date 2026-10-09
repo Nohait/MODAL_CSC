@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/trace_evacuation.gd" id="script"]
+[ext_resource type="PackedScene" path="res://assets/modeles/parking/sac.glb" id="modele"]
+
+[node name="EvacuationSac" type="Node3D"]
+script = ExtResource("script")
+composition = 1
+modele = ExtResource("modele")
+largeur_objet = 0.55

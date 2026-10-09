@@ -1,9 +1,9 @@
 // Shader de surface 3D : il colore les rebords construits par trous_plancher.gd.
 // Il ne modifie ni la grille, ni les collisions, ni la forme de l'ouverture.
 shader_type spatial;
-// cull_disabled : visible des deux côtés ; specular_disabled : pas de reflet brillant.
+// cull_disabled : visible des deux côtés. Le rebord conserve les reflets du sol.
 // depth_prepass_alpha aide à gérer la profondeur des parties opaques du rebord transparent.
-render_mode cull_disabled, specular_disabled, depth_prepass_alpha;
+render_mode cull_disabled, depth_prepass_alpha;
 
 // UV.y mesure la traversée du bord : 0 = parquet intact, 1 = lèvre carbonisée.
 // La découpe est dans le maillage : aucun plan transparent ne bouche le trou.
@@ -14,6 +14,15 @@ render_mode cull_disabled, specular_disabled, depth_prepass_alpha;
 uniform sampler2D texture_sol : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D texture_suie : source_color, filter_linear_mipmap, repeat_enable;
 uniform bool avec_texture = false;
+uniform sampler2D texture_rugosite : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform sampler2D texture_normale : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform bool avec_rugosite = false;
+uniform bool avec_normale = false;
+uniform vec4 canal_rugosite = vec4(1.0, 0.0, 0.0, 0.0);
+uniform float rugosite_sol = 0.8;
+uniform float force_normale = 1.0;
+uniform float speculaire_sol = 0.5;
+uniform float metallique_sol = 0.0;
 uniform bool avec_suie = false;
 uniform vec4 teinte_sol : source_color = vec4(0.3, 0.32, 0.34, 1.0);
 uniform vec2 echelle_sol = vec2(0.25);
@@ -62,49 +71,30 @@ void vertex() {
 	position_monde = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
-/**
- * Fonction appelée par Godot pour chaque fragment de surface à dessiner.
- * Combine le parquet, le charbon, la transparence du raccord et les braises.
- * Les résultats sont écrits dans les variables de sortie ALBEDO, ALPHA, etc.
- */
 void fragment() {
-	// Tous les morceaux du rebord regardent vers le haut, quel que soit le sens
-	// dans lequel on a parcouru leur côté de la grille.
-	// VIEW_MATRIX convertit une direction du monde vers le repère de la caméra,
-	// attendu par NORMAL. Le dernier 0 du vec4 exclut la translation.
 	NORMAL = normalize((VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz);
-	// Projection horizontale comme le matériau triplanaire du parquet.
 	vec2 p = position_monde.xz * vec2(1.0, -1.0);
-	vec3 bois = teinte_sol.rgb;
-	if (avec_texture) {
-		bois *= texture(texture_sol, p * echelle_sol).rgb;
+	vec3 sol = teinte_sol.rgb;
+	if (avec_texture) sol *= texture(texture_sol, p * echelle_sol).rgb;
+	if (avec_suie) sol *= texture(texture_suie, p * echelle_suie).rgb;
+	// Le revêtement reste intact presque jusqu'à la cassure : aucune ceinture orange.
+	float charbon = smoothstep(0.78, 1.0, UV.y + (bruit(p * 3.5) - 0.5) * 0.18);
+	ALBEDO = mix(sol, vec3(0.018), charbon * 0.88);
+	// Même rugosité, relief et brillance que le sol ; seul le charbon devient mat.
+	float rugosite = rugosite_sol;
+	if (avec_rugosite) rugosite *= dot(texture(texture_rugosite, p * echelle_sol), canal_rugosite);
+	ROUGHNESS = mix(rugosite, 1.0, charbon);
+	SPECULAR = speculaire_sol * (1.0 - charbon);
+	METALLIC = metallique_sol * (1.0 - charbon);
+	if (avec_normale) {
+		// La texture est projetée suivant X et -Z, comme la face supérieure du sol triplanaire.
+		TANGENT = normalize((VIEW_MATRIX * vec4(1.0, 0.0, 0.0, 0.0)).xyz);
+		BINORMAL = normalize((VIEW_MATRIX * vec4(0.0, 0.0, -1.0, 0.0)).xyz);
+		NORMAL_MAP = texture(texture_normale, p * echelle_sol).rgb;
+		NORMAL_MAP_DEPTH = force_normale * (1.0 - charbon);
 	}
-	if (avec_suie) {
-		bois *= texture(texture_suie, p * echelle_suie).rgb;
-	}
-	float irregularite = sin(p.x * 9.0 + sin(p.y * 5.0)) * sin(p.y * 13.0);
-	// smoothstep(a,b,x) passe doucement de 0 à 1 lorsque x va de a à b.
-	// La petite variation décale la transition pour éviter une frontière régulière.
-	float brulure = smoothstep(0.08, 0.9, UV.y + irregularite * 0.06);
-	// ALBEDO est la couleur de base, avant éclairage. mix rapproche progressivement
-	// le parquet de la couleur du charbon ; ROUGHNESS=1 donne une surface mate.
-	ALBEDO = mix(bois, vec3(0.006, 0.004, 0.003), brulure);
-	ROUGHNESS = 1.0;
-	// Le tout début recouvre le sol solide : le fondre évite une couture carrée.
-	// Le rebord devient opaque bien avant d'atteindre le vide.
 	ALPHA = smoothstep(0.0, 0.25, UV.y);
-	// Des fragments de braises, plutôt qu'une bande orange parfaitement uniforme.
-	// Le premier smoothstep allume la bande, le second l'éteint près de la lèvre.
-	// Leur produit garde les braises entre le parquet intact et le bord noir.
-	float bande = smoothstep(0.25, 0.5, UV.y) * (1.0 - smoothstep(0.65, 0.95, UV.y));
-	// abs(bruit-0.5) est faible le long des contours où le bruit vaut environ 0.5.
-	// On éclaire ces contours ; un second bruit en masque des portions.
-	float fragments = (1.0 - smoothstep(0.025, 0.12, abs(bruit(p * 5.0) - 0.5)))
-		* smoothstep(0.2, 0.7, bruit(p * 1.7));
-	// TIME est le temps fourni par Godot. Le sinus fait varier l'intensité de 0.6 à 1.
-	// L'ajout de la position décale la pulsation d'un endroit à l'autre.
-	float pulsation = 0.8 + 0.2 * sin(TIME * 2.0 + p.x * 3.0 + p.y);
-	// EMISSION ajoute la couleur lumineuse des braises. Ce n'est pas une Light3D :
-	// cela rend le matériau lumineux sans créer ici de lumière sur les objets voisins.
-	EMISSION = vec3(1.0, 0.24, 0.025) * bande * fragments * pulsation * intensite_braises;
+	// Quelques points seulement au bord ; zéro dans l'Inspector supprime aussi ces braises.
+	float braise = smoothstep(0.94, 1.0, UV.y) * smoothstep(0.88, 0.96, bruit(p * 14.0));
+	EMISSION = vec3(1.0, 0.15, 0.015) * braise * intensite_braises * 0.12;
 }

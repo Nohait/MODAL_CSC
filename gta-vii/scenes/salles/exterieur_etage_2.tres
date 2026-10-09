@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ExterieurEtage" format=3 uid="uid://b8ebcw1yo4odx"]
+
+[ext_resource type="Script" uid="uid://omp8s0ablptb" path="res://scenes/decors/interieurs/exterieur_etage.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+hauteur_sur_rue = 9.0
+detail_immeubles = null
+immeubles_par_ligne = null
+rangees_par_ilot = null
+intensite_fenetres_eclairees = null
+incendies_exterieurs = null

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" format=3 uid="uid://cy3yp6g7itof1"]
+
+[ext_resource type="PackedScene" uid="uid://ce4af8quypo7b" path="res://assets/modeles/appartements/decorative_book_set_01/livres.glb" id="a0"]
+[ext_resource type="PackedScene" uid="uid://csg6j0fxv353" path="res://assets/modeles/appartements/metal_office_desk/metal_office_desk_1k.gltf" id="m0"]
+[ext_resource type="PackedScene" uid="uid://bk2nw70hjm1np" path="res://assets/modeles/interieurs/dining_chair_02/dining_chair_02_1k.gltf" id="m1"]
+[ext_resource type="PackedScene" uid="uid://dppa5rs4gqj66" path="res://assets/modeles/appartements/wooden_bookshelf_worn/wooden_bookshelf_worn_1k.gltf" id="m2"]
+[ext_resource type="PackedScene" uid="uid://m8o7n5poybyx" path="res://assets/modeles/appartements/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf" id="nouveau"]
+[ext_resource type="Script" uid="uid://hud8yex5xpuq" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/wood_floor.tres" id="sol"]
+
+[resource]
+script = ExtResource("script")
+titre = "bureau"
+modeles = Array[PackedScene]([ExtResource("m0"), ExtResource("m1"), ExtResource("m2"), ExtResource("a0"), ExtResource("nouveau")])
+positions = Array[Vector3]([Vector3(0, 0, 0), Vector3(0, 0, 1.2), Vector3(-1.7, 0, -0.9), Vector3(0.5, 0.8, 0), Vector3(-0.5, 0.8, -0.15)])
+hauteurs = Array[float]([0.8, 0.95, 1.9, 0.22, 0.45])
+orientations = Array[float]([0.0, 180.0, 90.0, 10.0, 20.0])
+sol = ExtResource("sol")
+lampes = Array[int]([4])
