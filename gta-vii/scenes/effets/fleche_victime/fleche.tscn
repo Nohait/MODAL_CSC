@@ -5,7 +5,7 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rgd0h"]
 albedo_color = Color(0.21176471, 0.54901963, 0, 1)
 
-[node name="Fleche" unique_id=1024731478 instance=ExtResource("1_ti35f")]
+[node name="Fleche" unique_id=1024731478 groups=["fleche"] instance=ExtResource("1_ti35f")]
 
 [node name="Sketchfab_model" parent="." index="0" unique_id=1503347033]
 transform = Transform3D(0.50612634, 2.549744, 9.656223, -5.899517, 7.8777866, -1.7709242, -8.058508, -5.607074, 1.9029413, 0, 1.5, 0)

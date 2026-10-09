@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dpft8gvxw21f6"]
+
+[ext_resource type="Script" uid="uid://dukar4ev00ma4" path="res://scenes/armes/bouche_incendie/attaque_bouche.gd" id="1"]
+
+[node name="AttaqueBouche" type="Node3D" unique_id=1144273006]
+script = ExtResource("1")
