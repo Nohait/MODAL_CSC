@@ -1,8 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/decors/hall_incendie/foyer_incendie.gd" id="script"]
-[ext_resource type="Script" path="res://scenes/decors/hall_incendie/extinction_foyer.gd" id="extinction"]
-[ext_resource type="Script" path="res://scenes/decors/hall_incendie/braises_foyer.gd" id="vent"]
 [ext_resource type="Texture2D" path="res://assets/textures/feu/kenney/flame_01.png" id="flamme"]
 [ext_resource type="Shader" path="res://assets/shaders/decors/fumee_hall.gdshader" id="fumee"]
 [ext_resource type="AudioStream" path="res://assets/sounds/design/fire.wav" id="crepitement"]
@@ -96,7 +94,6 @@ color_ramp = SubResource("fondu_fumee")
 cast_shadow = 0
 
 [node name="Braises" type="CPUParticles3D" parent="."]
-script = ExtResource("vent")
 position = Vector3(0, 0.2, 0)
 amount = 12
 lifetime = 2.0
@@ -127,6 +124,3 @@ stream = ExtResource("crepitement")
 volume_db = -6.0
 unit_size = 6.0
 max_distance = 10.0
-
-[node name="Extinction" type="Node3D" parent="."]
-script = ExtResource("extinction")

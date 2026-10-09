@@ -38,8 +38,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	temps += delta
 	# Deux oscillations superposées donnent un vacillement doux, sans flash.
-	var intensite: float = $Extinction.intensite if not Engine.is_editor_hint() else 1.0
-	lumiere.light_energy = energie * intensite * (0.88 + 0.08 * sin(temps * 5.0) + 0.04 * sin(temps * 11.3))
+	lumiere.light_energy = energie * (0.88 + 0.08 * sin(temps * 5.0) + 0.04 * sin(temps * 11.3))
 
 func _actualiser() -> void:
 	# Agrandir les particules indépendamment de la portée de leur éclairage.

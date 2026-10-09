@@ -292,7 +292,6 @@ func animation_fleche(position):
 		fleche_victime.queue_free()
 	
 	fleche_victime = fleche_victime_scene.instantiate()
-	fleche_victime.add_to_group("fleche")
 	Effets.add_child(fleche_victime)
 	fleche_victime.position = position
 	fleche_victime.visible = true

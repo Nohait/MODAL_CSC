@@ -14,19 +14,19 @@ var cible_deplacement: Node3D = null
 signal escort_changed
 
 func _ready() -> void:
-
 	# Les victimes annoncent leur libération ; le gestionnaire centralise la file.
 	var victims := get_tree().get_nodes_in_group("victims")
+	
 	for victim in victims:
-
-		# On connecte le signal freed à la fonction qui enregistre une victime libérée
+		# On connecte le signal freed et waiting termine à la fonction qui enregistre une victime libérée
 		surveiller_victime(victim)
 
 func surveiller_victime(victim: CharacterBody3D) -> void:
-
 	# Fonction également appelée pour les victimes créées pendant la génération.
 	if not victim.freed.is_connected(register_victim):
 		victim.freed.connect(register_victim)
+	if not victim.waiting_termine.is_connected(_on_waiting_termine):
+		victim.waiting_termine.connect(_on_waiting_termine)
 
 func diriger_victime(fleche) -> void:
 	cible_deplacement = fleche
@@ -60,6 +60,10 @@ func register_victim(victim: CharacterBody3D) -> void:
 	actualiser_bonus()
 	escort_changed.emit()
 
+func _on_waiting_termine() -> void:
+	print("signal capturé")
+	retour_nav_auto()
+
 func evacuate_victim(victim: CharacterBody3D) -> void:
 
 	# Seules les victimes présentes dans notre escorte peuvent être évacuées.
@@ -77,7 +81,6 @@ func evacuate_victim(victim: CharacterBody3D) -> void:
 	escort_changed.emit()
 
 func reorganiser_file() -> void:
-
 	# Le joueur peut déjà avoir disparu, notamment lors d'un redémarrage du niveau.
 	if not is_instance_valid(player):
 		return
@@ -87,6 +90,7 @@ func reorganiser_file() -> void:
 	var cible: Node3D = cible_deplacement if is_instance_valid(cible_deplacement) else player
 	for suivante in freed_victims:
 		if is_instance_valid(suivante):
+			suivante.waiting_timer = suivante.waiting_cooldown
 			suivante.follow_target = cible
 
 			# Au tour suivant, cette victime devient la cible de celle qui la suit.
@@ -142,7 +146,7 @@ func restaurer_sauvegarde(etat: Dictionary, salle: Node3D) -> void:
 	for donnees in etat.victimes:
 		var victime = preload("res://scenes/victimes/victime.tscn").instantiate()
 		victime.is_freed = true
-		victime.arret = false
+		victime.waiting = false
 		victime.vie_max = donnees.vie_max
 		victime.defi_fragile = donnees.get("fragile", false)
 		victime.points_boutique = donnees.get("points", 1)

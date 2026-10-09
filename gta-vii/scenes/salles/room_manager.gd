@@ -1,8 +1,5 @@
 extends Node
 
-const VILLE_CLASSIQUE = preload("res://scenes/decors/interieurs/ville_etage.gd")
-var ville_exterieure: Node3D
-
 signal room_cleared
 
 # Les défis suivent une salle depuis son activation jusqu’au passage de sa porte.
@@ -217,6 +214,7 @@ func peupler_salle(salle: Node3D) -> void:
 		# La victime connaît les ennemis de sa salle.
 		victime.set_ennemis_container(salle.get_node("Ennemis"))
 		victim_manager.surveiller_victime(victime)
+		
 		victime.freed.connect(_on_victim_freed.bind(salle), CONNECT_ONE_SHOT)
 		victime.died.connect(_on_victim_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
@@ -490,7 +488,6 @@ func activer_salle(indice: int) -> void:
 	_preparer_salle(indice)
 	indice_salle = indice
 	salle_actuelle = salles.get_child(indice)
-	ville_exterieure = VILLE_CLASSIQUE.actualiser(salle_actuelle, ville_exterieure, salles.get_parent())
 
 	# Les défis peuvent compléter la population avant le démarrage du timer.
 	salle_preparee.emit(salle_actuelle)

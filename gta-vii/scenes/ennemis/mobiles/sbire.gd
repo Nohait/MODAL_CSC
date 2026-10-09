@@ -16,6 +16,7 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 # Fourni par le créateur AVANT add_child, donc avant _ready.
 var etage := 1
 
+var animation_frappe: Tween  # Conservé pour les mobs hérités qui frappent par tween
 
 # Annonce une vraie mort au RoomManager, avant la suppression du nœud.
 signal died
@@ -30,6 +31,10 @@ var est_mort := false
 @onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
+@onready var modele: Node3D = $sbire
+@onready var anim : AnimationPlayer = $sbire/Armature/AnimationPlayer
+const ANIM_FRAPPE := &"attack"
+const ANIM_DEFAUT := &"idle"
 
 
 @export_group("Statistiques de base")
@@ -59,7 +64,7 @@ var cible_attaque: Node3D
 var feux_mains: Array[Node3D] = []
 var tailles_feux: Array[Vector3] = []
 var animation_feux: Tween
-var animation_frappe: Tween
+
 @export var attaque_cooldown = 1.0
 var attaque_timer = 0.0 #temps initialisé à 0
 @export var degats_sbire = 10.0
@@ -93,11 +98,14 @@ func _ready() -> void:
 	detection_shape.shape.radius = distance_detection  #On met à jour la distance de detection en fonction de la valeur choisie en variable
 
 	# Le RoomManager choisit un emplacement libre : ne pas remplacer sa position ici.
-
-	pass # Replace with function body.
+	
+	if anim != null and anim.has_animation(ANIM_DEFAUT) :
+		anim.play(ANIM_DEFAUT)
 
 
 func _physics_process(delta):
+	if anim != null :
+		anim.speed_scale = 0.0 if est_gele() else multiplicateur_vitesse()
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
 	if est_gele() or subit_recul():
 		velocity = Vector3.ZERO
@@ -309,8 +317,7 @@ func mourir():
 	if apparition != null: apparition.annuler()
 	if animation_feux:
 		animation_feux.kill()
-	if animation_frappe:
-		animation_frappe.kill()
+
 
 	#On joue le son de mort dans un parent de l'ennemi pour qu'il reste après la mort
 	var steam_death=  AudioStreamPlayer3D.new()
@@ -319,20 +326,20 @@ func mourir():
 	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
 	steam_death.global_position = global_position
 	steam_death.play()
-
+	
+	if anim != null : anim.pause()
+	
 	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
 	if afficher_cendres:
-		RETOUR_COMBAT.creer_cendres(self, [$Sketchfab_Scene, $droplet], duree_cendres)
+		RETOUR_COMBAT.creer_cendres(self, [modele], duree_cendres)
 	died.emit()
 	print("Bravo, vous avez tué le sbire")
 	queue_free()
 
 func _preparer_feux_mains() -> void:
-	var second_feu: Node3D = $vfx_fire/vfx_fire
-	# Deux frères : grossir une main ne doit pas grossir aussi l'autre.
-	second_feu.reparent(self, true)
-	feux_mains.append($vfx_fire)
-	feux_mains.append(second_feu)
+	var squelette: Node = $sbire/Armature/Skeleton3D
+	feux_mains.append(squelette.get_node("RHand/vfx_fire"))
+	feux_mains.append(squelette.get_node("LHand/vfx_fire"))
 	for feu in feux_mains:
 		tailles_feux.append(feu.scale)
 		feu.scale *= 0.55
@@ -354,6 +361,7 @@ func commencer_preparation() -> void:
 	cible_attaque = cible
 	preparation_restante = duree_preparation
 	_animer_feux(true, duree_preparation)
+	_jouer_frappe()
 
 func attaque() -> void:
 	_animer_feux(false, 0.15)
@@ -362,7 +370,6 @@ func attaque() -> void:
 	if not is_instance_valid(cible_attaque) or cible_attaque.is_queued_for_deletion():
 		return
 	# L'impulsion se joue aussi si la cible esquive : le sbire frappe dans le vide.
-	_jouer_frappe()
 	if global_position.distance_to(cible_attaque.global_position) > distance_attaque:
 		return
 	# Un seul appel direct : aucune création de projectile, aucun dégât différé.
@@ -370,14 +377,13 @@ func attaque() -> void:
 	cible_attaque.prendre_degats(degats)
 
 func _jouer_frappe() -> void:
-	var modele: Node3D = $Sketchfab_Scene
-	var origine := modele.position
-	# Le modèle n'a pas d'animation de frappe : une brève impulsion donne le mouvement.
-	var direction := global_position.direction_to(cible_attaque.global_position)
-	var impulsion := global_basis.inverse() * direction * 0.18
-	animation_frappe = create_tween()
-	animation_frappe.tween_property(modele, "position", origine + impulsion, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	animation_frappe.tween_property(modele, "position", origine, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	print("frappe demandée | anim=",anim," | liste =",anim.get_animation_list())
+	print("anim_speed_sale : ", anim.speed_scale)
+	if anim == null or not anim.has_animation(ANIM_FRAPPE):
+		print("SBIRE : animation de frappe introuvable")
+		return
+	anim.play(ANIM_FRAPPE)
+	anim.queue(ANIM_DEFAUT)
 
 func afficher_degats(degats: float) -> void:
 	preload("res://scenes/interfaces/indications/nombre_degats.gd").afficher($PopUpDegats, degats, 2.5)

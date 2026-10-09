@@ -1,17 +1,24 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://d1xbc38lxbwq8"]
+[gd_resource type="StandardMaterial3D" format=3]
 
-[ext_resource type="Texture2D" uid="uid://c0pdmfd6maoyy" path="res://assets/textures/decors/etage_2/brick_floor_diff_2k.jpg" id="1_lg4rd"]
-[ext_resource type="Texture2D" uid="uid://d13rwwc2cm28a" path="res://assets/textures/decors/etage_2/brick_floor_nor_gl_2k.png" id="normal"]
-[ext_resource type="Texture2D" uid="uid://nc2h61lxl8rb" path="res://assets/textures/decors/etage_2/brick_floor_rough_2k.jpg" id="roughness"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_2/brick_floor_diff_2k.jpg" id="1_lg4rd"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/suie_variations.tres" id="2_lg4rd"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_2/brick_floor_nor_gl_2k.png" id="normal"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/decors/etage_2/brick_floor_rough_2k.jpg" id="roughness"]
 
 [resource]
-albedo_color = Color(0.86, 0.81, 0.76, 1)
+albedo_color = Color(0.71997714, 0.69100815, 0.67296934, 1)
 albedo_texture = ExtResource("1_lg4rd")
-roughness = 0.65
+roughness = 1.0
 roughness_texture = ExtResource("roughness")
+roughness_texture_channel = 0
 normal_enabled = true
-normal_scale = 0.7
 normal_texture = ExtResource("normal")
+detail_enabled = true
+detail_blend_mode = 3
+detail_uv_layer = 1
+detail_albedo = ExtResource("2_lg4rd")
 uv1_scale = Vector3(0.25, 0.25, 0.25)
 uv1_triplanar = true
 uv1_world_triplanar = true
