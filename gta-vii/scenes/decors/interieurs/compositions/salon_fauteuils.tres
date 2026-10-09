@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" format=3 uid="uid://50l1bcn13xhw"]
+
+[ext_resource type="PackedScene" uid="uid://dyihfiefn5m66" path="res://assets/modeles/appartements/modern_arm_chair_01/modern_arm_chair_01_1k.gltf" id="m1"]
+[ext_resource type="PackedScene" uid="uid://dqe57atspsphn" path="res://assets/modeles/appartements/painted_wooden_cabinet/painted_wooden_cabinet_1k.gltf" id="m2"]
+[ext_resource type="PackedScene" uid="uid://b5thf188nd735" path="res://assets/modeles/appartements/television_02/television_02_1k.gltf" id="m3"]
+[ext_resource type="PackedScene" uid="uid://kmgii5sommvx" path="res://assets/modeles/appartements/potted_plant_02/potted_plant_02_1k.gltf" id="nouveau"]
+[ext_resource type="Script" uid="uid://hud8yex5xpuq" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/wood_floor.tres" id="sol"]
+
+[resource]
+script = ExtResource("script")
+titre = "salon_fauteuils"
+modeles = Array[PackedScene]([ExtResource("m1"), ExtResource("m1"), ExtResource("m2"), ExtResource("m3"), ExtResource("nouveau")])
+positions = Array[Vector3]([Vector3(-1, 0, -0.8), Vector3(1, 0, -0.8), Vector3(0, 0, 1.4), Vector3(0, 1.1, 1.4), Vector3(1.6, 0, 1.1)])
+hauteurs = Array[float]([0.95, 0.95, 1.1, 0.45, 1.05])
+orientations = Array[float]([25.0, -25.0, 180.0, 180.0, -20.0])
+sol = ExtResource("sol")

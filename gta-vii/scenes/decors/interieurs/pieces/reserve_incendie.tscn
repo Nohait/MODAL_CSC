@@ -1,0 +1,115 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/pieces/piece_decorative.gd" id="1_qcwss"]
+[ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="2_v6kqw"]
+[ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="3_6akcv"]
+[ext_resource type="PackedScene" path="res://scenes/decors/interieurs/stockage_technique.tscn" id="4_1c8b2"]
+[ext_resource type="Script" path="res://scenes/decors/interieurs/mobilier_incendie.gd" id="5_cxwd0"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="6_s3kvu"]
+[ext_resource type="Script" path="res://scenes/decors/hall_incendie/foyer_incendie.gd" id="7_gcoyd"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/trace_incendie.tscn" id="8_gyq7f"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/trace_incendie.gdshader" id="9_pv56j"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_k8akn"]
+material = ExtResource("2_v6kqw")
+size = Vector3(4.4, 0.2, 4.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hdnfp"]
+material = ExtResource("3_6akcv")
+size = Vector3(4.6, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ukx4r"]
+material = ExtResource("3_6akcv")
+size = Vector3(0.2, 3, 4.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wjf7x"]
+material = ExtResource("3_6akcv")
+size = Vector3(0.2, 3, 4.6)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5m7fm"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("9_pv56j")
+shader_parameter/teinte = null
+shader_parameter/graine = null
+
+[sub_resource type="QuadMesh" id="QuadMesh_wha0d"]
+size = Vector2(1.8, 1.6)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3rwcl"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("9_pv56j")
+shader_parameter/teinte = null
+shader_parameter/graine = null
+
+[sub_resource type="QuadMesh" id="QuadMesh_nicff"]
+size = Vector2(1.8, 1.6)
+
+[node name="ReserveIncendie" type="Node3D" unique_id=1906180051]
+editor_description = "Pièce décorative fixe, ouverte vers +Z, sans plafond. Emprise : 4,6 m x 4,7 m. Ne pas ajouter de collision : le mur invisible du seuil bloque l'accès."
+script = ExtResource("1_qcwss")
+
+[node name="Sol" type="MeshInstance3D" parent="." unique_id=1982443194]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.3)
+layers = 524289
+mesh = SubResource("BoxMesh_k8akn")
+
+[node name="MurFond" type="MeshInstance3D" parent="." unique_id=1123119461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4.6)
+layers = 524289
+mesh = SubResource("BoxMesh_hdnfp")
+
+[node name="MurGauche" type="MeshInstance3D" parent="." unique_id=782368116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 1.5, -2.3)
+layers = 524289
+mesh = SubResource("BoxMesh_ukx4r")
+
+[node name="MurDroit" type="MeshInstance3D" parent="." unique_id=723102705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.5, -2.3)
+layers = 524289
+mesh = SubResource("BoxMesh_wjf7x")
+
+[node name="MobilierIncendie" type="StaticBody3D" parent="." unique_id=1971444146 groups=["collider"] instance=ExtResource("4_1c8b2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.65)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("5_cxwd0")
+brulure = 0.5
+intensite_braises = 1.0
+taille_foyer = 0.7
+point_foyer = Vector3(-1.25, 0.6, -0.8)
+
+[node name="Foyer0" type="Node3D" parent="." unique_id=154736652 instance=ExtResource("6_s3kvu")]
+editor_description = "Incendie décoratif sans dégâts."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.4, -3.3)
+script = ExtResource("7_gcoyd")
+taille = 0.75
+densite_fumee = 0.3
+
+[node name="Trace0" parent="." unique_id=889067883 instance=ExtResource("8_gyq7f")]
+
+[node name="Suie" parent="Trace0" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.2, 0.013, -3.3)
+material_override = SubResource("ShaderMaterial_5m7fm")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_wha0d")
+
+[node name="Foyer1" type="Node3D" parent="." unique_id=940115753 instance=ExtResource("6_s3kvu")]
+editor_description = "Incendie décoratif sans dégâts."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.05, -1.4)
+script = ExtResource("7_gcoyd")
+taille = 0.5
+energie = 1.0
+densite_fumee = 0.3
+
+[node name="Trace1" parent="." unique_id=1293459750 instance=ExtResource("8_gyq7f")]
+
+[node name="Suie" parent="Trace1" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.75, 0.013, -1.4)
+material_override = SubResource("ShaderMaterial_3rwcl")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_nicff")
+
+[editable path="Trace0"]
+[editable path="Trace1"]

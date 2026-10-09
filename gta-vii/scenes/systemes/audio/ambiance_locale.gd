@@ -31,13 +31,13 @@ func _ready() -> void:
 		lecteur.max_distance = profil.portee
 	add_child(lecteur)
 	lecteur.finished.connect(_terminer)
-	_programmer()
+	_programmer(true)
 
 func _process(delta: float) -> void:
 	if not actif or lecteur == null or lecteur.playing or profil.sons.is_empty(): return
 	# Le gestionnaire partage une horloge entre les sources d'un même profil ponctuel.
 	if coordonne and not profil.boucle: return
-	attente -= delta
+	avancer_attente(delta)
 	if attente > 0.0: return
 	_jouer()
 
@@ -103,6 +103,43 @@ func _terminer() -> void:
 		passage_en_cours = false
 		passage_termine.emit()
 
-func _programmer() -> void:
+func _programmer(premier_passage := false) -> void:
 	# Un délai par catégorie, calculé après le passage, quel que soit le nombre de sources.
-	attente = aleatoire.randf_range(minf(profil.attente_min, profil.attente_max), maxf(profil.attente_min, profil.attente_max))
+	var minimum := profil.attente_min
+	var maximum := profil.attente_max
+	# Seule la création de la source utilise ce délai ; reprendre après une pause ne le relance pas.
+	if premier_passage and profil.attente_initiale_distincte:
+		minimum = profil.attente_initiale_min
+		maximum = profil.attente_initiale_max
+	attente = aleatoire.randf_range(minf(minimum, maximum), maxf(minimum, maximum))
+	# Après un son, programmer le prochain passage pour toute la partie.
+	# La création d'une nouvelle source ne doit pas remplacer le délai déjà en cours.
+	if not premier_passage and profil.conserver_attente_entre_salles:
+		var horloge := _horloge_partagee()
+		if not horloge.is_empty(): horloge.restant = attente
+
+func avancer_attente(delta: float) -> void:
+	if not profil.conserver_attente_entre_salles:
+		attente -= delta
+		return
+	var horloge := _horloge_partagee()
+	if horloge.is_empty():
+		attente -= delta
+		return
+	# Même profil dans plusieurs salles : seule la source active fait avancer le temps.
+	var image := Engine.get_process_frames()
+	if horloge.image != image:
+		horloge.restant -= delta
+		horloge.image = image
+	attente = horloge.restant
+
+func _horloge_partagee() -> Dictionary:
+	var partie := get_tree().current_scene
+	if partie == null: return {}
+	# Stocker sur la scène de jeu conserve le temps entre salles, puis l'oublie au titre.
+	if not partie.has_meta("horloges_ambiances"):
+		partie.set_meta("horloges_ambiances", {})
+	var horloges: Dictionary = partie.get_meta("horloges_ambiances")
+	var cle := profil.resource_path if not profil.resource_path.is_empty() else str(profil.get_instance_id())
+	if not horloges.has(cle): horloges[cle] = {"restant": attente, "image": -1}
+	return horloges[cle]

@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ekgktuxra0pc"]
+
+[ext_resource type="Texture2D" uid="uid://yr556gja750y" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_diff_2k.jpg" id="couleur"]
+[ext_resource type="Texture2D" uid="uid://cf4wcd11w0nrm" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_nor_gl_2k.png" id="relief"]
+[ext_resource type="Texture2D" uid="uid://yq4e20tebbyj" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_rough_2k.png" id="rugosite"]
+
+[resource]
+albedo_texture = ExtResource("couleur")
+roughness = 0.42
+roughness_texture = ExtResource("rugosite")
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = ExtResource("relief")
+uv1_scale = Vector3(0.59, 0.59, 0.59)
+uv1_triplanar = true
+uv1_world_triplanar = true

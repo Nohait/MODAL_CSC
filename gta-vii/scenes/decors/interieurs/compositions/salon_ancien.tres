@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" format=3 uid="uid://doxv0hltd36ri"]
+
+[ext_resource type="PackedScene" uid="uid://b7p12gl44raxn" path="res://assets/modeles/appartements/standing_picture_frame_01/standing_picture_frame_01_1k.gltf" id="a0"]
+[ext_resource type="PackedScene" uid="uid://cemg7o8rr5str" path="res://assets/modeles/appartements/sofa_03/sofa_03_1k.gltf" id="m0"]
+[ext_resource type="PackedScene" uid="uid://dqe57atspsphn" path="res://assets/modeles/appartements/painted_wooden_cabinet/painted_wooden_cabinet_1k.gltf" id="m1"]
+[ext_resource type="PackedScene" uid="uid://b5thf188nd735" path="res://assets/modeles/appartements/television_02/television_02_1k.gltf" id="m2"]
+[ext_resource type="PackedScene" uid="uid://dajl7u70ekqio" path="res://assets/modeles/appartements/painted_wooden_nightstand/painted_wooden_nightstand_1k.gltf" id="m3"]
+[ext_resource type="Script" uid="uid://hud8yex5xpuq" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/herringbone_parquet.tres" id="sol"]
+
+[resource]
+script = ExtResource("script")
+titre = "salon_ancien"
+modeles = Array[PackedScene]([ExtResource("m0"), ExtResource("m1"), ExtResource("m2"), ExtResource("m3"), ExtResource("a0")])
+positions = Array[Vector3]([Vector3(0, 0, -1.2), Vector3(0, 0, 1.6), Vector3(0, 1.1, 1.6), Vector3(1.9, 0, -0.7), Vector3(1.9, 0.6, -0.7)])
+hauteurs = Array[float]([1.05, 1.1, 0.45, 0.6, 0.18])
+orientations = Array[float]([0.0, 180.0, 180.0, 0.0, 0.0])
+sol = ExtResource("sol")
+lampes = null
+energie_lampes = null
+portee_lampes = null

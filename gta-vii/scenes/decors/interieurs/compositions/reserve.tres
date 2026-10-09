@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" format=3 uid="uid://bhxykmp3pecbr"]
+
+[ext_resource type="PackedScene" uid="uid://cl03yr411v2or" path="res://assets/modeles/appartements/industrial_storage_cart/industrial_storage_cart_1k.gltf" id="m0"]
+[ext_resource type="PackedScene" uid="uid://dppa5rs4gqj66" path="res://assets/modeles/appartements/wooden_bookshelf_worn/wooden_bookshelf_worn_1k.gltf" id="m1"]
+[ext_resource type="PackedScene" uid="uid://dqe57atspsphn" path="res://assets/modeles/appartements/painted_wooden_cabinet/painted_wooden_cabinet_1k.gltf" id="m2"]
+[ext_resource type="Script" uid="uid://hud8yex5xpuq" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/interior_tiles.tres" id="sol"]
+
+[resource]
+script = ExtResource("script")
+titre = "reserve"
+modeles = Array[PackedScene]([ExtResource("m0"), ExtResource("m1"), ExtResource("m2")])
+positions = Array[Vector3]([Vector3(-0.9, 0, 0), Vector3(1.2, 0, -0.8), Vector3(-0.9, 0, 1.7)])
+hauteurs = Array[float]([1.4, 1.9, 1.1])
+orientations = Array[float]([15.0, -90.0, 180.0])
+sol = ExtResource("sol")
+lampes = null
+energie_lampes = null
+portee_lampes = null

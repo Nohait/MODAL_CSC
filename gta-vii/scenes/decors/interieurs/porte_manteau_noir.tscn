@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/porte_manteau_noir/scene.gltf" id="1_en16a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mygaw"]
+size = Vector3(0.8836642, 1.75, 0.50502044)
+
+[node name="PorteManteau" type="StaticBody3D" unique_id=187253256 groups=["collider"]]
+collision_mask = 0
+
+[node name="Mobilier" type="Node3D" parent="." unique_id=1246810336]
+
+[node name="Modele" type="Node3D" parent="Mobilier" unique_id=1547507207 instance=ExtResource("1_en16a")]
+transform = Transform3D(0.9463691, 0, 0, 0, 0.9463691, 0, 0, 0, 0.9463691, -0.00057674357, 0.022015816, 0.026843464)
+
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=170655583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("BoxShape3D_mygaw")

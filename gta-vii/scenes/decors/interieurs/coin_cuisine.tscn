@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/mobilier_incendie.gd" id="1_5upai"]
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/refrigerateur.glb" id="2_tucjw"]
+[ext_resource type="PackedScene" path="res://assets/modeles/interieurs/cuisiniere.glb" id="3_rungb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qpc3e"]
+size = Vector3(0.84, 1.88, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qpqor"]
+size = Vector3(0.82, 0.86, 0.62)
+
+[node name="CoinCuisine" type="StaticBody3D" unique_id=1125538524 groups=["collider"]]
+collision_mask = 0
+script = ExtResource("1_5upai")
+brulure = 0.65
+intensite_braises = 1.0
+taille_foyer = 0.6
+point_foyer = Vector3(0, 0.9, -0.9)
+
+[node name="Mobilier" type="Node3D" parent="." unique_id=2014866771]
+
+[node name="Refrigerateur" type="Node3D" parent="Mobilier" unique_id=669149831 instance=ExtResource("2_tucjw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, -0.9)
+
+[node name="Cuisiniere" type="Node3D" parent="Mobilier" unique_id=803474123 instance=ExtResource("3_rungb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.95)
+
+[node name="CollisionRefrigerateur" type="CollisionShape3D" parent="." unique_id=664424532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0.94, -0.9)
+shape = SubResource("BoxShape3D_qpc3e")
+
+[node name="CollisionCuisiniere" type="CollisionShape3D" parent="." unique_id=1896867548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43, -0.95)
+shape = SubResource("BoxShape3D_qpqor")

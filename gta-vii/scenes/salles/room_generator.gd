@@ -8,10 +8,14 @@ extends Node3D
 @export var roomSize := Vector2i(10, 8)
 
 # Matériau appliqué aux cases de sol.
-@export var materiau_sol: StandardMaterial3D
+@export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_appartements.tres")
 
 # Matériau des murs et des morceaux de mur autour des portes.
-@export var materiau_murs: StandardMaterial3D
+@export var materiau_murs: StandardMaterial3D = preload("res://assets/materiaux/mur_appartements.tres")
+
+@export_group("Habillage procédural")
+@export var habillage: HabillageSalle = preload("res://scenes/salles/habillage_classique.tres")
+var bords_habillage: Array = []
 
 @export_group("Matériaux des étages suivants")
 @export var sol_etage_2: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_2.tres")
@@ -27,13 +31,14 @@ extends Node3D
 
 # Largeur du parquet brûlé qui dépasse vers le vide, sans agrandir le sol praticable.
 @export_range(0.2, 1.2, 0.05) var largeur_bord_trou := 0.8
+@export_range(0.15, 0.6, 0.05) var epaisseur_dalle_trou := 0.35
+@export_range(0.0, 0.08, 0.005) var relief_bord_trou := 0.035
 
 # Intensité des fragments orange sur les bords ; zéro conserve seulement le charbon.
 @export_range(0.0, 5.0, 0.1) var intensite_braises := 1.5
 const TROUS_PLANCHER = preload("res://scenes/decors/trous_plancher.gd")
 const TILE_SIZE = 5.0
 const BOX_SCENE = preload("res://scenes/decors/caisse.tscn")
-const PORTE_ENTREE = preload("res://scenes/decors/porte_entree.tscn")
 const ENTREE = preload("res://scenes/salles/entree_salle.gd")
 const OBSCURITE = preload("res://assets/shaders/decors/obscurite_entree.gdshader")
 const DOOR_SCENE = preload("res://scenes/decors/porte_sortie.tscn")
@@ -65,7 +70,9 @@ func regenerer_apercu() -> void:
 	for enfant in get_children():
 		remove_child(enfant)
 		enfant.queue_free()
-	add_child(generer_salle())
+	var salle := generer_salle()
+	add_child(salle)
+	preload("res://scenes/decors/interieurs/ville_etage.gd").actualiser(salle, null, salle)
 
 # Vrai uniquement pour la cinquième salle de chaque étage.
 var sortie_avec_escalier := false
@@ -100,6 +107,7 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 			ligne.fill(true)
 	cellules_disponibles.clear()
 	cellules_reservees.clear()
+	bords_habillage.clear()
 	for y in range(roomSize.y):
 		for x in range(roomSize.x):
 			if grid[y][x]:
@@ -111,9 +119,9 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 	cellules_trous = TROUS_PLANCHER.trouver_trous(grid, roomSize)
 	displayWalls()
 	TROUS_PLANCHER.construire(salle_en_creation, cellules_trous, TILE_SIZE,
-		sol_actuel, largeur_bord_trou, intensite_braises)
+		sol_actuel, largeur_bord_trou, intensite_braises, epaisseur_dalle_trou, relief_bord_trou)
 
-	# Réserver assez de place pour le joueur et TOUTE son escorte avant les caisses.
+	# Réserver assez de place pour le joueur et TOUTE son escorte avant le mobilier.
 	cellules_disponibles.shuffle()
 	var places_par_cellule := 9
 	var nombre_cellules := ceili(float(nombre_arrivants) / places_par_cellule)
@@ -123,7 +131,8 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 		for z in [-1.4, 0.0, 1.4]:
 			for x in [-1.4, 0.0, 1.4]:
 				salle_en_creation.points_arrivee.append(position_cellule(cellule) + Vector3(x, 0, z))
-	displayBoxes()
+	if habillage != null:
+		habillage.appliquer(self, etage)
 
 	# Les emplacements restants serviront au RoomManager pour les personnages.
 	for cellule in cellules_disponibles:
@@ -223,17 +232,6 @@ func displayRoom() -> void:
 			sol_actuel
 		)
 
-func displayBoxes() -> void:
-
-	# Mélanger une liste finie évite la boucle infinie si la salle manque de place.
-	# Garder au moins 12 cases libres pour les personnages et la borne.
-	var nombre := mini(randi_range(2, 5), maxi(0, cellules_disponibles.size() - 12))
-	for i in range(nombre):
-		var cellule: Vector2i = cellules_disponibles.pop_back()
-		var caisse = BOX_SCENE.instantiate()
-		caisse.position = position_cellule(cellule) + Vector3(0, 0.6, 0)
-		salle_en_creation.get_node("Navigation/Decor").add_child(caisse)
-
 func displayWalls() -> void:
 
 	# Tous les bords du sol sont admissibles, y compris après les découpes.
@@ -288,6 +286,8 @@ func displayWalls() -> void:
 # Le corps est ajouté sous Navigation/Decor, donc lu lors du calcul des chemins.
 
 func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false) -> void:
+	if not invisible:
+		bords_habillage.append([cellule, direction])
 	var taille := Vector3(TILE_SIZE, 3.0, 0.2)
 	if direction.x != 0:
 		taille = Vector3(0.2, 3.0, TILE_SIZE)
@@ -299,6 +299,47 @@ func createWall(cellule: Vector2i, direction: Vector2i, invisible: bool = false)
 	murs_actuels,
 	invisible
 	)
+
+func ouvrir_mur_decoratif(cellule: Vector2i, direction: Vector2i) -> bool:
+	return _ouvrir_mur_visuel(cellule, direction, 1.6, 0.0, 2.4)
+
+func ouvrir_mur_fenetre(cellule: Vector2i, direction: Vector2i) -> bool:
+	# Même procédé que les portes, mais avec une allège sous le vitrage.
+	return _ouvrir_mur_visuel(cellule, direction, 1.4, 0.8, 1.8)
+
+func _ouvrir_mur_visuel(cellule: Vector2i, direction: Vector2i, largeur: float, bas: float, hauteur: float) -> bool:
+	var normale := Vector3(direction.x, 0, direction.y)
+	var centre := position_cellule(cellule) + normale * 2.5 + Vector3.UP * 1.6
+	for corps in salle_en_creation.get_node("Navigation/Decor").get_children():
+		if not corps.position.is_equal_approx(centre): continue
+		for surface in corps.get_children():
+			if not surface is MeshInstance3D or not surface.mesh is BoxMesh: continue
+			# Conserver la collision complète : on voit la pièce, mais elle reste inaccessible.
+			corps.remove_child(surface)
+			surface.free()
+			var tangente := Vector3(normale.z, 0, -normale.x)
+			var largeur_cote := (TILE_SIZE - largeur) / 2.0
+			for signe in [-1, 1]:
+				var taille := Vector3(largeur_cote, 3, 0.2) if direction.x == 0 else Vector3(0.2, 3, largeur_cote)
+				_panneau_mur(corps, tangente * signe * (largeur / 2.0 + largeur_cote / 2.0), taille)
+			if bas > 0:
+				var taille_allege := Vector3(largeur, bas, 0.2) if direction.x == 0 else Vector3(0.2, bas, largeur)
+				_panneau_mur(corps, Vector3.UP * (bas / 2.0 - 1.5), taille_allege)
+			var haut := 3.0 - bas - hauteur
+			var taille_linteau := Vector3(largeur, haut, 0.2) if direction.x == 0 else Vector3(0.2, haut, largeur)
+			_panneau_mur(corps, Vector3.UP * (1.5 - haut / 2.0), taille_linteau)
+			return true
+	return false
+
+func _panneau_mur(parent: Node3D, position_locale: Vector3, taille: Vector3) -> void:
+	var surface := MeshInstance3D.new()
+	var forme := BoxMesh.new()
+	forme.size = taille
+	forme.material = murs_actuels
+	surface.mesh = forme
+	surface.position = position_locale
+	surface.set_layer_mask_value(20, true)
+	parent.add_child(surface)
 
 func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	var normale := Vector3(direction.x, 0, direction.y)
@@ -394,6 +435,8 @@ func creer_bloc(position_bloc: Vector3, taille: Vector3, couleur: Color, materia
 		materiau.albedo_color = couleur
 		mesh.material = materiau
 	visuel.mesh = mesh
+	# Couche visuelle 20 : seules les surfaces du décor reçoivent les fissures.
+	visuel.set_layer_mask_value(20, true)
 	corps.add_child(visuel)
 	var collision := CollisionShape3D.new()
 	var forme := BoxShape3D.new()
@@ -445,13 +488,6 @@ func creer_entree(cellule: Vector2i, direction: Vector2i) -> void:
 	entree.rotation.y = atan2(normale.x, normale.z)
 	salle_en_creation.add_child(entree)
 	salle_en_creation.entree = entree
-	var porte_cassee = PORTE_ENTREE.instantiate()
-	entree.add_child(porte_cassee)
-	# Une teinte assombrie garde le bois en relief, sans attirer autant que les sorties.
-	var bois = porte_cassee.get_node("BattantCasse").mesh.material.duplicate()
-	bois.albedo_color = Color(0.32, 0.29, 0.25)
-	porte_cassee.get_node("BattantCasse").material_override = bois
-	porte_cassee.get_node("Fragment").material_override = bois
 	# Refermer les côtés de l’ancien mur, en laissant un passage de 2,5 mètres.
 	var tangente := Vector3(normale.z, 0, -normale.x)
 	var taille_cote := Vector3(1.25, 3, 0.2) if direction.x == 0 else Vector3(0.2, 3, 1.25)

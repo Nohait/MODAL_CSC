@@ -1,0 +1,162 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/porte_decorative.gd" id="1_7yxke"]
+[ext_resource type="Texture2D" path="res://assets/textures/decors/weathered_brown_planks_nor_gl_2k.png" id="2_24opa"]
+[ext_resource type="Material" path="res://assets/materiaux/poignee_porte.tres" id="3_6ef6h"]
+[ext_resource type="Shader" path="res://assets/shaders/decors/fumee_hall.gdshader" id="4_3h7ep"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dainl"]
+shading_mode = 0
+albedo_color = Color(0.008, 0.006, 0.005, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3ma5u"]
+material = SubResource("StandardMaterial3D_dainl")
+size = Vector3(1.6, 2.4, 0.015)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_si4jv"]
+albedo_color = Color(0.24, 0.23, 0.2, 1)
+roughness = 0.75
+normal_enabled = true
+normal_scale = 0.7
+normal_texture = ExtResource("2_24opa")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_4b57e"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(0.1, 2.5, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ceibb"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(0.1, 2.5, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p7151"]
+material = SubResource("StandardMaterial3D_si4jv")
+size = Vector3(1.8, 0.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ml41n"]
+size = Vector3(1.85, 2.5, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mofpc"]
+albedo_color = Color(0.36, 0.34, 0.3, 1)
+roughness = 0.75
+normal_enabled = true
+normal_scale = 0.7
+normal_texture = ExtResource("2_24opa")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_tke7s"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.54, 2.35, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ixv11"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.25, 0.8, 0.018)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nh3xj"]
+material = SubResource("StandardMaterial3D_mofpc")
+size = Vector3(1.25, 0.8, 0.018)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bniii"]
+material = ExtResource("3_6ef6h")
+size = Vector3(0.18, 0.035, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qiuef"]
+albedo_color = Color(0.15, 0.025, 0.006, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.02, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_3hq6e"]
+material = SubResource("StandardMaterial3D_qiuef")
+size = Vector3(1.48, 0.03, 0.035)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gufkc"]
+material = SubResource("StandardMaterial3D_qiuef")
+size = Vector3(0.18, 2.1, 0.015)
+
+[sub_resource type="ShaderMaterial" id="nuage"]
+render_priority = 0
+shader = ExtResource("4_3h7ep")
+
+[sub_resource type="QuadMesh" id="voile"]
+material = SubResource("nuage")
+size = Vector2(0.9, 0.9)
+
+[sub_resource type="Gradient" id="fondu_fumee"]
+offsets = PackedFloat32Array(0, 0.18, 0.65, 1)
+colors = PackedColorArray(0.12, 0.1, 0.09, 0, 0.12, 0.1, 0.09, 0.24, 0.17, 0.15, 0.13, 0.13, 0.2, 0.18, 0.16, 0)
+
+[node name="PorteEntrouverte" type="StaticBody3D" unique_id=1442427487 groups=["collider"]]
+editor_description = "Porte décorative : +Z vers la salle. Le mur reste solide derrière ; aucun passage, aucun voyant de sortie."
+collision_mask = 0
+script = ExtResource("1_7yxke")
+
+[node name="FondSombre" type="MeshInstance3D" parent="." unique_id=212676058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.04)
+mesh = SubResource("BoxMesh_3ma5u")
+
+[node name="MontantGauche" type="MeshInstance3D" parent="." unique_id=1429293288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 1.25, 0.14)
+mesh = SubResource("BoxMesh_4b57e")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="." unique_id=1286951479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1.25, 0.14)
+mesh = SubResource("BoxMesh_ceibb")
+
+[node name="Linteau" type="MeshInstance3D" parent="." unique_id=2032722934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 0.14)
+mesh = SubResource("BoxMesh_p7151")
+
+[node name="CollisionPorte" type="CollisionShape3D" parent="." unique_id=267693033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.38)
+shape = SubResource("BoxShape3D_ml41n")
+
+[node name="Charniere" type="Node3D" parent="." unique_id=233239712]
+transform = Transform3D(0.9286646, 0, -0.37092048, 0, 1, 0, 0.37092048, 0, 0.9286646, -0.77, 0, 0.12)
+
+[node name="Battant" type="MeshInstance3D" parent="Charniere" unique_id=294562854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 1.2, 0)
+mesh = SubResource("BoxMesh_tke7s")
+
+[node name="Panneau0" type="MeshInstance3D" parent="Charniere" unique_id=499343821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 0.67, 0.045)
+mesh = SubResource("BoxMesh_ixv11")
+
+[node name="Panneau1" type="MeshInstance3D" parent="Charniere" unique_id=365100439]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 1.67, 0.045)
+mesh = SubResource("BoxMesh_nh3xj")
+
+[node name="Poignee" type="MeshInstance3D" parent="Charniere" unique_id=1027891081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 1.13, 0.09)
+mesh = SubResource("BoxMesh_bniii")
+
+[node name="BraiseSousPorte" type="MeshInstance3D" parent="." unique_id=757723404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0.17)
+mesh = SubResource("BoxMesh_3hq6e")
+
+[node name="LueurInterieure" type="MeshInstance3D" parent="." unique_id=120565698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62, 1.15, 0.06)
+mesh = SubResource("BoxMesh_gufkc")
+
+[node name="Lueur" type="OmniLight3D" parent="." unique_id=1890635896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.3)
+light_color = Color(1, 0.29, 0.07, 1)
+
+[node name="Fumee" type="CPUParticles3D" parent="." unique_id=1614509717]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.25)
+cast_shadow = 0
+lifetime = 3.5
+preprocess = 2.0
+mesh = SubResource("voile")
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.015, 0.025)
+direction = Vector3(0, 0.6, 1)
+spread = 14.0
+gravity = Vector3(0, 0.1, 0)
+initial_velocity_min = 0.12
+initial_velocity_max = 0.2
+scale_amount_min = 0.3
+scale_amount_max = 0.6
+color_ramp = SubResource("fondu_fumee")

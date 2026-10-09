@@ -1,0 +1,11 @@
+Model Information:
+* title:	Nyc Building
+* source:	https://sketchfab.com/3d-models/nyc-building-05ad0ac87d954dd3abf7bd6f50163857
+* author:	David Buchmiller (https://sketchfab.com/dwbuchmiller)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Nyc Building" (https://sketchfab.com/3d-models/nyc-building-05ad0ac87d954dd3abf7bd6f50163857) by David Buchmiller (https://sketchfab.com/dwbuchmiller) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
