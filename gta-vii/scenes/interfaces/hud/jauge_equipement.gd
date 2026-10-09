@@ -8,6 +8,9 @@ extends ProgressBar
 		if is_node_ready():
 			remplissage.material.set_shader_parameter("teinte", couleur)
 @export var pictogramme: Texture2D
+@export_group("Cadre")
+@export var texture_cadre: Texture2D
+@export_range(0.0, 100.0, 1.0) var largeur_extension := 0.0
 
 @onready var cadre: TextureRect = $Cadre
 @onready var remplissage: TextureRect = $Remplissage
@@ -27,6 +30,11 @@ var proportion_retard := 0.0:
 			vie_perdue.material.set_shader_parameter("proportion", valeur)
 
 func _ready() -> void:
+	if texture_cadre != null: cadre.texture = texture_cadre
+	# Réserver l'extension à l'attaque secondaire sans allonger la barre de mousse.
+	remplissage.offset_right -= largeur_extension
+	texte_valeur.offset_left -= largeur_extension
+	texte_valeur.offset_right -= largeur_extension
 	# Chaque jauge a son matériau : rougir la vie ne doit pas rougir la mousse.
 	remplissage.material = remplissage.material.duplicate()
 	$Titre.text = titre
