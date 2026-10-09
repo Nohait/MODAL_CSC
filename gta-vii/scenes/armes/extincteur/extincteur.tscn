@@ -7,7 +7,6 @@
 [ext_resource type="AudioStream" uid="uid://dqm6lagpfbpe6" path="res://assets/sounds/extincteur/steam_damage1.wav" id="5_eg3a3"]
 [ext_resource type="AudioStream" uid="uid://d10vx3e6jngnl" path="res://assets/sounds/design/155516__planet-leader__fireextinguisher.wav" id="souffle"]
 [ext_resource type="Texture2D" uid="uid://dmiycwh10oa14" path="res://assets/textures/extincteur/pulverisation.png" id="texture_jet"]
-[ext_resource type="Script" path="res://scenes/armes/extincteur/extinction_decor.gd" id="extinction_decor"]
 
 [sub_resource type="Gradient" id="FonduJet"]
 offsets = PackedFloat32Array(0, 0.08, 0.65, 1)
@@ -119,6 +118,3 @@ bus = &"Effets"
 [node name="steam_damage1" type="AudioStreamPlayer3D" parent="Sons/steam_damage" unique_id=110784539]
 stream = ExtResource("5_eg3a3")
 bus = &"Effets"
-
-[node name="ExtinctionDecor" type="Node3D" parent="."]
-script = ExtResource("extinction_decor")

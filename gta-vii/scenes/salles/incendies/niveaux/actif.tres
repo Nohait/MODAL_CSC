@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="NiveauIncendie" format=3]
-
-[ext_resource type="Script" path="res://scenes/salles/incendies/niveaux/niveau_incendie.gd" id="script"]
-
-[resource]
-script = ExtResource("script")
-titre = "Incendie actif"
-poids = 0.45

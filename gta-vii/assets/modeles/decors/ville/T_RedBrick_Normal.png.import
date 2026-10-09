@@ -2,7 +2,7 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drjkodds7pgrk"
+uid="uid://d2o676xyk73m2"
 path.s3tc="res://.godot/imported/T_RedBrick_Normal.png-80dbae1c037dbe1601c005309bc3b417.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
@@ -26,8 +26,8 @@ compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://assets/modeles/decors/ville/T_RedBrick_Normal.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

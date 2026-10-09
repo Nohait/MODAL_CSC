@@ -5,8 +5,6 @@ extends RefCounted
 
 
 const BORD_SHADER = preload("res://assets/shaders/decors/bord_trou.gdshader")
-const CASSURE_SHADER = preload("res://assets/shaders/decors/cassure_plancher.gdshader")
-const BETON = preload("res://assets/textures/decors/etage_3/concrete_wall_009_diff_2k.jpg")
 const PROFONDEUR_SHADER = preload("res://assets/shaders/decors/profondeur_trou.gdshader")
 const DIRECTIONS = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 const PROFONDEUR := 3.0
@@ -66,7 +64,7 @@ static func trouver_trous(grille: Array, taille: Vector2i) -> Dictionary:
 ## [param largeur] règle le débord irrégulier vers le vide ; [param braises] règle son émission.
 ## Crée les rebords, les parois et les fonds noirs, mais AUCUNE collision.
 ## Ne renvoie rien. À appeler une fois par salle, après la construction de son sol.
-static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: StandardMaterial3D, largeur: float, braises: float, epaisseur: float = 0.35, relief: float = 0.035) -> void:
+static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: StandardMaterial3D, largeur: float, braises: float) -> void:
 	if trous.is_empty():
 		return
 	var ensemble := Node3D.new()
@@ -78,11 +76,9 @@ static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: Stand
 	# car ces surfaces utilisent des matériaux différents.
 	var bords := SurfaceTool.new()
 	var parois := SurfaceTool.new()
-	var cassures := SurfaceTool.new()
 	# En mode TRIANGLES, chaque groupe de trois sommets forme une face.
 	bords.begin(Mesh.PRIMITIVE_TRIANGLES)
 	parois.begin(Mesh.PRIMITIVE_TRIANGLES)
-	cassures.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var materiau_bord := ShaderMaterial.new()
 	materiau_bord.shader = BORD_SHADER
 	# Chaque nom correspond à un "uniform" déclaré dans bord_trou.gdshader.
@@ -95,25 +91,9 @@ static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: Stand
 		materiau_bord.set_shader_parameter("avec_texture", sol.albedo_texture != null)
 		materiau_bord.set_shader_parameter("texture_sol", sol.albedo_texture)
 		materiau_bord.set_shader_parameter("echelle_sol", Vector2(sol.uv1_scale.x, sol.uv1_scale.z))
-		# Reprendre aussi le PBR, sinon la texture correspond mais la lumière révèle le raccord.
-		materiau_bord.set_shader_parameter("rugosite_sol", sol.roughness)
-		materiau_bord.set_shader_parameter("avec_rugosite", sol.roughness_texture != null)
-		materiau_bord.set_shader_parameter("texture_rugosite", sol.roughness_texture)
-		var canal := Vector4.ZERO
-		if sol.roughness_texture_channel < 4: canal[sol.roughness_texture_channel] = 1.0
-		else: canal = Vector4(0.333333, 0.333333, 0.333333, 0.0)
-		materiau_bord.set_shader_parameter("canal_rugosite", canal)
-		materiau_bord.set_shader_parameter("speculaire_sol", sol.metallic_specular)
-		materiau_bord.set_shader_parameter("metallique_sol", sol.metallic)
-		materiau_bord.set_shader_parameter("avec_normale", sol.normal_enabled and sol.normal_texture != null)
-		materiau_bord.set_shader_parameter("texture_normale", sol.normal_texture)
-		materiau_bord.set_shader_parameter("force_normale", sol.normal_scale)
 		materiau_bord.set_shader_parameter("avec_suie", sol.detail_enabled and sol.detail_albedo != null)
 		materiau_bord.set_shader_parameter("texture_suie", sol.detail_albedo)
 		materiau_bord.set_shader_parameter("echelle_suie", Vector2(sol.uv2_scale.x, sol.uv2_scale.z))
-	var materiau_cassure := ShaderMaterial.new()
-	materiau_cassure.shader = CASSURE_SHADER
-	materiau_cassure.set_shader_parameter("texture_beton", BETON)
 	var materiau_paroi := ShaderMaterial.new()
 	materiau_paroi.shader = PROFONDEUR_SHADER
 	# Les fonds noirs sont uniquement visuels : aucun sol physique ou navigable
@@ -177,9 +157,6 @@ static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: Stand
 				var ex1 := a.lerp(b, t1)
 				var in0 := _point_irregulier(ex0, t0, interieur, retrait_a, retrait_b, largeur)
 				var in1 := _point_irregulier(ex1, t1, interieur, retrait_a, retrait_b, largeur)
-				# La lèvre se soulève ou s'affaisse légèrement, mais reste raccordée aux coins.
-				in0.y += sin(PI * t0) * sin(in0.x * 3.7 + in0.z * 4.1) * relief
-				in1.y += sin(PI * t1) * sin(in1.x * 3.7 + in1.z * 4.1) * relief
 				# Commencer la brûlure sur le parquet encore solide, pas exactement
 				# sur le bord carré de la grille : la transition masque ce quadrillage.
 				ex0 -= retrait_a.lerp(retrait_b, t0).normalized() * 0.5
@@ -189,15 +166,11 @@ static func construire(parent: Node3D, trous: Dictionary, pas: float, sol: Stand
 				ex0.y = 0.103
 				ex1.y = 0.103
 				_quad(bords, ex0, ex1, in1, in0, t0, t1)
-				# Une vraie tranche de dalle sépare le sol du vide. La profondeur varie dans l'espace.
-				var bas0 := in0 - Vector3.UP * epaisseur * (1.0 + 0.22 * sin(in0.x * 4.3 + in0.z * 5.7))
-				var bas1 := in1 - Vector3.UP * epaisseur * (1.0 + 0.22 * sin(in1.x * 4.3 + in1.z * 5.7))
-				_quad(cassures, in0, in1, bas1, bas0, t0, t1)
-				# Le fondu sombre commence sous la cassure : il ne recouvre jamais sa texture.
-				_quad(parois, bas0, bas1, Vector3(bas1.x, 0.1 - PROFONDEUR, bas1.z),
-					Vector3(bas0.x, 0.1 - PROFONDEUR, bas0.z), t0, t1)
+				# La paroi repart de la lèvre in0/in1 et conserve leurs x/z
+				# jusqu'au bas : sa face descend verticalement dans le trou.
+				_quad(parois, in0, in1, Vector3(in1.x, 0.1 - PROFONDEUR, in1.z),
+					Vector3(in0.x, 0.1 - PROFONDEUR, in0.z), t0, t1)
 	_ajouter_maillage(ensemble, "BordsBrules", bords, materiau_bord)
-	_ajouter_maillage(ensemble, "DalleCassee", cassures, materiau_cassure)
 	_ajouter_maillage(ensemble, "ParoisSombres", parois, materiau_paroi)
 
 
