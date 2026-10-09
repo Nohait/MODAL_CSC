@@ -192,11 +192,13 @@ func _on_surface_detection_body_entered(body: Node3D) -> void:
 		cible = body
 		en_idle = false
 		$SbireRepere.play("PopUp")
+		$SonRepere.play()
 
 	elif body.is_in_group("victime") and body.is_freed:
 		cible = body
 		en_idle = false
 		$SbireRepere.play("PopUp")
+		$SonRepere.play()
 
 func choisir_destination_idle():
 	var destination = Vector3.ZERO
@@ -250,7 +252,6 @@ func choisir_cible():
 		#les cibles ne peuvent etre que des gentils libérés
 		if body.is_in_group("player") or (body.is_in_group("victime") and body.is_freed):
 			var distance_body = global_position.distance_to(body.global_position)
-			print(body, " dbody: ",distance_body," dmin: ", distance_min)
 
 			#La cible choisie est la plus proche
 			if distance_body <= distance_min:
@@ -260,10 +261,9 @@ func choisir_cible():
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
 		en_idle = false
+		$SbireRepere.reset_section()
 		$SbireRepere.play("PopUp")
-		print("J'ai changé de cible de cible")
-		print("Cible avant: ", cible_avant)
-		print("Cible mtn: ", cible)
+		$SonRepere.play()
 
 func animation_enerve():
 	var tween_enerve = create_tween()
@@ -297,13 +297,17 @@ func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 
 	#Le joueur prends l'aggro
 	if cible != player:
+		if $SbireRepere.current_animation == "PopUp":
+			$SbireRepere.stop()
+			$SbireRepere.reset_section()
+		$SonRepere.play()
+		$SonRepere.play()
 		animation_enerve()
 
 		cible = player
 		chgt_cible_timer = aggro_cooldown #On veut que la cible ait le temps de "s'echapper"
 
 	afficher_degats(degats)
-
 
 	if vie <= 0:
 		mourir()
@@ -325,6 +329,7 @@ func mourir():
 	get_parent().add_child(steam_death)
 	steam_death.stream = preload("res://assets/sounds/ennemis/steam_death.wav")
 	steam_death.global_position = global_position
+	steam_death.volume_db = -10
 	steam_death.play()
 	
 	if anim != null : anim.pause()

@@ -2,10 +2,20 @@
 
 [ext_resource type="Script" uid="uid://cihc78eohkcd6" path="res://scenes/victimes/victime.gd" id="1_gyep1"]
 [ext_resource type="PackedScene" uid="uid://d1rj0yjqnrbvy" path="res://scenes/victimes/anims/victime_scene.tscn" id="2_feqff"]
-[ext_resource type="AudioStream" uid="uid://bty8pb0obb4ka" path="res://assets/sounds/victimes/woman_scream3.wav" id="2_ovwgb"]
-[ext_resource type="AudioStream" uid="uid://c1v61jkgc5lc4" path="res://assets/sounds/victimes/man_helpme.wav" id="3_feqff"]
-[ext_resource type="AudioStream" uid="uid://bi73govvxn4v" path="res://assets/sounds/victimes/man_help2.wav" id="4_m8bqf"]
+[ext_resource type="AudioStream" uid="uid://brs5l6k4wlub0" path="res://assets/sounds/victimes/cris/woman_scream3.wav" id="3_rp07q"]
+[ext_resource type="AudioStream" uid="uid://d0rj0m2tg116r" path="res://assets/sounds/victimes/cris/man_helpme.wav" id="4_t8nca"]
+[ext_resource type="AudioStream" uid="uid://caxy6eij4tnol" path="res://assets/sounds/victimes/cris/man_help2.wav" id="5_bw200"]
 [ext_resource type="AudioStream" uid="uid://sfuniwh3gbw" path="res://assets/sounds/victimes/liberation.wav" id="5_bwg0e"]
+[ext_resource type="AudioStream" uid="uid://cqcdvqjtehfht" path="res://assets/sounds/victimes/douleur/man_ouch1.wav" id="7_rp07q"]
+[ext_resource type="AudioStream" uid="uid://cbdn8mpc7bdfg" path="res://assets/sounds/victimes/douleur/man_ouch2.wav" id="8_t8nca"]
+[ext_resource type="AudioStream" uid="uid://b7y4naae8hgbk" path="res://assets/sounds/victimes/douleur/man_ouch3.wav" id="9_bw200"]
+[ext_resource type="AudioStream" uid="uid://djom8adk36wd8" path="res://assets/sounds/victimes/douleur/man_ouch4.wav" id="10_gq6ob"]
+[ext_resource type="AudioStream" uid="uid://cr014kqn5b6oo" path="res://assets/sounds/victimes/douleur/man_ouch5.wav" id="11_m55r2"]
+[ext_resource type="AudioStream" uid="uid://dgb6pf7kjcnc1" path="res://assets/sounds/victimes/douleur/woman_ouch1.wav" id="12_fsnxt"]
+[ext_resource type="AudioStream" uid="uid://e56ash5k3w46" path="res://assets/sounds/victimes/douleur/woman_ouch2.wav" id="13_ndl4g"]
+[ext_resource type="AudioStream" uid="uid://gh3g4asgryie" path="res://assets/sounds/victimes/douleur/woman_ouch3.wav" id="14_mwtdt"]
+[ext_resource type="AudioStream" uid="uid://dhicgpdm8yfti" path="res://assets/sounds/victimes/douleur/woman_ouch4.wav" id="15_gq4ck"]
+[ext_resource type="AudioStream" uid="uid://cunofkadna3yr" path="res://assets/sounds/victimes/douleur/woman_ouch5.wav" id="16_b233b"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_feqff"]
 animation = &"idle"
@@ -78,37 +88,37 @@ script = ExtResource("1_gyep1")
 transform = Transform3D(1.135, 0, 0, 0, 1.135, 0, 0, 0, 1.135, 0, -0.6208883, 0)
 
 [node name="Skeleton3D" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="0" unique_id=1164513802]
-bones/0/rotation = Quaternion(-0.46130323, 0.023318507, 0.019313145, 0.8867258)
-bones/1/rotation = Quaternion(0.14301927, 0.027572392, 0.013552909, 0.989243)
-bones/2/rotation = Quaternion(0.07693519, 0.014537152, 0.009047021, 0.9968891)
-bones/3/rotation = Quaternion(0.07692492, 0.014402103, 0.009266219, 0.9968898)
-bones/4/rotation = Quaternion(-0.05205124, 0.061617553, -0.07513845, 0.9939055)
-bones/5/rotation = Quaternion(-0.02480094, 0.005316135, -0.022512784, 0.9994248)
-bones/7/rotation = Quaternion(-0.6156208, -0.3393547, 0.41650784, -0.576516)
-bones/8/rotation = Quaternion(0.22592713, -0.46975273, -0.06388009, 0.8510046)
-bones/9/rotation = Quaternion(0.017663756, -0.0013683737, 0.954618, 0.29730585)
-bones/10/rotation = Quaternion(-0.08144371, -0.3762821, -0.1515753, 0.91038656)
-bones/11/rotation = Quaternion(0.3115453, 0.024707342, 0.16079916, 0.9362013)
-bones/15/rotation = Quaternion(0.22202669, 0.088302664, 0.103604175, 0.9654911)
-bones/16/rotation = Quaternion(0.72257894, -0.0052770353, -0.08735857, 0.68572617)
-bones/19/rotation = Quaternion(0.21801348, -0.00022874828, -0.013133771, 0.9758574)
-bones/21/rotation = Quaternion(0.46291447, 0.0009453285, -0.053378098, 0.8847939)
-bones/23/rotation = Quaternion(0.24525149, 0.015607233, -0.091435604, 0.9650117)
-bones/25/rotation = Quaternion(0.49246863, 0.00563554, -0.054537166, 0.8686015)
-bones/27/rotation = Quaternion(0.22322196, -0.039796446, -0.19095986, 0.95505106)
-bones/29/rotation = Quaternion(0.45830232, -0.00027168222, -0.05972303, 0.8867875)
-bones/31/rotation = Quaternion(0.58853954, -0.42593297, 0.52349937, 0.44514138)
-bones/32/rotation = Quaternion(0.15714724, 0.24350831, -0.601941, 0.7440937)
-bones/33/rotation = Quaternion(0.014733037, 0.0029024815, -0.778212, 0.6278221)
-bones/34/rotation = Quaternion(0.15607311, 0.6402481, -0.038905628, 0.7511391)
-bones/55/rotation = Quaternion(0.048874903, 0.5896915, 0.8046954, -0.048379995)
-bones/56/rotation = Quaternion(-0.46480653, -0.059087846, 0.024047907, 0.8831111)
-bones/57/rotation = Quaternion(0.58037436, -0.046999823, -0.046889644, 0.8116391)
-bones/58/rotation = Quaternion(0.3458017, -0.05227524, 0.01620112, 0.9367103)
-bones/60/rotation = Quaternion(-0.02990649, 0.59487253, 0.7949764, 0.11508635)
-bones/61/rotation = Quaternion(-0.4792731, -0.049015783, 0.031501528, 0.8757297)
-bones/62/rotation = Quaternion(0.6156972, 0.010739878, 0.042718295, 0.7867508)
-bones/63/rotation = Quaternion(0.33391988, 0.05158017, -0.015935808, 0.9410542)
+bones/0/rotation = Quaternion(-0.41973364, -0.17139211, -0.035615567, 0.8906065)
+bones/1/rotation = Quaternion(0.13848886, -0.025786197, -0.057956588, 0.98833036)
+bones/2/rotation = Quaternion(0.06949818, -0.0018378143, -0.02889008, 0.997162)
+bones/3/rotation = Quaternion(0.06949179, -0.0049400516, -0.028552996, 0.9971617)
+bones/4/rotation = Quaternion(-0.011362267, -0.08771557, 0.05633638, 0.99448645)
+bones/5/rotation = Quaternion(0.0059286477, -0.0628103, 0.049084175, 0.9968002)
+bones/7/rotation = Quaternion(-0.6452541, -0.30539662, 0.4338748, -0.5496661)
+bones/8/rotation = Quaternion(-0.027127631, -0.43294242, 0.15241395, 0.8880287)
+bones/9/rotation = Quaternion(0.016718805, -0.0019706415, 0.9035527, 0.42814633)
+bones/10/rotation = Quaternion(-0.0489285, -0.59181577, 0.20187147, 0.7788505)
+bones/11/rotation = Quaternion(0.31143463, 0.024822174, 0.16075245, 0.93624306)
+bones/15/rotation = Quaternion(0.22190721, 0.08841409, 0.10355783, 0.9655133)
+bones/16/rotation = Quaternion(0.72232777, -0.005274995, -0.087332845, 0.68599397)
+bones/19/rotation = Quaternion(0.21788144, -0.00022153942, -0.013148805, 0.9758867)
+bones/21/rotation = Quaternion(0.46279037, 0.00094503904, -0.053364422, 0.88485956)
+bones/23/rotation = Quaternion(0.2451198, 0.015605063, -0.091455914, 0.96504337)
+bones/25/rotation = Quaternion(0.4923625, 0.0056343703, -0.054525275, 0.8686624)
+bones/27/rotation = Quaternion(0.22308993, -0.039823834, -0.19097866, 0.95507705)
+bones/29/rotation = Quaternion(0.45829543, -0.00027172812, -0.059722316, 0.88679105)
+bones/31/rotation = Quaternion(0.6155613, -0.39636242, 0.5467305, 0.4062842)
+bones/32/rotation = Quaternion(0.2363578, 0.34520486, -0.4692541, 0.7776691)
+bones/33/rotation = Quaternion(0.015109905, 0.0027845686, -0.79812175, 0.6023002)
+bones/34/rotation = Quaternion(0.15200467, 0.5410086, -0.2515546, 0.78798765)
+bones/55/rotation = Quaternion(0.043392915, 0.64984405, 0.73784894, -0.17719693)
+bones/56/rotation = Quaternion(-0.5222189, -0.06605571, 0.0342637, 0.8495588)
+bones/57/rotation = Quaternion(0.6056302, -0.052652314, 0.02053443, 0.7937368)
+bones/58/rotation = Quaternion(0.3148311, -0.051651854, 0.015937392, 0.9476072)
+bones/60/rotation = Quaternion(-0.01873818, 0.53007734, 0.8474063, -0.0238658)
+bones/61/rotation = Quaternion(-0.22966155, -0.055225283, 0.019019876, 0.97151643)
+bones/62/rotation = Quaternion(0.49373403, 0.035508838, 0.11657732, 0.8610317)
+bones/63/rotation = Quaternion(0.36695302, 0.05220342, -0.016223747, 0.9286319)
 
 [node name="AnimationTree" type="AnimationTree" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="1" unique_id=2048477472]
 root_node = NodePath("../..")
@@ -177,16 +187,16 @@ billboard = 1
 [node name="cris" type="Node3D" parent="Sons" unique_id=81621523]
 
 [node name="scream1" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=297965837]
-stream = ExtResource("2_ovwgb")
+stream = ExtResource("3_rp07q")
 bus = &"Effets"
 
 [node name="man_helpme1" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=203652440]
-stream = ExtResource("3_feqff")
+stream = ExtResource("4_t8nca")
 unit_size = 5.0
 bus = &"Effets"
 
 [node name="man_helpme2" type="AudioStreamPlayer3D" parent="Sons/cris" unique_id=573838042]
-stream = ExtResource("4_m8bqf")
+stream = ExtResource("5_bw200")
 bus = &"Effets"
 
 [node name="UI" type="Node3D" parent="Sons" unique_id=2011843790]
@@ -195,6 +205,45 @@ bus = &"Effets"
 stream = ExtResource("5_bwg0e")
 pitch_scale = 20.0
 bus = &"Effets"
+
+[node name="douleur" type="Node3D" parent="Sons" unique_id=280727777]
+
+[node name="douleur1" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=456205434]
+stream = ExtResource("7_rp07q")
+volume_db = -5.0
+
+[node name="douleur2" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=1612812586]
+stream = ExtResource("8_t8nca")
+
+[node name="douleur3" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=575111317]
+stream = ExtResource("9_bw200")
+
+[node name="douleur4" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=1269705184]
+stream = ExtResource("10_gq6ob")
+volume_db = -3.0
+
+[node name="douleur5" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=362534481]
+stream = ExtResource("11_m55r2")
+
+[node name="douleur6" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=1447094092]
+stream = ExtResource("12_fsnxt")
+
+[node name="douleur7" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=1379878073]
+stream = ExtResource("13_ndl4g")
+max_db = 4.765
+
+[node name="douleur8" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=256079132]
+stream = ExtResource("14_mwtdt")
+volume_db = 2.0
+
+[node name="douleur9" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=764684743]
+stream = ExtResource("15_gq4ck")
+volume_db = 6.0
+max_db = 6.0
+
+[node name="douleur10" type="AudioStreamPlayer3D" parent="Sons/douleur" unique_id=1486236587]
+stream = ExtResource("16_b233b")
+volume_db = 3.0
 
 [connection signal="body_entered" from="Detection" to="." method="_on_detection_body_entered"]
 [connection signal="body_exited" from="Detection" to="." method="_on_detection_body_exited"]

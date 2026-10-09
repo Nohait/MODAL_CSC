@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx3f7fj7lyhiw"
-path.s3tc="res://.godot/imported/T_MarbleFloor_BaseColor.png-ac19f1dd47f2734c8f7a7830ccf2fdfa.s3tc.ctex"
+uid="uid://b1db4178j2til"
+path.s3tc="res://.godot/imported/hound_fire_dog_mtl_emissive.jpg-742e015dd2a8ba087dce795e8f967a6d.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "952c82963c6064cfba470437271b260a"
+}
 
 [deps]
 
-source_file="res://assets/modeles/decors/ville/T_MarbleFloor_BaseColor.png"
-dest_files=["res://.godot/imported/T_MarbleFloor_BaseColor.png-ac19f1dd47f2734c8f7a7830ccf2fdfa.s3tc.ctex"]
+source_file="res://assets/modeles/ennemis/mobiles/chien_magma/hound_fire_dog_mtl_emissive.jpg"
+dest_files=["res://.godot/imported/hound_fire_dog_mtl_emissive.jpg-742e015dd2a8ba087dce795e8f967a6d.s3tc.ctex"]
 
 [params]
 

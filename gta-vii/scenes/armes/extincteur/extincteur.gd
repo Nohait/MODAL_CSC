@@ -11,7 +11,8 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @onready var steam_damage = $"Sons/steam_damage".get_children()
 @onready var steam_damage_sound = $"Sons/steam_damage/steam_damage2"
 @onready var souffle: AudioStreamPlayer3D = $Sons/Souffle
-@onready var volume_souffle: float = souffle.volume_db
+
+@onready var volume_souffle: float = -24
 var fondu_souffle: Tween
 @export_group("Souffle sonore")
 @export_range(0.05, 0.5, 0.01) var seuil_reserve_souffle := 0.25
@@ -106,6 +107,8 @@ func _ready() -> void:
 	actualiser_position_jet()
 	# Le composant visuel reste indépendant du calcul des dégâts.
 	add_child(preload("res://scenes/effets/combat/contact_jet_murs.tscn").instantiate())
+	
+	souffle.volume_db = volume_souffle
 
 
 func configurer_jet() -> void:
@@ -320,17 +323,22 @@ func attaque_1(cible, delta: float):
 			if not delais_impacts.has(id):
 				RETOUR_COMBAT.creer_impact(cible, muzzle.global_position)
 				delais_impacts[id] = intervalle_impacts
+		#part de random
 		var multiplier = randf_range(0.9,1.1)
+		
 		if ralentissement_jet > 0.0 and cible.has_method("appliquer_gel"):
 			cible.appliquer_gel(ralentissement_jet, duree_gel)
+			
 		if is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations):
 			porteur.ameliorations.effets_cartes.toucher_jet(cible, delta)
+			
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0, &"mousse")
 		# Colorer la zone uniquement après un impact, y compris sur les flaques.
 		indicateur_attaque.signaler_impact()
+		#sons
 		if not steam_damage_sound.playing:
-			print('son')
 			steam_damage_sound = steam_damage.pick_random()
+			steam_damage_sound.volume_db = -22
 			steam_damage_sound.play()
 
 func regler_variantes(pulse: bool, double: bool) -> void:

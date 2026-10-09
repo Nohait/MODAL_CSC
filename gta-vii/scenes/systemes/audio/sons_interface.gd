@@ -1,10 +1,13 @@
 extends Node
 
-@export_range(-40.0, 0.0, 1.0) var volume_clic_db := -5.0
+@export_range(-40.0, 0.0, 1.0) var volume_clic_db := -12.0
+@export_range(-40.0, 0.0, 1.0) var volume_select_db := -20.0
 @export_range(-40.0, 0.0, 1.0) var volume_booster_db := -16.0
 var clic: AudioStreamPlayer
 var booster: AudioStreamPlayer
+var select: AudioStreamPlayer
 var derniere_image_clic := -1
+var derniere_image_select := -1
 var attenuation_musique: AudioEffectAmplify
 var fondu_musique: Tween
 @export_range(-40.0, 0.0, 1.0) var volume_succes_db := -24.0
@@ -48,7 +51,8 @@ func preparer_carte(puissance: int) -> void:
 func _ready() -> void:
 	# L'autoload survit aux changements de scène et aux pauses des menus.
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	clic = _creer_lecteur(preload("res://assets/sounds/interfaces/clic_bouton.ogg"))
+	clic = _creer_lecteur(preload("res://assets/sounds/interfaces/confirmer.wav"))
+	select = _creer_lecteur(preload("res://assets/sounds/interfaces/select.wav"))
 	booster = _creer_lecteur(preload("res://assets/sounds/interfaces/ouverture_booster.wav"))
 	get_tree().node_added.connect(_brancher_bouton)
 	_brancher_arbre(get_tree().root)
@@ -70,6 +74,13 @@ func _brancher_bouton(noeud: Node) -> void:
 		# pressed couvre la souris et la validation manette, sans son au simple survol.
 		if not noeud.pressed.is_connected(jouer_clic):
 			noeud.pressed.connect(jouer_clic)
+			
+		if not noeud.mouse_entered.is_connected(jouer_select):
+			noeud.mouse_entered.connect(jouer_select)
+
+		if not noeud.focus_entered.is_connected(jouer_select):
+			noeud.focus_entered.connect(jouer_select)
+			
 	elif noeud is Control:
 		# Les cartes et certaines vignettes sont des Control avec leur propre signal.
 		for nom in ["selected", "selectionne"]:
@@ -84,6 +95,15 @@ func jouer_clic() -> void:
 	derniere_image_clic = image
 	clic.volume_db = volume_clic_db
 	clic.play()
+
+func jouer_select() -> void:
+	# Une activation peut traverser plusieurs boutons/signaux : ne jouer qu'un clic.
+	var image := Engine.get_process_frames()
+	if image == derniere_image_select:
+		return
+	derniere_image_select = image
+	select.volume_db = volume_select_db
+	select.play()
 
 func ouvrir_booster() -> void:
 	booster.volume_db = volume_booster_db
