@@ -10,22 +10,36 @@ var animation: Tween
 var physique_active := false
 var termine := false
 @onready var sbire = get_parent()
+@onready var corps: MeshInstance3D = sbire.get_node("sbire/Armature/Skeleton3D/defaultMaterial")
 
 func _ready() -> void:
 	physique_active = sbire.is_physics_processing()
 	sbire.set_physics_process(false)
-	var maillages: Array[Node] = sbire.get_node("Sketchfab_Scene").find_children("*", "MeshInstance3D", true, false)
-	var goutte := sbire.get_node_or_null("droplet")
-	if goutte is MeshInstance3D: maillages.append(goutte)
+	if sbire.anim != null: sbire.anim.pause()
+
+	# Flammes : récupérées d'abord pour exclure leurs meshes du dissolve.
+	var flammes: Array[Node3D] = []
+	var mains = sbire.get("feux_mains")
+	if mains != null:
+		for feu in mains:
+			if feu is Node3D: flammes.append(feu)
+	var feu_corps := sbire.find_child("Flammes", true, false)
+	if feu_corps is Node3D: flammes.append(feu_corps)
+
+	var maillages := [corps]
+
 	var bas := INF
 	var haut := -INF
 	for maillage in maillages:
-		if maillage.mesh == null: continue
-		var volume: AABB = maillage.global_transform * maillage.mesh.get_aabb()
+		var volume: AABB = maillage.global_transform * maillage.get_aabb()
 		bas = minf(bas, volume.position.y)
 		haut = maxf(haut, volume.end.y)
+	if bas == INF:
+		push_warning("apparition_sbire : aucun MeshInstance3D trouvé sur %s" % sbire.name)
+		bas = sbire.global_position.y
+		haut = bas + 1.0
+
 	for maillage in maillages:
-		if maillage.mesh == null: continue
 		var remplacement: Material = maillage.material_override
 		for i in range(maillage.mesh.get_surface_count()):
 			var original: Material = maillage.get_active_material(i)
@@ -33,7 +47,7 @@ func _ready() -> void:
 			mat.shader = SHADER
 			mat.set_shader_parameter("bas", bas)
 			mat.set_shader_parameter("hauteur", maxf(haut - bas, 0.1))
-			if original is StandardMaterial3D:
+			if original is BaseMaterial3D:
 				mat.set_shader_parameter("teinte", original.albedo_color)
 				mat.set_shader_parameter("utilise_texture", original.albedo_texture != null)
 				mat.set_shader_parameter("texture_corps", original.albedo_texture)
@@ -43,13 +57,11 @@ func _ready() -> void:
 			surfaces.append({"maillage": maillage, "surface": i, "original": maillage.get_surface_override_material(i), "mat": mat, "remplacement": remplacement})
 			maillage.set_surface_override_material(i, mat)
 		maillage.material_override = null
-	var flammes: Array[Node3D] = []
-	for feu in sbire.feux_mains: flammes.append(feu)
-	var feu_corps := sbire.get_node_or_null("Flammes")
-	if feu_corps is Node3D: flammes.append(feu_corps)
+
 	for feu in flammes:
 		feux.append({"noeud": feu, "echelle": feu.scale})
 		feu.scale *= 0.05
+
 	var cercle = CERCLE.instantiate()
 	add_child(cercle)
 	cercle.top_level = true
@@ -83,7 +95,9 @@ func terminer() -> void:
 			surface.maillage.material_override = surface.remplacement
 	for feu in feux:
 		if is_instance_valid(feu.noeud): feu.noeud.scale = feu.echelle
-	if not sbire.est_mort: sbire.set_physics_process(physique_active)
+	if not sbire.est_mort:
+		sbire.set_physics_process(physique_active)
+		if sbire.anim != null: sbire.anim.play(sbire.ANIM_DEFAUT)
 
 func annuler() -> void:
 	if animation: animation.kill()
