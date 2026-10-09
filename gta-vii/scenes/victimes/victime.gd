@@ -1,6 +1,8 @@
 extends CharacterBody3D
 
 const EFFET_LIBERATION = preload("res://scenes/effets/liberation/liberation_victime.tscn")
+@onready var victime_manager = preload("res://scenes/victimes/victim_manager.gd")
+
 
 @export_group("Retour visuel — libération")
 @export var afficher_effet_liberation := true
@@ -108,9 +110,12 @@ var speed: float = 6.0
 var multiplicateur_vitesse := 1.0
 ## Distance à laquelle la victime s'arrête de suivre sa cible.
 @export_range(0.0, 10.0, 0.1, "or_greater")
-var stop_distance: float = 2.0
+var stop_distance: float = 1.5
 var stop_distance_player: float
-var arret := true
+var waiting := true
+var waiting_cooldown := 3.0
+var waiting_timer := 3.0
+signal waiting_termine
 var follow_target: Node3D = null
 var player_nearby := false
 var is_freed := false
@@ -242,7 +247,7 @@ func free_victim() -> void:
 		return
 	is_freed = true
 	$"Sons/UI/liberation".play()
-	arret = false
+	waiting = false
 	interaction_label.visible = false
 	freed.emit(self)
 	playback.travel("Locomotion")
@@ -288,12 +293,14 @@ func follow_target_node(delta: float) -> void:
 		stop_distance = 0.1
 	else:
 		stop_distance = stop_distance_player
+	
 
 	var distance := to_target.length()
 	var vitesse_voulue := Vector3.ZERO
-
+	var facteur := 1
+	
 	if distance > stop_distance:
-		arret = false
+		waiting = false
 		var point_sol := NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(), global_position)
 		navigation_agent.path_height_offset = point_sol.y - global_position.y
 		navigation_agent.target_position = follow_target.global_position
@@ -301,19 +308,33 @@ func follow_target_node(delta: float) -> void:
 		var next_position := navigation_agent.get_next_path_position()
 		var direction := next_position - global_position
 		direction.y = 0.0
-
+		
 		if direction.length() > 0.01:
 			direction = _direction_sur_navigation(direction.normalized())
 			# 0 à stop_distance, 1 à stop_distance + distance_ralentissement
-			var facteur := clampf((distance - stop_distance) / distance_ralentissement, 0.0, 1.0)
+			
+			#on établit un coefficient de ralentissement vers la cible
+			if follow_target.is_in_group("fleche"):
+				#si c'est une fleche, on ne ralentit pas trop, car la distance de stop est bien plus petit et la vitesse tendrait vers 0
+				facteur = clampf(distance, 0.0, 1.0)
+			else:
+				facteur = clampf((distance - stop_distance) / distance_ralentissement, 0.0, 1.0)
 			vitesse_voulue = direction * speed * multiplicateur_vitesse * facteur
-	elif follow_target.is_in_group("fleche"):
-		arret = true
+	
+	#si le facteur est null, c'est qu'on est arrivé, et si on est arrivé alros qu'on suit une fleche, on déclenche le timer
+	if waiting == true or (follow_target.is_in_group("fleche") and facteur <= 0):
+		waiting = true
+		waiting_timer -= delta
+		if waiting_timer <0:
+			waiting_timer = waiting_cooldown
+			waiting_termine.emit()
+				
 
 	# Accélération / décélération progressive vers la vitesse voulue
 	var horizontale := Vector3(velocity.x, 0.0, velocity.z).move_toward(vitesse_voulue, acceleration * delta)
 	velocity.x = horizontale.x
 	velocity.z = horizontale.z
+	
 	move_and_slide()
 
 func _direction_sur_navigation(direction_chemin: Vector3) -> Vector3:

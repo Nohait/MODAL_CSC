@@ -200,6 +200,7 @@ func peupler_salle(salle: Node3D) -> void:
 		# La victime connaît les ennemis de sa salle.
 		victime.set_ennemis_container(salle.get_node("Ennemis"))
 		victim_manager.surveiller_victime(victime)
+		
 		victime.freed.connect(_on_victim_freed.bind(salle), CONNECT_ONE_SHOT)
 		victime.died.connect(_on_victim_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
