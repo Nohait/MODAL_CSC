@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://07swcw2w7mpo"]
+
+[ext_resource type="Texture2D" uid="uid://ewenamobnppd" path="res://scenes/armes/bouche_incendie/icone_bouche.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"hydrant_electrique"
+titre = "Court-circuit"
+description = "Électrifie la bouche à incendie : ses ondes paralysent les ennemis au lieu de les repousser."
+pictogramme = ExtResource("icone")
+effet = "hydrant_electrique"
+obtention_unique = true
+puissance_variable = false
+rarete = "epique"
+valeur = 35.0
+texte_effet = "Dégâts des ondes : +{valeur} %"
+contrepartie = 0.0

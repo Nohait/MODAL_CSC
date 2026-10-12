@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://bs3u1acxen64p"]
+
+[ext_resource type="Texture2D" uid="uid://ewenamobnppd" path="res://scenes/armes/bouche_incendie/icone_bouche.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"hydrant_belier"
+titre = "Coup de bélier"
+description = "Les ennemis projetés contre un obstacle subissent un second impact."
+pictogramme = ExtResource("icone")
+effet = "hydrant_belier"
+obtention_unique = true
+puissance_variable = false
+rarete = "legendaire"
+valeur = 25.0
+texte_effet = "Collision : {valeur} dégâts"
+contrepartie = 0.0

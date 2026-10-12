@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://coxv7ad033iaj"]
+
+[ext_resource type="Texture2D" uid="uid://ewenamobnppd" path="res://scenes/armes/bouche_incendie/icone_bouche.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"hydrant_circuit"
+titre = "Circuit fermé"
+description = "Le dash récupère de la mousse ; alimenter la bouche prolonge brièvement sa présence."
+pictogramme = ExtResource("icone")
+active = false
+effet = "hydrant_circuit"
+obtention_unique = true
+puissance_variable = false
+rarete = "synergie"
+valeur = 1.0
+texte_effet = ""
+contrepartie = 0.0

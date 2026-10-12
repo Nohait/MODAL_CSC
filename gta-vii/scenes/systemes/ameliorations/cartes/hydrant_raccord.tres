@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://8wupem3cel5h"]
+
+[ext_resource type="Texture2D" uid="uid://ewenamobnppd" path="res://scenes/armes/bouche_incendie/icone_bouche.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"hydrant_raccord"
+titre = "Raccord pompier"
+description = "Tirer sur la bouche renforce sa prochaine projection d’eau."
+pictogramme = ExtResource("icone")
+effet = "hydrant_raccord"
+obtention_unique = true
+prerequis = Array[StringName]([&"hydrant_fuite"])
+puissance_variable = false
+rarete = "epique"
+valeur = 1.0
+texte_effet = ""
+contrepartie = 0.0

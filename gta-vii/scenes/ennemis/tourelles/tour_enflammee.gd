@@ -79,6 +79,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	var statut := get_node_or_null("EtatMousse")
+	if statut != null and statut.paralysie_restant > 0.0: return
 	if est_mort:
 		return
 	repos_restant = maxf(0.0, repos_restant - delta)

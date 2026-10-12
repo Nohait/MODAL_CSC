@@ -17,6 +17,33 @@ extends Node3D
 @export_range(0, 150, 1) var gouttes_impact := 48
 @export_range(0.4, 3.0, 0.1) var duree_cycle_visee := 1.2
 @export_range(0.002, 0.05, 0.002) var epaisseur_contour := 0.008
+@export_range(0.0, 0.3, 0.01) var rebond_impact := 0.08
+@export_range(0.0, 0.5, 0.01) var force_camera_impact := 0.12
+@export_range(0.05, 0.5, 0.01) var duree_camera_impact := 0.18
+@export_range(0.3, 2.0, 0.1) var duree_avertissement := 1.0
+@export_range(0.2, 0.9, 0.05) var opacite_minimale := 0.45
+@export_range(0.5, 4.0, 0.1) var frequence_pulsation := 1.7
+@export_range(0.1, 0.5, 0.05) var duree_fondu_final := 0.25
+@export_range(0.1, 1.5, 0.05) var hauteur_couronne_eau := 0.55
+@export_group("Fonte lourde · présentation")
+@export_range(2.0, 4.0, 0.1) var acceleration_fonte := 3.0
+@export_range(1.0, 1.5, 0.05) var ampleur_eau_fonte := 1.25
+@export_range(1.0, 1.5, 0.05) var force_camera_fonte := 1.3
+@export_range(0.7, 1.0, 0.02) var tonalite_impact_fonte := 0.86
+@export_group("Matériaux du hydrant")
+@export var couleur_peinture := Color(0.62, 0.055, 0.035)
+@export var couleur_raccords := Color(0.26, 0.29, 0.31)
+@export_range(0.6, 1.0, 0.05) var rugosite_modele := 0.85
+@export_group("Sons de l'impact")
+@export var son_impact: AudioStream = preload("res://assets/sounds/bouche_incendie/impact.wav")
+@export var son_eau: AudioStream = preload("res://assets/sounds/bouche_incendie/onde_eau.wav")
+@export_range(-40.0, 0.0, 1.0) var volume_impact_db := -17.0
+@export_range(-40.0, 0.0, 1.0) var volume_eau_db := -20.0
+@export var son_chute: AudioStream = preload("res://assets/sounds/design/mouvements/swish-3.wav")
+@export_range(-40.0, 0.0, 1.0) var volume_chute_db := -25.0
+@export_range(1.0, 10.0, 0.5) var portee_proche_sons := 5.0
+@export_range(5.0, 40.0, 1.0) var portee_maximale_sons := 22.0
+@export_group("Interface")
 @export_range(12.0, 48.0, 1.0) var taille_pictogramme := 28.0
 @export_range(-10.0, 10.0, 0.5) var decalage_vertical_pictogramme := -1.0
 @export_flags_3d_physics var masque_decor := 1
@@ -40,6 +67,10 @@ var temps := 0.0
 var phase := "disponible"
 var touches: Dictionary = {}
 var salle_depart: Node
+var materiaux_modele: Array[ShaderMaterial] = []
+var ombre: MeshInstance3D
+var souffle_lance := false
+@onready var cartes_bouche: Node = $AmeliorationsBouche
 
 func _ready() -> void:
 	# Une action dédiée permet de changer la touche sans dépendre de l'extincteur.
@@ -115,35 +146,66 @@ func _physics_process(delta: float) -> void:
 			disque.hide()
 		else:
 			# Une onde de prévisualisation ; aucun dégât n'est appliqué ici.
+			var plan: PlaneMesh = disque.mesh
+			plan.size = Vector2.ONE * cartes_bouche.rayon() * 2.0
 			cycle_visee = fmod(cycle_visee + delta / duree_cycle_visee, 1.0)
 			materiau.set_shader_parameter("cycle_visee", cycle_visee)
 			_actualiser_cible()
 	if phase == "disponible": return
 	temps += delta
+	cartes_bouche.avancer(delta)
 	if phase == "chute":
-		var p := clampf(temps / duree_chute, 0.0, 1.0)
-		corps.global_position = cible + Vector3.UP * hauteur_chute * (1.0 - p * p)
-		recharge_icone.set_shader_parameter("recharge", clampf(temps / (duree_chute + duree_presence), 0.0, 1.0))
+		var p := clampf(temps / cartes_bouche.chute(), 0.0, 1.0)
+		ombre.material_override.set_shader_parameter("approche", p * p)
+		if p >= 0.65 and not souffle_lance:
+			souffle_lance = true
+			_jouer_son_impact(son_chute, volume_chute_db)
+		var acceleration := pow(p, acceleration_fonte) if cartes_bouche.valeur(&"hydrant_fonte") > 0 else p * p
+		corps.global_position = cible + Vector3.UP * hauteur_chute * (1.0 - acceleration)
+		recharge_icone.set_shader_parameter("recharge", clampf(temps / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
 		if p >= 1.0:
 			phase = "presence"
 			temps = 0.0
+			materiau.set_shader_parameter("progression", 0.0)
+			materiau.set_shader_parameter("couleur", Color(0.65, 0.9, 1.0, 0.85))
 			corps.collision_layer = 1
 			# Les deux cartes de navigation doivent contourner la bouche posée.
 			corps.add_to_group("obstacles_navigation")
 			corps.set_meta("salle_navigation", salle_depart)
 			salle_depart.demander_navigation()
 			# Tout le disque frappe à l'atterrissage ; l'onde suivante est visuelle.
-			_frapper(rayon)
+			cartes_bouche.atterrir()
 			_eclabousser()
-			joueur.secouer_camera(0.12, 0.18)
+			var couronne = preload("res://scenes/armes/bouche_incendie/couronne_eau.tscn").instantiate()
+			couronne.rayon = cartes_bouche.rayon()
+			couronne.hauteur = hauteur_couronne_eau * (ampleur_eau_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
+			couronne.duree = duree_onde
+			corps.add_child(couronne)
+			if cartes_bouche.valeur(&"hydrant_electrique") > 0:
+				var arcs = preload("res://scenes/armes/bouche_incendie/arcs_electriques.gd").new()
+				arcs.onde = true
+				arcs.rayon = cartes_bouche.rayon()
+				arcs.duree = duree_onde
+				couronne.add_child(arcs)
+			ombre.hide()
+			_jouer_son_impact(son_impact, volume_impact_db, tonalite_impact_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
+			_jouer_son_impact(son_eau, volume_eau_db)
+			joueur.secouer_camera(force_camera_impact * (force_camera_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0), duree_camera_impact)
+			_animer_impact()
 	elif phase == "presence":
 		var p := clampf(temps / duree_onde, 0.0, 1.0)
 		materiau.set_shader_parameter("progression", p)
 		disque.visible = p < 1.0
-		recharge_icone.set_shader_parameter("recharge", clampf((duree_chute + temps) / (duree_chute + duree_presence), 0.0, 1.0))
-		# La dernière seconde annonce la disparition, sans ajouter de cooldown.
-		dessin.visible = temps < duree_presence - 1.0 or sin(temps * 20.0) > 0.0
-		if temps >= duree_presence: _terminer()
+		recharge_icone.set_shader_parameter("recharge", clampf((cartes_bouche.chute() + temps) / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
+		# Une pulsation continue annonce la fin sans faire disparaître le modèle entre deux cycles.
+		var avertissement := maxf(0.0, temps - (cartes_bouche.presence() - duree_avertissement))
+		if avertissement > 0.0:
+			var pulsation := (1.0 - cos(avertissement * TAU * frequence_pulsation)) * 0.5
+			var opacite := lerpf(1.0, opacite_minimale, pulsation)
+			opacite *= clampf((cartes_bouche.presence() - temps) / duree_fondu_final, 0.0, 1.0)
+			for mat in materiaux_modele:
+				mat.set_shader_parameter("opacite", opacite)
+		if temps >= cartes_bouche.presence(): _terminer()
 
 func _actualiser_cible() -> void:
 	var camera: Camera3D = joueur.camera
@@ -159,7 +221,7 @@ func _actualiser_cible() -> void:
 	if point == null: return
 	var direction: Vector3 = point - joueur.global_position
 	direction.y = 0.0
-	cible = joueur.global_position + direction.limit_length(portee)
+	cible = joueur.global_position + direction.limit_length(cartes_bouche.portee())
 	cible.y = hauteur_sol
 	# Chercher la vraie surface du sol, et non supposer que son dessus est à zéro.
 	var sol := espace.intersect_ray(PhysicsRayQueryParameters3D.create(cible + Vector3.UP * 3.0, cible - Vector3.UP * 4.0, masque_decor))
@@ -183,6 +245,7 @@ func _actualiser_cible() -> void:
 
 func _lancer() -> void:
 	phase = "chute"
+	souffle_lance = false
 	temps = 0.0
 	recharge_icone.set_shader_parameter("recharge", 0.0)
 	touches.clear()
@@ -193,6 +256,7 @@ func _lancer() -> void:
 	add_child(corps)
 	dessin = MODELE.instantiate()
 	corps.add_child(dessin)
+	_preparer_fondu_modele()
 	# Normaliser le modèle importé en conservant ses proportions.
 	var boite := _bornes(dessin, Transform3D.IDENTITY)
 	var facteur := hauteur_modele / maxf(boite.size.y, 0.01)
@@ -207,6 +271,18 @@ func _lancer() -> void:
 	forme.position.y = hauteur_modele / 2.0
 	corps.add_child(forme)
 	corps.global_position = cible + Vector3.UP * hauteur_chute
+	ombre = MeshInstance3D.new()
+	ombre.top_level = true
+	var plan_ombre := PlaneMesh.new()
+	plan_ombre.size = Vector2.ONE * hauteur_modele * 1.6
+	ombre.mesh = plan_ombre
+	var mat_ombre := ShaderMaterial.new()
+	mat_ombre.shader = preload("res://scenes/armes/bouche_incendie/ombre_chute.gdshader")
+	ombre.material_override = mat_ombre
+	ombre.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	corps.add_child(ombre)
+	ombre.global_position = cible + Vector3.UP * 0.025
+	cartes_bouche.lancer()
 
 func _bornes(noeud: Node3D, parent_transform: Transform3D) -> AABB:
 	var transformation := parent_transform * noeud.transform
@@ -220,33 +296,39 @@ func _bornes(noeud: Node3D, parent_transform: Transform3D) -> AABB:
 				resultat = boite if resultat.size == Vector3.ZERO else resultat.merge(boite)
 	return resultat
 
-func _frapper(distance: float) -> void:
-	if not is_instance_valid(joueur.ameliorations): return
-	for ennemi in get_tree().get_nodes_in_group("enemies"):
-		if not is_instance_valid(ennemi) or not ennemi is Node3D or ennemi.get("est_mort") == true: continue
-		if not salle_depart.is_ancestor_of(ennemi) or not ennemi.has_method("prendre_degats"): continue
-		var id := ennemi.get_instance_id()
-		if touches.has(id): continue
-		var direction: Vector3 = ennemi.global_position - cible
-		direction.y = 0.0
-		if direction.length() > distance: continue
-		# L'eau ne frappe pas à travers les murs. Exclure la bouche elle-même du rayon.
-		var requete := PhysicsRayQueryParameters3D.create(cible + Vector3.UP * 0.6, ennemi.global_position + Vector3.UP * 0.6, masque_decor)
-		requete.exclude = [corps.get_rid()]
-		if not get_world_3d().direct_space_state.intersect_ray(requete).is_empty(): continue
-		touches[id] = true
-		var effets = joueur.ameliorations.effets_cartes
-		effets.infliger(ennemi, degats, &"eau")
-		if is_instance_valid(ennemi) and ennemi is CharacterBody3D and ennemi.get("est_mort") != true:
-			if direction.length_squared() < 0.001: direction = joueur.last_direction
-			effets.etat(ennemi).repousser(direction, force_recul, duree_recul, true)
+func _preparer_fondu_modele() -> void:
+	materiaux_modele.clear()
+	var boite := _bornes(dessin, Transform3D.IDENTITY)
+	var surfaces := dessin.find_children("*", "MeshInstance3D", true, false)
+	if dessin is MeshInstance3D:
+		surfaces.append(dessin)
+	for surface: MeshInstance3D in surfaces:
+		if surface.mesh == null:
+			continue
+		for index in range(surface.mesh.get_surface_count()):
+			# Le modèle possède un seul matériau rouge : varier son aspect selon ses parties.
+			var mat := ShaderMaterial.new()
+			mat.shader = preload("res://scenes/armes/bouche_incendie/aspect_bouche.gdshader")
+			mat.set_shader_parameter("peinture", couleur_peinture)
+			mat.set_shader_parameter("metal", couleur_raccords)
+			mat.set_shader_parameter("rugosite", rugosite_modele)
+			mat.set_shader_parameter("electrique", cartes_bouche.valeur(&"hydrant_electrique") > 0.0)
+			mat.set_shader_parameter("fonte_lourde", cartes_bouche.valeur(&"hydrant_fonte") > 0.0)
+			mat.set_shader_parameter("texture_givre", preload("res://assets/textures/effets/verglas/Ice003_Color.png"))
+			mat.set_shader_parameter("transformation_modele", dessin.transform * dessin.global_transform.affine_inverse() * surface.global_transform)
+			mat.set_shader_parameter("minimum_modele", boite.position)
+			mat.set_shader_parameter("taille_modele", boite.size)
+			surface.set_surface_override_material(index, mat)
+			materiaux_modele.append(mat)
 
 func _terminer() -> void:
+	cartes_bouche.terminer()
 	if is_instance_valid(corps):
 		corps.remove_from_group("obstacles_navigation")
 		corps.queue_free()
 		if is_instance_valid(salle_depart): salle_depart.demander_navigation()
 	phase = "disponible"
+	materiaux_modele.clear()
 	disque.hide()
 	icone.modulate = Color.WHITE
 	recharge_icone.set_shader_parameter("recharge", 1.0)
@@ -276,9 +358,33 @@ func _eclabousser() -> void:
 	eau.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	bille.material = eau
 	gouttes.mesh = bille
+	gouttes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	corps.add_child(gouttes)
 	gouttes.position.y = 0.1
+	gouttes.finished.connect(gouttes.queue_free)
 	gouttes.restart()
+
+func _animer_impact() -> void:
+	# Seul le dessin rebondit : la collision et la navigation restent posées au sol.
+	var position_repos := dessin.position
+	var animation := dessin.create_tween()
+	animation.tween_property(dessin, "position", position_repos + Vector3.UP * rebond_impact, 0.09).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	animation.tween_property(dessin, "position", position_repos, 0.13).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+func _jouer_son_impact(son: AudioStream, volume: float, hauteur_son: float = 1.0) -> void:
+	if son == null:
+		return
+	var lecteur := AudioStreamPlayer3D.new()
+	lecteur.stream = son
+	lecteur.bus = &"Effets"
+	lecteur.volume_db = volume
+	lecteur.pitch_scale = hauteur_son
+	lecteur.unit_size = portee_proche_sons
+	lecteur.max_distance = portee_maximale_sons
+	corps.add_child(lecteur)
+	lecteur.position.y = 0.2
+	lecteur.finished.connect(lecteur.queue_free)
+	lecteur.play()
 
 func _salle_actuelle() -> Node:
 	if is_instance_valid(joueur.ameliorations):

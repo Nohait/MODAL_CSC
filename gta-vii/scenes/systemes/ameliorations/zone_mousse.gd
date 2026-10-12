@@ -7,6 +7,11 @@ var duree := 4.0
 var rayon := 0.9
 var degats := 8.0
 var gel := 0.0
+var ralentissement_eau := 0.0
+var gele_progressivement := false
+@export_range(0.1, 3.0, 0.1) var delai_gel_eau := 1.2
+var contacts_eau: Dictionary = {}
+var obstacles_exclus: Array[RID] = []
 var couleur_gel := Color(0.74, 0.94, 1.0, 0.4)
 var expansive := false
 var empreinte := PackedVector2Array()
@@ -39,8 +44,9 @@ func _ready() -> void:
 		materiau = preload("res://assets/materiaux/verglas.tres").duplicate()
 	else:
 		materiau = ShaderMaterial.new()
-		materiau.shader = preload("res://scenes/systemes/ameliorations/zone_mousse.gdshader")
+		materiau.shader = preload("res://scenes/armes/bouche_incendie/nappe_eau.gdshader") if type_zone == "eau" else preload("res://scenes/systemes/ameliorations/zone_mousse.gdshader")
 	var couleur := couleur_gel if gel > 0 else Color(0.85, 0.9, 0.8, 0.4)
+	if type_zone == "eau" and gel <= 0: couleur = Color(0.22, 0.38, 0.45, 0.28)
 	if type_zone == "abri": couleur = Color(0.2, 0.7, 1.0, 0.2)
 	materiau.set_shader_parameter("couleur", couleur)
 	materiau.set_shader_parameter("forme_libre", not empreinte.is_empty())
@@ -107,10 +113,24 @@ func _physics_process(delta: float) -> void:
 	if type_zone == "abri": return
 	for corps in get_overlapping_bodies():
 		if not _dans_empreinte(corps): continue
-		if not effets.visible_depuis(global_position + Vector3.UP, corps): continue
+		if type_zone == "eau":
+			var ray := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * 0.6, corps.global_position + Vector3.UP * 0.6, 1)
+			ray.exclude = obstacles_exclus
+			if not get_world_3d().direct_space_state.intersect_ray(ray).is_empty(): continue
+		elif not effets.visible_depuis(global_position + Vector3.UP, corps): continue
 		if corps.is_in_group("enemies"):
 			if corps.get("est_mort") == true: continue
 			if degats > 0: effets.infliger(corps, degats * pas)
 			if gel > 0 and corps.has_method("appliquer_gel"): corps.appliquer_gel(gel, 0.7)
-		elif corps.is_in_group("victime") and corps is CharacterBody3D:
+			if ralentissement_eau > 0 and corps.has_method("appliquer_gel"):
+				corps.appliquer_gel(ralentissement_eau, 0.3)
+				if gele_progressivement:
+					var id := corps.get_instance_id()
+					var contact: Dictionary = contacts_eau.get(id, {"temps": 0.0, "dernier": temps})
+					if temps - contact.dernier > 0.4: contact.temps = 0.0
+					contact.temps += pas
+					contact.dernier = temps
+					contacts_eau[id] = contact
+					if contact.temps >= delai_gel_eau: effets.etat(corps).gel_restant = maxf(effets.etat(corps).gel_restant, 0.4)
+		elif type_zone != "eau" and corps.is_in_group("victime") and corps is CharacterBody3D:
 			effets.proteger_victime(corps)

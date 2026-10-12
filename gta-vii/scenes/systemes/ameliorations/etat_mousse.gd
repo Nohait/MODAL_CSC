@@ -4,6 +4,8 @@ var effets: Node
 var temps_jet := 0.0
 var enrobage_restant := 0.0
 var gel_restant := 0.0
+var paralysie_restant := 0.0
+var degats_collision := 0.0
 var delai_gel := 0.0
 var dernier_contact := 0.0
 var recul := Vector3.ZERO
@@ -67,15 +69,24 @@ func _physics_process(delta: float) -> void:
 	if dernier_contact > 0.3: temps_jet = 0.0
 	enrobage_restant = maxf(0, enrobage_restant - delta)
 	gel_restant = maxf(0, gel_restant - delta)
+	paralysie_restant = maxf(0.0, paralysie_restant - delta)
 	delai_gel = maxf(0, delai_gel - delta)
-	halo.visible = enrobage_restant > 0 or gel_restant > 0
+	halo.visible = enrobage_restant > 0 or gel_restant > 0 or paralysie_restant > 0
 	halo_materiau.albedo_color = Color(0.15, 0.65, 1, 0.8) if gel_restant > 0 else Color(0.9, 0.95, 0.85, 0.7)
+	if paralysie_restant > 0: halo_materiau.albedo_color = Color(0.65, 0.85, 1.0, 0.9)
+	if recul_restant <= 0: degats_collision = 0.0
 	if recul_restant > 0 and get_parent() is CharacterBody3D:
 		var pas := minf(delta, recul_restant)
 		var frein := recul_restant / recul_initial if recul_prioritaire else 1.0
 		recul_restant = maxf(0.0, recul_restant - delta)
 		# L'impulsion ralentit progressivement et les collisions arrêtent le recul aux murs.
-		get_parent().move_and_collide(recul * pas * frein)
+		var collision = get_parent().move_and_collide(recul * pas * frein)
+		if collision != null and degats_collision > 0:
+			var obstacle = collision.get_collider()
+			if obstacle is StaticBody3D:
+				var degats := degats_collision
+				degats_collision = 0.0
+				effets.infliger(get_parent(), degats, &"eau")
 
 func _mort() -> void:
 	# La disparition des renforts à la mort du boss ne déclenche pas de réactions en chaîne.

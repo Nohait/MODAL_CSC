@@ -77,6 +77,9 @@ var branches_zombie: Node
 
 
 func _ready() -> void:
+	# Les synergies communes complètent celles propres au mode.
+	for definition in [preload("res://scenes/systemes/ameliorations/synergies/hydrant_patinoire.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_essorage.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_circuit.tres")]:
+		if not synergies.has(definition): synergies.append(definition)
 	synergy_manager = preload("res://scenes/systemes/ameliorations/synergy_manager.gd").new()
 	synergy_manager.catalogue = synergies
 	synergy_manager.synergie_decouverte.connect(_recevoir_synergie)

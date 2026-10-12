@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3 uid="uid://bxn417m3bju4k"]
+
+[ext_resource type="Texture2D" uid="uid://ewenamobnppd" path="res://scenes/armes/bouche_incendie/icone_bouche.svg" id="icone"]
+[ext_resource type="Script" uid="uid://1sjvuu5eq3i5" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+
+[resource]
+script = ExtResource("script")
+identifiant = &"hydrant_distance"
+titre = "Service à distance"
+description = "Lancez plus loin, mais avec moins de dégâts."
+pictogramme = ExtResource("icone")
+effet = "hydrant_distance"
+obtention_unique = true
+incompatibles = Array[StringName]([&"hydrant_fonte"])
+puissance_variable = false
+valeur = 40.0
+texte_effet = "Portée : +{valeur} % · dégâts : −{contrepartie} %"

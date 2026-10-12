@@ -404,7 +404,7 @@ func appliquer_gel(pourcentage: float, duree: float) -> void:
 
 func est_gele() -> bool:
 	var statut := get_node_or_null("EtatMousse")
-	return statut != null and statut.gel_restant > 0
+	return statut != null and (statut.gel_restant > 0 or statut.paralysie_restant > 0)
 
 func subit_recul() -> bool:
 	var statut := get_node_or_null("EtatMousse")
