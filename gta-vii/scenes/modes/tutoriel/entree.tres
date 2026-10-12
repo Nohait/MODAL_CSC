@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/etape_tutoriel.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titre = "PRÊT À ENTRER"
+consigne = "Rejoignez la porte du bâtiment, puis appuyez sur E pour entrer."
+repliques = PackedStringArray("Bien. Là-haut, on cherche d’abord les habitants. Ceux que tu libères comptent sur toi pour les escorter.", "La mousse, la réserve, une porte de sortie : tu as les bases. Pour le reste, on apprend en avançant. Quand tu es prêt, entre.")
+objectif = 4

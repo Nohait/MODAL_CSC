@@ -1,5 +1,7 @@
 extends Node3D
 
+@export var session_tutoriel := false
+
 # A SUPPRIMER DANS LE JEU REEL 
 func _unhandled_key_input(event: InputEvent) -> void:
 	# Pour beta_test : R recommence le niveau. On ignore 
@@ -17,7 +19,7 @@ func _ready() -> void:
 	# main ne gère plus les apparitions : il relie seulement les systèmes du jeu.
 	$player.died.connect(_on_player_died, CONNECT_ONE_SHOT)
 	# Tous les enfants doivent avoir terminé leur _ready avant de générer les salles.
-	if $UpgradeManager.mode_jeu == "classique":
+	if $UpgradeManager.mode_jeu == "classique" and not session_tutoriel:
 		var point = preload("res://scenes/jeu/sauvegarde/point_reprise_classique.gd").new()
 		point.name = "PointRepriseClassique"
 		add_child(point)
@@ -25,7 +27,7 @@ func _ready() -> void:
 
 
 func _on_player_died() -> void:
-	if $UpgradeManager.mode_jeu == "classique": SauvegardeClassique.supprimer()
+	if $UpgradeManager.mode_jeu == "classique" and not session_tutoriel: SauvegardeClassique.supprimer()
 	# Arrêter le combat immédiatement. L'écran suivant rétablira un arbre non pausé.
 	get_tree().paused = true
 	# Les dégâts arrivent pendant la physique : différer le changement de scène

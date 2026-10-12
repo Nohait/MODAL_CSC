@@ -7,6 +7,7 @@ var mode_suppression := "zombie"
 func _ready() -> void:
 	super._ready()
 	%ModeZombie.pressed.connect(_jouer_zombie)
+	%Tutoriel.pressed.connect(func(): changer_scene("res://scenes/modes/tutoriel/tutoriel.tscn"))
 	%SupprimerZombie.pressed.connect(_demander_suppression.bind("zombie"))
 	%SupprimerClassique.pressed.connect(_demander_suppression.bind("classique"))
 	_creer_confirmation_suppression()
