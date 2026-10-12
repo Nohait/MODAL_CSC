@@ -31,8 +31,8 @@ var est_mort := false
 @onready var player = get_tree().get_first_node_in_group("player")
 var cible = null
 
-@onready var modele: Node3D = $sbire
-@onready var anim : AnimationPlayer = $sbire/Armature/AnimationPlayer
+@onready var modele: Node3D = _trouver_modele_combat()
+@onready var anim : AnimationPlayer = get_node_or_null("sbire/Armature/AnimationPlayer") as AnimationPlayer
 const ANIM_FRAPPE := &"attack"
 const ANIM_DEFAUT := &"idle"
 
@@ -341,6 +341,13 @@ func mourir():
 	print("Bravo, vous avez tué le sbire")
 	queue_free()
 
+func _trouver_modele_combat() -> Node3D:
+	# Les ennemis hérités partagent le combat, mais pas le nom de leur modèle importé.
+	for chemin in ["sbire", "Sketchfab_Scene"]:
+		var candidat := get_node_or_null(chemin) as Node3D
+		if candidat != null: return candidat
+	return null
+
 func _preparer_feux_mains() -> void:
 	var squelette: Node = $sbire/Armature/Skeleton3D
 	feux_mains.append(squelette.get_node("RHand/vfx_fire"))
@@ -382,11 +389,11 @@ func attaque() -> void:
 	cible_attaque.prendre_degats(degats)
 
 func _jouer_frappe() -> void:
-	print("frappe demandée | anim=",anim," | liste =",anim.get_animation_list())
-	print("anim_speed_sale : ", anim.speed_scale)
 	if anim == null or not anim.has_animation(ANIM_FRAPPE):
 		print("SBIRE : animation de frappe introuvable")
 		return
+	print("frappe demandée | anim=",anim," | liste =",anim.get_animation_list())
+	print("anim_speed_sale : ", anim.speed_scale)
 	anim.play(ANIM_FRAPPE)
 	anim.queue(ANIM_DEFAUT)
 

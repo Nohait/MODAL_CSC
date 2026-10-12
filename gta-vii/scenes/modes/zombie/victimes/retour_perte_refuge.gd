@@ -35,7 +35,7 @@ func _preparer() -> void:
 	nombre.modulate = Color("ff8b75")
 	add_child(nombre)
 	son = AudioStreamPlayer3D.new()
-	son.stream = preload("res://assets/sounds/victimes/victim_death2.wav")
+	son.stream = preload("res://assets/sounds/victimes/mort/victim_death2.wav")
 	son.bus = &"Effets"
 	son.volume_db = volume_son
 	son.max_distance = 25.0
