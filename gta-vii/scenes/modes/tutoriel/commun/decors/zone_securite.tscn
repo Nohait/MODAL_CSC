@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/effets/annonce_impact_boss.gdshader" id="repere_shader"]
+
+[sub_resource type="ShaderMaterial" id="vert"]
+shader = ExtResource("repere_shader")
+shader_parameter/couleur = Color(0.2, 0.85, 0.55, 1)
+shader_parameter/charge = 0.12
+shader_parameter/opacite = 0.85
+
+[sub_resource type="StandardMaterial3D" id="bord"]
+albedo_color = Color(0.45, 0.9, 0.65, 1)
+emission_enabled = true
+emission = Color(0.08, 0.22, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_color = Color(0.19, 0.24, 0.25, 1)
+metallic = 0.3
+
+[sub_resource type="PlaneMesh" id="sol"]
+size = Vector2(4.8, 4.8)
+material = SubResource("vert")
+
+[sub_resource type="TorusMesh" id="bordure"]
+inner_radius = 2.32
+outer_radius = 2.4
+rings = 48
+ring_segments = 8
+material = SubResource("bord")
+
+[sub_resource type="BoxMesh" id="banc"]
+size = Vector3(0.5, 0.12, 1.6)
+material = SubResource("metal")
+
+[sub_resource type="BoxMesh" id="pied"]
+size = Vector3(0.12, 0.42, 0.12)
+material = SubResource("metal")
+
+[node name="ZoneSecurite" type="Node3D"]
+
+[node name="Sol" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.025, 0)
+cast_shadow = 0
+mesh = SubResource("sol")
+
+[node name="Bordure" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("bordure")
+
+[node name="BancGauche" type="MeshInstance3D" parent="."]
+position = Vector3(-2.9, 0.48, 0)
+mesh = SubResource("banc")
+
+[node name="Pied1" type="MeshInstance3D" parent="BancGauche"]
+position = Vector3(0, -0.26, -0.6)
+mesh = SubResource("pied")
+
+[node name="Pied2" type="MeshInstance3D" parent="BancGauche"]
+position = Vector3(0, -0.26, 0.6)
+mesh = SubResource("pied")
+
+[node name="BancDroit" type="MeshInstance3D" parent="."]
+position = Vector3(2.9, 0.48, 0)
+mesh = SubResource("banc")
+
+[node name="Pied1" type="MeshInstance3D" parent="BancDroit"]
+position = Vector3(0, -0.26, -0.6)
+mesh = SubResource("pied")
+
+[node name="Pied2" type="MeshInstance3D" parent="BancDroit"]
+position = Vector3(0, -0.26, 0.6)
+mesh = SubResource("pied")
+
+[node name="Panneau" type="Label3D" parent="."]
+position = Vector3(0, 1.65, -2.6)
+text = "ZONE DE SÉCURITÉ"
+font_size = 56
+pixel_size = 0.006
+modulate = Color(0.6, 1, 0.75, 1)
+outline_modulate = Color(0.03, 0.08, 0.05, 1)
+billboard = 1
+no_depth_test = false
+

@@ -371,6 +371,7 @@ func _direction_sur_navigation(direction_chemin: Vector3) -> Vector3:
 
 
 func prendre_degats(degats: float) -> void:
+	if OS.is_debug_build() and get_meta("protection_debug_tutoriel", false): return
 	if est_morte:
 		return
 	var pompier = get_tree().get_first_node_in_group("player")
@@ -389,6 +390,7 @@ func prendre_degats(degats: float) -> void:
 
 # Dégâts du timer
 func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
+	if OS.is_debug_build() and get_meta("protection_debug_tutoriel", false): return
 
 	# Une victime libérée n'est plus touchée par le compte à rebours.
 	if est_morte or is_freed:

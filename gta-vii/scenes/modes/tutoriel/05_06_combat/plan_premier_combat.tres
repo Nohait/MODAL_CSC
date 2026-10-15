@@ -1,0 +1,13 @@
+[gd_resource type="Resource" format=3]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/plan_appartement.gd" id="script"]
+[ext_resource type="PackedScene" path="res://scenes/decors/interieurs/pieces/appartement_en_l.tscn" id="annexe0"]
+[ext_resource type="PackedScene" path="res://scenes/decors/interieurs/pieces/cuisine_incendie.tscn" id="annexe1"]
+[resource]
+script = ExtResource("script")
+sols = Array[Rect2]([Rect2(-6, -10, 12, 13), Rect2(-3, 3, 6, 7), Rect2(-10, -3, 4, 6)])
+contour = PackedVector2Array(-3, 10, 3, 10, 3, 3, 6, 3, 6, -10, -6, -10, -6, -3, -10, -3, -10, 3, -3, 3)
+navigation = true
+annexes = Array[PackedScene]([ExtResource("annexe0"), ExtResource("annexe1")])
+positions_annexes = Array[Vector3]([Vector3(-10, 0, 0), Vector3(6, 0, -4)])
+orientations_annexes = Array[float]([1.5707963, -1.5707963])
+lumieres = Array[Vector3]([Vector3(-2, 2.4, 6), Vector3(-2, 2.4, -3)])

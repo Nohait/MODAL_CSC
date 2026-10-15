@@ -3,11 +3,49 @@ extends "res://scenes/interfaces/menus/navigation_menus.gd"
 var confirmation_suppression: Window
 var message_sauvegarde: Label
 var mode_suppression := "zombie"
+@export_range(0.2, 1.2, 0.05) var duree_depart := 0.5
+var temps_titre := 0.0
+
+func _process(delta: float) -> void:
+	temps_titre += delta
+	var chaleur := (sin(temps_titre * 2.1) + sin(temps_titre * 3.7) * 0.35 + 1.35) / 2.7
+	$Menu/Colonne/Titre.add_theme_color_override("font_color", Color("ead6ac").lerp(Color("ffe3ac"), chaleur))
+	$Menu/Colonne/Titre.add_theme_color_override("font_shadow_color", Color(0.9, 0.28, 0.04, 0.25 + chaleur * 0.2))
+
+func changer_scene(chemin: String) -> void:
+	if changement_en_cours:
+		return
+	changement_en_cours = true
+	$Illustration/Vue3D/Decor.animer_depart(duree_depart)
+	for bouton: BaseButton in $Menu.find_children("*", "BaseButton", true, false):
+		bouton.disabled = true
+	var animation := create_tween()
+	animation.tween_property($Menu, "modulate:a", 0.0, duree_depart)
+	await animation.finished
+	# Le chargement partagé reste responsable de la préparation et des erreurs.
+	changement_en_cours = false
+	super.changer_scene(chemin)
+	if chemin in ["res://scenes/jeu/main.tscn", "res://scenes/modes/zombie/mode_zombie.tscn"] or chemin.begins_with("res://scenes/modes/tutoriel/"):
+		Reglages.chargement.chargement_echoue.connect(_restaurer_menu, CONNECT_ONE_SHOT)
+	elif not changement_en_cours:
+		_restaurer_menu()
+
+func _restaurer_menu() -> void:
+	$Menu.modulate.a = 1.0
+	var decor = $Illustration/Vue3D/Decor
+	decor.depart_en_cours = false
+	for bouton: BaseButton in $Menu.find_children("*", "BaseButton", true, false):
+		bouton.disabled = false
 
 func _ready() -> void:
 	super._ready()
+	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	$Menu/Colonne/Titre.resized.connect(_centrer_flammes)
+	_centrer_flammes.call_deferred()
 	%ModeZombie.pressed.connect(_jouer_zombie)
-	%Tutoriel.pressed.connect(func(): changer_scene("res://scenes/modes/tutoriel/tutoriel.tscn"))
+	%Tutoriel.pressed.connect(_jouer_tutoriel)
+	var reprise_tutoriel = preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree())
+	%Tutoriel.text = "Continuer le tutoriel" if reprise_tutoriel.disponible() else "Tutoriel"
 	%SupprimerZombie.pressed.connect(_demander_suppression.bind("zombie"))
 	%SupprimerClassique.pressed.connect(_demander_suppression.bind("classique"))
 	_creer_confirmation_suppression()
@@ -39,6 +77,13 @@ func _ready() -> void:
 	$Menu.modulate.a = 0.0
 	var animation := create_tween()
 	animation.tween_property($Menu, "modulate:a", 1.0, 0.45)
+
+func _centrer_flammes() -> void:
+	var titre: Label = $Menu/Colonne/Titre
+	var flammes: ColorRect = $Menu/Flammes
+	# Le fond suit les dimensions réelles du titre, y compris lors d'un redimensionnement.
+	flammes.position = titre.global_position - $Menu.global_position - Vector2(28, 35)
+	flammes.size = titre.size + Vector2(56, 60)
 
 func _actualiser_zombie() -> void:
 	var disponible := SauvegardeZombie.disponible()
@@ -141,3 +186,6 @@ func nouvelle_partie() -> void:
 	else:
 		SauvegardeClassique.reprise.clear()
 	changer_scene("res://scenes/jeu/main.tscn")
+
+func _jouer_tutoriel() -> void:
+	changer_scene(preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).chemin_reprise())

@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/double_porte.gd" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="vitre"]
+albedo_color = Color(0.075, 0.105, 0.12, 1)
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_color = Color(0.14, 0.17, 0.19, 1)
+metallic = 0.25
+
+[sub_resource type="BoxMesh" id="vantail"]
+size = Vector3(1.65, 3.4, 0.12)
+material = SubResource("vitre")
+
+[sub_resource type="BoxMesh" id="poignee"]
+size = Vector3(0.045, 0.5, 0.12)
+material = SubResource("metal")
+
+[sub_resource type="BoxMesh" id="montant"]
+size = Vector3(0.15, 3.6, 0.25)
+material = SubResource("metal")
+
+[sub_resource type="BoxMesh" id="linteau"]
+size = Vector3(3.6, 0.15, 0.25)
+material = SubResource("metal")
+
+[sub_resource type="BoxShape3D" id="collision"]
+size = Vector3(3.4, 3.4, 0.2)
+
+[node name="DoublePorte" type="StaticBody3D"]
+script = ExtResource("script")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("collision")
+
+[node name="VantailGauche" type="MeshInstance3D" parent="."]
+position = Vector3(-0.86, 0, 0)
+mesh = SubResource("vantail")
+
+[node name="VantailDroit" type="MeshInstance3D" parent="."]
+position = Vector3(0.86, 0, 0)
+mesh = SubResource("vantail")
+
+[node name="PoigneeGauche" type="MeshInstance3D" parent="."]
+position = Vector3(-0.18, -0.15, 0.14)
+mesh = SubResource("poignee")
+
+[node name="PoigneeDroite" type="MeshInstance3D" parent="."]
+position = Vector3(0.18, -0.15, 0.14)
+mesh = SubResource("poignee")
+
+[node name="MontantGauche" type="MeshInstance3D" parent="."]
+position = Vector3(-1.8, 0, 0)
+mesh = SubResource("montant")
+
+[node name="MontantDroit" type="MeshInstance3D" parent="."]
+position = Vector3(1.8, 0, 0)
+mesh = SubResource("montant")
+
+[node name="Linteau" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.8, 0)
+mesh = SubResource("linteau")

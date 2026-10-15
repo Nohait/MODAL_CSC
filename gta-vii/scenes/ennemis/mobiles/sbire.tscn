@@ -125,7 +125,9 @@ libraries/ = SubResource("AnimationLibrary_pilda")
 
 [node name="SonRepere" type="AudioStreamPlayer3D" parent="." unique_id=1544712082]
 stream = ExtResource("8_xwblr")
-volume_db = -10.0
+bus = &"Effets"
+volume_db = -18.0
+max_distance = 18.0
 
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]
 

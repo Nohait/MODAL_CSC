@@ -4,6 +4,15 @@ const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 @export_group("Retour visuel — mort")
 @export var afficher_cendres := true
 @export_range(0.2, 2.0, 0.05) var duree_cendres := 0.7
+@export_group("Contact du jet")
+@export var reaction_mousse := true
+@export_range(0.0, 0.08, 0.005) var tassement_mousse := 0.045
+@export_range(0.1, 0.6, 0.05) var intervalle_reaction := 0.25
+@export_range(0.0, 0.4, 0.01) var derive_mort_mousse := 0.16
+var prochaine_reaction := 0
+var tween_contact: Tween
+var taille_avant_contact := Vector3.ONE
+var direction_mort_mousse := Vector3.ZERO
 
 @export_group("Apparition")
 # Seuil dans le parcours : une salle plus tardive reste autorisée aux étages suivants.
@@ -291,6 +300,10 @@ func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 	if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations):
 		degats *= pompier.ameliorations.effets_cartes.modifier_degats(self, source)
 	var vie_avant: float = vie
+	if source == &"mousse" and degats > 0.0:
+		_reagir_au_jet(pompier)
+	else:
+		direction_mort_mousse = Vector3.ZERO
 	vie -= degats
 	vie = max(vie, 0)
 	if vie < vie_avant: degats_subis.emit(vie_avant - vie)
@@ -300,7 +313,6 @@ func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 		if $SbireRepere.current_animation == "PopUp":
 			$SbireRepere.stop()
 			$SbireRepere.reset_section()
-		$SonRepere.play()
 		$SonRepere.play()
 		animation_enerve()
 
@@ -317,6 +329,9 @@ func mourir():
 	if est_mort:
 		return
 	est_mort = true
+	if tween_contact:
+		tween_contact.kill()
+		if is_instance_valid(modele): modele.scale = taille_avant_contact
 	var apparition := get_node_or_null("ApparitionSbire")
 	if apparition != null: apparition.annuler()
 	if animation_feux:
@@ -335,11 +350,25 @@ func mourir():
 	if anim != null : anim.pause()
 	
 	# Une copie du visuel termine l’animation ; le vrai sbire meurt immédiatement.
-	if afficher_cendres:
-		RETOUR_COMBAT.creer_cendres(self, [modele], duree_cendres)
+	if afficher_cendres and is_instance_valid(modele):
+		RETOUR_COMBAT.creer_cendres(self, [modele], duree_cendres, direction_mort_mousse * derive_mort_mousse)
 	died.emit()
 	print("Bravo, vous avez tué le sbire")
 	queue_free()
+
+func _reagir_au_jet(pompier: Node3D) -> void:
+	if not is_instance_valid(pompier): return
+	direction_mort_mousse = global_position - pompier.global_position
+	direction_mort_mousse.y = 0.0
+	direction_mort_mousse = direction_mort_mousse.normalized()
+	if not reaction_mousse or not is_instance_valid(modele) or Time.get_ticks_msec() < prochaine_reaction: return
+	prochaine_reaction = Time.get_ticks_msec() + int(intervalle_reaction * 1000.0)
+	# Seul le modèle réagit : la collision et les animations du squelette restent intactes.
+	if tween_contact:
+		tween_contact.kill()
+		modele.scale = taille_avant_contact
+	taille_avant_contact = modele.scale
+	tween_contact = RETOUR_COMBAT.reagir_impact(modele, tassement_mousse)
 
 func _trouver_modele_combat() -> Node3D:
 	# Les ennemis hérités partagent le combat, mais pas le nom de leur modèle importé.

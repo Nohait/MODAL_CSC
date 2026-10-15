@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/05_06_combat/05_premier_combat.tscn" id="combat"]
+
+[node name="TutorielRavitaillement" instance=ExtResource("combat")]
+debut_ravitaillement = true

@@ -1,0 +1,23 @@
+Spatial Fire Raymarched — Dari0us
+Source : https://github.com/Dari0us/Godot-Spatial-Fire-Raymarched
+Présentation : https://godotshaders.com/shader/spatial-fire-raymarched/
+Téléchargement : https://github.com/Dari0us/Godot-Spatial-Fire-Raymarched/archive/refs/heads/main.zip
+Date : 2026-10-13. Licence du projet : MIT, conservée dans LICENSE.txt.
+
+Fichiers repris : FireEffect.gdshader et campfire3DNoiseResource.tres.
+Shader original conservé dans source_originale.gdshader.txt.
+SHA256 original normalisé LF : fe20d8c05d0f159241a8c568770a852c3a23cec14b1c070470dd91744e4434fb
+Les modèles, textures de bois et scènes de démonstration ne sont pas intégrés.
+
+Adaptations locales dans brasier_volume.gdshader :
+- Volume rectangulaire à profondeur distincte, support BoxMesh sans billboard.
+- Rayons compatibles avec la caméra orthographique et limités au décor opaque.
+- Empreinte rectangulaire et densité minimale à la base du brasier.
+- Temps animé fourni par le script pour une diminution continue de l'agitation.
+- Correction de la portée de la variable de pas de raymarching.
+- Distorsion de forme réduite pour le volume peu profond du passage.
+- Silhouette animée de langues de feu ; densité minimale limitée à un lit de 22 cm.
+- Épaisseur adaptée à l'intensité et contours mobiles bornés à l'intérieur du passage.
+- Absorption réduite pour conserver les détails dans le volume plus épais.
+
+L'extinction et les collisions restent pilotées par les composants du tutoriel.

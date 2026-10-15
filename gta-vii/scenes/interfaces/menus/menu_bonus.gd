@@ -236,7 +236,7 @@ func _choisir_onglet(ouvrir_glossaire: bool) -> void:
 func _demander_retour_titre() -> void:
 	var avertissement: Label = confirmation.get_node("Contenu/Marge/Disposition/Avertissement")
 	if get_tree().current_scene.get("session_tutoriel") == true:
-		avertissement.text = "Le tutoriel recommencera depuis le début.\nVoulez-vous retourner à l’écran titre ?"
+		avertissement.text = "Le tutoriel reprendra au début de la dernière salle atteinte.\nVoulez-vous retourner à l’écran titre ?"
 	elif upgrades.mode_jeu == "zombie" and SauvegardeZombie.disponible():
 		avertissement.text = "Votre partie reprendra au début de la vague %d.\nLa progression depuis son lancement sera annulée.\nVoulez-vous retourner à l’écran titre ?" % SauvegardeZombie.dernier_point.vague
 	elif upgrades.mode_jeu == "classique" and SauvegardeClassique.disponible():

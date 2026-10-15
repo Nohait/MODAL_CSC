@@ -255,7 +255,7 @@ func _physics_process(delta: float) -> void:
 	# Même test pour les personnages (bodies) et les flaques (areas).
 	var candidats := damage_area.get_overlapping_bodies() + damage_area.get_overlapping_areas()
 	for cible in candidats:
-		if cible.is_in_group("enemies") and not cible.is_queued_for_deletion():
+		if (cible.is_in_group("enemies") or cible.is_in_group("cibles_entrainement")) and not cible.is_queued_for_deletion():
 			if cible_dans_jet(cible.global_position, cible.hitbox_radius):
 				attaque_1(cible, delta)
 
@@ -329,7 +329,7 @@ func attaque_1(cible, delta: float):
 		if ralentissement_jet > 0.0 and cible.has_method("appliquer_gel"):
 			cible.appliquer_gel(ralentissement_jet, duree_gel)
 			
-		if is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations):
+		if not cible.is_in_group("cibles_entrainement") and is_instance_valid(porteur) and is_instance_valid(porteur.ameliorations):
 			porteur.ameliorations.effets_cartes.toucher_jet(cible, delta)
 			
 		cible.prendre_degats(round(multiplier * get_degats() *100.0)/100.0, &"mousse")

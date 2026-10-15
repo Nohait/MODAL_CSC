@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ambulance with Interior
+* source:	https://sketchfab.com/3d-models/ambulance-with-interior-1b60946ded6a4d5597157c6fde621f4b
+* author:	AxiØm (https://sketchfab.com/axi0m)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ambulance with Interior" (https://sketchfab.com/3d-models/ambulance-with-interior-1b60946ded6a4d5597157c6fde621f4b) by AxiØm (https://sketchfab.com/axi0m) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

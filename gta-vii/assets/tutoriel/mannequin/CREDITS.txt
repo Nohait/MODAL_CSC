@@ -1,0 +1,21 @@
+Modèle utilisé : Crash Dummy — robomax
+Source : https://sketchfab.com/3d-models/crash-dummy-0c5cf6b017ba48f1bb32244ae1fefd2d
+Auteur : https://sketchfab.com/robomax
+Licence : Creative Commons Attribution-NonCommercial 4.0 International.
+https://creativecommons.org/licenses/by-nc/4.0/
+Notice : LICENSE_CC_BY_NC_4.txt
+Copie GLB distribuée par Objaverse (Allen Institute for AI) :
+https://huggingface.co/datasets/allenai/objaverse/resolve/main/glbs/000-137/0c5cf6b017ba48f1bb32244ae1fefd2d.glb
+Fichier : crash_dummy.glb, 4 199 108 octets, 9 010 triangles, un matériau.
+Quatre textures PNG intégrées, un squelette, aucune animation intégrée.
+Adaptations dans Godot : hauteur normalisée à 1,85 m, suie, flammes et réaction d'impact.
+Usage non commercial uniquement ; conserver cette attribution lors de la distribution.
+
+Ancien modèle conservé mais non utilisé : Practice Dummy — Quaternius
+Source : https://poly.pizza/m/1pYOHhwjXP
+Fichier : https://static.poly.pizza/2b9e9ce4-5434-4a0d-ae66-9224dad78a77.glb
+Licence : CC0 1.0 Universal, déclaration de domaine public.
+Texte intégral : LICENSE_CC0.txt
+https://creativecommons.org/publicdomain/zero/1.0/
+Modèle statique GLB 2.0 : 104 triangles, deux matériaux, sans squelette.
+Réaction d'impact et flammes ajoutées dans Godot avec les composants du projet.

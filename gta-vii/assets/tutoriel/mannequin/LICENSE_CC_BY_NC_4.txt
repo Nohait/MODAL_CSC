@@ -1,0 +1,13 @@
+Crash Dummy by robomax
+https://sketchfab.com/3d-models/crash-dummy-0c5cf6b017ba48f1bb32244ae1fefd2d
+https://sketchfab.com/robomax
+
+Licensed under Creative Commons Attribution-NonCommercial 4.0 International.
+License deed: https://creativecommons.org/licenses/by-nc/4.0/
+Full legal code: https://creativecommons.org/licenses/by-nc/4.0/legalcode.en
+
+This file is a license notice, not a reproduction of the full legal code.
+Attribution is required. Commercial use is prohibited. Indicate modifications
+and retain the author, source and license links when redistributing the model.
+No additional restrictions may be imposed on the licensed material.
+Adaptations in this project: height normalization, soot, fire and impact effects.

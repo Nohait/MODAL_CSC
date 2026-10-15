@@ -242,6 +242,8 @@ func actualiser_contenu() -> void:
 	$Visuel/Contenu/Organisation/Titre.text = titre
 	$Visuel/Contenu/Organisation/Description.text = description
 	$Visuel/Contenu/Organisation/Effet.text = effet_affiche
+	# L’encart est réservé aux précisions techniques, sans espace vide s’il est absent.
+	$Visuel/Contenu/Organisation/Effet.visible = not effet_affiche.strip_edges().is_empty()
 	$Visuel/Contenu/Organisation/Entete/Categorie.text = categorie
 	image.texture = illustration
 	$Visuel/Contenu/Organisation/Duree.text = duree_affichee

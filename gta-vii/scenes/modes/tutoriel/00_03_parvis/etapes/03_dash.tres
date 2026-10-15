@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titre = "03 · UNE ISSUE, TOUJOURS"
+consigne = "Rejoignez le repère orange d’une esquive · déplacement + Espace."
+repliques = PackedStringArray("S’il faut dégager le passage, garde une issue. Une esquive rapide peut te permettre de te dégager. Ça peut te sortir d’un mauvais pas.", "Tu verras bientôt pourquoi rester immobile devant une créature est une très mauvaise idée. Si l’extincteur ne suffit plus, on trouvera autre chose.")
+objectif = 3

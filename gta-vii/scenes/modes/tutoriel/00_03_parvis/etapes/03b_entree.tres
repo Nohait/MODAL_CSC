@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titre = "PRÊT À ENTRER"
+consigne = "Rejoignez la porte du bâtiment, puis appuyez sur E pour entrer."
+repliques = PackedStringArray("Bien. Là-haut, on cherche d’abord les victimes. Celles que tu libères comptent sur toi pour les escorter.", "Garde de la mousse en réserve et repère toujours une sortie. Je te rejoins à l’intérieur. Vas-y quand tu es prêt.")
+objectif = 4

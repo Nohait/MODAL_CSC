@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ambulance Stretcher
+* source:	https://sketchfab.com/3d-models/ambulance-stretcher-2b8e41355d9a4eb8b87ae288b4f6b291
+* author:	Danish Shah (https://sketchfab.com/s.danishshah57)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ambulance Stretcher" (https://sketchfab.com/3d-models/ambulance-stretcher-2b8e41355d9a4eb8b87ae288b4f6b291) by Danish Shah (https://sketchfab.com/s.danishshah57) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

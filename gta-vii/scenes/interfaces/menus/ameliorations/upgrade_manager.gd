@@ -1,6 +1,10 @@
 extends CanvasLayer
 
 signal ameliorations_changees
+signal booster_formation_acquis(identifiant: StringName)
+var formation_en_cours := false
+var formation_utilisee := false
+var pause_avant_formation := false
 @export var synergies: Array[Synergie] = []
 @export_range(8, 128) var maximum_zones_mousse := 40
 var synergy_manager: Node
@@ -317,6 +321,20 @@ func _choisir(carte: Control) -> void:
 		await confirmation.finished
 		revelation_en_cours = false
 	appliquer_amelioration(carte.identifiant)
+	if formation_en_cours:
+		var identifiant_acquis: StringName = carte.identifiant
+		formation_en_cours = false
+		formation_utilisee = true
+		choix_ouverts = false
+		menu.hide()
+		fond_revelation.hide()
+		for enfant in cartes.get_children():
+			cartes.remove_child(enfant)
+			enfant.queue_free()
+		Input.mouse_mode = souris_avant
+		get_tree().paused = pause_avant_formation
+		booster_formation_acquis.emit(identifiant_acquis)
+		return
 	while not synergy_manager.en_attente.is_empty():
 		revelation_en_cours = true
 		var definition: Synergie = synergy_manager.en_attente.pop_front()
@@ -354,6 +372,52 @@ func _continuer() -> void:
 func valeur_base(identifiant: StringName) -> float:
 	var definition := catalogue_ameliorations.trouver(identifiant)
 	return definition.valeur if definition != null else 0.0
+
+func ouvrir_booster_formation() -> void:
+	if get_parent().get("session_tutoriel") != true or formation_utilisee or formation_en_cours or choix_ouverts or boutique_ouverte: return
+	var propositions: Array[Dictionary] = []
+	for id in [&"pression", &"reserve", &"recharge"]:
+		var definition := catalogue_ameliorations.trouver(id)
+		if definition == null or not prerequis_remplis(definition): return
+		propositions.append(TIRAGE.proposition(definition, &"rare", puissance_rare / 100.0))
+	formation_en_cours = true
+	choix_ouverts = true
+	catalogue_debug = false
+	retour_debug.hide()
+	extincteur.stop_primary_attack()
+	pause_avant_formation = get_tree().paused
+	souris_avant = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	get_tree().paused = true
+	# Réutiliser la pochette et sa déchirure avec un habillage neutre, sans annoncer de rareté.
+	var centre := CenterContainer.new()
+	add_child(centre)
+	centre.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var booster = preload("res://scenes/interfaces/menus/boutique/booster_apercu.tscn").instantiate()
+	booster.titre = "Formation"
+	booster.contenu = "Trois propositions · une seule carte conservée"
+	booster.symbole = "?"
+	booster.couleur = Color(0.6, 0.67, 0.7)
+	centre.add_child(booster)
+	booster.get_node("%Prix").text = "OFFERT"
+	var ouverture = preload("res://scenes/interfaces/menus/ouverture_booster.tscn").instantiate()
+	add_child(ouverture)
+	await get_tree().process_frame
+	booster.hide()
+	await ouverture.ouvrir(booster)
+	centre.queue_free()
+	ouverture.queue_free()
+	_afficher_cartes(propositions, true)
+	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "Sous pression : dégâts. Grande réserve : capacité. Second souffle : récupération. Une seule carte sera conservée pour la partie."
+
+func acquerir_formation_debug(identifiant: StringName) -> void:
+	if not OS.is_debug_build(): return
+	if get_parent().get("session_tutoriel") != true or formation_utilisee or identifiant not in [&"pression", &"reserve", &"recharge"]: return
+	rarete_courante = &"rare"
+	multiplicateur_choix_courant = puissance_rare / 100.0
+	appliquer_amelioration(identifiant)
+	formation_utilisee = true
+	booster_formation_acquis.emit(identifiant)
 
 func appliquer_amelioration(identifiant: StringName) -> void:
 	var definition := catalogue_ameliorations.trouver(identifiant)

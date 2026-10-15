@@ -31,6 +31,7 @@ func _noeud_ajoute(noeud: Node) -> void:
 		_enregistrer_ennemi.call_deferred(noeud.get_instance_id())
 
 func _enregistrer_ennemi(identifiant_instance: int) -> void:
+	if OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false): return
 	# L’aperçu peut avoir été détruit avant cet appel différé.
 	var noeud = instance_from_id(identifiant_instance)
 	if not is_instance_valid(noeud) or not noeud.is_inside_tree() or noeud.has_meta("apercu_glossaire"): return
@@ -95,6 +96,7 @@ func a_rencontre(id: String, variante := "") -> bool:
 	return rencontres.has(id) if variante.is_empty() else variante in rencontres.get(id, [])
 
 func noter_rencontre(id: String, variante: String) -> void:
+	if OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false): return
 	if a_rencontre(id, variante): return
 	if not rencontres.has(id): rencontres[id] = []
 	rencontres[id].append(variante)

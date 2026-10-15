@@ -1,0 +1,7 @@
+[gd_resource type="Resource" format=3]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/reprise/definition_salle.gd" id="script"]
+[resource]
+script = ExtResource("script")
+identifiant = &"menace"
+titre = "Sauvetage sous menace"
+scene = "res://scenes/modes/tutoriel/08_sauvetage_sous_menace/08_sauvetage_sous_menace.tscn"

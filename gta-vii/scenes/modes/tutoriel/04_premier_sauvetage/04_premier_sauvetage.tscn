@@ -1,0 +1,433 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/04_premier_sauvetage.gd" id="salle"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/progression_sauvetage.gd" id="progression"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/passage_enflamme.gd" id="passage"]
+[ext_resource type="PackedScene" path="res://scenes/victimes/victime.tscn" id="victime"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="sol"]
+[ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="mur"]
+[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="police"]
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="porte"]
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/zone_securite.tscn" id="zone"]
+
+[sub_resource type="StandardMaterial3D" id="chaleur"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.25, 0.025, 0.24)
+emission_enabled = true
+emission = Color(1, 0.22, 0.02, 1)
+
+[sub_resource type="BoxMesh" id="rideau"]
+size = Vector3(3.2, 1.5, 0.45)
+material = SubResource("chaleur")
+
+[sub_resource type="BoxShape3D" id="blocage"]
+size = Vector3(3.2, 1.5, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="vert"]
+shading_mode = 0
+albedo_color = Color(0.25, 0.85, 0.5, 1)
+
+[sub_resource type="TorusMesh" id="arrivee"]
+inner_radius = 2.25
+outer_radius = 2.4
+rings = 32
+ring_segments = 8
+material = SubResource("vert")
+
+[sub_resource type="StyleBoxFlat" id="parchemin"]
+content_margin_left = 18.0
+content_margin_right = 18.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.92, 0.84, 0.68, 0.97)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="BoxMesh" id="mesh_SolSalle"]
+size = Vector3(8, 0.3, 8)
+material = ExtResource("sol")
+
+[sub_resource type="BoxShape3D" id="shape_SolSalle"]
+size = Vector3(8, 0.3, 8)
+
+[sub_resource type="BoxMesh" id="mesh_SolCouloir"]
+size = Vector3(3.2, 0.3, 8)
+material = ExtResource("sol")
+
+[sub_resource type="BoxShape3D" id="shape_SolCouloir"]
+size = Vector3(3.2, 0.3, 8)
+
+[sub_resource type="BoxMesh" id="mesh_SolPalier"]
+size = Vector3(8, 0.3, 6)
+material = ExtResource("sol")
+
+[sub_resource type="BoxShape3D" id="shape_SolPalier"]
+size = Vector3(8, 0.3, 6)
+
+[sub_resource type="BoxMesh" id="mesh_MurEntree"]
+size = Vector3(2.35, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_MurEntree"]
+size = Vector3(2.35, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="mesh_MurOuest"]
+size = Vector3(0.3, 1.2, 8)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_MurOuest"]
+size = Vector3(0.3, 1.2, 8)
+
+[sub_resource type="BoxMesh" id="mesh_MurEst"]
+size = Vector3(0.3, 1.2, 8)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_MurEst"]
+size = Vector3(0.3, 1.2, 8)
+
+[sub_resource type="BoxMesh" id="mesh_EpauleOuest"]
+size = Vector3(2.4, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_EpauleOuest"]
+size = Vector3(2.4, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="mesh_EpauleEst"]
+size = Vector3(2.4, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_EpauleEst"]
+size = Vector3(2.4, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="mesh_CouloirOuest"]
+size = Vector3(0.3, 1.2, 8)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_CouloirOuest"]
+size = Vector3(0.3, 1.2, 8)
+
+[sub_resource type="BoxMesh" id="mesh_CouloirEst"]
+size = Vector3(0.3, 1.2, 8)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_CouloirEst"]
+size = Vector3(0.3, 1.2, 8)
+
+[sub_resource type="BoxMesh" id="mesh_PalierOuest"]
+size = Vector3(0.3, 1.2, 6)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_PalierOuest"]
+size = Vector3(0.3, 1.2, 6)
+
+[sub_resource type="BoxMesh" id="mesh_PalierEst"]
+size = Vector3(0.3, 1.2, 6)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_PalierEst"]
+size = Vector3(0.3, 1.2, 6)
+
+[sub_resource type="BoxMesh" id="mesh_PalierFond"]
+size = Vector3(8.6, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_PalierFond"]
+size = Vector3(8.6, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="mesh_PalierEpauleOuest"]
+size = Vector3(2.4, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_PalierEpauleOuest"]
+size = Vector3(2.4, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="mesh_PalierEpauleEst"]
+size = Vector3(2.4, 1.2, 0.3)
+material = ExtResource("mur")
+
+[sub_resource type="BoxShape3D" id="shape_PalierEpauleEst"]
+size = Vector3(2.4, 1.2, 0.3)
+
+[node name="TutorielSauvetage" instance=ExtResource("main")]
+script = ExtResource("salle")
+session_tutoriel = true
+
+[node name="SalleFixe" type="Node3D" parent="."]
+
+[node name="Navigation" type="NavigationRegion3D" parent="SalleFixe"]
+
+[node name="Depart" type="Marker3D" parent="SalleFixe"]
+position = Vector3(0, 1, 2.8)
+
+[node name="Arrivee" type="Marker3D" parent="SalleFixe"]
+position = Vector3(0, 0, -15)
+
+[node name="RepereFinal" parent="SalleFixe" instance=ExtResource("zone")]
+position = Vector3(0, 0, -15)
+
+[node name="DoublePorte" parent="SalleFixe" instance=ExtResource("porte")]
+position = Vector3(0, 1.8, 4.15)
+rotation = Vector3(0, 3.1415927, 0)
+
+[node name="Ennemis" type="Node3D" parent="SalleFixe"]
+
+[node name="Victimes" type="Node3D" parent="SalleFixe"]
+
+[node name="Habitant" parent="SalleFixe/Victimes" instance=ExtResource("victime")]
+position = Vector3(-1.8, 0.75, 0.5)
+distance_ralentissement = 0.5
+
+[node name="Passage" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(0, 0, -6)
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("passage")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/Passage"]
+position = Vector3(0, 0.75, 0)
+shape = SubResource("blocage")
+
+[node name="Rideau" type="MeshInstance3D" parent="SalleFixe/Passage"]
+visible = false
+position = Vector3(0, 0.75, 0)
+mesh = SubResource("rideau")
+cast_shadow = 0
+
+[node name="Foyers" type="Node3D" parent="SalleFixe/Passage"]
+
+[node name="Foyer1" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
+position = Vector3(-1, 0, 0)
+taille = 2.0
+densite_fumee = 0.5
+
+[node name="Foyer2" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
+position = Vector3(0, 0, 0)
+taille = 2.0
+densite_fumee = 0.5
+
+[node name="Foyer3" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
+position = Vector3(1, 0, 0)
+taille = 2.0
+densite_fumee = 0.5
+
+[node name="SolSalle" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(0, -0.15, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolSalle"]
+mesh = SubResource("mesh_SolSalle")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolSalle"]
+shape = SubResource("shape_SolSalle")
+
+[node name="SolCouloir" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(0, -0.15, -8)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolCouloir"]
+mesh = SubResource("mesh_SolCouloir")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolCouloir"]
+shape = SubResource("shape_SolCouloir")
+
+[node name="SolPalier" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(0, -0.15, -15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolPalier"]
+mesh = SubResource("mesh_SolPalier")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolPalier"]
+shape = SubResource("shape_SolPalier")
+
+[node name="MurEntree" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-2.975, 0.6, 4.15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntree"]
+mesh = SubResource("mesh_MurEntree")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntree"]
+shape = SubResource("shape_MurEntree")
+
+[node name="MurEntreeDroit" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(2.975, 0.6, 4.15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntreeDroit"]
+mesh = SubResource("mesh_MurEntree")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntreeDroit"]
+shape = SubResource("shape_MurEntree")
+
+[node name="MurOuest" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-4.15, 0.6, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurOuest"]
+mesh = SubResource("mesh_MurOuest")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurOuest"]
+shape = SubResource("shape_MurOuest")
+
+[node name="MurEst" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(4.15, 0.6, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEst"]
+mesh = SubResource("mesh_MurEst")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEst"]
+shape = SubResource("shape_MurEst")
+
+[node name="EpauleOuest" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-2.8, 0.6, -4)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleOuest"]
+mesh = SubResource("mesh_EpauleOuest")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleOuest"]
+shape = SubResource("shape_EpauleOuest")
+
+[node name="EpauleEst" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(2.8, 0.6, -4)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleEst"]
+mesh = SubResource("mesh_EpauleEst")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleEst"]
+shape = SubResource("shape_EpauleEst")
+
+[node name="CouloirOuest" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-1.75, 0.6, -8)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirOuest"]
+mesh = SubResource("mesh_CouloirOuest")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirOuest"]
+shape = SubResource("shape_CouloirOuest")
+
+[node name="CouloirEst" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(1.75, 0.6, -8)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirEst"]
+mesh = SubResource("mesh_CouloirEst")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirEst"]
+shape = SubResource("shape_CouloirEst")
+
+[node name="PalierOuest" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-4.15, 0.6, -15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierOuest"]
+mesh = SubResource("mesh_PalierOuest")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierOuest"]
+shape = SubResource("shape_PalierOuest")
+
+[node name="PalierEst" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(4.15, 0.6, -15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEst"]
+mesh = SubResource("mesh_PalierEst")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEst"]
+shape = SubResource("shape_PalierEst")
+
+[node name="PalierFond" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(0, 0.6, -18.15)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierFond"]
+mesh = SubResource("mesh_PalierFond")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierFond"]
+shape = SubResource("shape_PalierFond")
+
+[node name="PalierEpauleOuest" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(-2.8, 0.6, -12)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleOuest"]
+mesh = SubResource("mesh_PalierEpauleOuest")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleOuest"]
+shape = SubResource("shape_PalierEpauleOuest")
+
+[node name="PalierEpauleEst" type="StaticBody3D" parent="SalleFixe"]
+position = Vector3(2.8, 0.6, -12)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleEst"]
+mesh = SubResource("mesh_PalierEpauleEst")
+
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleEst"]
+shape = SubResource("shape_PalierEpauleEst")
+
+[node name="ProgressionSauvetage" type="Node" parent="."]
+script = ExtResource("progression")
+
+[node name="Briefing" type="CanvasLayer" parent="."]
+
+[node name="Panneau" type="PanelContainer" parent="Briefing"]
+offset_left = 400.0
+offset_top = 24.0
+offset_right = 1100.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("parchemin")
+
+[node name="Marge" type="MarginContainer" parent="Briefing/Panneau"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau/Marge"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Titre" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("police")
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.24, 0.14, 0.07, 1)
+text = "04 · PREMIER SAUVETAGE"
+mouse_filter = 2
+
+[node name="Consigne" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.14, 0.09, 1)
+mouse_filter = 2
+
+[node name="Rappel" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.2, 0.08, 1)
+mouse_filter = 2

@@ -1,0 +1,5 @@
+Animations : Quaternius, Universal Animation Library Standard.
+Source : https://quaternius.itch.io/universal-animation-library
+Licence : CC0 1.0 Universal, voir License.txt.
+Clips Walk et Idle adaptés aux squelettes des figurants du tutoriel.
+Clips sur place, sans piste de déplacement du personnage ni redimensionnement du modèle.

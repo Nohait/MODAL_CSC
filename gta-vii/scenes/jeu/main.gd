@@ -2,6 +2,14 @@ extends Node3D
 
 @export var session_tutoriel := false
 
+func _enter_tree() -> void:
+	# Retirer l'isolation du debug avant les enfants d'une partie normale.
+	if not session_tutoriel and OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false):
+		Engine.remove_meta("tutoriel_debug_actif")
+		Engine.remove_meta("tutoriel_debug_historique")
+		if Engine.has_meta("tutoriel_debug_depart"): Engine.remove_meta("tutoriel_debug_depart")
+		Engine.time_scale = 1.0
+
 # A SUPPRIMER DANS LE JEU REEL 
 func _unhandled_key_input(event: InputEvent) -> void:
 	# Pour beta_test : R recommence le niveau. On ignore 

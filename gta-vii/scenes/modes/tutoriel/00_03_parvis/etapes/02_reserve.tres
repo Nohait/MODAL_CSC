@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titre = "02 · GARDER DU SOUFFLE"
+consigne = "Essayez le jet, puis relâchez le clic gauche pour récupérer de la mousse."
+repliques = PackedStringArray("Surveille la réserve de ton extincteur. Un jet continu la vide vite. Essaie, puis relâche : elle se reconstitue toute seule.", "Le bon réflexe, c’est de garder de quoi réagir. L’équipe pourra adapter ton matériel un peu plus loin. Pour l’instant, garde de quoi te défendre.")
+objectif = 2

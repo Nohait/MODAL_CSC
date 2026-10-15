@@ -1,4 +1,5 @@
 extends SceneTree
+const DELAI_TRANSITION_MORT_MS := 5000
 var chemin := ProjectSettings.globalize_path("res://.godot/gta_vii_reprise_test_%d.save" % OS.get_process_id())
 func _initialize() -> void:
 	verifier.call_deferred()
@@ -115,10 +116,28 @@ func verifier() -> void:
 	assert(sauvegarde.disponible())
 	assert(sauvegarde.dernier_point.vague == 6)
 	print("RECUPERATION_FICHIER_INTERRUPPU_OK")
+	var ancien_mode_id: int = jeu.get_instance_id()
+	var debut_transition: int = Time.get_ticks_msec()
 	joueur.mourir()
 	assert(not sauvegarde.disponible())
 	assert(not FileAccess.file_exists(chemin))
 	print("MORT_TERMINE_LA_SAUVEGARDE_OK")
 	assert(sauvegarde.supprimer())
 	print("SUPPRESSION_SAUVEGARDE_OK")
+	# Attendre la vraie transition, y compris pendant la pause du combat.
+	while true:
+		var transition_terminee := (
+			is_instance_valid(current_scene)
+			and current_scene.scene_file_path == "res://scenes/modes/zombie/interfaces/fin/fin_zombie.tscn"
+			and current_scene.is_node_ready()
+			and not is_instance_id_valid(ancien_mode_id)
+			and not paused
+		)
+		if transition_terminee:
+			break
+		if Time.get_ticks_msec() - debut_transition >= DELAI_TRANSITION_MORT_MS:
+			push_error("La transition de mort zombie ne s'est pas terminée dans le délai de %d ms." % DELAI_TRANSITION_MORT_MS)
+			quit(1)
+			return
+		await process_frame
 	quit()
