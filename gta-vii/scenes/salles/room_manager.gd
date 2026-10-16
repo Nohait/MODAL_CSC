@@ -29,6 +29,7 @@ const VICTIME_SCENE = preload("res://scenes/victimes/victime.tscn")
 # Ancien système conservé dans le projet.
 # La scène n'est simplement plus instanciée automatiquement.
 const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuation.tscn")
+var SonNouvelleVague = preload("res://assets/sounds/ennemis/NouvelleVague.wav")
 
 # Parcours
 
@@ -305,6 +306,13 @@ func _process(delta: float) -> void:
 		if restant > vague.restant + duree_annonce:
 			break
 		salle_actuelle.vagues_planifiees.pop_front()
+		
+		#Alarme de vague
+		var sonVague = AudioStreamPlayer3D.new()
+		sonVague.stream = SonNouvelleVague
+		joueur.add_child(sonVague)
+		sonVague.play()
+		
 		creer_vague(vague.nombre, vague.restant)
 	for apparition in salle_actuelle.apparitions_planifiees.duplicate():
 		if restant <= apparition.restant:

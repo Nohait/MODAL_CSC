@@ -12,11 +12,12 @@ extends Node
 @export_range(0.1, 2.0, 0.1) var decalage_double := 0.6
 @export_range(1.0, 5.0, 0.1) var distance_point_appui := 3.0
 @export var son_electricite: AudioStream = preload("res://assets/sounds/bouche_incendie/electricite.wav")
+@export var son_impact: AudioStream = preload("res://assets/sounds/bouche_incendie/impact.wav")
 @export_range(-40.0, -10.0, 1.0) var volume_electricite_db := -29.0
 @export_group("Présentation")
 @export var scene_presentation: PackedScene = preload("res://scenes/armes/bouche_incendie/presentation_bouche.tscn")
 var presentations: Array[Node3D] = []
-var attaque: Node3D
+var attaque: Node3D #
 var prochaine_onde := 0.0
 var retours: Array[Dictionary] = []
 var final_lance := false
@@ -72,6 +73,11 @@ func lancer() -> void:
 	if valeur(&"hydrant_double") > 0: _creer_double()
 
 func atterrir() -> void:
+	var son_impact_player = AudioStreamPlayer3D.new()
+	son_impact_player.stream = son_impact
+	attaque.add_child(son_impact_player)
+	son_impact_player.play()
+	
 	prochaine_onde = intervalle_ondes
 	_installer_presentation(attaque.corps, attaque.dessin)
 	onde(attaque.cible, 1.0, false, false)

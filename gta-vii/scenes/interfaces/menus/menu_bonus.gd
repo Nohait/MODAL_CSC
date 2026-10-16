@@ -106,7 +106,7 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed("menu_bonus") or event.is_action_pressed("ui_cancel"):
 			fermer_menu()
 			get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("menu_bonus") and peut_ouvrir():
+	elif event.is_action_pressed("menu_bonus") or  event.is_action_pressed("ui_cancel") and peut_ouvrir():
 		ouvrir_menu()
 		get_viewport().set_input_as_handled()
 

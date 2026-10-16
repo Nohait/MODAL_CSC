@@ -236,9 +236,9 @@ func _physics_process(delta: float) -> void:
 		attente_recharge = delai_avant_recharge
 		if emission_effective: charge -= consumption_rate * consommation_evenement * delta
 		if charge <= 0.0:
+			$SonOverheated.play()
 			charge = 0.0
 			is_overheated = true
-			$SonOverheated.play()
 			stop_primary_attack()
 	else:
 		# Recharger uniquement la portion de cette frame située après l'attente.
