@@ -66,7 +66,7 @@ var bonus_degats_actif := false
 var multiplicateur_degats_ameliorations := 1.0
 # Les événements sont indépendants des cartes et ne changent pas leur équilibrage.
 var consommation_evenement := 1.0
-var panne_evenement := false
+var panne_evenement := false #pour activer la panne de mousse forcée
 var bonus_dernier_souffle := 0.0
 var seuil_dernier_souffle := 25.0
 var ralentissement_jet := 0.0
@@ -167,7 +167,10 @@ func start_primary_attack() -> void:
 		particles.emitting = true
 		if is_instance_valid(particles_secondaires): particles_secondaires.emitting = double_lance
 		regler_souffle(true)
-
+	if is_overheated:
+		if not $SonTirSansMousse.is_playing():
+			$SonTirSansMousse.play() 
+	
 
 func stop_primary_attack() -> void:
 	# Arrêter l'émission ; les portions déjà parties continuent leur trajet.
@@ -235,6 +238,7 @@ func _physics_process(delta: float) -> void:
 		if charge <= 0.0:
 			charge = 0.0
 			is_overheated = true
+			$SonOverheated.play()
 			stop_primary_attack()
 	else:
 		# Recharger uniquement la portion de cette frame située après l'attente.

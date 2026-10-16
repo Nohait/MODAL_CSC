@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://btcvmuhbbwlus" path="res://scenes/ennemis/mobiles/sbire.gd" id="1_i8ure"]
 [ext_resource type="PackedScene" uid="uid://dx5po8bv0f7fy" path="res://assets/modeles/ennemis/mobiles/sbire/sbire.tscn" id="2_65l3k"]
 [ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_r3twd"]
+[ext_resource type="AudioStream" uid="uid://bq5l7lhcnrv43" path="res://assets/sounds/ennemis/huh.wav" id="6_igt6l"]
 [ext_resource type="PackedScene" uid="uid://jou2viln2jqw" path="res://assets/modeles/effets/exclamation_point.glb" id="6_rwpig"]
 [ext_resource type="PackedScene" uid="uid://de2ep4oxoxpeh" path="res://scenes/effets/point_exclamation_rouge/point_exclamation_rouge.tscn" id="7_0d17i"]
-[ext_resource type="AudioStream" uid="uid://dlpio1t8ugkkj" path="res://assets/sounds/ennemis/repere.wav" id="8_xwblr"]
+[ext_resource type="AudioStream" uid="uid://dysbb0wh6vrxv" path="res://assets/sounds/ennemis/enerve.wav" id="7_65l3k"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ta0d"]
 size = Vector3(1.7168427, 2.7529297, 0.43432617)
@@ -73,7 +74,7 @@ script = ExtResource("1_i8ure")
 transform = Transform3D(0.295, 0, 0, 0, 0.295, 0, 0, 0, 0.295, 0, 0.6291781, 0)
 
 [node name="RHand" type="BoneAttachment3D" parent="sbire/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1554498629, 1964473862) index="1" unique_id=1427563485]
-transform = Transform3D(-0.80750716, 0.13464287, -0.57428527, -0.44773442, -0.7737513, 0.4481548, -0.38401318, 0.6190156, 0.6850938, -1.917012, 0.8895612, -0.2203359)
+transform = Transform3D(-0.54317427, -0.83962005, -4.972919e-07, 0.46203518, -0.29890442, 0.8349727, -0.70106, 0.45353556, 0.5502911, -1.8663048, 3.4378653, -1.1083977)
 bone_name = "Forearm.R"
 bone_idx = 9
 
@@ -124,10 +125,16 @@ root_node = NodePath("../PointExclamation")
 libraries/ = SubResource("AnimationLibrary_pilda")
 
 [node name="SonRepere" type="AudioStreamPlayer3D" parent="." unique_id=1544712082]
-stream = ExtResource("8_xwblr")
-bus = &"Effets"
+stream = ExtResource("6_igt6l")
 volume_db = -18.0
 max_distance = 18.0
+bus = &"Effets"
+
+[node name="SonEnerve" type="AudioStreamPlayer3D" parent="." unique_id=1331478430]
+stream = ExtResource("7_65l3k")
+volume_db = -18.0
+max_distance = 18.0
+bus = &"Effets"
 
 [connection signal="body_entered" from="SurfaceDetection" to="." method="_on_surface_detection_body_entered"]
 

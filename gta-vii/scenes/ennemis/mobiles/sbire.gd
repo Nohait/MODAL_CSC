@@ -150,6 +150,7 @@ func _physics_process(delta):
 	chgt_cible_timer -= delta
 	if chgt_cible_timer < 0:
 		choisir_cible()
+		chgt_cible_timer = chgt_cible_cooldown
 
 	if cible == null or en_idle:
 		idle_timer -= delta
@@ -250,6 +251,7 @@ func suivre_cible_navigation() -> void:
 	move_and_slide()
 
 func choisir_cible():
+	print("je tente de changer de cible")
 	var cible_avant = cible #on sauvegardde la cible
 	var bodies = SurfaceDetection.get_overlapping_bodies()
 	if cible != null and !en_idle:
@@ -273,6 +275,8 @@ func choisir_cible():
 		$SbireRepere.reset_section()
 		$SbireRepere.play("PopUp")
 		$SonRepere.play()
+		print("j'ai changé de cible: ", cible, "avant: ", cible_avant)
+		print(chgt_cible_timer)
 
 func animation_enerve():
 	var tween_enerve = create_tween()
@@ -313,7 +317,7 @@ func prendre_degats(degats: float, source: StringName = &"feu") -> void:
 		if $SbireRepere.current_animation == "PopUp":
 			$SbireRepere.stop()
 			$SbireRepere.reset_section()
-		$SonRepere.play()
+		$SonEnerve.play()
 		animation_enerve()
 
 		cible = player
