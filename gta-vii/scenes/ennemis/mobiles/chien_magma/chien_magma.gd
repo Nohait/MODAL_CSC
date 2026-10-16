@@ -33,8 +33,11 @@ var origine_visuel := Vector3.ZERO
 var animations: AnimationPlayer
 var animation_marche := ""
 var animation_repos := ""
-@onready var visuel: Node3D = $Sketchfab_Scene
+@onready var visuel: Node3D = $hound/Skeleton3D
 @onready var crocs: Node3D = $Crocs
+
+
+
 
 func _ready() -> void:
 	vie = vie_max
@@ -66,13 +69,14 @@ func _ready() -> void:
 
 func _preparer_modele() -> void:
 	# La taille et le placement sont dans la scène ; préparer seulement les animations.
-	for noeud in visuel.find_children("*", "AnimationPlayer", true, false):
-		animations = noeud
-		for nom in animations.get_animation_list():
-			if "walk" in nom.to_lower(): animation_marche = nom
-			if "idle" in nom.to_lower(): animation_repos = nom
-			if nom != "RESET": animations.get_animation(nom).loop_mode = Animation.LOOP_LINEAR
-		break
+	
+	animations = $hound/AnimationPlayer
+	
+	for nom in animations.get_animation_list():
+		if "hound_run" in nom.to_lower(): animation_marche = nom
+		if "idle" in nom.to_lower(): animation_repos = nom
+		if nom != "RESET": animations.get_animation(nom).loop_mode = Animation.LOOP_LINEAR
+		
 
 func _physics_process(delta: float) -> void:
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.

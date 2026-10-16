@@ -1,12 +1,11 @@
-[gd_resource type="Resource" script_class="ProfilGraphique" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ProfilGraphique" format=3 uid="uid://bl15q0mj4xyv7"]
 
-[ext_resource type="Script" path="res://scenes/systemes/reglages/profil_graphique.gd" id="1"]
+[ext_resource type="Script" uid="uid://c2k68f6pvuh3b" path="res://scenes/systemes/reglages/profil_graphique.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
 titre = "Équilibré"
 resolution_3d = 0.85
 distance_details = 85.0
-
 reflets_ecran = false
 seuil_lod = 2.0

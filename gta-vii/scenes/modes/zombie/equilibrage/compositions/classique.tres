@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c3fcvu0vig46s" path="res://scenes/modes/zombie/ennemis/sbire_zombie.gd" id="aggro_sbire"]
 [ext_resource type="PackedScene" uid="uid://hiqoxgqogngr" path="res://scenes/ennemis/mobiles/artilleur/artilleur.tscn" id="artilleur"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/blaze/blaze.tscn" id="blaze"]
-[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn" id="chien"]
+[ext_resource type="PackedScene" uid="uid://bhadldaxv3gks" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn" id="chien"]
 [ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn" id="kamikaze"]

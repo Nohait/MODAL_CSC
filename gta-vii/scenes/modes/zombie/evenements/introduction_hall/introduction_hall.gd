@@ -74,7 +74,7 @@ func preparer(personnage: CharacterBody3D) -> void:
 	loup = Node3D.new()
 	loup.name = "LoupIntroduction"
 	add_child(loup)
-	modele_loup = original.get_node("Sketchfab_Scene").duplicate()
+	modele_loup = original.get_node("hound").duplicate()
 	loup.add_child(modele_loup)
 	original.free()
 	loup.hide()
@@ -248,7 +248,9 @@ func _intercepter(cible: Vector3) -> Tween:
 func _animer_loup(courir: bool) -> void:
 	for animateur in modele_loup.find_children("*", "AnimationPlayer", true, false):
 		for nom in animateur.get_animation_list():
-			if ("walk" if courir else "idle") in nom.to_lower():
+			var min : String = nom.to_lower()
+			if ("run" if courir else "idle") in min or (courir and "walk" in min):
+				animateur.get_animation(nom).loop_mode = Animation.LOOP_LINEAR
 				animateur.play(nom, 0.1, 1.4 if courir else 1.0)
 				return
 

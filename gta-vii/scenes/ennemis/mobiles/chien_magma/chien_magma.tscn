@@ -1,49 +1,69 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://bhadldaxv3gks"]
 
-[ext_resource type="Script" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.gd" id="1"]
-[ext_resource type="PackedScene" path="res://assets/modeles/ennemis/mobiles/chien_magma/chien_magma.glb" id="2"]
-[ext_resource type="AudioStream" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="3_son"]
+[ext_resource type="Script" uid="uid://cryadkfm6dhap" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://dgkjj8fmhrdea" path="res://assets/modeles/ennemis/mobiles/chien_magma/hound.tscn" id="2_rb57g"]
+[ext_resource type="AudioStream" uid="uid://gu5cgmdb8qiq" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="3_son"]
+
 [sub_resource type="CapsuleShape3D" id="Corps"]
-radius = 0.55
-height = 1.4
+radius = 0.41992188
+height = 1.4050782
+
 [sub_resource type="SphereShape3D" id="Detection"]
 radius = 20.0
-[node name="ChienMagma" type="CharacterBody3D" groups=["enemies"]]
+
+[node name="ChienMagma" type="CharacterBody3D" unique_id=2005441492 groups=["enemies"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1")
 vie_max = 50.0
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+
+[node name="hound" parent="." unique_id=40788998 instance=ExtResource("2_rb57g")]
+
+[node name="Skeleton3D" parent="hound" index="0" unique_id=383374503]
+transform = Transform3D(0.01734228, 0, 0, 0, 0.01734228, 0, 0, 0, 0.01734228, 0, -0.65963507, 0.6369397)
+bones/1/rotation = Quaternion(-0.09875452, 6.5252393e-06, -1.5306772e-07, 0.9951118)
+bones/2/position = Vector3(1.143754e-10, 11.779899, -1.1980534e-05)
+bones/6/position = Vector3(4.760317, 11.742448, 2.043426)
+bones/11/position = Vector3(-4.7603254, 11.74245, 2.043406)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=411930196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2071349, 0.36611938)
 shape = SubResource("Corps")
-[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
-path_desired_distance = 1.0
+
+[node name="NavigationAgent" type="NavigationAgent3D" parent="." unique_id=173411588]
 target_desired_distance = 0.7
 radius = 0.55
-[node name="Sketchfab_Scene" type="Node3D" parent="."]
-position = Vector3(2.77579399466e-08, -0.75, 0.492982625961)
-scale = Vector3(0.931401908398, 0.931401908398, 0.931401908398)
-[node name="Modele" parent="Sketchfab_Scene" instance=ExtResource("2")]
-[node name="droplet" type="Node3D" parent="."]
-[node name="SurfaceDetection" type="Area3D" parent="."]
+
+[node name="droplet" type="Node3D" parent="." unique_id=57836486]
+
+[node name="SurfaceDetection" type="Area3D" parent="." unique_id=2053574741]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceDetection" unique_id=1209584460]
 shape = SubResource("Detection")
-[node name="PointExclamationRouge" type="Node3D" parent="."]
-[node name="PopUpDegats" type="Label3D" parent="."]
+
+[node name="PointExclamationRouge" type="Node3D" parent="." unique_id=304591579]
+
+[node name="PopUpDegats" type="Label3D" parent="." unique_id=1231897113]
 visible = false
 billboard = 1
 no_depth_test = true
-[node name="Crocs" type="Node3D" parent="."]
-position = Vector3(0, 0.15, 1.2)
-[node name="Haut" type="Node3D" parent="Crocs"]
-[node name="Bas" type="Node3D" parent="Crocs"]
 
-[node name="GrognementBond" type="AudioStreamPlayer3D" parent="."]
+[node name="Crocs" type="Node3D" parent="." unique_id=102491963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 1.2)
+
+[node name="Haut" type="Node3D" parent="Crocs" unique_id=1887902203]
+
+[node name="Bas" type="Node3D" parent="Crocs" unique_id=2018583204]
+
+[node name="GrognementBond" type="AudioStreamPlayer3D" parent="." unique_id=251946478]
 editor_description = "Un grognement par impulsion. Volume et portée réglables ici."
 stream = ExtResource("3_son")
 volume_db = -15.0
 unit_size = 4.0
 max_distance = 22.0
 bus = &"Effets"
+
+[editable path="hound"]
