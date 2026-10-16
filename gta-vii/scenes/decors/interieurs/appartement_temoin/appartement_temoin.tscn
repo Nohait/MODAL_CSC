@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/05_06_combat/05_premier_combat.tscn" id="base"]
+[ext_resource type="Script" path="res://scenes/decors/interieurs/appartement_temoin/direction_artistique.gd" id="direction"]
+[ext_resource type="PackedScene" path="res://scenes/victimes/victime.tscn" id="victime"]
+
+[node name="AppartementTemoin" instance=ExtResource("base")]
+editor_description = "Pilote artistique fixe du premier étage. F6 : progression et combat du tutoriel, sans génération aléatoire. Le retraitement du décor ne s'applique qu'à cette scène."
+
+[node name="DirectionArtistique" type="Node" parent="."]
+script = ExtResource("direction")
+
+[node name="VictimeTemoin" parent="." instance=ExtResource("victime")]
+position = Vector3(-3, 0.8, -3.8)

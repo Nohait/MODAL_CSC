@@ -1,15 +1,9 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/interfaces/transitions/transition_etage.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="2"]
-[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="3"]
-[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="4"]
-
-[sub_resource type="ShaderMaterial" id="Parchemin"]
-shader = ExtResource("3")
-shader_parameter/largeur_bord = 12.0
-shader_parameter/rayon_coin = 12.0
-shader_parameter/intensite_braises = 0.5
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="theme"]
+[ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="support"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
 
 [node name="TransitionEtage" type="CanvasLayer"]
 process_mode = 3
@@ -18,6 +12,7 @@ script = ExtResource("1")
 
 [node name="Menu" type="Control" parent="."]
 visible = false
+theme = ExtResource("theme")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -43,11 +38,11 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panneau" type="Control" parent="Menu/Centre"]
-custom_minimum_size = Vector2(550, 180)
+custom_minimum_size = Vector2(500, 160)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Papier" type="TextureRect" parent="Menu/Centre/Panneau"]
+[node name="Support" type="Panel" parent="Menu/Centre/Panneau"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,9 +50,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2")
-material = SubResource("Parchemin")
-expand_mode = 1
+theme_override_styles/panel = ExtResource("support")
 
 [node name="Contenu" type="VBoxContainer" parent="Menu/Centre/Panneau"]
 layout_mode = 1
@@ -65,7 +58,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 25.0
-offset_top = 32.0
+offset_top = 24.0
 offset_right = -25.0
 offset_bottom = -25.0
 grow_horizontal = 2
@@ -79,15 +72,14 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("4")
-theme_override_font_sizes/font_size = 46
-theme_override_colors/font_color = Color(0.22, 0.12, 0.07, 1)
+theme_override_font_sizes/font_size = 38
 text = "Étage 2"
 horizontal_alignment = 1
 
 [node name="Note" type="Label" parent="Menu/Centre/Panneau/Contenu"]
+theme_type_variation = &"NoteIntervention"
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 17
-theme_override_colors/font_color = Color(0.3, 0.2, 0.13, 1)
 text = "La montée continue…"
 horizontal_alignment = 1

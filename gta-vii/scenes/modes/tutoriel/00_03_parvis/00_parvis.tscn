@@ -1,5 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
+
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+
 [ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/point_regroupement.gd" id="point_medical"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/double_porte.gd" id="double_porte"]
@@ -18,7 +22,6 @@
 
 [ext_resource type="Material" path="res://assets/materiaux/appartements/white_plaster_02.tres" id="mur"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="police"]
 
 [ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/00_contact.tres" id="contact"]
 
@@ -30,8 +33,6 @@
 
 [ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/03b_entree.tres" id="entree"]
 
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="papier"]
-[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="almendra"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/dialogues/bulle_dialogue.gd" id="bulle"]
 
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/apercu_sauvetage.gd" id="teasing"]
@@ -322,27 +323,6 @@ size = Vector3(1.65, 3.4, 0.12)
 size = Vector3(0.045, 0.5, 0.12)
 [sub_resource type="BoxShape3D" id="porte_collision"]
 size = Vector3(3.8, 3.8, 0.2)
-
-[sub_resource type="StyleBoxTexture" id="parchemin"]
-texture = ExtResource("papier")
-texture_margin_left = 18.0
-texture_margin_top = 18.0
-texture_margin_right = 18.0
-texture_margin_bottom = 18.0
-[sub_resource type="StyleBoxFlat" id="bulle_style"]
-bg_color = Color(0.95, 0.9, 0.79, 1)
-border_width_left = 1
-border_width_right = 1
-border_width_top = 1
-border_width_bottom = 1
-border_color = Color(0.43, 0.32, 0.2, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_left = 16
-corner_radius_bottom_right = 16
-shadow_color = Color(0, 0, 0, 0.32)
-shadow_size = 8
-shadow_offset = Vector2(0, 4)
 
 [node name="Tutoriel" instance=ExtResource("main")]
 script = ExtResource("intro")
@@ -943,33 +923,32 @@ rayon_contact = 0.6
 [node name="Briefing" type="CanvasLayer" parent="."]
 layer = 3
 [node name="Objectif" type="PanelContainer" parent="Briefing"]
+script = ExtResource("briefing_compact")
 offset_left = 430.0
 offset_top = 24.0
 offset_right = 1100.0
 offset_bottom = 116.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("parchemin")
+theme = ExtResource("intervention")
 [node name="Marge" type="MarginContainer" parent="Briefing/Objectif"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_bottom = 2
 [node name="Disposition" type="VBoxContainer" parent="Briefing/Objectif/Marge"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 5
 [node name="Titre" type="Label" parent="Briefing/Objectif/Marge/Disposition"]
+theme_type_variation = &"TitreIntervention"
 layout_mode = 2
 mouse_filter = 2
-theme_override_fonts/font = ExtResource("almendra")
-theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color(0.24, 0.14, 0.07, 1)
+theme_override_font_sizes/font_size = 20
 [node name="Consigne" type="Label" parent="Briefing/Objectif/Marge/Disposition"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.2, 0.14, 0.09, 1)
 autowrap_mode = 2
 [node name="Dialogue" type="PanelContainer" parent="Briefing"]
 offset_right = 500.0
@@ -977,32 +956,39 @@ offset_bottom = 170.0
 custom_minimum_size = Vector2(500, 0)
 mouse_filter = 2
 script = ExtResource("bulle")
-theme_override_styles/panel = SubResource("bulle_style")
+theme = ExtResource("intervention")
 [node name="Marge" type="MarginContainer" parent="Briefing/Dialogue"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_right = 22
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_bottom = 2
 [node name="Disposition" type="VBoxContainer" parent="Briefing/Dialogue/Marge"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 [node name="Nom" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
+theme_type_variation = &"TitreIntervention"
 layout_mode = 2
 text = "CHEF D’INTERVENTION"
 mouse_filter = 2
-theme_override_fonts/font = ExtResource("police")
 theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.39, 0.24, 0.1, 1)
 [node name="Texte" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
 layout_mode = 2
 custom_minimum_size = Vector2(450, 0)
 mouse_filter = 2
 theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.16, 0.13, 0.1, 1)
 autowrap_mode = 2
+[node name="Suite" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
+theme_type_variation = &"NoteIntervention"
+layout_mode = 2
+mouse_filter = 2
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 14
+text = "E · Continuer"
+visible = false
+
 [node name="Invitation" type="Label" parent="Briefing"]
 anchor_left = 0.5
 anchor_right = 0.5

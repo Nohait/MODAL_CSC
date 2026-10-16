@@ -148,6 +148,7 @@ func _actualiser_proximite() -> void:
 		invitation.text = "E · " + ("Écouter la suite" if dialogue.visible and not dialogue.revelee() else ("Continuer la conversation" if not progression.replique().is_empty() else "Parler au chef"))
 	else:
 		invitation.text = "Approchez-vous du chef pour lui parler" if not progression.dialogue_termine else ""
+	invitation.visible = not (dialogue.visible and not progression.dialogue_termine)
 	$Intervention/Superieur/Invite.visible = pres and not dialogue.visible
 
 func _actualiser_briefing() -> void:
@@ -161,6 +162,7 @@ func _actualiser_briefing() -> void:
 		objectif.text += "  (%d / %d)" % [progression.foyers_eteints(), progression.foyers.size()]
 	elif progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee:
 		objectif.text = "Relâchez le clic gauche et laissez la réserve se reconstituer."
+	dialogue.dialogue_interactif = not progression.dialogue_termine
 	dialogue.afficher(actuelle.consigne if progression.dialogue_termine else progression.replique())
 	if progression.indice == 0 and progression.indice_replique >= 1:
 		$Intervention/TeasingSauvetage.jouer($player)

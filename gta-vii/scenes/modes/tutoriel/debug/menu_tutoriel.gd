@@ -46,9 +46,12 @@ func _ready() -> void:
 
 func _construire() -> void:
 	indicateur = Label.new()
-	indicateur.position = Vector2(20, 18)
 	indicateur.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(indicateur)
+	indicateur.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	indicateur.offset_left = 20
+	indicateur.offset_top = -30
+	indicateur.offset_bottom = -8
 	panneau = PanelContainer.new()
 	panneau.theme = _theme_menu()
 	add_child(panneau)

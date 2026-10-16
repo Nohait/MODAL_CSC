@@ -1,0 +1,6 @@
+Rubik — lecture, commandes et chiffres.
+Source : https://github.com/google/fonts/tree/main/ofl/rubik
+Licence : SIL Open Font License 1.1, voir OFL-Rubik.txt.
+lecture.tres : graisse 400 ; accent.tres : graisse 600.
+La clé OpenType 2003265652 correspond à wght.
+Fichier original, sans modification, récupéré le 16 octobre 2026.

@@ -5,7 +5,7 @@ const ICONE_VIE = "res://assets/textures/interfaces/hud/icone_vie.svg"
 const ICONE_PIECE = "res://assets/textures/interfaces/hud/icone_piece.svg"
 const ICONE_COMBAT = "res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg"
 const ICONE_TEMPS = "res://assets/textures/interfaces/ameliorations/pictogrammes/recharge.svg"
-const POLICE_CHIFFRES = preload("res://assets/fonts/Almendra-Bold.ttf")
+const POLICE_CHIFFRES = preload("res://assets/fonts/rubik/accent.tres")
 const ICONE_CLAIRE = preload("res://scenes/modes/zombie/interfaces/fin/icone_bilan.gdshader")
 const LIGNES = [
 	{"id": "vagues_terminees", "titre": "Vagues terminées", "icone": ICONE_COMBAT},

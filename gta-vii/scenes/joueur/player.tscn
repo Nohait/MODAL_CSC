@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/hud/jauge_equipement.tscn" id="5_jauge"]
 [ext_resource type="Texture2D" uid="uid://uiwdov1ysn5g" path="res://assets/textures/interfaces/hud/icone_mousse.svg" id="6_mousse"]
-[ext_resource type="FontFile" uid="uid://bakravhue45e3" path="res://assets/fonts/Oswald-SemiBold.ttf" id="7_police"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="7_police"]
 [ext_resource type="Script" uid="uid://b7hbwlqcmioay" path="res://scenes/joueur/sons/pas_joueur.gd" id="8_pas"]
 [ext_resource type="AudioStream" uid="uid://4vifwjlxeftp" path="res://assets/sounds/joueur/dash/dash.wav" id="9_5lk6e"]
 [ext_resource type="Script" uid="uid://cdydwelkte4e4" path="res://scenes/joueur/feedback_dash.gd" id="9_dash"]

@@ -164,4 +164,5 @@ autowrap_mode = 2
 stream = ExtResource("13_hscm2")
 bus = &"Effets"
 
-[node name="Monnaie" parent="." unique_id=1592089747 instance=ExtResource("17_monnaie")]
+[node name="Monnaie" parent="." instance=ExtResource("17_monnaie")]
+actif = false

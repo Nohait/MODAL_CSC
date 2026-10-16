@@ -39,10 +39,12 @@ func _actualiser_timer(secondes: float) -> void:
 	texte_timer.clear()
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
 	if secondes > 0:
-		texte_timer.add_text("SAUVETAGE · %02d s · %d " % [ceili(secondes), victimes_a_liberer])
-		# L’image est insérée dans la ligne, juste après le nombre de victimes.
-		texte_timer.add_image(ICONE_VICTIMES, 14, 14, Color(0.24, 0.13, 0.08), INLINE_ALIGNMENT_CENTER)
-		texte_timer.add_text(" à libérer")
+		texte_timer.push_font_size(26)
+		texte_timer.add_text("%d " % victimes_a_liberer)
+		texte_timer.add_image(ICONE_VICTIMES, 22, 22, Color("edf0e9"), INLINE_ALIGNMENT_CENTER)
+		texte_timer.add_text(" À LIBÉRER")
+		texte_timer.pop()
+		texte_timer.add_text("\nSAUVETAGE · %02d s" % ceili(secondes))
 	else:
 		texte_timer.add_text("SAUVETAGE TERMINÉ")
 	texte_timer.pop()
@@ -53,16 +55,16 @@ func demarrer_timer() -> void:
 	temps = 0.0
 	encart.show()
 	timer.show()
-	texte_timer.offset_top = 3.0
-	texte_timer.offset_bottom = 25.0
+	texte_timer.offset_top = 6.0
+	texte_timer.offset_bottom = 62.0
 	_actualiser_timer(timer.value)
 
 func afficher_salle_liberee() -> void:
 	salle_liberee = true
 	encart.show()
 	timer.hide()
-	texte_timer.offset_top = 8.0
-	texte_timer.offset_bottom = 30.0
+	texte_timer.offset_top = 23.0
+	texte_timer.offset_bottom = 52.0
 	texte_timer.clear()
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
 	texte_timer.add_text("Salle libérée !")

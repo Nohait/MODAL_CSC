@@ -60,6 +60,16 @@ preload("res://assets/sounds/victimes/mort/victim_death7.wav"),]
 ## Rapidité des accélérations et décélérations (en unités/s²).
 @export_range(1.0, 100.0, 1.0, "or_greater") var acceleration: float = 25.0
 
+@export_range(1.0,15.0,0.1) var rayon_joueur:= 2.5
+@export_range(0.0,15.0,0.1) var rayon_fleche:= 0.0
+@export_range(1.0,15.0,0.1) var rayon_lien := 1.0
+@export_range(0.3,2.0,0.1) var rayon_separation := 1.0
+@export_range(0.0,3.0,0.1) var force_separation := 1.5
+# Pour le suivi groupé
+var est_proche_cible := false
+static var _frame_groupe := -1
+static var _ancre: Node3D
+
 
 # ------------------------------------------------------------------
 # BARRE DE VIE
@@ -129,6 +139,20 @@ var multiplicateur_vitesse := 1.0
 @export_range(0.0, 10.0, 0.1, "or_greater") var stop_distance_victime := 0.5
 var stop_distance: float = stop_distance_player
 
+@export_group("Irrégularité")
+
+@export_range(0.0, 4.0, 0.1) var dispersion := 1.0
+@export_range(0.0, 0.5, 0.01) var variation_separation := 0.25
+@export_range(0.0, 0.3, 0.01) var variation_vitesse := 0.1
+@export_range(0.0, 0.5, 0.01) var force_derive := 0.15
+@export_range(1.0, 8.0, 0.5) var duree_derive := 3.0
+
+var decalage := Vector3.ZERO
+var separation_perso := 1.2
+var facteur_vitesse_perso := 1.0
+var timer_derive := 0.0
+
+
 #Variables de décompte de l'attente
 var waiting := true
 var waiting_cooldown := 3.0
@@ -161,24 +185,16 @@ func _ready() -> void:
 	# Chaque victime possède son propre matériau.
 	# Sinon le flash rouge pourrait modifier plusieurs victimes partageant la même ressource.
 	visuel.material_override = materiau
+	
+	# tirage des paramètres aléatoires pour l'irrégularité
+	separation_perso = rayon_separation * randf_range(1.0 - variation_separation, 1.0 + variation_separation)
+	facteur_vitesse_perso = randf_range(1.0 - variation_vitesse, 1.0 + variation_vitesse)
+	timer_derive = randf_range(0.0, duree_derive)
+	_tirer_decalage()
 
 	if defi_fragile:
 		visuel.scale = Vector3.ONE * 0.65
 		materiau.albedo_color = Color("b789db")
-
-	# Ancien système de types
-	$BonusLabel.hide()
-	if bonus_dash:
-		materiau.albedo_color = Color(1.0, 0.65, 0.12, 1.0)
-		visuel.set_surface_override_material(0, materiau)
-		$BonusLabel.text = "SPORTIVE \nDash : cooldown -20 %"
-		$BonusLabel.show()
-	elif bonus_degats:
-		materiau.albedo_color = Color(0.15, 0.65, 1.0, 1.0)
-		visuel.set_surface_override_material(0, materiau)
-		$BonusLabel.modulate = Color(0.4, 0.8, 1.0)
-		$BonusLabel.text = "SPÉCIALISTE\nDégâts +25 %"
-		$BonusLabel.show()
 
 	# Barre de vie
 	# Le Sprite3D affiche directement la texture générée par le SubViewport.
@@ -189,28 +205,6 @@ func _ready() -> void:
 	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-	# --------------------------------------------------------------
-	# ANCIEN SYSTÈME DE TYPES
-	# --------------------------------------------------------------
-	$BonusLabel.hide()
-	if bonus_dash:
-		materiau.albedo_color = Color(1.0,0.65,0.12,1.0)
-		visuel.set_surface_override_material(0,materiau)
-
-		$BonusLabel.text = "SPORTIVE \nDash : cooldown -20 %"
-		$BonusLabel.show()
-	elif bonus_degats:
-		materiau.albedo_color = Color(0.15,0.65,1.0,1.0)
-
-		visuel.set_surface_override_material(0,materiau)
-
-		$BonusLabel.modulate = Color(0.4,0.8,1.0)
-
-		$BonusLabel.text = ("SPÉCIALISTE\nDégâts +25 %")
-		$BonusLabel.show()
-	# --------------------------------------------------------------
-	# BARRE DE VIE
-	# --------------------------------------------------------------
 	# Le Sprite3D affiche directement la texture générée par le SubViewport.
 	health_bar_sprite.texture = health_bar_viewport.get_texture()
 	# La barre occupe automatiquement toute la surface du SubViewport.
@@ -221,6 +215,12 @@ func _ready() -> void:
 	health_bar.max_value = vie_max
 	actualiser_barre_vie()
 	update_interaction_label()
+
+func _tirer_decalage() -> void:
+	# sqrt() répartit les points uniformément dans le disque, sans les concentrer au centre.
+	var angle := randf() * TAU
+	var rayon_tirage := dispersion * sqrt(randf())
+	decalage = Vector3(cos(angle), 0.0, sin(angle)) * rayon_tirage
 
 func _animate() -> void:
 	var vitesse_horizontale := Vector2(velocity.x, velocity.z)
@@ -304,8 +304,74 @@ func get_nom_affiche() -> String:
 	return str(name)
 
 # Suivi
+func _suivre_groupe(delta: float) -> void:
+	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
+		return
+	var joueur := get_tree().get_first_node_in_group("player") as Node3D
+	if joueur == null: return
+	_maj_groupe(get_tree(), joueur, rayon_joueur, rayon_fleche, rayon_lien)
+
+	var vitesse_max := speed * multiplicateur_vitesse * facteur_vitesse_perso
+	var vitesse_voulue := Vector3.ZERO
+
+	if not est_proche_cible:
+		var but := _meilleur_but(_ancre)
+		var point_sol := NavigationServer3D.map_get_closest_point(navigation_agent.get_navigation_map(), global_position)
+		navigation_agent.path_height_offset = point_sol.y - global_position.y
+		navigation_agent.target_position = but.global_position
+		var direction := navigation_agent.get_next_path_position() - global_position
+		direction.y = 0.0
+		if direction.length() > 0.01:
+			vitesse_voulue = _direction_sur_navigation(direction.normalized()) * vitesse_max
+
+	vitesse_voulue += _separation(_ancre) * vitesse_max
+	vitesse_voulue = vitesse_voulue.limit_length(vitesse_max)
+
+	# Arrivée à la flèche : le décompte d'attente démarre quand la victime fait partie de l'amas.
+	if _ancre.is_in_group("fleche"):
+		waiting = est_proche_cible
+		if waiting:
+			waiting_timer -= delta
+			if waiting_timer < 0.0:
+				waiting_timer = waiting_cooldown
+				waiting_termine.emit()
+
+	var horizontale := Vector3(velocity.x, 0.0, velocity.z).move_toward(vitesse_voulue, acceleration * delta)
+	velocity.x = horizontale.x
+	velocity.z = horizontale.z
+	move_and_slide()
+
+func _meilleur_but(ancre: Node3D) -> Node3D:
+	# Le plus proche parmi le joueur et les victimes déjà « proches ».
+	var meilleur: Node3D = ancre
+	var meilleure_distance := global_position.distance_to(ancre.global_position)
+	for v in get_tree().get_nodes_in_group("victims"):
+		if v == self or not v.get("is_freed") or v.est_morte or not v.est_proche_cible: continue
+		var d := global_position.distance_to(v.global_position)
+		if d < meilleure_distance:
+			meilleure_distance = d
+			meilleur = v
+	return meilleur
+
+func _separation(ancre: Node3D) -> Vector3:
+	var poussee := Vector3.ZERO
+	var voisins: Array = get_tree().get_nodes_in_group("victims")
+	voisins.append(ancre)
+	for v in voisins:
+		if v == self or v.get("est_morte") or (v != ancre and not v.get("is_freed")): continue
+		var ecart: Vector3 = global_position - v.global_position
+		ecart.y = 0.0
+		var d := ecart.length()
+		if d > 0.001 and d < rayon_separation:
+			poussee += ecart / d * (1.0 - d / rayon_separation)
+	return poussee * force_separation
 
 func follow_target_node(delta: float) -> void:
+	
+	_suivre_groupe(delta)
+	return
+		
+	## DEPRECATED
 	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
 		return
 	var to_target := follow_target.global_position - global_position
@@ -430,6 +496,33 @@ func _verifier_appel_secours() -> void:
 			appels_secours.pick_random().play()
 	)
 	delai.start(maxf(0.01, hasard_appel.randf_range(minf(delai_appel_min, delai_appel_max), maxf(delai_appel_min, delai_appel_max))))
+
+static func _maj_groupe(arbre: SceneTree, joueur: Node3D, rayon_joueur: float, rayon_fleche: float, rayon_lien_: float) -> void:
+	var frame := Engine.get_physics_frames()
+	if _frame_groupe == frame: return
+	_frame_groupe = frame
+	var libres: Array = []
+	var fleche: Node3D = null
+	for v in arbre.get_nodes_in_group("victims"):
+		if v.get("is_freed") and not v.est_morte and not v.is_queued_for_deletion():
+			v.est_proche_cible = false
+			libres.append(v)
+			# L'ancre est la flèche dès qu'une victime libérée la suit.
+			if fleche == null and is_instance_valid(v.follow_target) and v.follow_target.is_in_group("fleche"):
+				fleche = v.follow_target
+	_ancre = fleche if fleche != null else joueur
+	var rayon := rayon_fleche if fleche != null else rayon_joueur
+	var file: Array = []
+	for v in libres:
+		if v.global_position.distance_to(_ancre.global_position) <= rayon:
+			v.est_proche_cible = true
+			file.append(v)
+	while not file.is_empty():
+		var a = file.pop_front()
+		for v in libres:
+			if not v.est_proche_cible and a.global_position.distance_to(v.global_position) <= rayon_lien_:
+				v.est_proche_cible = true
+				file.append(v)
 
 # Barre de vie
 

@@ -18,6 +18,8 @@ var halo_materiau: StandardMaterial3D
 func _ready() -> void:
 	process_physics_priority = 2
 	get_parent().died.connect(_mort)
+
+func _creer_halo() -> void:
 	halo = MeshInstance3D.new()
 	var cercle := TorusMesh.new()
 	cercle.inner_radius = 0.88
@@ -71,9 +73,14 @@ func _physics_process(delta: float) -> void:
 	gel_restant = maxf(0, gel_restant - delta)
 	paralysie_restant = maxf(0.0, paralysie_restant - delta)
 	delai_gel = maxf(0, delai_gel - delta)
-	halo.visible = enrobage_restant > 0 or gel_restant > 0 or paralysie_restant > 0
-	halo_materiau.albedo_color = Color(0.15, 0.65, 1, 0.8) if gel_restant > 0 else Color(0.9, 0.95, 0.85, 0.7)
-	if paralysie_restant > 0: halo_materiau.albedo_color = Color(0.65, 0.85, 1.0, 0.9)
+	var halo_visible := enrobage_restant > 0 or gel_restant > 0 or paralysie_restant > 0
+	# Un simple contact sans statut ne nécessite aucun maillage ni matériau de halo.
+	if halo_visible and not is_instance_valid(halo): _creer_halo()
+	if is_instance_valid(halo):
+		halo.visible = halo_visible
+		if halo_visible:
+			halo_materiau.albedo_color = Color(0.15, 0.65, 1, 0.8) if gel_restant > 0 else Color(0.9, 0.95, 0.85, 0.7)
+			if paralysie_restant > 0: halo_materiau.albedo_color = Color(0.65, 0.85, 1.0, 0.9)
 	if recul_restant <= 0: degats_collision = 0.0
 	if recul_restant > 0 and get_parent() is CharacterBody3D:
 		var pas := minf(delta, recul_restant)

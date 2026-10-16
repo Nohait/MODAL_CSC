@@ -17,6 +17,8 @@
 [ext_resource type="AudioStream" uid="uid://dhicgpdm8yfti" path="res://assets/sounds/victimes/douleur/woman_ouch4.wav" id="15_gq4ck"]
 [ext_resource type="AudioStream" uid="uid://cunofkadna3yr" path="res://assets/sounds/victimes/douleur/woman_ouch5.wav" id="16_b233b"]
 
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="police_interface"]
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_feqff"]
 animation = &"idle"
 
@@ -63,7 +65,8 @@ height = 1.9957031
 radius = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sysh0"]
-bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+bg_color = Color(0.059, 0.094, 0.118, 1)
+border_color = Color(0.32, 0.39, 0.43, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -74,7 +77,7 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqnpg"]
-bg_color = Color(0.35267237, 0.7006889, 0, 1)
+bg_color = Color(0.39, 0.72, 0.56, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -168,11 +171,15 @@ collision_mask = 31
 shape = SubResource("SphereShape3D_sysh0")
 
 [node name="InteractionLabel" type="Label3D" parent="." unique_id=692538401]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.83697385, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.65, 0)
 visible = false
 billboard = 1
 text = "Libérer"
-font_size = 48
+font = ExtResource("police_interface")
+font_size = 40
+modulate = Color(0.89, 0.776, 0.353, 1)
+outline_modulate = Color(0.059, 0.094, 0.118, 1)
+outline_size = 8
 
 [node name="BonusLabel" type="Label3D" parent="." unique_id=1549689767]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
@@ -195,6 +202,11 @@ size = Vector2i(240, 32)
 [node name="HealthBar" type="ProgressBar" parent="HealthBarViewport" unique_id=1422637192]
 offset_right = 240.0
 offset_bottom = 32.0
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_constants/outline_size = 3
+theme_override_colors/font_outline_color = Color(0.059, 0.094, 0.118, 1)
+theme_override_fonts/font = ExtResource("police_interface")
+theme_override_font_sizes/font_size = 22
 theme_override_styles/background = SubResource("StyleBoxFlat_sysh0")
 theme_override_styles/fill = SubResource("StyleBoxFlat_fqnpg")
 value = 100.0

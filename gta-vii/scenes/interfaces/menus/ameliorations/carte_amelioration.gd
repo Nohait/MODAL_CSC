@@ -56,7 +56,7 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/boutique/catalogue_bout
 ## Agrandissement du visuel seulement : le rectangle cliquable et les containers restent stables.
 @export_range(1.0, 1.15, 0.01) var hover_scale := 1.035
 @export_range(0.05, 1.0, 0.01) var hover_duration := 0.18
-## Mettre zéro pour conserver uniquement les bordures carbonisées.
+## Paramètre historique conservé pour les scènes existantes ; la fiche reste mate.
 @export_range(0.0, 2.0, 0.05) var intensite_braises := 0.8
 
 @onready var visuel: Control = $Visuel
@@ -74,7 +74,7 @@ var dos_carte: TextureRect
 var intensite_repos := 0.8
 var niveau_rarete := 0
 
-# Le dos utilise le papier existant ; le contenu reste caché jusqu'au retournement.
+# Le dos est neutre ; le contenu reste caché jusqu’au retournement.
 func preparer_revelation() -> void:
 	en_revelation = true
 	intensite_repos = intensite_braises
@@ -85,16 +85,14 @@ func preparer_revelation() -> void:
 	dos_carte = TextureRect.new()
 	dos_carte.texture = preload("res://assets/textures/interfaces/ameliorations/dos_carte.svg")
 	var lave := ShaderMaterial.new()
-	lave.shader = preload("res://scenes/interfaces/menus/ameliorations/dos_carte.gdshader")
-	lave.set_shader_parameter("decalage", randf() * 20.0)
+	lave.shader = preload("res://scenes/interfaces/theme_intervention/dos_fiche.gdshader")
 	dos_carte.material = lave
 	dos_carte.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	dos_carte.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visuel.add_child(dos_carte)
 	dos_carte.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	materiau_papier.set_shader_parameter("rarete_coloree", false)
-	materiau_papier.set_shader_parameter("braises_personnalisees", false)
-	visuel.modulate = Color(0.82, 0.76, 0.65, 1.0)
+	visuel.modulate = Color.WHITE
 	visuel.scale = Vector2(0.94, 0.94)
 	visuel.modulate.a = 0.0
 
@@ -204,7 +202,7 @@ func _ready() -> void:
 	materiau_papier = papier.material.duplicate() as ShaderMaterial
 	# Les pictogrammes gardent leur transparence et leurs proportions.
 	var metal := ShaderMaterial.new()
-	metal.shader = preload("res://scenes/interfaces/menus/ameliorations/pictogramme_metal.gdshader")
+	metal.shader = preload("res://scenes/interfaces/theme_intervention/pictogramme.gdshader")
 	image.material = metal
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	papier.material = materiau_papier
@@ -230,14 +228,11 @@ func actualiser_contenu() -> void:
 	var teinte: Color = CATALOGUE.COULEURS.get(StringName(rarete), Color.WHITE)
 	materiau_papier.set_shader_parameter("rarete_coloree", coloree)
 	materiau_papier.set_shader_parameter("teinte_rarete", teinte)
-	materiau_papier.set_shader_parameter("braises_personnalisees", coloree)
-	materiau_papier.set_shader_parameter("teinte_braises", teinte)
 	niveau_rarete = maxi(0, ["commun", "rare", "epique", "legendaire", "synergie"].find(rarete))
-	materiau_papier.set_shader_parameter("niveau_rarete", float(niveau_rarete))
 	var marque: Label = $Visuel/Contenu/Organisation/Entete/Marque
-	marque.text = CATALOGUE.NOMS.get(StringName(rarete), "✦").to_upper()
+	marque.text = CATALOGUE.NOMS.get(StringName(rarete), "MATÉRIEL").to_upper()
 	marque.add_theme_color_override("font_color", teinte.lightened(0.3))
-	$Visuel/Contenu/Organisation/Entete/Categorie.add_theme_color_override("font_color", Color("d7c7ac"))
+	$Visuel/Contenu/Organisation/Entete/Categorie.add_theme_color_override("font_color", Color("acbabf"))
 	image.material.set_shader_parameter("teinte", teinte.lightened(0.25))
 	$Visuel/Contenu/Organisation/Titre.text = titre
 	$Visuel/Contenu/Organisation/Description.text = description
@@ -260,21 +255,21 @@ func preparer_consultation() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	hover_scale = 1.0 # Éviter de déborder sur les voisines dans le défilement.
-	$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 80
+	$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 48
 	$Visuel/Contenu/Organisation.add_theme_constant_override("separation", 8)
 	if not duree_affichee.is_empty():
 		# Réserver la durée dans le même format, au lieu d'allonger la carte temporaire.
-		$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 45
+		$Visuel/Contenu/Organisation/Illustration.custom_minimum_size.y = 32
 		$Visuel/Contenu/Organisation/Duree.add_theme_font_size_override("font_size", 18)
 		$Visuel/Contenu/Organisation.add_theme_constant_override("separation", 6)
 	for cote in ["left", "top", "right", "bottom"]:
 		$Visuel/Contenu.add_theme_constant_override("margin_" + cote, 18)
 	$Visuel/Contenu/Organisation/Titre.add_theme_font_size_override("font_size", 22)
-	$Visuel/Contenu/Organisation/Entete/Marque.add_theme_font_size_override("font_size", 11)
-	$Visuel/Contenu/Organisation/Description.add_theme_font_size_override("font_size", 13)
+	$Visuel/Contenu/Organisation/Entete/Marque.add_theme_font_size_override("font_size", 12)
+	$Visuel/Contenu/Organisation/Description.add_theme_font_size_override("font_size", 14)
 	$Visuel/Contenu/Organisation/Effet.add_theme_font_size_override("font_size", 15)
-	# Réserver deux lignes même pour un effet court garde les illustrations alignées.
-	$Visuel/Contenu/Organisation/Effet.custom_minimum_size.y = 54
+	# La description reçoit l’espace disponible, sans réserver un encart vide.
+	$Visuel/Contenu/Organisation/Effet.custom_minimum_size.y = 0
 	$Visuel/Contenu/Organisation/Effet.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 
@@ -284,36 +279,13 @@ func actualiser_dimensions() -> void:
 	materiau_papier.set_shader_parameter("taille", papier.size)
 
 
-## Anime les braises même si le jeu est en pause : la scène est en mode Always.
-func _process(delta: float) -> void:
+## Le retour de survol reste actif dans les menus en pause.
+func _process(_delta: float) -> void:
 	if not is_visible_in_tree():
 		return
-	temps_animation += delta
-	if is_instance_valid(dos_carte) and dos_carte.visible:
-		# Utiliser notre horloge fait vivre la lave même pendant la pause du jeu.
-		dos_carte.material.set_shader_parameter("horloge", temps_animation)
-	var lumiere := Vector2(0.25, 0.15)
-	if souris_dessus and size.x > 0.0 and size.y > 0.0:
-		# Position relative dans la carte : déplace le reflet simulé sous la souris.
-		lumiere = get_local_mouse_position() / size
-	materiau_papier.set_shader_parameter("horloge", temps_animation)
 	materiau_papier.set_shader_parameter("survol", accent)
-	materiau_papier.set_shader_parameter("point_lumiere", lumiere)
-	materiau_papier.set_shader_parameter("intensite_braises", intensite_braises)
-	# Lire la vraie place de l'illustration fonctionne aussi avec les cartes compactes du Carnet.
-	var illustration_zone: Control = image.get_parent()
-	var centre := papier.get_global_transform().affine_inverse() * illustration_zone.get_global_transform() * (illustration_zone.size / 2.0)
-	materiau_papier.set_shader_parameter("centre_illustration", centre / papier.size.max(Vector2.ONE))
-	materiau_papier.set_shader_parameter("rayon_illustration", minf(illustration_zone.size.x, illustration_zone.size.y) * 0.44)
-	var titre_zone: Control = $Visuel/Contenu/Organisation/Titre
-	# Une durée temporaire fait partie des informations lisibles sur le parchemin.
-	if $Visuel/Contenu/Organisation/Duree.visible:
-		titre_zone = $Visuel/Contenu/Organisation/Duree
-	var debut_titre := papier.get_global_transform().affine_inverse() * titre_zone.global_position
-	materiau_papier.set_shader_parameter("limite_metal", (debut_titre.y - 6.0) / maxf(papier.size.y, 1.0))
 	image.material.set_shader_parameter("survol", accent)
-	# Le pictogramme devient un emblème : conserver une marge à l'intérieur du médaillon.
-	var marge := illustration_zone.size * 0.15
+	var marge: Vector2 = image.get_parent().size * 0.15
 	image.offset_left = marge.x
 	image.offset_right = -marge.x
 	image.offset_top = marge.y
@@ -331,7 +303,7 @@ func _on_mouse_exited() -> void:
 	actualiser_survol()
 
 
-## Anime le visuel et les braises ensemble, sans agrandir la zone qui reçoit la souris.
+## Anime le visuel sans agrandir la zone qui reçoit la souris.
 func actualiser_survol() -> void:
 	if en_revelation:
 		return

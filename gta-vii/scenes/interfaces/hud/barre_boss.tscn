@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scenes/interfaces/hud/barre_boss.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="2"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="2"]
 [sub_resource type="StyleBoxFlat" id="Fond"]
 bg_color = Color(0.045, 0.05, 0.055, 0.95)
 border_width_left = 2

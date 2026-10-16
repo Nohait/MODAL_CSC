@@ -42,7 +42,7 @@ theme_override_constants/separation = 26
 layout_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.73, 0.5, 1)
 theme_override_font_sizes/font_size = 26
-text = "DANS LES CENDRES, UNE CHANCE"
+text = "CHOISISSEZ UNE AMÉLIORATION"
 horizontal_alignment = 1
 
 [node name="Cartes" type="HBoxContainer" parent="Defilement/Centre/Marge/Contenu"]

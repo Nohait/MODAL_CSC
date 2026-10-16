@@ -43,7 +43,7 @@ func _ready() -> void:
 	icone.custom_minimum_size = Vector2(28, 28)
 	ligne.add_child(icone)
 	nombre_secours = Label.new()
-	nombre_secours.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
+	nombre_secours.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	ligne.add_child(nombre_secours)
 	upgrades.ameliorations_changees.connect(actualiser_secours)
 	actualiser_secours()

@@ -64,6 +64,8 @@ func _physics_process(delta: float) -> void:
 	if not is_instance_valid(joueur) or termine: return
 	var actuelle := etat()
 	var intensite: float = passage.intensite_totale()
+	if actuelle != etat_precedent and actuelle in ["extinction", "escorte"]:
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	if actuelle != etat_precedent or intensite < intensite_precedente:
 		temps_sans_progres = 0.0
 		etat_precedent = actuelle
@@ -77,5 +79,6 @@ func _physics_process(delta: float) -> void:
 	if actuelle == "escorte" and _dans_repere(joueur) and _dans_repere(victime):
 		# La mise en scène prend ensuite le relais, sans attribuer de victoire classique.
 		termine = true
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		consigne_changee.emit()
 		premier_sauvetage_reussi.emit()

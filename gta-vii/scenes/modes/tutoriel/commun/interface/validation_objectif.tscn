@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="AudioStream" path="res://assets/sounds/design/menus/confirmation_003.ogg" id="son"]
+
+[node name="ValidationObjectifTutoriel" type="AudioStreamPlayer"]
+process_mode = 3
+stream = ExtResource("son")
+volume_db = -18.0
+bus = &"Effets"

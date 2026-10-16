@@ -18,22 +18,22 @@ func _ready() -> void:
 	add_theme_constant_override("separation", 6)
 	# Un thème local laisse les textes des boosters inchangés.
 	theme = Theme.new()
-	theme.set_color("font_color", "Label", Color("3e2d20"))
+	theme.set_color("font_color", "Label", Color("edf0e9"))
 	for etat in ["normal", "hover", "pressed", "disabled"]:
 		var fond := StyleBoxFlat.new()
-		fond.bg_color = Color("bba17a") if etat == "normal" else Color("dac199")
+		fond.bg_color = Color("24333b") if etat == "normal" else Color("354b57")
 		if etat == "disabled":
-			fond.bg_color = Color("bea989")
+			fond.bg_color = Color("202a30")
 		fond.set_corner_radius_all(4)
 		fond.content_margin_left = 10
 		fond.content_margin_right = 10
 		fond.content_margin_top = 8
 		fond.content_margin_bottom = 8
 		theme.set_stylebox(etat, "Button", fond)
-		theme.set_color("font_" + etat + "_color" if etat != "normal" else "font_color", "Button", Color("78674f") if etat == "disabled" else Color("38291d"))
+		theme.set_color("font_" + etat + "_color" if etat != "normal" else "font_color", "Button", Color("819097") if etat == "disabled" else Color("edf0e9"))
 	var contour := StyleBoxFlat.new()
 	contour.bg_color = Color(0, 0, 0, 0)
-	contour.border_color = Color("79562d")
+	contour.border_color = Color("e3c65a")
 	contour.set_border_width_all(2)
 	contour.set_corner_radius_all(4)
 	theme.set_stylebox("focus", "Button", contour)
@@ -80,7 +80,7 @@ func afficher_progression() -> void:
 	barre.show_percentage = false
 	# Une piste discrète et un remplissage vert rendent l'avancement identifiable.
 	var piste := StyleBoxFlat.new()
-	piste.bg_color = Color("99825f")
+	piste.bg_color = Color("101b21")
 	piste.set_corner_radius_all(2)
 	var remplissage := StyleBoxFlat.new()
 	remplissage.bg_color = Color("4c873d")

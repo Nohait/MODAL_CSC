@@ -2,7 +2,7 @@ extends Button
 
 const PLAQUE = preload("res://assets/textures/interfaces/titre/plaque_bouton.svg")
 const REFLET = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
-const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
+const POLICE = preload("res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf")
 
 
 @export var taille_police := 28
@@ -18,9 +18,9 @@ func _ready() -> void:
 		add_theme_stylebox_override(etat, StyleBoxEmpty.new())
 	add_theme_font_override("font", POLICE)
 	add_theme_font_size_override("font_size", taille_police)
-	add_theme_color_override("font_color", Color("f0e5cf"))
-	add_theme_color_override("font_hover_color", Color("fff2cc"))
-	add_theme_color_override("font_pressed_color", Color("e8b37d"))
+	add_theme_color_override("font_color", Color("edf0e9"))
+	add_theme_color_override("font_hover_color", Color("ffffff"))
+	add_theme_color_override("font_pressed_color", Color("e3c65a"))
 	add_theme_color_override("font_shadow_color", Color(0.015, 0.02, 0.025, 0.9))
 	add_theme_constant_override("shadow_offset_y", 2)
 	
@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
 	if fond == null: return
 	fond.material.set_shader_parameter("taille", size)
 	# Utiliser l'état réel évite un survol bloqué après un changement de menu.
-	var cible := 1.0 if not disabled and (is_hovered() or (has_focus() and not Input.get_connected_joypads().is_empty())) else 0.0
+	var cible := 1.0 if not disabled and (is_hovered() or has_focus()) else 0.0
 	var valeur = fond.material.get_shader_parameter("survol")
 	var actuel: float = float(valeur) if valeur != null else 0.0
 	fond.material.set_shader_parameter("survol", lerpf(actuel, cible, 1.0 - exp(-12.0 * delta)))

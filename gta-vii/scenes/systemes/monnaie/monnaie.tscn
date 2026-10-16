@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/systemes/monnaie/monnaie.gd" id="script"]
 [ext_resource type="AudioStream" path="res://assets/sounds/interfaces/collecte_piece.wav" id="son"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_piece.svg" id="icone"]
-[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="police"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="police"]
 
 [node name="Monnaie" type="Node3D"]
 script = ExtResource("script")
@@ -41,3 +41,12 @@ theme_override_colors/font_color = Color(1, 0.84, 0.47, 1)
 theme_override_colors/font_outline_color = Color(0.09, 0.04, 0.01, 1)
 theme_override_constants/outline_size = 4
 text = "0"
+
+[node name="Unite" type="Label" parent="HUD/Compteur"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_outline_color = Color(0.06, 0.09, 0.11, 1)
+theme_override_constants/outline_size = 4
+text = "PIÈCES"
