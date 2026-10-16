@@ -97,8 +97,6 @@ editor_description = "Le gestionnaire pilote le parcours ; le générateur fabri
 
 [node name="RoomGenerator" type="Node3D" parent="Salles" unique_id=601904784]
 script = ExtResource("12_generateur")
-roomSizeMax = null
-roomSizeMin = null
 
 [node name="Rooms" type="Node3D" parent="Salles" unique_id=648949322]
 
@@ -164,5 +162,5 @@ autowrap_mode = 2
 stream = ExtResource("13_hscm2")
 bus = &"Effets"
 
-[node name="Monnaie" parent="." instance=ExtResource("17_monnaie")]
+[node name="Monnaie" parent="." unique_id=128993438 instance=ExtResource("17_monnaie")]
 actif = false

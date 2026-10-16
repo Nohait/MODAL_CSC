@@ -61,7 +61,6 @@ func register_victim(victim: CharacterBody3D) -> void:
 	escort_changed.emit()
 
 func _on_waiting_termine() -> void:
-	print("signal capturé")
 	retour_nav_auto()
 
 func evacuate_victim(victim: CharacterBody3D) -> void:

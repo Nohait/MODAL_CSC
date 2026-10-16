@@ -1,10 +1,9 @@
 [gd_resource type="Theme" format=3 uid="uid://com021etce2oa"]
 
+[ext_resource type="FontFile" uid="uid://cbrlojs21m4os" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
 [ext_resource type="Texture2D" uid="uid://dk7hfr6og4bri" path="res://assets/textures/interfaces/options/poignee_reglage.svg" id="poignee"]
 [ext_resource type="Texture2D" uid="uid://dea2c8xqu228l" path="res://assets/textures/interfaces/options/rail_reglage.svg" id="rail_texture"]
 [ext_resource type="Texture2D" uid="uid://b16dj1ks1mlbn" path="res://assets/textures/interfaces/options/remplissage_reglage.svg" id="remplissage_texture"]
-
-[ext_resource type="FontFile" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
 
 [sub_resource type="StyleBoxFlat" id="Focus"]
 bg_color = Color(0, 0, 0, 0)
@@ -37,8 +36,8 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [resource]
-Button/fonts/font = ExtResource("boutons")
 default_font_size = 20
+Button/fonts/font = ExtResource("boutons")
 HSlider/icons/grabber = ExtResource("poignee")
 HSlider/icons/grabber_highlight = ExtResource("poignee")
 HSlider/styles/focus = SubResource("Focus")

@@ -1,7 +1,7 @@
 extends Resource
 
 @export_range(0.0, 1000.0, 0.5) var seuil_petits_degats := 1
-@export_range(0.0, 1000.0, 0.5) var seuil_gros_degats := 5.0
+@export_range(0.0, 1000.0, 0.5) var seuil_gros_degats := 7.0
 @export var couleur_faible := Color("fff0cb")
 @export var couleur_moyenne := Color("d58600ff")
 @export var couleur_forte := Color("960017ff")
