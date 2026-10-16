@@ -103,7 +103,7 @@ func _habiller_boutons(parent: Node) -> void:
 func _creer_titre(texte: String) -> void:
 	var titre := Label.new()
 	titre.text = texte
-	titre.add_theme_color_override("font_color", Color("d5a76d"))
+	titre.add_theme_color_override("font_color", Color("e3c65a"))
 	titre.add_theme_font_size_override("font_size", 20)
 	contenu.add_child(titre)
 

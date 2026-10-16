@@ -130,7 +130,6 @@ func ouvrir_menu() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = true
 	menu.show()
-	ouverture_booster.lancer(raccourci)
 	raccourci.hide()
 	# Interrompre le fondu précédent si le menu est rouvert rapidement.
 	if animation:

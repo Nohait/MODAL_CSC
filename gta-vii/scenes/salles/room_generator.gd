@@ -24,8 +24,8 @@ var bords_habillage: Array = []
 @export var murs_etage_3: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_3.tres")
 
 @export_group("Reflets du sol classique")
-@export_range(0.0, 1.0, 0.05) var rugosite_minimale_sol := 0.85
-@export_range(0.0, 1.0, 0.05) var intensite_reflets_sol := 0.25
+@export_range(0.0, 1.0, 0.05) var rugosite_minimale_sol := 1.0
+@export_range(0.0, 1.0, 0.05) var intensite_reflets_sol := 0.05
 
 @export_group("Trous du plancher")
 

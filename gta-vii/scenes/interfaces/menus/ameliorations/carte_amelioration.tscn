@@ -1,37 +1,32 @@
 [gd_scene format=3 uid="uid://bx5r5mv7v8cud"]
 
 [ext_resource type="Script" uid="uid://bvpfbruarcplu" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gd" id="1"]
-[ext_resource type="Shader" uid="uid://bmg8kmi14kviw" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="2"]
+[ext_resource type="Shader" path="res://scenes/interfaces/theme_intervention/fiche.gdshader" id="2"]
 [ext_resource type="Texture2D" uid="uid://dpc6hyifmn5ke" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="4"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/pression.svg" id="5"]
-[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="6"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="Ombre"]
 bg_color = Color(0.015, 0.01, 0.008, 0.85)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 shadow_size = 14
 shadow_offset = Vector2(0, 8)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w1v70"]
 shader = ExtResource("2")
 shader_parameter/taille = Vector2(320, 500)
-shader_parameter/largeur_bord = 13.0
-shader_parameter/rayon_coin = 15.0
 shader_parameter/survol = 0.0
-shader_parameter/horloge = 152.5917991111433
-shader_parameter/point_lumiere = Vector2(0.25, 0.15)
-shader_parameter/intensite_braises = 0.8
 
 [sub_resource type="StyleBoxFlat" id="Effet"]
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.16, 0.075, 0.04, 0.1)
+bg_color = Color(0.063, 0.094, 0.114, 1)
 border_width_top = 1
 border_width_bottom = 1
-border_color = Color(0.27, 0.14, 0.07, 0.35)
+border_color = Color(0.286, 0.357, 0.388, 1)
 
 [node name="CarteAmelioration" type="Control" unique_id=1155351157]
 process_mode = 3
@@ -105,21 +100,21 @@ mouse_filter = 2
 [node name="Categorie" type="Label" parent="Visuel/Contenu/Organisation/Entete" unique_id=1594370416]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.3, 0.17, 0.1, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_font_sizes/font_size = 12
 text = "EXTINCTEUR"
 
 [node name="Marque" type="Label" parent="Visuel/Contenu/Organisation/Entete" unique_id=1851811171]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.2, 0.08, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_font_sizes/font_size = 14
-text = "✦"
+text = "MATÉRIEL"
 
 [node name="Illustration" type="Control" parent="Visuel/Contenu/Organisation" unique_id=2038948273]
 editor_description = "Pictogramme vectoriel centré, sans déformation."
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="Image" type="TextureRect" parent="Visuel/Contenu/Organisation/Illustration" unique_id=369160520]
@@ -136,16 +131,16 @@ expand_mode = 1
 [node name="Duree" type="Label" parent="Visuel/Contenu/Organisation"]
 visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.1, 0.3, 0.26, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Titre" type="Label" parent="Visuel/Contenu/Organisation" unique_id=1147516186]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.16, 0.065, 0.025, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_fonts/font = ExtResource("6")
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 text = "Sous pression"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -153,8 +148,9 @@ autowrap_mode = 3
 [node name="Description" type="Label" parent="Visuel/Contenu/Organisation" unique_id=498926739]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.24, 0.16, 0.105, 1)
-theme_override_font_sizes/font_size = 15
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_font_sizes/font_size = 16
 text = "Un jet plus puissant pour repousser les flammes."
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -162,7 +158,7 @@ autowrap_mode = 3
 
 [node name="Effet" type="Label" parent="Visuel/Contenu/Organisation" unique_id=1316546436]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.105, 0.035, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Effet")
 text = "+20 % de dégâts"
@@ -171,7 +167,7 @@ autowrap_mode = 3
 
 [node name="Invitation" type="Label" parent="Visuel/Contenu/Organisation" unique_id=2126584790]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.26, 0.17, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_font_sizes/font_size = 12
 text = "CLIQUER POUR CHOISIR"
 horizontal_alignment = 1

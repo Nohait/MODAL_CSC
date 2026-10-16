@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="1_0tgcp"]
 [ext_resource type="Script" uid="uid://cn4v8t5wx1t4l" path="res://scenes/interfaces/contrôles/menu_controles.gd" id="1_yyvv7"]
-[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="2_b6nf5"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="2_b6nf5"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="3_bm73f"]
 [ext_resource type="Script" uid="uid://tvvahyuhbk7s" path="res://scenes/interfaces/contrôles/j_1_clavier_touches.gd" id="4_tkrf5"]
 [ext_resource type="Script" uid="uid://dr2r1mifrb88f" path="res://scenes/interfaces/contrôles/j_1_manette_touches.gd" id="6_uyq8f"]

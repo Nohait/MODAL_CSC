@@ -6,12 +6,6 @@ var mode_suppression := "zombie"
 @export_range(0.2, 1.2, 0.05) var duree_depart := 0.5
 var temps_titre := 0.0
 
-func _process(delta: float) -> void:
-	temps_titre += delta
-	var chaleur := (sin(temps_titre * 2.1) + sin(temps_titre * 3.7) * 0.35 + 1.35) / 2.7
-	$Menu/Colonne/Titre.add_theme_color_override("font_color", Color("ead6ac").lerp(Color("ffe3ac"), chaleur))
-	$Menu/Colonne/Titre.add_theme_color_override("font_shadow_color", Color(0.9, 0.28, 0.04, 0.25 + chaleur * 0.2))
-
 func changer_scene(chemin: String) -> void:
 	if changement_en_cours:
 		return
@@ -40,8 +34,6 @@ func _restaurer_menu() -> void:
 func _ready() -> void:
 	super._ready()
 	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	$Menu/Colonne/Titre.resized.connect(_centrer_flammes)
-	_centrer_flammes.call_deferred()
 	%ModeZombie.pressed.connect(_jouer_zombie)
 	%Tutoriel.pressed.connect(_jouer_tutoriel)
 	var reprise_tutoriel = preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree())
@@ -77,13 +69,6 @@ func _ready() -> void:
 	$Menu.modulate.a = 0.0
 	var animation := create_tween()
 	animation.tween_property($Menu, "modulate:a", 1.0, 0.45)
-
-func _centrer_flammes() -> void:
-	var titre: Label = $Menu/Colonne/Titre
-	var flammes: ColorRect = $Menu/Flammes
-	# Le fond suit les dimensions réelles du titre, y compris lors d'un redimensionnement.
-	flammes.position = titre.global_position - $Menu.global_position - Vector2(28, 35)
-	flammes.size = titre.size + Vector2(56, 60)
 
 func _actualiser_zombie() -> void:
 	var disponible := SauvegardeZombie.disponible()
@@ -131,9 +116,9 @@ func _creer_confirmation_suppression() -> void:
 	message_sauvegarde.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message_sauvegarde.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	message_sauvegarde.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	message_sauvegarde.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
+	message_sauvegarde.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	message_sauvegarde.add_theme_font_size_override("font_size", 23)
-	message_sauvegarde.add_theme_color_override("font_color", Color("f0e5cf"))
+	message_sauvegarde.add_theme_color_override("font_color", Color("edf0e9"))
 	colonne.add_child(message_sauvegarde)
 	var boutons := HBoxContainer.new()
 	boutons.alignment = BoxContainer.ALIGNMENT_CENTER

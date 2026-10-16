@@ -128,7 +128,7 @@ func _ready() -> void:
 	boutique.catalogue = offres_boosters()
 	add_child(boutique)
 	boutique.hide()
-	boutique.ajouter_ravitaillement()
+	if mode_jeu == "zombie": boutique.ajouter_ravitaillement()
 	boutique.recharge_murale_demandee.connect(_acheter_recharge_murale)
 	monnaie.solde_change.connect(_actualiser_pieces)
 	boutique.achat_demande.connect(_acheter_booster)
@@ -265,7 +265,7 @@ func _afficher_cartes(propositions: Array, avec_revelation := false) -> void:
 		cartes.add_child(carte)
 		if avec_revelation:
 			carte.preparer_revelation()
-	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "DEBUG · Choix gratuit à 100 % · Les cartes déjà obtenues ou sans leurs prérequis sont désactivées." if catalogue_debug else "Choisissez une carte. Les soins sont immédiats ; les autres effets indiquent leur durée."
+	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "DEBUG · Choix gratuit à 100 % · Les cartes déjà obtenues ou sans leurs prérequis sont désactivées." if catalogue_debug else "Choisissez une carte pour votre équipement."
 	menu.show()
 	if avec_revelation:
 		_reveler_cartes()
@@ -408,7 +408,7 @@ func ouvrir_booster_formation() -> void:
 	centre.queue_free()
 	ouverture.queue_free()
 	_afficher_cartes(propositions, true)
-	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "Sous pression : dégâts. Grande réserve : capacité. Second souffle : récupération. Une seule carte sera conservée pour la partie."
+	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "Choisissez votre première amélioration. Elle vous accompagne jusqu’à la fin de la partie."
 
 func acquerir_formation_debug(identifiant: StringName) -> void:
 	if not OS.is_debug_build(): return
@@ -653,6 +653,7 @@ func _legendaire_disponible() -> bool:
 
 func _actualiser_pieces(_solde: int = 0) -> void:
 	boutique.actualiser_legendaire(_legendaire_disponible())
+	if mode_jeu != "zombie": return
 	if not is_instance_valid(extincteur_mural):
 		# La map est créée après la boutique : chercher l'objet au premier affichage.
 		for objet in get_tree().get_nodes_in_group("extincteur_mural"):
@@ -665,6 +666,7 @@ func _actualiser_pieces(_solde: int = 0) -> void:
 		extincteur_mural.prix_recharge if present else 5, present)
 
 func _acheter_recharge_murale() -> void:
+	if mode_jeu != "zombie": return
 	# Revérifier côté jeu : un bouton grisé ne remplace pas la vérification d'un achat.
 	if not boutique_ouverte or choix_ouverts or not is_instance_valid(extincteur_mural): return
 	if extincteur_mural.disponible: return

@@ -6,22 +6,8 @@ extends CanvasLayer
 @onready var menu: Control = $Menu
 @onready var voile: ColorRect = $Menu/Voile
 @onready var panneau: Control = $Menu/Centre/Panneau
-@onready var papier: TextureRect = $Menu/Centre/Panneau/Papier
-var horloge := 0.0
-
-
 func _ready() -> void:
-	papier.material = papier.material.duplicate()
 	menu.hide()
-
-
-func _process(delta: float) -> void:
-	if not menu.visible:
-		return
-	horloge += delta
-	papier.material.set_shader_parameter("horloge", horloge)
-	papier.material.set_shader_parameter("taille", papier.size)
-
 
 func masquer(rapide: bool = false) -> void:
 	# Le RoomManager a déjà gelé le combat ; ce menu ne met pas l'arbre en pause.

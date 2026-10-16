@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cm4uw2klixynb" path="res://scenes/interfaces/menus/boutique/booster_apercu.gd" id="1"]
 [ext_resource type="Shader" uid="uid://cc1e2upb5xoud" path="res://scenes/interfaces/menus/boutique/booster.gdshader" id="2"]
 [ext_resource type="Texture2D" uid="uid://dpc6hyifmn5ke" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="3"]
-[ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="4"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n0irj"]
 shader = ExtResource("2")

@@ -1,6 +1,9 @@
 @tool
 extends Resource
+
 class_name HabillageSalle
+
+@export var zones_humides_visibles := false
 
 # Une ressource par ambiance permet de régler le décor sans toucher au découpage des salles.
 @export var actif := true
@@ -303,7 +306,11 @@ func _meubler(generateur: Node3D, decor: Node3D, bords: Array, hasard: RandomNum
 			var eau = EAU.instantiate()
 			eau.position = centre - normale * 1.65 + Vector3.UP * 0.075
 			eau.rotation.y = angle + hasard.randf_range(-0.2, 0.2)
-			decor.add_child(eau)
+			# Garder le tirage d’orientation pour préserver les autres placements de cette graine.
+			if zones_humides_visibles:
+				decor.add_child(eau)
+			else:
+				eau.free()
 			eaux += 1
 
 func _varier_incendie(feu: Node3D, hasard: RandomNumberGenerator, incendie: IncendieSalle = null) -> void:

@@ -1,0 +1,110 @@
+[gd_resource type="Theme" format=3 uid="uid://4yvbquuw1ee3"]
+
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
+[ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="titre"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
+
+[sub_resource type="StyleBoxFlat" id="disabled"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.14, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.3, 0.33, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="focus"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.89, 0.776, 0.353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="hover"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.208, 0.294, 0.341, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.89, 0.776, 0.353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="normal"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.141, 0.2, 0.231, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.43, 0.47, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="pressed"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.09, 0.13, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.89, 0.776, 0.353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[resource]
+Button/fonts/font = ExtResource("boutons")
+default_font = ExtResource("lecture")
+default_font_size = 18
+Button/colors/font_color = Color(0.929, 0.941, 0.914, 1)
+Button/colors/font_disabled_color = Color(0.5, 0.56, 0.59, 1)
+Button/font_sizes/font_size = 18
+Button/styles/disabled = SubResource("disabled")
+Button/styles/focus = SubResource("focus")
+Button/styles/hover = SubResource("hover")
+Button/styles/normal = SubResource("normal")
+Button/styles/pressed = SubResource("pressed")
+Label/colors/font_color = Color(0.929, 0.941, 0.914, 1)
+NoteIntervention/base_type = &"Label"
+NoteIntervention/colors/font_color = Color(0.675, 0.729, 0.749, 1)
+NoteIntervention/font_sizes/font_size = 14
+PanelContainer/styles/panel = ExtResource("panneau")
+RichTextLabel/colors/default_color = Color(0.929, 0.941, 0.914, 1)
+TitreIntervention/base_type = &"Label"
+TitreIntervention/colors/font_color = Color(0.89, 0.776, 0.353, 1)
+TitreIntervention/font_sizes/font_size = 20
+TitreIntervention/fonts/font = ExtResource("titre")
