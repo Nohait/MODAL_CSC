@@ -4,6 +4,10 @@ const RESERVE = preload("res://scenes/interfaces/indications/reserve_nombres_deg
 const REGLAGES = preload("res://scenes/interfaces/indications/reglages_nombres_degats.tres")
 
 static func afficher(modele: Label3D, degats: float, hauteur: float) -> void:
+	var random = randi_range(0,1)
+	if random == 1:
+		return
+	degats*=2
 	# La réserve appartient à la salle : ses textes disparaissent avec elle.
 	var scene := modele.get_tree().current_scene
 	var reserve = scene.get_node_or_null("ReserveNombresDegats")

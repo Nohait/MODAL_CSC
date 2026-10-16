@@ -3,9 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://luimd4nfrie4" path="res://scenes/joueur/player.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bun8rdsj5jnis" path="res://scenes/jeu/camera_rig.gd" id="3_eb6dy"]
 [ext_resource type="Script" uid="uid://boutamduodgft" path="res://scenes/jeu/main.gd" id="5_test"]
-[ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="6_btjur"]
 [ext_resource type="Script" uid="uid://c7on22dt7jui7" path="res://scenes/victimes/victim_manager.gd" id="7_o6xl0"]
-[ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="7_pc1m8"]
 [ext_resource type="Script" uid="uid://c1ra1f2u30ghu" path="res://scenes/salles/room_manager.gd" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dp50ppdaf7soj" path="res://scenes/interfaces/menus/menu_bonus.tscn" id="11_bonus"]
 [ext_resource type="Script" uid="uid://b40m3worduogm" path="res://scenes/salles/room_generator.gd" id="12_generateur"]
@@ -14,10 +12,8 @@
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/hud/informations_salle.tscn" id="16_salle"]
-
 [ext_resource type="PackedScene" path="res://scenes/systemes/monnaie/monnaie.tscn" id="17_monnaie"]
-
-[ext_resource type="Script" path="res://scenes/salles/incendies/eclairage_incendie.gd" id="eclairage_incendie"]
+[ext_resource type="Script" uid="uid://bfmvoxlm7r7gt" path="res://scenes/salles/incendies/eclairage_incendie.gd" id="eclairage_incendie"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -75,8 +71,8 @@ theme_override_constants/shadow_offset_y = 2
 text = "I : menu de test"
 
 [node name="Eclairage" type="Node3D" parent="." unique_id=398809102]
-script = ExtResource("eclairage_incendie")
 editor_description = "Fond lumineux faible pour la lisibilité. Les lumières locales du joueur, des yeux et des flaques donnent les variations de couleur."
+script = ExtResource("eclairage_incendie")
 
 [node name="Soleil" type="DirectionalLight3D" parent="Eclairage" unique_id=286219491]
 editor_description = "Éclaire tout le niveau dans une même direction, comme un soleil. Inclinaison de -60 degrés sur X pour éclairer le sol. Les ombres aident à percevoir le relief. Régler Light > Energy pour modifier son intensité."
@@ -101,8 +97,6 @@ editor_description = "Le gestionnaire pilote le parcours ; le générateur fabri
 
 [node name="RoomGenerator" type="Node3D" parent="Salles" unique_id=601904784]
 script = ExtResource("12_generateur")
-materiau_sol = ExtResource("6_btjur")
-materiau_murs = ExtResource("7_pc1m8")
 
 [node name="Rooms" type="Node3D" parent="Salles" unique_id=648949322]
 
@@ -165,8 +159,8 @@ autowrap_mode = 2
 [node name="Sons" type="Node3D" parent="." unique_id=1826293685]
 
 [node name="steam_death" type="AudioStreamPlayer3D" parent="Sons" unique_id=422388062]
-bus = &"Effets"
 stream = ExtResource("13_hscm2")
+bus = &"Effets"
 
-[node name="Monnaie" parent="." instance=ExtResource("17_monnaie")]
+[node name="Monnaie" parent="." unique_id=128993438 instance=ExtResource("17_monnaie")]
 actif = false

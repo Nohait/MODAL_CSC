@@ -5,7 +5,9 @@ extends Node3D
 # Le générateur construit le décor ; le RoomManager décide du contenu et du parcours.
 @export var generate := false
 @export var apercu_auto := false
-@export var roomSize := Vector2i(10, 8)
+@export var roomSizeMax := Vector2i(10, 10)
+@export var roomSizeMin := Vector2i(10, 10)
+var roomSize := Vector2i(1, 1)
 
 # Matériau appliqué aux cases de sol.
 @export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_appartements.tres")
@@ -92,7 +94,7 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
 
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.
-	roomSize = roomSize.clamp(Vector2i(6, 6), Vector2i(20, 20))
+	roomSize = roomSize.clamp(roomSizeMin, roomSizeMax)
 	salle_en_creation = ROOM_SCENE.instantiate()
 	generateRoom()
 

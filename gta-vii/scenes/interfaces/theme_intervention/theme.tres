@@ -1,10 +1,9 @@
 [gd_resource type="Theme" format=3 uid="uid://4yvbquuw1ee3"]
 
-[ext_resource type="FontVariation" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
+[ext_resource type="FontFile" uid="uid://cbrlojs21m4os" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
+[ext_resource type="FontVariation" uid="uid://3a4yqhewh8nx" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
 [ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
-[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="titre"]
-
-[ext_resource type="FontFile" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
+[ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="titre"]
 
 [sub_resource type="StyleBoxFlat" id="disabled"]
 content_margin_left = 16.0
@@ -87,12 +86,12 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [resource]
-Button/fonts/font = ExtResource("boutons")
 default_font = ExtResource("lecture")
 default_font_size = 18
 Button/colors/font_color = Color(0.929, 0.941, 0.914, 1)
 Button/colors/font_disabled_color = Color(0.5, 0.56, 0.59, 1)
 Button/font_sizes/font_size = 18
+Button/fonts/font = ExtResource("boutons")
 Button/styles/disabled = SubResource("disabled")
 Button/styles/focus = SubResource("focus")
 Button/styles/hover = SubResource("hover")

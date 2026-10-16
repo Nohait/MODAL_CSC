@@ -323,18 +323,28 @@ func _suivre_groupe(delta: float) -> void:
 		direction.y = 0.0
 		if direction.length() > 0.01:
 			vitesse_voulue = _direction_sur_navigation(direction.normalized()) * vitesse_max
-
+			
+		
+	
 	vitesse_voulue += _separation(_ancre) * vitesse_max
 	vitesse_voulue = vitesse_voulue.limit_length(vitesse_max)
-
+	
+	
 	# Arrivée à la flèche : le décompte d'attente démarre quand la victime fait partie de l'amas.
 	if _ancre.is_in_group("fleche"):
-		waiting = est_proche_cible
+		
+		for v in get_tree().get_nodes_in_group("victims"):
+			waiting = waiting or v.est_proche_cible
+			waiting = waiting or v.waiting
+		#Si au moins une des cibles attend ou est proche, on active le timer
 		if waiting:
 			waiting_timer -= delta
 			if waiting_timer < 0.0:
 				waiting_timer = waiting_cooldown
 				waiting_termine.emit()
+				
+		elif round(vitesse_voulue) == Vector3.ZERO:
+			est_proche_cible = true
 
 	var horizontale := Vector3(velocity.x, 0.0, velocity.z).move_toward(vitesse_voulue, acceleration * delta)
 	velocity.x = horizontale.x

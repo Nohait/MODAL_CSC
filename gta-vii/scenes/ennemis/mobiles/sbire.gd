@@ -251,7 +251,6 @@ func suivre_cible_navigation() -> void:
 	move_and_slide()
 
 func choisir_cible():
-	print("je tente de changer de cible")
 	var cible_avant = cible #on sauvegardde la cible
 	var bodies = SurfaceDetection.get_overlapping_bodies()
 	if cible != null and !en_idle:
@@ -275,7 +274,6 @@ func choisir_cible():
 		$SbireRepere.reset_section()
 		$SbireRepere.play("PopUp")
 		$SonRepere.play()
-		print("j'ai changé de cible: ", cible, "avant: ", cible_avant)
 		print(chgt_cible_timer)
 
 func animation_enerve():
