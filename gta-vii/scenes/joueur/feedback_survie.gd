@@ -24,8 +24,8 @@ extends Node
 	preload("res://assets/sounds/joueur/douleur/douleur_20.wav")
 ]
 @export var son_bouclier: AudioStream = preload("res://assets/sounds/design/impact/impactPlate_light_002.ogg")
-@export_range(-40.0, 0.0, 1.0) var volume_vie := -16.0
-@export_range(-40.0, 0.0, 1.0) var volume_bouclier := -19.0
+@export_range(-40.0, 0.0, 1.0) var volume_vie := -10.0
+@export_range(-40.0, 0.0, 1.0) var volume_bouclier := -13.0
 @export_range(0.0, 1.0, 0.01) var intervalle_impacts := 0.12
 @export_group("Faible vie")
 @export var alerte_active := true

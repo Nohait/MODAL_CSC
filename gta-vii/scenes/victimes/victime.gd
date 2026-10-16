@@ -21,9 +21,9 @@ signal died(victim: CharacterBody3D)
 @onready var appels_secours: Array[AudioStreamPlayer3D] = [$Sons/cris/man_helpme1, $Sons/cris/man_helpme2]
 @export_group("Appel au secours")
 @export_range(-30.0, 0.0, 1.0) var volume_appel_db := -12.0
-@export_range(1.0, 15.0, 0.5) var distance_appel := 6.0
+@export_range(1.0, 15.0, 0.5) var distance_appel := 15.0
 @export_range(10.0, 60.0, 1.0) var portee_appel := 35.0
-@export_range(-30.0, 0.0, 1.0) var volume_mort_captive_db := -12.0
+@export_range(-30.0, 0.0, 1.0) var volume_mort_captive_db := -5.0
 var appel_secours_joue := false
 @export_range(0.0, 3.0, 0.05) var delai_appel_min := 0.1
 @export_range(0.0, 3.0, 0.05) var delai_appel_max := 0.9
@@ -41,7 +41,12 @@ var hasard_appel := RandomNumberGenerator.new()
 	$"Sons/douleur/douleur9",
 	$"Sons/douleur/douleur10"]
 
-@onready var victim_death = [preload("res://assets/sounds/victimes/mort/victim_death3.wav")]
+@onready var victim_death = [preload("res://assets/sounds/victimes/mort/victim_death3.wav"),
+preload("res://assets/sounds/victimes/mort/victim_death2.wav"),
+preload("res://assets/sounds/victimes/mort/victim_death4.wav"),
+preload("res://assets/sounds/victimes/mort/victim_death5.wav"),
+preload("res://assets/sounds/victimes/mort/victim_death6.wav"),
+preload("res://assets/sounds/victimes/mort/victim_death7.wav"),]
 
 ## Gestion de l'animation
 @onready var anim_tree: AnimationTree = $victime/Armature/AnimationTree
