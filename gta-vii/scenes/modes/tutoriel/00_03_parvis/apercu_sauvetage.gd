@@ -1,8 +1,9 @@
 extends Node3D
 
 @export_range(2, 3, 1) var nombre_habitants := 2
-@export_range(0.5, 4.0, 0.1) var vitesse := 1.2
+@export_range(0.5, 4.0, 0.01) var vitesse := 1.67
 @export_range(0.6, 2.5, 0.1) var espacement := 1.3
+@export_range(0.4, 1.0, 0.05) var allure_blessee := 1.0
 @export var trajet := PackedVector3Array([
 	# Sortir au-delà des vantaux ouverts avant de contourner la porte à gauche.
 	Vector3(-0.6, 1, -7.1), Vector3(-0.6, 1, -2.3),
@@ -20,7 +21,8 @@ var habitant_embarque := 1
 var guide_arrive := false
 var guide_ecarte := false
 const HABITANT = preload("res://scenes/victimes/victime.tscn")
-const ANIMATIONS = preload("res://scenes/modes/tutoriel/commun/figurants/animations_figurant.gd")
+const ANIMATIONS = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
+@export var locomotion: ANIMATIONS = ANIMATIONS.new()
 
 func _ready() -> void:
 	set_process(false)
@@ -38,7 +40,7 @@ func jouer(joueur: Node3D) -> void:
 	add_child(porteur)
 	porteur.add_child(pompier)
 	pompier.get_node("visual/Armature/Skeleton3D/Right_Hand_Holder/extincteur0").hide()
-	var arbre := ANIMATIONS.installer(pompier, true)
+	var arbre := locomotion.installer(pompier, true)
 	figurants.append({"modele": porteur, "arbre": arbre, "pompier": true})
 	accueillant = get_parent().get_node("PointRegroupement/Secouriste")
 	for i in range(nombre_habitants):
@@ -53,7 +55,7 @@ func jouer(joueur: Node3D) -> void:
 		habitant.add_child(modele)
 		# Conserver l’échelle du modèle partagé, sans mesure AABB du squelette.
 		modele.position.y -= 0.25
-		var animation := ANIMATIONS.installer(modele, false)
+		var animation := locomotion.installer(modele, false)
 		figurants.append({"modele": habitant, "arbre": animation, "pompier": false})
 	for figurant in figurants: figurant.modele.hide()
 	for figurant in figurants: figurant.modele.position = trajet[0]
@@ -99,7 +101,10 @@ func _position_dans_trace(recul: float) -> Vector3:
 func _animer(figurant: Dictionary, cible: Vector3, delta: float, allure_max := 1.0) -> void:
 	var modele: Node3D = figurant.modele
 	var ancienne := modele.position
-	var vitesse_cible := minf(vitesse * allure_max, modele.position.distance_to(cible) * 4.0)
+	locomotion.orienter(figurant.arbre, modele, cible - ancienne, delta, not figurant.pompier)
+	# Le guide adopte l'allure du groupe ; les victimes ne courent pas pour le rattraper.
+	var vitesse_cible := minf(vitesse * allure_blessee * allure_max, modele.position.distance_to(cible) * 4.0)
+	if locomotion.pivote(figurant.arbre): vitesse_cible = 0.0
 	var vitesse_actuelle := move_toward(float(figurant.get("vitesse", 0.0)), vitesse_cible, delta * 3.0)
 	figurant.vitesse = vitesse_actuelle
 	modele.position = modele.position.move_toward(cible, vitesse_actuelle * delta)
@@ -107,11 +112,7 @@ func _animer(figurant: Dictionary, cible: Vector3, delta: float, allure_max := 1
 		modele.position = cible
 		figurant.vitesse = 0.0
 	var mouvement := modele.position - ancienne
-	var direction := Vector3(mouvement.x, 0, mouvement.z)
-	if direction.length_squared() > 0.00000001:
-		# La direction du corps suit immédiatement le déplacement, dès le premier pas.
-		ANIMATIONS.orienter(modele, direction, delta, not figurant.pompier, true)
-	ANIMATIONS.actualiser(figurant.arbre, mouvement.length() / maxf(delta, 0.001), delta)
+	locomotion.actualiser(figurant.arbre, mouvement.length() / maxf(delta, 0.001), delta)
 
 func _process(delta: float) -> void:
 	var guide: Dictionary = figurants[0]
@@ -136,7 +137,7 @@ func _process(delta: float) -> void:
 			_animer(guide, attente, delta)
 	else:
 		_animer(guide, guide.modele.position, delta)
-		ANIMATIONS.orienter(guide.modele, guide.modele.get_parent().to_local(accueillant.global_position) - guide.modele.position, delta)
+		locomotion.orienter(guide.arbre, guide.modele, guide.modele.get_parent().to_local(accueillant.global_position) - guide.modele.position, delta)
 	for i in range(1, figurants.size()):
 		var figurant: Dictionary = figurants[i]
 		if distance < i * espacement: continue
@@ -160,7 +161,7 @@ func _process(delta: float) -> void:
 			# La file suit les positions du guide, pas une animation directionnelle indépendante.
 			_animer(figurant, _position_dans_trace(i * espacement), delta)
 	if guide_arrive and habitant_embarque >= figurants.size():
-		if float(guide.arbre["parameters/Transition/blend_amount"]) <= 0.001:
+		if float(guide.arbre["parameters/Transition/blend_amount"]) <= 0.001 and not locomotion.pivote(guide.arbre):
 			termine = true
 			set_process(false)
 
