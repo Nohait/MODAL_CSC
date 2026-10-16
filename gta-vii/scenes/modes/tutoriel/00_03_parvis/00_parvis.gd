@@ -1,10 +1,11 @@
 extends "res://scenes/jeu/main.gd"
 
 const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd")
-const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/commun/figurants/animations_figurant.gd")
+const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
+@export var locomotion: ANIMATIONS_FIGURANT = ANIMATIONS_FIGURANT.new()
 @export_group("Rencontre")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
-@export_range(0.5, 4.0, 0.1) var vitesse_superieur := 1.2
+@export_range(0.5, 4.0, 0.01) var vitesse_superieur := 1.67
 @export_range(0.2, 2.0, 0.1) var duree_fondu_interface := 1.0
 @export_group("Ambiance")
 @export_range(0.0, 1.0, 0.05) var lumiere_ambiante := 0.25
@@ -96,25 +97,26 @@ func _creer_superieur() -> void:
 	superieur.add_child(modele_superieur)
 	modele_superieur.collision_layer = 0
 	modele_superieur.collision_mask = 0
-	arbre_superieur = ANIMATIONS_FIGURANT.installer(modele_superieur, true)
+	arbre_superieur = locomotion.installer(modele_superieur, true)
 	modele_superieur.get_node("visual/Armature/Skeleton3D/Right_Hand_Holder/extincteur0").hide()
 
 func _process(delta: float) -> void:
 	var destination: Vector3 = $Intervention/PositionBriefing.global_position
 	if not arrive:
 		var direction := destination - superieur.global_position
-		allure_superieur = move_toward(allure_superieur, minf(vitesse_superieur, direction.length() * 4.0), delta * 3.0)
+		locomotion.orienter(arbre_superieur, superieur, superieur.get_parent().global_basis.inverse() * direction, delta)
+		var vitesse_cible := 0.0 if locomotion.pivote(arbre_superieur) else minf(vitesse_superieur, direction.length() * 4.0)
+		allure_superieur = move_toward(allure_superieur, vitesse_cible, delta * 3.0)
 		if direction.length() <= maxf(allure_superieur * delta, 0.005):
 			superieur.global_position = destination
 			arrive = true
 		else:
 			superieur.global_position += direction.normalized() * allure_superieur * delta
-			ANIMATIONS_FIGURANT.orienter(superieur, superieur.get_parent().global_basis.inverse() * direction, delta)
 	elif superieur.global_position.distance_to($player.global_position) < distance_conversation:
 		var regard: Vector3 = $player.global_position
 		regard.y = superieur.global_position.y
-		ANIMATIONS_FIGURANT.orienter(superieur, superieur.get_parent().global_basis.inverse() * (regard - superieur.global_position), delta)
-	ANIMATIONS_FIGURANT.actualiser(arbre_superieur, 0.0 if arrive else allure_superieur, delta)
+		locomotion.orienter(arbre_superieur, superieur, superieur.get_parent().global_basis.inverse() * (regard - superieur.global_position), delta)
+	locomotion.actualiser(arbre_superieur, 0.0 if arrive else allure_superieur, delta)
 	_actualiser_proximite()
 	$Intervention/ZoneDash.visible = progression.etape() != null and progression.etape().objectif == ETAPE.Objectif.DASH and progression.dialogue_termine
 
@@ -148,6 +150,7 @@ func _actualiser_proximite() -> void:
 		invitation.text = "E · " + ("Écouter la suite" if dialogue.visible and not dialogue.revelee() else ("Continuer la conversation" if not progression.replique().is_empty() else "Parler au chef"))
 	else:
 		invitation.text = "Approchez-vous du chef pour lui parler" if not progression.dialogue_termine else ""
+	invitation.visible = not (dialogue.visible and not progression.dialogue_termine)
 	$Intervention/Superieur/Invite.visible = pres and not dialogue.visible
 
 func _actualiser_briefing() -> void:
@@ -161,6 +164,7 @@ func _actualiser_briefing() -> void:
 		objectif.text += "  (%d / %d)" % [progression.foyers_eteints(), progression.foyers.size()]
 	elif progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee:
 		objectif.text = "Relâchez le clic gauche et laissez la réserve se reconstituer."
+	dialogue.dialogue_interactif = not progression.dialogue_termine
 	dialogue.afficher(actuelle.consigne if progression.dialogue_termine else progression.replique())
 	if progression.indice == 0 and progression.indice_replique >= 1:
 		$Intervention/TeasingSauvetage.jouer($player)

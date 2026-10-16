@@ -244,6 +244,8 @@ func _actualiser_cible() -> void:
 	materiau.set_shader_parameter("couleur", Color(0.4, 0.85, 1.0, 0.65) if emplacement_valide else Color(1.0, 0.25, 0.15, 0.65))
 
 func _lancer() -> void:
+	# Arrêter la prévisualisation animée, en conservant le disque fixe pendant la chute.
+	materiau.set_shader_parameter("cycle_visee", 0.0)
 	phase = "chute"
 	souffle_lance = false
 	temps = 0.0

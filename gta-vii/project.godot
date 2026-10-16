@@ -54,6 +54,10 @@ victime=""
 fleche=""
 mobiles=""
 
+[gui]
+
+theme/custom_font="res://assets/fonts/rubik/lecture.tres"
+
 [input]
 
 ui_accept={

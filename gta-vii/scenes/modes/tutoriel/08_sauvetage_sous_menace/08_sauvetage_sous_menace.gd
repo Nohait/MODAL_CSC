@@ -50,6 +50,7 @@ func preparer(personnage, gestion_escorte, ameliorations) -> void:
 func _liberee(_habitante) -> void:
 	if progression.liberee or progression.perdu: return
 	progression.liberee = true
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	rappel = "La personne vous suit. Approchez de la porte et ouvrez-la avec E."
 	consigne_changee.emit()
 
@@ -65,6 +66,7 @@ func _ouvrir_porte() -> void:
 	if progression.perdu or joueur.est_mort: return
 	decor.liaison.enabled = true
 	progression.porte_ouverte = true
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	ennemi.collision_layer = 4
 	ennemi.add_to_group("enemies")
 	ennemi.attaque_timer = 1.2
@@ -80,6 +82,7 @@ func _activer_rencontre() -> void:
 
 func _vaincu() -> void:
 	progression.vaincu = true
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	rappel = ""
 	consigne_changee.emit()
 
@@ -101,6 +104,7 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(victime) and victime.vie < vie_precedente: victime_blessee = true
 	if is_instance_valid(victime): vie_precedente = victime.vie
 	if progression.verifier(joueur, victime, escorte):
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		rappel = ""
 		consigne_changee.emit()
 		return

@@ -50,14 +50,15 @@ func interagir() -> void:
 
 func _sur_acquisition(identifiant: StringName) -> void:
 	if not progression.acquerir(identifiant): return
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	sortie.ouvrir()
 	carte_acquise.emit()
 	consigne_changee.emit()
 
 func consigne() -> String:
 	if termine: return "La voie est libre. L’équipe prend le relais."
-	if carte == &"": return "Rejoignez le pompier pour vous ravitailler et choisir un renfort · E."
-	return "Renfort installé : " + gestion.get_resume() + "\nLe mannequin est à votre disposition. Rejoignez la porte quand vous êtes prêt. Votre carnet reste accessible avec B."
+	if carte == &"": return "E · Parlez au pompier pour choisir votre amélioration."
+	return "Essayez votre amélioration sur le mannequin, puis rejoignez la porte."
 
 func _process(_delta: float) -> void:
 	if not actif or termine or joueur.est_mort: return
@@ -65,5 +66,6 @@ func _process(_delta: float) -> void:
 	ecart.y = 0
 	if ecart.length() < 2.5 and Input.is_action_just_pressed("interact"): interagir()
 	if progression.verifier_sortie(joueur.global_position, sortie_ouverte):
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		consigne_changee.emit()
 		salle_reussie.emit()

@@ -1,6 +1,6 @@
 extends PanelContainer
 
-const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
+const POLICE = preload("res://assets/fonts/rubik/accent.tres")
 const ICONE_VIE = preload("res://assets/textures/interfaces/hud/icone_vie.svg")
 const ICONE_MOUSSE = preload("res://assets/textures/interfaces/hud/icone_mousse.svg")
 const PICTOS = "res://assets/textures/interfaces/ameliorations/pictogrammes/"
@@ -16,12 +16,12 @@ var animation_infobulle: Tween
 func _ready() -> void:
 	# Les pictos des cartes sont bruns : conserver leur alpha et les teinter en crème.
 	var shader := Shader.new()
-	shader.code = "shader_type canvas_item; void fragment() { COLOR.rgb = vec3(0.93, 0.80, 0.61); }"
+	shader.code = "shader_type canvas_item; void fragment() { COLOR.rgb = vec3(0.929, 0.941, 0.914); }"
 	materiau_icones = ShaderMaterial.new()
 	materiau_icones.shader = shader
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.10, 0.12, 0.14, 0.92)
-	style.border_color = Color("a17b50")
+	style.border_color = Color("52636b")
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(8)
 	style.shadow_color = Color(0.0, 0.0, 0.0, 0.3)
@@ -38,7 +38,7 @@ func _ready() -> void:
 	titre.text = "LE POMPIER"
 	titre.add_theme_font_override("font", POLICE)
 	titre.add_theme_font_size_override("font_size", 23)
-	titre.add_theme_color_override("font_color", Color("f0d0a0"))
+	titre.add_theme_color_override("font_color", Color("e3c65a"))
 	contenu.add_child(titre)
 	_ajouter(contenu, "vie", ICONE_VIE, "Vie actuelle / vie maximale.")
 	_ajouter(contenu, "mousse", ICONE_MOUSSE, "Mousse disponible / réserve maximale.")
@@ -53,7 +53,7 @@ func _ready() -> void:
 	note.text = "Survolez un pictogramme
 pour connaître sa signification."
 	note.add_theme_font_size_override("font_size", 13)
-	note.add_theme_color_override("font_color", Color("bfa58c"))
+	note.add_theme_color_override("font_color", Color("acbabf"))
 	contenu.add_child(note)
 	_creer_infobulle()
 
@@ -75,7 +75,7 @@ func _ajouter(contenu: VBoxContainer, id: String, texture: Texture2D, explicatio
 	var valeur := Label.new()
 	valeur.add_theme_font_override("font", POLICE)
 	valeur.add_theme_font_size_override("font_size", 22)
-	valeur.add_theme_color_override("font_color", Color("f0ddbd"))
+	valeur.add_theme_color_override("font_color", Color("edf0e9"))
 	valeur.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ligne.add_child(valeur)
 	valeurs[id] = valeur

@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://gh3g4asgryie" path="res://assets/sounds/victimes/douleur/woman_ouch3.wav" id="14_mwtdt"]
 [ext_resource type="AudioStream" uid="uid://dhicgpdm8yfti" path="res://assets/sounds/victimes/douleur/woman_ouch4.wav" id="15_gq4ck"]
 [ext_resource type="AudioStream" uid="uid://cunofkadna3yr" path="res://assets/sounds/victimes/douleur/woman_ouch5.wav" id="16_b233b"]
+[ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="police_interface"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_feqff"]
 animation = &"idle"
@@ -63,18 +64,19 @@ height = 1.9957031
 radius = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sysh0"]
-bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+bg_color = Color(0.059, 0.094, 0.118, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
+border_color = Color(0.32, 0.39, 0.43, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqnpg"]
-bg_color = Color(0.35267237, 0.7006889, 0, 1)
+bg_color = Color(0.39, 0.72, 0.56, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -83,64 +85,42 @@ corner_radius_bottom_left = 3
 [node name="victime" type="CharacterBody3D" unique_id=1870513431 groups=["victime", "victims"]]
 collision_layer = 8
 script = ExtResource("1_gyep1")
-afficher_effet_liberation = null
-duree_effet_liberation = null
-volume_appel_db = null
-distance_appel = null
-portee_appel = null
-volume_mort_captive_db = null
-delai_appel_min = null
-delai_appel_max = null
-distance_ralentissement = null
-acceleration = null
-defi_fragile = null
-points_boutique = null
-vie_max = null
-force_fuite_max = null
-anticipation_fuite = null
-marge_fuite = null
-bonus_dash = null
-bonus_degats = null
-speed = null
-stop_distance_player = null
-stop_distance_fleche = null
-stop_distance_victime = null
 
 [node name="victime" parent="." unique_id=518449011 instance=ExtResource("2_feqff")]
 transform = Transform3D(1.135, 0, 0, 0, 1.135, 0, 0, 0, 1.135, 0, -0.6208883, 0)
 
 [node name="Skeleton3D" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="0" unique_id=1164513802]
-bones/0/rotation = Quaternion(-0.48373103, 0.027778918, 0.0902131, 0.87011164)
-bones/1/rotation = Quaternion(0.1524906, 0.018014193, 0.026313912, 0.9877904)
-bones/2/rotation = Quaternion(0.076232344, 0.010083562, 0.020533223, 0.9968277)
-bones/3/rotation = Quaternion(0.07605181, 0.0123903435, 0.020344246, 0.9968194)
-bones/4/rotation = Quaternion(0.0034131585, 0.11371123, -0.07356618, 0.99078065)
-bones/5/rotation = Quaternion(0.016099319, 0.039759357, -0.0154271275, 0.9989605)
-bones/7/rotation = Quaternion(-0.6095742, -0.34580162, 0.44308054, -0.5590352)
-bones/8/rotation = Quaternion(0.2694305, -0.41572306, -0.18833593, 0.8480043)
-bones/9/rotation = Quaternion(0.01781343, -0.0012425113, 0.9627043, 0.2699659)
-bones/10/rotation = Quaternion(-0.09681852, -0.407927, 0.06500232, 0.90553665)
-bones/11/rotation = Quaternion(0.30809212, 0.02758632, 0.15977094, 0.9374389)
-bones/15/rotation = Quaternion(0.21832527, 0.09104607, 0.10252683, 0.9661951)
-bones/16/rotation = Quaternion(0.7221446, -0.005273608, -0.087314084, 0.68618923)
-bones/19/rotation = Quaternion(0.21401054, -6.342699e-05, -0.013369564, 0.97673994)
-bones/21/rotation = Quaternion(0.46339363, 0.0009461592, -0.05343043, 0.8845399)
-bones/23/rotation = Quaternion(0.2412639, 0.0154837025, -0.09181277, 0.9659827)
-bones/25/rotation = Quaternion(0.49307588, 0.0056420146, -0.054604627, 0.8682527)
-bones/27/rotation = Quaternion(0.21924512, -0.040602487, -0.19124892, 0.9558802)
-bones/29/rotation = Quaternion(0.45911515, -0.00027215193, -0.05981418, 0.8863608)
-bones/31/rotation = Quaternion(0.61001104, -0.40328524, 0.5329407, 0.4257015)
-bones/32/rotation = Quaternion(0.09793043, 0.13136292, -0.62092006, 0.7665584)
-bones/33/rotation = Quaternion(0.014403801, 0.0029994096, -0.7608243, 0.6487911)
-bones/34/rotation = Quaternion(0.12288113, 0.7081812, -0.1043724, 0.6873762)
-bones/55/rotation = Quaternion(0.06021687, 0.5460859, 0.83511347, -0.02737939)
-bones/56/rotation = Quaternion(-0.42240092, -0.063867114, 0.024108432, 0.9038348)
-bones/57/rotation = Quaternion(0.5528684, -0.09363269, -0.04562411, 0.82673335)
-bones/58/rotation = Quaternion(0.3232411, -0.051825937, 0.016010378, 0.9447608)
-bones/60/rotation = Quaternion(-0.0039008707, 0.5945028, 0.79307467, 0.13260414)
-bones/61/rotation = Quaternion(-0.4713556, -0.06468983, 0.038911432, 0.8787065)
-bones/62/rotation = Quaternion(0.5922879, -0.016188882, 0.029963786, 0.8050064)
-bones/63/rotation = Quaternion(0.3133623, 0.05116424, -0.015748536, 0.94812363)
+bones/0/rotation = Quaternion(-0.48511708, 0.024258258, 0.09453725, 0.8689855)
+bones/1/rotation = Quaternion(0.15783072, 0.015507171, 0.02811245, 0.98694414)
+bones/2/rotation = Quaternion(0.07755345, 0.0092265345, 0.020695625, 0.99673074)
+bones/3/rotation = Quaternion(0.0773739, 0.0116558485, 0.02044849, 0.99672437)
+bones/4/rotation = Quaternion(0.012521805, 0.10148223, -0.06220606, 0.99281174)
+bones/5/rotation = Quaternion(0.020810029, 0.03872054, -0.015026887, 0.9989203)
+bones/7/rotation = Quaternion(-0.602286, -0.3514698, 0.43880266, -0.5667212)
+bones/8/rotation = Quaternion(0.2800253, -0.39898804, -0.22230218, 0.8443791)
+bones/9/rotation = Quaternion(0.017846331, -0.0012129771, 0.96448374, 0.26353624)
+bones/10/rotation = Quaternion(-0.10138731, -0.43567967, 0.0968676, 0.88911223)
+bones/11/rotation = Quaternion(0.31140518, 0.024882574, 0.16072464, 0.936256)
+bones/15/rotation = Quaternion(0.22187681, 0.08848343, 0.10353255, 0.9655167)
+bones/16/rotation = Quaternion(0.7221446, -0.005273602, -0.08731407, 0.68618923)
+bones/19/rotation = Quaternion(0.21784587, -0.00021837342, -0.01315858, 0.9758945)
+bones/21/rotation = Quaternion(0.46299204, 0.000945382, -0.05338639, 0.88475275)
+bones/23/rotation = Quaternion(0.24508435, 0.015606064, -0.09146841, 0.9650512)
+bones/25/rotation = Quaternion(0.49261805, 0.0056370804, -0.054553673, 0.86851573)
+bones/27/rotation = Quaternion(0.2230537, -0.039832048, -0.1909927, 0.9550824)
+bones/29/rotation = Quaternion(0.45863754, -0.00027194977, -0.059760712, 0.88661164)
+bones/31/rotation = Quaternion(0.60974455, -0.4040522, 0.5271061, 0.4325651)
+bones/32/rotation = Quaternion(0.12989132, 0.14993833, -0.6106822, 0.76662505)
+bones/33/rotation = Quaternion(0.014430929, 0.0029915615, -0.76225716, 0.6471066)
+bones/34/rotation = Quaternion(0.12756635, 0.7183532, -0.1054994, 0.6756963)
+bones/55/rotation = Quaternion(0.058442727, 0.54878277, 0.8333976, -0.029502962)
+bones/56/rotation = Quaternion(-0.43115222, -0.06277692, 0.02479537, 0.8997511)
+bones/57/rotation = Quaternion(0.5557774, -0.101341575, -0.045074478, 0.8238992)
+bones/58/rotation = Quaternion(0.325455, -0.0518712, 0.016029386, 0.9439977)
+bones/60/rotation = Quaternion(0.0010539314, 0.5975423, 0.79091746, 0.13187726)
+bones/61/rotation = Quaternion(-0.47693655, -0.06164998, 0.038091384, 0.8759452)
+bones/62/rotation = Quaternion(0.59287083, -0.019833816, 0.032368697, 0.80440235)
+bones/63/rotation = Quaternion(0.31327567, 0.051162433, -0.015747737, 0.94815236)
 
 [node name="AnimationTree" type="AnimationTree" parent="victime/Armature" parent_id_path=PackedInt32Array(518449011, 1588960662) index="1" unique_id=2048477472]
 root_node = NodePath("../..")
@@ -168,11 +148,15 @@ collision_mask = 31
 shape = SubResource("SphereShape3D_sysh0")
 
 [node name="InteractionLabel" type="Label3D" parent="." unique_id=692538401]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.83697385, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.65, 0)
 visible = false
 billboard = 1
+modulate = Color(0.89, 0.776, 0.353, 1)
+outline_modulate = Color(0.059, 0.094, 0.118, 1)
 text = "Libérer"
-font_size = 48
+font = ExtResource("police_interface")
+font_size = 40
+outline_size = 8
 
 [node name="BonusLabel" type="Label3D" parent="." unique_id=1549689767]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
@@ -195,6 +179,11 @@ size = Vector2i(240, 32)
 [node name="HealthBar" type="ProgressBar" parent="HealthBarViewport" unique_id=1422637192]
 offset_right = 240.0
 offset_bottom = 32.0
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_outline_color = Color(0.059, 0.094, 0.118, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("police_interface")
+theme_override_font_sizes/font_size = 22
 theme_override_styles/background = SubResource("StyleBoxFlat_sysh0")
 theme_override_styles/fill = SubResource("StyleBoxFlat_fqnpg")
 value = 100.0

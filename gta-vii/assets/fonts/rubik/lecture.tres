@@ -1,0 +1,9 @@
+[gd_resource type="FontVariation" format=3 uid="uid://3a4yqhewh8nx"]
+
+[ext_resource type="FontFile" uid="uid://biaekwgopj36c" path="res://assets/fonts/rubik/Rubik-Variable.ttf" id="base"]
+
+[resource]
+base_font = ExtResource("base")
+variation_opentype = {
+2003265652: 400.0
+}

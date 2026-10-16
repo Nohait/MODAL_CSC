@@ -50,6 +50,7 @@ func _sur_defaite() -> void:
 func _terminer_rencontre() -> void:
 	if etat != "transition" or not is_instance_valid(joueur) or joueur.BarreDeVie.value <= 0: return
 	etat = "sortie"
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	sortie_autorisee.emit()
 	consigne_changee.emit()
 
@@ -69,6 +70,7 @@ func consigne() -> String:
 func atteindre_sortie() -> void:
 	if etat != "sortie" or joueur.BarreDeVie.value <= 0: return
 	etat = "reussi"
+	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	rappel = ""
 	consigne_changee.emit()
 	salle_reussie.emit()

@@ -88,6 +88,7 @@ func _verifier() -> void:
 			reussi = reserve_sollicitee and not joueur.extincteur.is_attacking and joueur.extincteur.charge >= joueur.extincteur.max_charge * seuil_recharge
 		ETAPE.Objectif.DASH: reussi = dash_reussi
 	if reussi:
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		indice += 1
 		indice_replique = -1
 		dialogue_termine = false
@@ -97,4 +98,5 @@ func _verifier() -> void:
 
 func entrer() -> void:
 	if etape() != null and etape().objectif == ETAPE.Objectif.ENTREE and dialogue_termine:
+		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		preparation_terminee.emit()

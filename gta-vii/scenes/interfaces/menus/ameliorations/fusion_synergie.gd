@@ -17,7 +17,7 @@ func presenter(synergie: Synergie, catalogue: CatalogueAmeliorations) -> void:
 	var titre := Label.new()
 	titre.text = "SYNERGIE DÉCOUVERTE"
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	titre.add_theme_font_override("font", preload("res://assets/fonts/Almendra-Bold.ttf"))
+	titre.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	titre.add_theme_font_size_override("font_size", 42)
 	titre.add_theme_color_override("font_color", Color("8ff4ef"))
 	fond.add_child(titre)

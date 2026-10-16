@@ -34,7 +34,7 @@ func _ready() -> void:
 		libelle.custom_minimum_size.x = 380
 		libelle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	libelle.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	libelle.add_theme_font_override("font", preload("res://assets/fonts/Oswald-SemiBold.ttf"))
+	libelle.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	libelle.add_theme_font_size_override("font_size", 17)
 	libelle.add_theme_color_override("font_color", Color("f2e4ce"))
 	libelle.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))

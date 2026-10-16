@@ -1,0 +1,4 @@
+Barlow Condensed SemiBold — gros boutons et navigation.
+Source : https://github.com/google/fonts/tree/main/ofl/barlowcondensed
+Licence : SIL Open Font License 1.1, voir OFL-BarlowCondensed.txt.
+Fichier original, sans modification, récupéré le 16 octobre 2026.

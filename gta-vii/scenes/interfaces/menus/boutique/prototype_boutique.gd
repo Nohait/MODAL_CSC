@@ -9,13 +9,11 @@ signal recharge_murale_demandee
 signal sprinkler_demande(sprinkler: Node3D)
 signal bonus_demandes
 
-const BOUTON = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn")
 const OUVERTURE = preload("res://scenes/interfaces/menus/ouverture_booster.tscn")
 const BOOSTER = preload("res://scenes/interfaces/menus/boutique/booster_apercu.tscn")
 const DEFI = preload("res://scenes/interfaces/menus/boutique/ligne_defi_apercu.gd")
 const ICONE = preload("res://assets/textures/interfaces/ameliorations/icone_victimes.svg")
-const POLICE = preload("res://assets/fonts/Almendra-Bold.ttf")
-const POLICE_ITALIQUE = preload("res://assets/fonts/Almendra-BoldItalic.ttf")
+const POLICE = preload("res://assets/fonts/rubik/accent.tres")
 
 @export_group("Aperçu — raretés")
 # Pourcentage du bonus de base, et non un ajout direct de 50 % aux dégâts.
@@ -52,9 +50,6 @@ var categorie_sprinklers: Button
 func _ready() -> void:
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	# Garder une bordure brûlée de la même épaisseur lorsque la fenêtre change.
-	$Fond.resized.connect(_ajuster_parchemin)
-	_ajuster_parchemin()
 	var bloc_points := VBoxContainer.new()
 	bloc_points.add_theme_constant_override("separation", 4)
 	contenu.add_child(bloc_points)
@@ -64,17 +59,17 @@ func _ready() -> void:
 	bloc_points.add_child(entete)
 	var icone := TextureRect.new()
 	icone.texture = ICONE
-	icone.modulate = Color("483525")
+	icone.modulate = Color("edf0e9")
 	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icone.custom_minimum_size = Vector2(30, 30)
 	icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	entete.add_child(icone)
 	compteur = _texte("", 24)
 	entete.add_child(compteur)
-	var note := _texte("Chaque victime vivante dans votre escorte vous rapporte un point.", 16)
-	note.add_theme_font_override("font", POLICE_ITALIQUE)
+	var note := _texte("1 victime dans l’escorte = 1 point.", 16)
+	note.add_theme_color_override("font_color", Color("acbabf"))
 	bloc_points.add_child(note)
-	var titre := _texte("La relève", 42)
+	var titre := _texte("RAVITAILLEMENT", 28)
 	titre.add_theme_font_override("font", POLICE)
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(titre)
@@ -114,7 +109,7 @@ func _ready() -> void:
 	var bloc_cadeau := _panneau(gauche, "VOTRE BOOSTER OFFERT")
 	cadeau = bloc_cadeau.get_parent()
 	var cadre_cadeau := cadeau.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	cadre_cadeau.bg_color = Color("d3e1e7")
+	cadre_cadeau.bg_color = Color("243b48")
 	cadre_cadeau.border_color = Color("569ccb")
 	cadeau.add_theme_stylebox_override("panel", cadre_cadeau)
 	bloc_cadeau.get_child(0).horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -138,7 +133,7 @@ func _ready() -> void:
 		_ajouter_booster(interventions, {"id": &"temporaire", "titre": "Intervention", "couleur": Color("55b5a5"), "prix": 1, "puissance": 100, "symbole": "+", "contenu": "Soins et protection"})
 
 	var droite := VBoxContainer.new()
-	droite.custom_minimum_size.x = 380
+	droite.custom_minimum_size.x = 300
 	droite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	colonnes.add_child(droite)
 	panneau_defis = droite
@@ -160,11 +155,12 @@ func _ready() -> void:
 	retour = _texte("APERÇU INTERACTIF — les achats et défis ne modifient pas encore la partie.", 14)
 	if not mode_demonstration:
 		retour.text = "Les points non dépensés sont perdus en quittant la boutique."
+	retour.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	retour.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(retour)
 	if not mode_demonstration:
-		var continuer = BOUTON.instantiate()
-		continuer.taille_police = 18
+		var continuer = Button.new()
+		continuer.add_theme_font_size_override("font_size", 18)
 		continuer.custom_minimum_size = Vector2(300, 40)
 		continuer.text = "Continuer vers la prochaine salle"
 		continuer.focus_mode = Control.FOCUS_NONE
@@ -172,8 +168,8 @@ func _ready() -> void:
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
 	if not mode_demonstration and OS.is_debug_build():
-		var debug = BOUTON.instantiate()
-		debug.taille_police = 16
+		var debug = Button.new()
+		debug.add_theme_font_size_override("font_size", 16)
 		debug.custom_minimum_size = Vector2(300, 40)
 		debug.name = "DebugCartes"
 		debug.text = "Debug : toutes les cartes du mode"
@@ -199,6 +195,13 @@ func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
 	booster.scale = Vector2.ONE * (125.0 / 270.0)
 	booster.selectionne.connect(_selectionner.bind(proposition))
 	emplacement.add_child(booster)
+	# À cette échelle, seuls le nom et le prix restent sur la pochette.
+	booster.get_node("%Contenu").hide()
+	booster.get_node("Visuel/Marge/Contenu/Serie").hide()
+	booster.get_node("%Titre").add_theme_font_override("font", POLICE)
+	booster.get_node("%Titre").add_theme_font_size_override("font_size", 36)
+	booster.get_node("%Prix").add_theme_font_size_override("font_size", 32)
+	booster.tooltip_text = booster.contenu
 	booster.set_meta("rarete", proposition.id)
 	boosters.append(booster)
 
@@ -253,11 +256,11 @@ func _panneau(parent: Control, titre: String, defi: bool = false) -> VBoxContain
 	var panneau := PanelContainer.new()
 	parent.add_child(panneau)
 	var style := StyleBoxFlat.new()
-	# Les défis sont légèrement plus foncés que les encadrés des boosters.
-	style.bg_color = Color("c4ac85") if defi else Color("e0cba4")
-	style.border_color = Color("90734f")
+	# Une nuance plus sombre sépare les défis du matériel.
+	style.bg_color = Color("1a252c") if defi else Color("1e2a31")
+	style.border_color = Color("52636b")
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(4)
 	style.content_margin_left = 20
 	style.content_margin_right = 20
 	style.content_margin_top = 14
@@ -266,7 +269,7 @@ func _panneau(parent: Control, titre: String, defi: bool = false) -> VBoxContain
 	var boite := VBoxContainer.new()
 	boite.add_theme_constant_override("separation", 14)
 	panneau.add_child(boite)
-	var etiquette := _texte(titre, 26)
+	var etiquette := _texte(titre, 20)
 	etiquette.add_theme_font_override("font", POLICE)
 	boite.add_child(etiquette)
 	return boite
@@ -276,12 +279,8 @@ func _texte(texte: String, taille: int) -> Label:
 	var etiquette := Label.new()
 	etiquette.text = texte
 	etiquette.add_theme_font_size_override("font_size", taille)
-	etiquette.add_theme_color_override("font_color", Color("3e2d20"))
+	etiquette.add_theme_color_override("font_color", Color("edf0e9"))
 	return etiquette
-
-
-func _ajuster_parchemin() -> void:
-	$Fond.material.set_shader_parameter("taille", $Fond.size)
 
 
 func actualiser_boutique(points: int, defis_actifs: Array[Dictionary], offres: Array[Dictionary], cadeaux: int, message: String = "") -> void:
@@ -371,8 +370,8 @@ func ajouter_ravitaillement() -> void:
 	# La tuile reste un seul bouton : ses enfants ne capturent pas les clics.
 	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var cadre := StyleBoxFlat.new()
-		cadre.bg_color = Color("bea17c") if etat == "normal" or etat == "disabled" else Color("d6bc93")
-		cadre.border_color = Color("614635")
+		cadre.bg_color = Color("24333b") if etat == "normal" or etat == "disabled" else Color("354b57")
+		cadre.border_color = Color("687d86")
 		cadre.set_border_width_all(2)
 		cadre.set_corner_radius_all(6)
 		recharge_murale.add_theme_stylebox_override(etat, cadre)
@@ -470,9 +469,9 @@ func ajouter_sprinklers(sprinklers: Array[Node3D]) -> void:
 		tuile.bouton.mouse_exited.connect(plan.montrer.bind(null))
 		tuile.bouton.focus_entered.connect(plan.montrer.bind(tuile.objet))
 		tuile.bouton.focus_exited.connect(plan.montrer.bind(null))
-	var fermer = BOUTON.instantiate()
-	fermer.taille_minimale = Vector2(300, 44)
-	fermer.taille_police = 18
+	var fermer = Button.new()
+	fermer.custom_minimum_size = Vector2(300, 44)
+	fermer.add_theme_font_size_override("font_size", 18)
 	fermer.text = "Retour à la boutique"
 	fermer.pressed.connect(_fermer_sprinklers)
 	contenu.add_child(fermer)

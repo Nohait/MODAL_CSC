@@ -1,0 +1,8 @@
+Animations Mixamo (Adobe), téléchargées par Rodrigo : Locomotion Pack et Male Injured Pack.
+Source : https://www.mixamo.com/
+Clips utilisés : walking, idle, left turn 90, right turn 90 ; injured walk, injured idle, injured turn left, injured turn right.
+Adaptation aux squelettes existants du pompier et des victimes, pour les figurants du parvis uniquement.
+Victimes : boiterie conservée ; haut du corps issu des clips de locomotion normaux pour éviter les gestes exagérés.
+Calibration fixe des bras et de l'axe du bassin avant transfert des rotations, sans corrections de pose image par image.
+Déplacements et lacet retirés des clips : le trajet et l'orientation sont pilotés par la scène.
+Ces animations ne sont pas sous la licence CC0 de la bibliothèque Quaternius voisine.

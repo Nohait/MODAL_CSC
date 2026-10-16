@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-const POLICE = preload("res://assets/fonts/Oswald-SemiBold.ttf")
+const POLICE = preload("res://assets/fonts/rubik/accent.tres")
 const APERCU = preload("res://scenes/systemes/ennemis/apercu_ennemi.gd")
 var catalogue: Node
 var liste: VBoxContainer

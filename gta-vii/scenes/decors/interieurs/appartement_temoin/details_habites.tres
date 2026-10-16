@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CompositionMobilier" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/decors/interieurs/composition_mobilier.gd" id="script"]
+[ext_resource type="PackedScene" path="res://assets/modeles/parking/valise/vintage_suitcase_2k.gltf" id="valise"]
+[ext_resource type="PackedScene" path="res://assets/modeles/appartements/decorative_book_set_01/livres.glb" id="livres"]
+[ext_resource type="PackedScene" path="res://assets/modeles/appartements/standing_picture_frame_01/standing_picture_frame_01_1k.gltf" id="photo"]
+
+[resource]
+script = ExtResource("script")
+titre = "DepartInterrompu"
+modeles = Array[PackedScene]([ExtResource("valise"), ExtResource("livres"), ExtResource("photo")])
+positions = Array[Vector3]([Vector3(2.2, 0, 7.5), Vector3(-7.6, 0.8, -0.2), Vector3(-8.6, 0.8, 0.1)])
+hauteurs = Array[float]([0.45, 0.16, 0.23])
+orientations = Array[float]([22.0, -17.0, 12.0])

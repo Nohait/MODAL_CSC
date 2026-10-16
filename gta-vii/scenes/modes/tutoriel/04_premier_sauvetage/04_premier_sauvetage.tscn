@@ -1,5 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
+
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+
 [ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/04_premier_sauvetage.gd" id="salle"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/progression_sauvetage.gd" id="progression"]
@@ -8,7 +12,6 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
 [ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="sol"]
 [ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="mur"]
-[ext_resource type="FontFile" path="res://assets/fonts/Almendra-Bold.ttf" id="police"]
 [ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="porte"]
 [ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/zone_securite.tscn" id="zone"]
 
@@ -36,17 +39,6 @@ outer_radius = 2.4
 rings = 32
 ring_segments = 8
 material = SubResource("vert")
-
-[sub_resource type="StyleBoxFlat" id="parchemin"]
-content_margin_left = 18.0
-content_margin_right = 18.0
-content_margin_top = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.92, 0.84, 0.68, 0.97)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
 
 [sub_resource type="BoxMesh" id="mesh_SolSalle"]
 size = Vector3(8, 0.3, 8)
@@ -397,12 +389,13 @@ script = ExtResource("progression")
 [node name="Briefing" type="CanvasLayer" parent="."]
 
 [node name="Panneau" type="PanelContainer" parent="Briefing"]
+script = ExtResource("briefing_compact")
 offset_left = 400.0
 offset_top = 24.0
 offset_right = 1100.0
 offset_bottom = 130.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("parchemin")
+theme = ExtResource("intervention")
 
 [node name="Marge" type="MarginContainer" parent="Briefing/Panneau"]
 layout_mode = 2
@@ -413,21 +406,19 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="Titre" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+theme_type_variation = &"TitreIntervention"
 layout_mode = 2
-theme_override_fonts/font = ExtResource("police")
-theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color(0.24, 0.14, 0.07, 1)
+theme_override_font_sizes/font_size = 20
 text = "04 · PREMIER SAUVETAGE"
 mouse_filter = 2
 
 [node name="Consigne" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
 layout_mode = 2
 autowrap_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.14, 0.09, 1)
 mouse_filter = 2
 
 [node name="Rappel" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+theme_type_variation = &"NoteIntervention"
 layout_mode = 2
 autowrap_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.2, 0.08, 1)
 mouse_filter = 2

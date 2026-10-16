@@ -1,10 +1,12 @@
-[gd_resource type="StandardMaterial3D" load_steps=4 format=3]
-[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_diff_2k.jpg" id="couleur"]
-[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_nor_gl_2k.png" id="relief"]
-[ext_resource type="Texture2D" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_rough_2k.png" id="rugosite"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cuy8fb83yqwbv"]
+
+[ext_resource type="Texture2D" uid="uid://cm5enl4q45kuf" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_diff_2k.jpg" id="couleur"]
+[ext_resource type="Texture2D" uid="uid://cn71dbhhooibm" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_nor_gl_2k.png" id="relief"]
+[ext_resource type="Texture2D" uid="uid://bc4drvjekl5pp" path="res://assets/textures/decors/appartements/interior_tiles/textures/interior_tiles_rough_2k.png" id="rugosite"]
+
 [resource]
 albedo_texture = ExtResource("couleur")
-roughness = 0.5
+metallic_specular = 0.05
 roughness_texture = ExtResource("rugosite")
 normal_enabled = true
 normal_scale = 0.35

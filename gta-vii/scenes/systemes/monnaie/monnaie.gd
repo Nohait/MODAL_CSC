@@ -2,6 +2,7 @@ extends Node3D
 
 signal solde_change(solde: int)
 const PIECE = preload("res://scenes/effets/monnaie/piece.tscn")
+@export var actif := true
 @export var rayon_dispersion := 0.65
 @export var volume_collecte_db := -12.0
 var solde := 0
@@ -15,6 +16,9 @@ var pause_collecte := 0.0
 @onready var son: AudioStreamPlayer = $SonCollecte
 
 func _ready() -> void:
+	$HUD.visible = actif
+	set_process(actif)
+	if not actif: return
 	add_to_group("monnaie_partie")
 	compteur.text = "0"
 	var mat := ShaderMaterial.new()
@@ -22,6 +26,7 @@ func _ready() -> void:
 	$HUD/Compteur/Icone.material = mat
 
 func lacher_pieces(ennemi: Node3D, valeur: int) -> void:
+	if not actif: return
 	if not is_instance_valid(ennemi) or ennemi.has_meta("pieces_lachees"): return
 	# Les flaques peuvent être recréées par les tourelles : aucun butin à leur mort.
 	if ennemi.is_in_group("flaque"): return
@@ -79,7 +84,7 @@ func _process(delta: float) -> void:
 
 func depenser(prix: int) -> bool:
 	# Vérifier avant de débiter évite un solde négatif et centralise la mise à jour du HUD.
-	if prix < 0 or solde < prix:
+	if not actif or prix < 0 or solde < prix:
 		return false
 	solde -= prix
 	compteur.text = str(solde)

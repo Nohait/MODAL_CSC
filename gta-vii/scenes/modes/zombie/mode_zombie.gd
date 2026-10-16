@@ -25,6 +25,7 @@ const PARTIE = preload("res://scenes/modes/zombie/gestion/partie_zombie.gd")
 func _ready() -> void:
 	# Reprendre main sans copier le joueur, le dÃ©cor, les lumiÃ¨res ni leurs scripts.
 	var niveau = NIVEAU.instantiate()
+	niveau.get_node("Monnaie").actif = true
 	# Le mode zombie garde ses rÃ©glages lumineux sans modifier ceux du jeu classique.
 	niveau.get_node("Eclairage/Ambiance").environment = ambiance
 	niveau.get_node("Eclairage/Soleil").light_energy = energie_soleil

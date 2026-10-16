@@ -1,15 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/interfaces/menus/boutique/prototype_boutique.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png" id="2"]
-[ext_resource type="Shader" path="res://scenes/interfaces/menus/ameliorations/carte_amelioration.gdshader" id="3"]
-
-[sub_resource type="ShaderMaterial" id="Parchemin"]
-shader = ExtResource("3")
-shader_parameter/taille = Vector2(1600, 900)
-shader_parameter/largeur_bord = 18.0
-shader_parameter/rayon_coin = 12.0
-shader_parameter/intensite_braises = 0.3
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="theme"]
 
 [node name="PrototypeBoutique" type="Control"]
 layout_mode = 3
@@ -19,9 +11,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
+theme = ExtResource("theme")
 
-[node name="Fond" type="TextureRect" parent="."]
-material = SubResource("Parchemin")
+[node name="Fond" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,8 +21,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2")
-expand_mode = 1
+color = Color(0.063, 0.086, 0.102, 1)
 
 [node name="Marge" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -39,11 +30,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 70
-theme_override_constants/margin_right = 70
-theme_override_constants/margin_top = 40
-theme_override_constants/margin_bottom = 35
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_bottom = 24
 
 [node name="Contenu" type="VBoxContainer" parent="Marge"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12

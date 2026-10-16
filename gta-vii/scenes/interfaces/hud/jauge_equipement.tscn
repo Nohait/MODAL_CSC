@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/interfaces/hud/jauge_equipement.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/cadre_equipement.svg" id="2"]
 [ext_resource type="Shader" path="res://scenes/interfaces/hud/remplissage_equipement.gdshader" id="3"]
-[ext_resource type="FontFile" path="res://assets/fonts/Oswald-SemiBold.ttf" id="4"]
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_vie.svg" id="5"]
 
 [sub_resource type="StyleBoxEmpty" id="Vide"]
@@ -70,7 +70,7 @@ offset_top = 6.0
 offset_right = 183.0
 offset_bottom = 30.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.84, 0.75, 0.61, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 16
 text = "VIE"
@@ -84,7 +84,7 @@ offset_top = 6.0
 offset_right = -24.0
 offset_bottom = 30.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.89, 0.75, 1)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 15
 text = "100 / 100"
