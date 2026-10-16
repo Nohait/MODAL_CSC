@@ -227,8 +227,7 @@ func choisir_cible():
 				cible = body
 				print(cible)
 	if cible_avant !=null and cible != cible_avant:
-		repos_restant = 0.0
-		chargement_ecoule = duree_chargement/1.2
+		chargement_ecoule = duree_chargement
 
 
 func afficher_degats(degats: float) -> void:

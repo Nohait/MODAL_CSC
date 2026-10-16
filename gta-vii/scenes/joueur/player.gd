@@ -258,8 +258,10 @@ func prendre_degats(degats: float) -> void:
 		degats *= ameliorations.effets_cartes.protection_joueur()
 		degats = ameliorations.absorber_degats_joueur(maxf(degats, 0.0))
 	if degats <= 0.0: return
+	
 	flash_degats()
 	secouer_camera()
+	
 	var vie_avant: float = BarreDeVie.value
 	BarreDeVie.value -= maxf(degats, 0.0)
 	BarreDeVie.value = max(BarreDeVie.value, 0)
@@ -286,7 +288,7 @@ func mourir():
 	# Garder le visuel jusqu’à la fin du fondu ; le changement de scène le libère.
 	died.emit()
 
-func animation_fleche(position):
+func animation_fleche(position_fleche):
 	if fleche_tween:
 		fleche_tween.kill()
 	if is_instance_valid(fleche_victime):
@@ -294,15 +296,19 @@ func animation_fleche(position):
 	
 	fleche_victime = fleche_victime_scene.instantiate()
 	Effets.add_child(fleche_victime)
-	fleche_victime.position = position
+	fleche_victime.position = position_fleche
 	fleche_victime.visible = true
 	fleche_tween = create_tween()
-	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-2,0),0.2)
-	fleche_tween.tween_property(fleche_victime, "position", position + Vector3(0,-1.7,0),0.2)
-	
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-2,0),0.2)
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-1.7,0),0.2)
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-2,0),0.3)
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-1.8,0),0.3)
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-2,0),0.4)
+	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-1.9,0),0.4)
 	fleche_tween.tween_callback(cacher_fleche)
 	
-	
+		
+		
 func cacher_fleche():
 	if is_instance_valid(fleche_victime):
 		fleche_victime.visible = false
@@ -322,9 +328,10 @@ func annuler_ordre_victimes() -> void:
 	
 func bouger_victime(position):
 	animation_fleche(position)
+	var SonFleche = fleche_victime.get_node("Fleche")
+	if not SonFleche.is_playing():
+		SonFleche.play()
 	victim_manager.diriger_victime(fleche_victime)
-	
-	
 	
 
 func commencer_entree(cible: Vector3) -> void:

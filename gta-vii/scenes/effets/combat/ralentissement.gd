@@ -5,6 +5,8 @@ var multiplicateur := 1.0
 var overlays: Dictionary = {}
 var teinte: ShaderMaterial
 
+
+
 func _ready() -> void:
 	teinte = ShaderMaterial.new()
 	teinte.shader = preload("res://scenes/effets/combat/teinte_givree.gdshader")

@@ -11,7 +11,7 @@ static func obtenir(arbre: SceneTree) -> Node:
 		service = load("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").new()
 		service.name = "RepriseTutoriel"
 		service.chemin_fichier = "user://partie_tutoriel.save"
-		arbre.root.add_child(service)
+		arbre.root.add_child.call_deferred(service)
 	return service
 
 func _valide(point: Dictionary) -> bool:
