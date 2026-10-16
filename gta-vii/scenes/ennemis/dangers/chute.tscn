@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bx2xkpxheaeej"]
+
+[ext_resource type="Script" uid="uid://di7nscltmph31" path="res://scenes/ennemis/dangers/chute.gd" id="1_1jhe6"]
+[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="2_jjju1"]
+
+[node name="Chute" type="Node3D" unique_id=971539214]
+script = ExtResource("1_1jhe6")
+rayon = 2.0
+delai_avertissement = 2.0
+
+[node name="vfx_fire" parent="." unique_id=1657664350 instance=ExtResource("2_jjju1")]
+transform = Transform3D(6.1276574, 0, 0, 0, 1, 0, 0, 0, 4.715118, 0, 0, 0)
+
+[editable path="vfx_fire"]
