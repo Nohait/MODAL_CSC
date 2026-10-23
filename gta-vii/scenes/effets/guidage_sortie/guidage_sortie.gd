@@ -1,7 +1,7 @@
 extends Node3D
 
 const FLECHE = preload("res://scenes/effets/fleche_victime/fleche.tscn")
-@export var delai_affichage := 20.0
+@export var delai_affichage := 0.0
 @export var rayon := 1.7
 # Le centre du CharacterBody correspond approximativement à la taille du joueur.
 @export var hauteur := 0.0
