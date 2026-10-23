@@ -19,6 +19,7 @@ var progression_pratique
 var entree_pratique := false
 var poste
 var menace
+var sortie_menace_en_cours := false
 
 func _ready() -> void:
 	session_tutoriel = true
@@ -181,6 +182,9 @@ func _process(_delta: float) -> void:
 
 func _actualiser_consigne() -> void:
 	if is_instance_valid(menace):
+		if menace.progression.reussi and not sortie_menace_en_cours:
+			sortie_menace_en_cours = true
+			_passer_points.call_deferred()
 		$Briefing/Panneau/Disposition/Consigne.text = menace.rappel if not menace.rappel.is_empty() else menace.progression.consigne()
 		$Briefing/Panneau/Disposition/Rappel.hide()
 		return
@@ -245,3 +249,7 @@ func _passer_poste() -> void:
 
 func _passer_menace() -> void:
 	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).ouvrir_salle(self, &"menace")
+
+func _passer_points() -> void:
+	# La victime précédente a été confiée à l'équipe ; cette séquence constitue une nouvelle escorte.
+	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).ouvrir_salle(self, &"points_1", false)

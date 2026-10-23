@@ -54,6 +54,10 @@ var effets_actifs: Dictionary = {}
 # Le récapitulatif garde la rareté et le gain réel de chaque acquisition.
 var acquisitions: Array[Dictionary] = []
 var points := 0
+var boutique_tutoriel_active := false
+var numero_boutique_tutoriel := 0
+var perte_points_tutoriel_confirmee := false
+var carte_choisie_boutique_tutoriel := false
 # Le menu de debug active ce mode pour la partie en cours, sans modifier l'escorte.
 var points_abondants_test := false
 const POINTS_BOUTIQUE_TEST := 999
@@ -148,6 +152,11 @@ func offres_boosters() -> Array[Dictionary]:
 		{"id": &"temporaire", "titre": "Intervention", "couleur": CATALOGUE.COULEURS[&"temporaire"], "prix": prix_temporaire, "puissance": 100.0, "symbole": "+", "categorie": "temporaire", "contenu": "%d choix · soins et protection" % mini(3, catalogue_ameliorations.disponibles(mode_jeu, "temporaire").size())}
 	]
 
+func configurer_boutique_tutoriel(numero: int) -> void:
+	boutique_tutoriel_active = true
+	numero_boutique_tutoriel = numero
+	if is_instance_valid(boutique): boutique.configurer_tutoriel_points(true, points)
+
 
 # Nom conservé pour le signal existant du RoomManager ; il ouvre désormais la boutique.
 func ouvrir_choix(_nombre_victimes: int) -> void:
@@ -159,6 +168,8 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 			points += 1
 	if points_abondants_test:
 		points = POINTS_BOUTIQUE_TEST
+	perte_points_tutoriel_confirmee = false
+	carte_choisie_boutique_tutoriel = false
 	boutique_ouverte = true
 	extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode
@@ -174,13 +185,33 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 
 func _actualiser_boutique(message: String = "") -> void:
 	if message.is_empty():
-		message = defis.bilan + "Les points non dépensés seront perdus en quittant la boutique."
-	boutique.actualiser_boutique(points, defis.actifs, defis.propositions(), defis.boosters_rares_gratuits, message)
+		message = _message_boutique_tutoriel() if boutique_tutoriel_active else defis.bilan + "Les points non dépensés seront perdus en quittant la boutique."
+	var defis_actifs: Array[Dictionary] = []
+	var defis_proposes: Array[Dictionary] = []
+	if not boutique_tutoriel_active:
+		defis_actifs.assign(defis.actifs)
+		defis_proposes.assign(defis.propositions())
+	var cadeaux: int = 0 if boutique_tutoriel_active else defis.boosters_rares_gratuits
+	boutique.actualiser_boutique(points, defis_actifs, defis_proposes, cadeaux, message)
+	if boutique_tutoriel_active: boutique.configurer_tutoriel_points(true, points)
 	_actualiser_pieces()
+
+func _message_boutique_tutoriel() -> String:
+	if points == 0:
+		return "Aucune victime n’est encore dans l’escorte : 0 point. Vous pouvez poursuivre sans achat."
+	var accord_victime := "victime encore en vie" if points == 1 else "victimes encore en vie"
+	var accord_point := "point" if points == 1 else "points"
+	var texte := "%d %s : %d %s de ravitaillement." % [points, accord_victime, points, accord_point]
+	if numero_boutique_tutoriel == 1:
+		texte += " Le booster Commun coûte 1 point et permet de choisir une carte."
+	else:
+		texte += " Achetez ce qui vous sera utile, ou poursuivez l’intervention."
+	texte += " Les points non dépensés seront perdus en quittant la boutique."
+	return texte
 
 
 func _acheter_defi(id: StringName) -> void:
-	if not boutique_ouverte or choix_ouverts:
+	if boutique_tutoriel_active or not boutique_ouverte or choix_ouverts:
 		return
 	for offre in defis.propositions():
 		if offre.id == id and points >= offre.prix:
@@ -215,6 +246,7 @@ func _acheter_booster(rarete: StringName) -> void:
 			_actualiser_boutique("Vous n’avez pas assez de points pour ce booster.")
 			return
 		points -= offre.prix
+	perte_points_tutoriel_confirmee = false
 	choix_ouverts = true
 	catalogue_debug = false
 	retour_debug.hide()
@@ -321,6 +353,7 @@ func _choisir(carte: Control) -> void:
 		await confirmation.finished
 		revelation_en_cours = false
 	appliquer_amelioration(carte.identifiant)
+	if boutique_tutoriel_active: carte_choisie_boutique_tutoriel = true
 	if formation_en_cours:
 		var identifiant_acquis: StringName = carte.identifiant
 		formation_en_cours = false
@@ -358,6 +391,11 @@ func _retour_boutique() -> void:
 
 func _continuer() -> void:
 	if not boutique_ouverte or choix_ouverts:
+		return
+	if boutique_tutoriel_active and points > 0 and not perte_points_tutoriel_confirmee:
+		perte_points_tutoriel_confirmee = true
+		var avertissement := "1 point non dépensé sera perdu." if points == 1 else "%d points non dépensés seront perdus." % points
+		_actualiser_boutique(avertissement + " Appuyez de nouveau sur Continuer pour confirmer.")
 		return
 	boutique_ouverte = false
 	points = 0 # Aucun report : la prochaine boutique recomptera l'escorte vivante.

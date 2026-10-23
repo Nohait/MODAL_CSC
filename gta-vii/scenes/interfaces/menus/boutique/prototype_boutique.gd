@@ -45,6 +45,9 @@ var entete_monnaies: HBoxContainer
 var tuiles_sprinklers: Array[Dictionary] = []
 var choix_sprinklers: Window
 var categorie_sprinklers: Button
+var note_points: Label
+var bouton_debug: Button
+var mode_points_tutoriel := false
 
 
 func _ready() -> void:
@@ -66,9 +69,9 @@ func _ready() -> void:
 	entete.add_child(icone)
 	compteur = _texte("", 24)
 	entete.add_child(compteur)
-	var note := _texte("1 victime dans l’escorte = 1 point.", 16)
-	note.add_theme_color_override("font_color", Color("acbabf"))
-	bloc_points.add_child(note)
+	note_points = _texte("1 victime dans l’escorte = 1 point.", 16)
+	note_points.add_theme_color_override("font_color", Color("acbabf"))
+	bloc_points.add_child(note_points)
 	var titre := _texte("RAVITAILLEMENT", 28)
 	titre.add_theme_font_override("font", POLICE)
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -168,15 +171,29 @@ func _ready() -> void:
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
 	if not mode_demonstration and OS.is_debug_build():
-		var debug = Button.new()
-		debug.add_theme_font_size_override("font_size", 16)
-		debug.custom_minimum_size = Vector2(300, 40)
-		debug.name = "DebugCartes"
-		debug.text = "Debug : toutes les cartes du mode"
-		debug.focus_mode = Control.FOCUS_NONE
-		debug.pressed.connect(func(): catalogue_debug_demande.emit())
-		contenu.add_child(debug)
+		bouton_debug = Button.new()
+		bouton_debug.add_theme_font_size_override("font_size", 16)
+		bouton_debug.custom_minimum_size = Vector2(300, 40)
+		bouton_debug.name = "DebugCartes"
+		bouton_debug.text = "Debug : toutes les cartes du mode"
+		bouton_debug.focus_mode = Control.FOCUS_NONE
+		bouton_debug.pressed.connect(func(): catalogue_debug_demande.emit())
+		contenu.add_child(bouton_debug)
 	_actualiser_budget()
+
+func configurer_tutoriel_points(actif: bool, points: int) -> void:
+	mode_points_tutoriel = actif
+	panneau_defis.visible = not actif
+	if is_instance_valid(bouton_debug): bouton_debug.visible = not actif
+	if actif:
+		cadeau.hide()
+		compteur.add_theme_color_override("font_color", Color("ef9b3d"))
+		compteur.add_theme_font_size_override("font_size", 28)
+		note_points.text = "1 victime vivante dans l’escorte = 1 point."
+	for booster in boosters:
+		var recommande: bool = actif and booster.get_meta("rarete") == &"commun" and points >= booster.prix
+		booster.get_node("%Prix").modulate = Color("ef9b3d") if recommande else Color.WHITE
+		booster.get_node("%Titre").modulate = Color("fff1d6") if recommande else Color.WHITE
 
 
 func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
@@ -295,7 +312,7 @@ func actualiser_boutique(points: int, defis_actifs: Array[Dictionary], offres: A
 		_creer_ligne_defi(defi, false)
 	if actifs.get_child_count() == 0:
 		actifs.add_child(_texte("Aucun défi en cours.", 15))
-	cadeau.visible = cadeaux > 0
+	cadeau.visible = cadeaux > 0 and not mode_points_tutoriel
 	booster_gratuit.get_node("%Prix").text = "GRATUIT" if cadeaux <= 1 else "GRATUIT · %d disponibles" % cadeaux
 	_actualiser_budget()
 	if not message.is_empty():

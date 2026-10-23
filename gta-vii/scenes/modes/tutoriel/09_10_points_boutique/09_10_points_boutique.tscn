@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/09_10_points_boutique/parcours_points_boutique.gd" id="parcours"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/09_10_points_boutique/room_manager_points_tutoriel.gd" id="gestion"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing"]
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+
+[node name="TutorielPointsBoutique" instance=ExtResource("main")]
+script = ExtResource("parcours")
+session_tutoriel = true
+
+[node name="RoomGenerator" parent="Salles"]
+roomSizeMax = Vector2i(6, 6)
+roomSizeMin = Vector2i(6, 6)
+
+[node name="RoomManager" parent="Salles"]
+script = ExtResource("gestion")
+nombre_etages = 1
+nombre_salles_personnalise = 2
+nombre_min_ennemis_mobiles = 0
+nombre_max_ennemis_mobiles = 0
+nombre_min_tour_enflammee = 0
+nombre_max_tour_enflammee = 0
+nombre_min_flaques = 0
+nombre_max_flaques = 0
+mobiles_ajoutes_par_salle = 0
+mobiles_ajoutes_par_etage = 0
+tours_ajoutees_par_etage = 0
+flaques_ajoutees_par_etage = 0
+duree_min_vagues = 30.0
+duree_max_vagues = 30.0
+nombre_min_victimes = 1
+nombre_max_victimes = 1
+chutes_actives = false
+
+[node name="Briefing" type="CanvasLayer" parent="."]
+
+[node name="Panneau" type="PanelContainer" parent="Briefing"]
+script = ExtResource("briefing")
+offset_left = 400.0
+offset_top = 24.0
+offset_right = 1100.0
+offset_bottom = 150.0
+mouse_filter = 2
+theme = ExtResource("intervention")
+
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Titre" type="Label" parent="Briefing/Panneau/Disposition"]
+theme_type_variation = &"TitreIntervention"
+layout_mode = 2
+text = "09 · VICTIMES ET RAVITAILLEMENT"
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="Consigne" type="Label" parent="Briefing/Panneau/Disposition"]
+layout_mode = 2
+autowrap_mode = 2
+mouse_filter = 2
+
+[node name="Rappel" type="Label" parent="Briefing/Panneau/Disposition"]
+theme_type_variation = &"NoteIntervention"
+layout_mode = 2
+autowrap_mode = 2
+mouse_filter = 2

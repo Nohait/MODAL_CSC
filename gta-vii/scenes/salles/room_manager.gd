@@ -65,10 +65,14 @@ var SonNouvelleVague = preload("res://assets/sounds/ennemis/NouvelleVague.wav")
 
 # Nombre d'étages du parcours.
 @export_range(1, 10, 1) var nombre_etages := 3
+## Limite facultative pour un parcours encadré. Zéro conserve cinq salles par étage.
+@export_range(0, 50, 1) var nombre_salles_personnalise := 0
+## Salle activée au chargement, utilisée par les parcours qui reprennent en cours de route.
+@export_range(0, 49, 1) var indice_salle_depart := 0
 const SALLES_PAR_ETAGE := 5
 var nombre_salles: int:
 	get:
-		return nombre_etages * SALLES_PAR_ETAGE
+		return nombre_salles_personnalise if nombre_salles_personnalise > 0 else nombre_etages * SALLES_PAR_ETAGE
 
 # Population
 
@@ -200,7 +204,8 @@ func demarrer_partie() -> void:
 		salles.add_child(reserve)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	await activer_salle(int(point.reprise.indice) if point != null and not point.reprise.is_empty() else 0)
+	var depart := int(point.reprise.indice) if point != null and not point.reprise.is_empty() else indice_salle_depart
+	await activer_salle(clampi(depart, 0, nombre_salles - 1))
 	partie_prete.emit()
 
 # Population
@@ -738,10 +743,10 @@ func actualiser_objectifs() -> void:
 
 	# Le HUD affiche les données ; le RoomManager conserve les règles de la salle.
 	informations_salle.mettre_a_jour(salle_actuelle.etage,
-		indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, remaining_enemies, a_venir, remaining_victims)
+		indice_salle % SALLES_PAR_ETAGE + 1, nombre_salles_dans_etage(salle_actuelle.etage), remaining_enemies, a_venir, remaining_victims)
 
 	# Seuls les ennemis conditionnent l'ouverture de la porte.
-	if (remaining_enemies == 0 and not is_room_cleared):
+	if conditions_sortie_remplies(salle_actuelle) and not is_room_cleared:
 		salle_actuelle.liberee = true
 		is_room_cleared = true
 		for porte in (salle_actuelle .get_node("Portes") .get_children()):
@@ -749,9 +754,12 @@ func actualiser_objectifs() -> void:
 		afficher_victoire()
 		room_cleared.emit()
 
+func conditions_sortie_remplies(salle: Node3D) -> bool:
+	return salle.remaining_enemies == 0
+
 func afficher_victoire() -> void:
 	informations_salle.mettre_a_jour(salle_actuelle.etage,
-		indice_salle % SALLES_PAR_ETAGE + 1, SALLES_PAR_ETAGE, 0, 0, salle_actuelle.remaining_victims)
+		indice_salle % SALLES_PAR_ETAGE + 1, nombre_salles_dans_etage(salle_actuelle.etage), 0, 0, salle_actuelle.remaining_victims)
 	informations_salle.afficher_salle_liberee()
 	guidage_sortie.demarrer(joueur, salle_actuelle)
 
@@ -766,6 +774,10 @@ func afficher_message(texte: String) -> void:
 	animation_message.tween_interval(4.0)
 	animation_message.tween_property(message_victoire, "modulate:a", 0.0, 0.6)
 	animation_message.tween_callback(message_victoire.hide)
+
+func nombre_salles_dans_etage(etage: int) -> int:
+	var premiere := (etage - 1) * SALLES_PAR_ETAGE
+	return clampi(nombre_salles - premiere, 1, SALLES_PAR_ETAGE)
 
 # Sortie
 
@@ -801,6 +813,8 @@ func passer_salle_suivante() -> void:
 	else:
 		# Compter les victimes encore vivantes avant que la scène du niveau soit détruite.
 		if not get_parent().get_parent().session_tutoriel:
+			if not preload("res://scenes/systemes/sauvegarde/progression_interventions.gd").enregistrer_victoire():
+				push_warning("La victoire n’a pas pu être enregistrée dans la progression durable.")
 			SauvegardeClassique.supprimer()
 			SuccesManager.valider_victoire(compter_victimes_escorte_vivantes())
 		get_tree().change_scene_to_file("res://scenes/interfaces/menus/ecran_victoire.tscn")
