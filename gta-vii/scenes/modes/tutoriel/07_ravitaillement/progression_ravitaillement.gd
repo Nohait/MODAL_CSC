@@ -9,8 +9,7 @@ func acquerir(identifiant: StringName) -> bool:
 	carte = identifiant
 	return true
 
-func verifier_sortie(position_joueur: Vector3, porte_ouverte: bool) -> bool:
+func valider_sortie(porte_ouverte: bool) -> bool:
 	if termine or carte == &"" or not porte_ouverte: return false
-	if absf(position_joueur.x) >= 1.1 or position_joueur.z >= -44.5: return false
 	termine = true
 	return true

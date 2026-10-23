@@ -4,7 +4,6 @@ extends RefCounted
 const SOL = preload("res://assets/materiaux/sol_appartements.tres")
 const MUR = preload("res://assets/materiaux/mur_appartements.tres")
 const PROFIL = preload("res://scenes/modes/tutoriel/commun/decors/profil_decor.tres")
-const GEOMETRIE = preload("res://scenes/decors/interieurs/geometrie_decorative.gd")
 
 static func bloc(parent: Node3D, nom: String, emplacement: Vector3, taille: Vector3, materiau: Material) -> StaticBody3D:
 	var corps := StaticBody3D.new()
@@ -94,25 +93,50 @@ static func construire_plan(parent: Node3D, plan: Resource) -> void:
 	for i in plan.annexes.size():
 		annexe(parent, plan.annexes[i], plan.positions_annexes[i], plan.orientations_annexes[i])
 	for position_lumiere in plan.lumieres:
-		plafonnier(parent, position_lumiere)
+		eclairage_local(parent, position_lumiere)
 
-static func plafonnier(parent: Node3D, emplacement: Vector3) -> void:
+static func ouvrir_mur(parent: Node3D, nom_mur: StringName, centre_passage: Vector3, largeur_passage: float) -> void:
+	var mur := parent.get_node_or_null(NodePath(nom_mur)) as StaticBody3D
+	if mur == null:
+		push_warning("Mur de passage introuvable : " + String(nom_mur))
+		return
+	var visuel := mur.get_node_or_null("Visuel") as MeshInstance3D
+	if visuel == null or not visuel.mesh is BoxMesh:
+		push_warning("Le mur de passage n'est pas un bloc rectangulaire : " + String(nom_mur))
+		return
+	var taille: Vector3 = visuel.mesh.size
+	var horizontal := taille.x >= taille.z
+	var axe_centre: float = mur.position.x if horizontal else mur.position.z
+	var axe_passage: float = centre_passage.x if horizontal else centre_passage.z
+	var longueur: float = taille.x if horizontal else taille.z
+	var debut := axe_centre - longueur * 0.5
+	var fin := axe_centre + longueur * 0.5
+	var debut_passage := axe_passage - largeur_passage * 0.5
+	var fin_passage := axe_passage + largeur_passage * 0.5
+	if debut_passage < debut or fin_passage > fin:
+		push_warning("Le passage dépasse du mur : " + String(nom_mur))
+		return
+	var materiau: Material = visuel.mesh.material
+	parent.remove_child(mur)
+	mur.queue_free()
+	var segments := [Vector2(debut, debut_passage), Vector2(fin_passage, fin)]
+	for i in segments.size():
+		var segment: Vector2 = segments[i]
+		var longueur_segment := segment.y - segment.x
+		if longueur_segment <= 0.02: continue
+		var position_segment := mur.position
+		if horizontal: position_segment.x = (segment.x + segment.y) * 0.5
+		else: position_segment.z = (segment.x + segment.y) * 0.5
+		var taille_segment := taille
+		if horizontal: taille_segment.x = longueur_segment
+		else: taille_segment.z = longueur_segment
+		bloc(parent, String(nom_mur) + "Passage" + str(i), position_segment, taille_segment, materiau)
+
+static func eclairage_local(parent: Node3D, emplacement: Vector3) -> void:
 	var support := Node3D.new()
-	support.name = "Plafonnier"
+	support.name = "EclairageLocal"
 	support.position = emplacement
 	parent.add_child(support)
-	var modele = preload("res://assets/modeles/appartements/modern_ceiling_lamp_01/modern_ceiling_lamp_01_1k.gltf").instantiate()
-	support.add_child(modele)
-	GEOMETRIE.normaliser(modele, 0.55, true)
-	for surface in modele.find_children("*", "MeshInstance3D", true, false):
-		for i in range(surface.mesh.get_surface_count()):
-			var original: Material = surface.get_active_material(i)
-			if original is StandardMaterial3D and "glass" in original.resource_name.to_lower():
-				var verre: StandardMaterial3D = original.duplicate()
-				verre.emission_enabled = true
-				verre.emission = PROFIL.couleur_lumieres
-				verre.emission_energy_multiplier = PROFIL.energie_lumieres
-				surface.set_surface_override_material(i, verre)
 	var lumiere := OmniLight3D.new()
 	lumiere.light_energy = PROFIL.energie_lumieres
 	lumiere.light_color = PROFIL.couleur_lumieres

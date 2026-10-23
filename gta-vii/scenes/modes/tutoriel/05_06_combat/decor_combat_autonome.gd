@@ -4,6 +4,7 @@ extends Node3D
 
 const STYLE = preload("res://scenes/modes/tutoriel/commun/decors/construction_interieur.gd")
 const PORTE = preload("res://scenes/modes/tutoriel/commun/decors/double_porte.tscn")
+const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
 var porte_combat: StaticBody3D
 var sortie: Node3D
 var sortie_ouverte := false
@@ -13,6 +14,12 @@ const POSITION_CREATURE := Vector3(3, 0, -22)
 
 func _ready() -> void:
 	STYLE.construire_plan(self, plan)
+	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -10), 3.6)
+	var porte_arrivee = PORTE.instantiate()
+	porte_arrivee.name = "PorteArrivee"
+	porte_arrivee.position = Vector3(0, 1.8, -10)
+	porte_arrivee.rotation.y = PI
+	add_child(porte_arrivee)
 	porte_combat = PORTE.instantiate()
 	porte_combat.position = Vector3(0, 1.8, -16)
 	var vitre := StandardMaterial3D.new()
@@ -21,12 +28,12 @@ func _ready() -> void:
 	for cote in ["Gauche", "Droit"]:
 		porte_combat.get_node("Vantail" + cote).material_override = vitre
 	add_child(porte_combat)
-	for cote in [-1, 1]:
-		STYLE.bloc(self, "MurSortie" + str(cote), Vector3(cote * 4.125, 0.6, -28), Vector3(5.75, 1.2, 0.3), STYLE.MUR)
-	sortie = preload("res://scenes/decors/porte_sortie.tscn").instantiate()
-	sortie.position = Vector3(0, 0, -28)
+	STYLE.ouvrir_mur(self, &"MurFixe8", Vector3(0, 0, -30), 3.6)
+	sortie = PORTE.instantiate()
+	sortie.name = "PorteSortie"
+	sortie.position = Vector3(0, 1.8, -30)
 	add_child(sortie)
-	sortie.ouverte.connect(_sortie_prete)
+	sortie.ouverture_terminee.connect(_sortie_prete)
 	ennemis = Node3D.new()
 	ennemis.name = "Ennemis"
 	add_child(ennemis)
@@ -36,17 +43,19 @@ func _ready() -> void:
 	var repas = preload("res://scenes/decors/interieurs/compositions/coin_repas.tres").construire()
 	repas.position = Vector3(9, 0, -21.5)
 	add_child(repas)
-	repere_sortie = preload("res://scenes/modes/tutoriel/commun/decors/zone_securite.tscn").instantiate()
-	repere_sortie.position = Vector3(0, 0, -29)
+	repere_sortie = REPERE_PASSAGE.instantiate()
+	repere_sortie.position = Vector3(0, 0, -28.35)
 	add_child(repere_sortie)
 	repere_sortie.hide()
 
 func ouvrir_palier() -> void:
 	porte_combat.ouvrir()
 
-func ouvrir_sortie() -> void:
-	sortie.ouvrir()
+func autoriser_sortie() -> void:
+	repere_sortie.show()
+
+func masquer_repere_sortie() -> void:
+	repere_sortie.hide()
 
 func _sortie_prete() -> void:
 	sortie_ouverte = true
-	repere_sortie.show()

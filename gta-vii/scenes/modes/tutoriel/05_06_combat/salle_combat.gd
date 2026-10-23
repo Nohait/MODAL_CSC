@@ -9,6 +9,7 @@ const SBIRE = preload("res://scenes/ennemis/mobiles/sbire.tscn")
 @export_range(10.0, 100.0, 5.0) var vie_creature := 65.0
 @export_range(1.0, 7.0, 0.1) var vitesse_creature := 2.4
 @export_range(1.0, 20.0, 1.0) var degats_creature := 8.0
+@export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 2.2
 @onready var salle = $SalleFixe
 @onready var progression = $ProgressionCombat
 var observation: CharacterBody3D
@@ -19,7 +20,7 @@ var progression_pratique
 var entree_pratique := false
 var poste
 var menace
-var sortie_menace_en_cours := false
+var sortie_en_cours := false
 
 func _ready() -> void:
 	session_tutoriel = true
@@ -38,7 +39,7 @@ func _ready() -> void:
 	if is_instance_valid(attaque.icone): attaque.icone.hide()
 	progression.consigne_changee.connect(_actualiser_consigne)
 	progression.rencontre_demandee.connect(_creer_rencontre)
-	progression.sortie_autorisee.connect(salle.ouvrir_sortie)
+	progression.sortie_autorisee.connect(salle.autoriser_sortie)
 	progression.fin_provisoire = false
 	progression.salle_reussie.connect(_passer_pratique)
 	if debut_autonome:
@@ -84,18 +85,17 @@ func debug_contexte() -> Dictionary:
 		contexte_menace.merge(preload("res://scenes/modes/tutoriel/debug/etapes_debug.gd").conditions({"Victime libérée": menace.progression.liberee, "Sbire vaincu": menace.progression.vaincu, "Arrivée ensemble vivant": menace.progression.reussi}))
 		return contexte_menace
 	if is_instance_valid(poste) and poste.actif:
-		var resultat_poste := {"salle": "Poste de ravitaillement", "etape": "essai" if poste.carte != &"" else "ravitaillement", "objectif": poste.consigne(), "joueur": $player, "escorte": $VictimManager, "foyers": [], "sortie": "ouverte" if poste.sortie_ouverte else "attend le choix", "restart_etape": "poste" if poste.carte == &"" else "essai_" + String(poste.carte), "restart_salle": "poste", "reperes": [Vector3(-2, 1, -34), Vector3(3, 0, -37), Vector3(0, 0, -44)]}
+		var resultat_poste := {"salle": "Poste de ravitaillement", "etape": "essai" if poste.carte != &"" else "ravitaillement", "objectif": poste.consigne(), "joueur": $player, "escorte": $VictimManager, "foyers": [], "sortie": "ouverte" if poste.sortie_ouverte else "attend le choix", "restart_etape": "poste" if poste.carte == &"" else "essai_" + String(poste.carte), "restart_salle": "poste", "reperes": [Vector3(-2, 1, -34), Vector3(3, 0, -37), Vector3(0, 0, -46)]}
 		resultat_poste.merge(preload("res://scenes/modes/tutoriel/debug/etapes_debug.gd").conditions({"Carte acquise": poste.carte != &"", "Sortie atteinte vivant": poste.termine}))
 		return resultat_poste
 	var autonome := is_instance_valid(progression_pratique)
 	var actuelle = progression_pratique if autonome else progression
 	var identifiant := "pratique" if autonome else "combat"
 	var conditions := {"Joueur vivant": $player.BarreDeVie.value > 0, "Porte ouverte": pratique.porte_combat.ouverte if autonome else salle.porte_combat.ouverte, "Créature vaincue": actuelle.rencontres_terminees > 0, "Sortie atteinte vivant": actuelle.etat == "reussi"}
-	var resultat := {"salle": "Combat autonome" if autonome else "Premier combat", "etape": actuelle.etat, "objectif": actuelle.consigne(), "joueur": $player, "escorte": $VictimManager, "ennemi": actuelle.ennemi, "foyers": [], "sortie": "ouverte" if actuelle.etat in ["sortie", "reussi"] else "verrouillée", "restart_etape": identifiant + ":" + actuelle.etat, "restart_salle": identifiant, "reperes": [Vector3(0, 0, -13), Vector3(0, 0, -16), Vector3(0, 0, -29)] if autonome else [Vector3(0, 0, 7), Vector3(0, 0, 3.5), Vector3(0, 0, -8.8)]}
+	var sortie_ouverte: bool = pratique.sortie.ouverte if autonome else salle.sortie.ouverte
+	var resultat := {"salle": "Combat autonome" if autonome else "Premier combat", "etape": actuelle.etat, "objectif": actuelle.consigne(), "joueur": $player, "escorte": $VictimManager, "ennemi": actuelle.ennemi, "foyers": [], "sortie": "ouverte" if sortie_ouverte else ("autorisée" if actuelle.etat == "sortie" else "verrouillée"), "restart_etape": identifiant + ":" + actuelle.etat, "restart_salle": identifiant, "reperes": [Vector3(0, 0, -13), Vector3(0, 0, -16), Vector3(0, 0, -30)] if autonome else [Vector3(0, 0, 7), Vector3(0, 0, 3.5), Vector3(0, 0, -10)]}
 	resultat.merge(preload("res://scenes/modes/tutoriel/debug/etapes_debug.gd").conditions(conditions))
 	resultat["ennemis_restants"] = int(is_instance_valid(observation) and not observation.est_mort) + int(is_instance_valid(actuelle.ennemi) and not actuelle.ennemi.est_mort)
-	if autonome:
-		resultat["sortie"] = "ouverte" if pratique.sortie_ouverte else ("ouverture en cours" if actuelle.etat == "sortie" else "verrouillée")
 	return resultat
 
 func debug_reconstruire(identifiant: String) -> void:
@@ -172,19 +172,30 @@ func _process(_delta: float) -> void:
 		if progression_pratique.etat == "observation" and not entree_pratique:
 			if $player.global_position.distance_to(Vector3(0, 1, -15.2)) < 1.8 and Input.is_action_just_pressed("interact"):
 				_entrer_pratique()
-		elif progression_pratique.etat == "sortie" and pratique.sortie_ouverte and absf($player.global_position.x) < 1.1 and $player.global_position.z < -28.5:
-			progression_pratique.atteindre_sortie()
+		elif progression_pratique.etat == "sortie" and _porte_proche(pratique.sortie) and Input.is_action_just_pressed("interact"):
+			_quitter_par_porte(progression_pratique, pratique)
 	elif progression.etat == "observation" and not entree_en_cours:
 		if $player.global_position.distance_to(Vector3(0, 1, 4.2)) < 1.8 and Input.is_action_just_pressed("interact"):
 			_entrer()
-	elif progression.etat == "sortie" and $player.global_position.z < -8:
-		progression.atteindre_sortie()
+	elif progression.etat == "sortie" and _porte_proche(salle.sortie) and Input.is_action_just_pressed("interact"):
+		_quitter_par_porte(progression, salle)
+
+func _porte_proche(porte: Node3D) -> bool:
+	var ecart: Vector3 = $player.global_position - porte.global_position
+	ecart.y = 0.0
+	return ecart.length() < distance_ouverture_sortie
+
+func _quitter_par_porte(progression_cible: Node, decor: Node3D) -> void:
+	if sortie_en_cours or decor.sortie.ouverte: return
+	sortie_en_cours = true
+	decor.masquer_repere_sortie()
+	decor.sortie.ouvrir()
+	if not decor.sortie.ouverte: await decor.sortie.ouverture_terminee
+	if $player.BarreDeVie.value <= 0: return
+	progression_cible.atteindre_sortie()
 
 func _actualiser_consigne() -> void:
 	if is_instance_valid(menace):
-		if menace.progression.reussi and not sortie_menace_en_cours:
-			sortie_menace_en_cours = true
-			_passer_points.call_deferred()
 		$Briefing/Panneau/Disposition/Consigne.text = menace.rappel if not menace.rappel.is_empty() else menace.progression.consigne()
 		$Briefing/Panneau/Disposition/Rappel.hide()
 		return
@@ -206,7 +217,7 @@ func _preparer_pratique() -> void:
 	add_child(progression_pratique)
 	progression_pratique.consigne_changee.connect(_actualiser_consigne)
 	progression_pratique.rencontre_demandee.connect(_creer_rencontre.bind(progression_pratique))
-	progression_pratique.sortie_autorisee.connect(pratique.ouvrir_sortie)
+	progression_pratique.sortie_autorisee.connect(pratique.autoriser_sortie)
 	progression_pratique.salle_reussie.connect(_passer_poste)
 	observation = _creer_sbire(true, pratique.ennemis, pratique.POSITION_CREATURE)
 	$Briefing/Panneau/Disposition/Titre.text = "06 · DÉGAGER LE PASSAGE"
@@ -230,6 +241,7 @@ func _ouvrir_menace() -> void:
 	menace = preload("res://scenes/modes/tutoriel/08_sauvetage_sous_menace/08_sauvetage_sous_menace.gd").new()
 	add_child(menace)
 	menace.consigne_changee.connect(_actualiser_consigne)
+	menace.salle_reussie.connect(_passer_points, CONNECT_ONE_SHOT)
 	menace.preparer($player, $VictimManager, $UpgradeManager)
 	$Briefing/Panneau/Disposition/Titre.text = "08 · SAUVETAGE SOUS MENACE"
 	_actualiser_consigne()

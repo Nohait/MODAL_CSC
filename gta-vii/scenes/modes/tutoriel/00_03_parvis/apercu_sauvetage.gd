@@ -20,6 +20,7 @@ var segment := 1
 var habitant_embarque := 1
 var guide_arrive := false
 var guide_ecarte := false
+var porte: StaticBody3D
 const HABITANT = preload("res://scenes/victimes/victime.tscn")
 const ANIMATIONS = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
 @export var locomotion: ANIMATIONS = ANIMATIONS.new()
@@ -30,7 +31,7 @@ func _ready() -> void:
 func jouer(joueur: Node3D) -> void:
 	if lance or trajet.size() < 2: return
 	lance = true
-	var porte = get_parent().get_node("PorteEntree")
+	porte = get_parent().get_node("PorteEntree")
 	porte.ouvrir()
 	if not porte.ouverte: await porte.ouverture_terminee
 	if not is_instance_valid(joueur): return
@@ -164,4 +165,5 @@ func _process(delta: float) -> void:
 		if float(guide.arbre["parameters/Transition/blend_amount"]) <= 0.001 and not locomotion.pivote(guide.arbre):
 			termine = true
 			set_process(false)
+			porte.fermer()
 

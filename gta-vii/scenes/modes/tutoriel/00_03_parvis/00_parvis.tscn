@@ -6,7 +6,7 @@
 
 [ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/point_regroupement.gd" id="point_medical"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/double_porte.gd" id="double_porte"]
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="double_porte"]
 
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/00_parvis.gd" id="intro"]
 
@@ -1010,27 +1010,8 @@ theme_override_constants/shadow_offset_y = 2
 position = Vector3(0, 1, -6.6)
 [node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteNord"]
 shape = SubResource("limite_nord")
-[node name="PorteEntree" type="StaticBody3D" parent="Intervention"]
+[node name="PorteEntree" parent="Intervention" instance=ExtResource("double_porte")]
 position = Vector3(0, 1.8, -5.7)
-script = ExtResource("double_porte")
-[node name="Collision" type="CollisionShape3D" parent="Intervention/PorteEntree"]
-shape = SubResource("porte_collision")
-[node name="VantailGauche" type="MeshInstance3D" parent="Intervention/PorteEntree"]
-position = Vector3(-0.86, 0, 0)
-mesh = SubResource("porte_vitre")
-material_override = SubResource("vitre")
-[node name="VantailDroit" type="MeshInstance3D" parent="Intervention/PorteEntree"]
-position = Vector3(0.86, 0, 0)
-mesh = SubResource("porte_vitre")
-material_override = SubResource("vitre")
-[node name="PoigneeGauche" type="MeshInstance3D" parent="Intervention/PorteEntree"]
-position = Vector3(-0.18, -0.15, 0.14)
-mesh = SubResource("poignee")
-material_override = SubResource("metal")
-[node name="PoigneeDroite" type="MeshInstance3D" parent="Intervention/PorteEntree"]
-position = Vector3(0.18, -0.15, 0.14)
-mesh = SubResource("poignee")
-material_override = SubResource("metal")
 
 [node name="PointRegroupement" type="Node3D" parent="Intervention"]
 script = ExtResource("point_medical")

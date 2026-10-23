@@ -749,10 +749,13 @@ func actualiser_objectifs() -> void:
 	if conditions_sortie_remplies(salle_actuelle) and not is_room_cleared:
 		salle_actuelle.liberee = true
 		is_room_cleared = true
-		for porte in (salle_actuelle .get_node("Portes") .get_children()):
-			porte.ouvrir()
+		liberer_portes(salle_actuelle)
 		afficher_victoire()
 		room_cleared.emit()
+
+func liberer_portes(salle: Node3D) -> void:
+	for porte in salle.get_node("Portes").get_children():
+		porte.ouvrir()
 
 func conditions_sortie_remplies(salle: Node3D) -> bool:
 	return salle.remaining_enemies == 0

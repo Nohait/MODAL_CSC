@@ -57,13 +57,13 @@ func _actualiser_briefing() -> void:
 	var salle = gestion_salles.salle_actuelle
 	var texte := ""
 	if salle.liberee:
-		texte = "Rejoignez le passage avec les victimes encore en vie."
+		texte = "Rejoignez la sortie avec les victimes encore en vie, puis ouvrez la porte · E."
 	elif salle.remaining_victims > 0:
 		texte = "Libérez la nouvelle victime et gardez-la à l’écart des créatures."
 	elif salle.remaining_enemies > 0:
 		texte = "Protégez votre escorte et sécurisez la salle."
 	else:
-		texte = "Rejoignez le passage avec votre escorte."
+		texte = "Rejoignez la sortie avec votre escorte, puis ouvrez la porte · E."
 	$Briefing/Panneau/Disposition/Consigne.text = texte
 	var vivantes: int = gestion_salles.compter_victimes_escorte_vivantes()
 	$Briefing/Panneau/Disposition/Rappel.text = "%d victime%s dans l’escorte · %d point%s à la prochaine boutique" % [vivantes, "s" if vivantes != 1 else "", vivantes, "s" if vivantes != 1 else ""]

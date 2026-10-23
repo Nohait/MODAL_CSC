@@ -2,6 +2,7 @@ extends "res://scenes/jeu/main.gd"
 
 const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd")
 const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
+const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
 @export var locomotion: ANIMATIONS_FIGURANT = ANIMATIONS_FIGURANT.new()
 @export_group("Rencontre")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
@@ -21,6 +22,7 @@ var arbre_superieur: AnimationTree
 var allure_superieur := 0.0
 var arrive := false
 var changement := false
+var repere_entree: Node3D
 
 func _ready() -> void:
 	# Garder les composants communs, mais ne pas lancer le générateur du classique dehors.
@@ -41,6 +43,10 @@ func _ready() -> void:
 	var attaque = secondaire.get_child(0)
 	if is_instance_valid(attaque.icone): attaque.icone.hide()
 	_creer_superieur()
+	repere_entree = REPERE_PASSAGE.instantiate()
+	repere_entree.position = Vector3(0, 0, -4.15)
+	repere_entree.hide()
+	$Intervention.add_child(repere_entree)
 	dialogue.acteur = superieur
 	dialogue.camera = $CameraRig/Camera3D
 	var foyers: Array[Node] = [$Intervention/FoyerExercice1/Extinction, $Intervention/FoyerExercice2/Extinction]
@@ -119,6 +125,7 @@ func _process(delta: float) -> void:
 	locomotion.actualiser(arbre_superieur, 0.0 if arrive else allure_superieur, delta)
 	_actualiser_proximite()
 	$Intervention/ZoneDash.visible = progression.etape() != null and progression.etape().objectif == ETAPE.Objectif.DASH and progression.dialogue_termine
+	repere_entree.visible = progression.etape() != null and progression.etape().objectif == ETAPE.Objectif.ENTREE and progression.dialogue_termine and not changement
 
 func _unhandled_input(event: InputEvent) -> void:
 	if changement or get_tree().paused or not event.is_action_pressed("interact") or event.is_echo(): return
@@ -173,7 +180,12 @@ func _actualiser_briefing() -> void:
 func _entrer() -> void:
 	if changement: return
 	changement = true
+	repere_entree.hide()
 	$player.extincteur.stop_primary_attack()
+	var porte = $Intervention/PorteEntree
+	porte.ouvrir()
+	if not porte.ouverte: await porte.ouverture_terminee
+	if $player.BarreDeVie.value <= 0: return
 	Reglages.chargement.chargement_echoue.connect(func(): changement = false, CONNECT_ONE_SHOT)
 	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).ouvrir_salle(self, &"sauvetage")
 

@@ -3,6 +3,7 @@ extends "res://scenes/interfaces/menus/navigation_menus.gd"
 var confirmation_suppression: Window
 var message_sauvegarde: Label
 var mode_suppression := "zombie"
+var reprise_tutoriel: Node
 @export_range(0.2, 1.2, 0.05) var duree_depart := 0.5
 var temps_titre := 0.0
 
@@ -36,17 +37,19 @@ func _ready() -> void:
 	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	%ModeZombie.pressed.connect(_jouer_zombie)
 	%Tutoriel.pressed.connect(_jouer_tutoriel)
-	var reprise_tutoriel = preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree())
-	%Tutoriel.text = "Continuer le tutoriel" if reprise_tutoriel.disponible() else "Tutoriel"
+	reprise_tutoriel = preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree())
+	reprise_tutoriel.charger()
+	reprise_tutoriel.sauvegarde_changee.connect(_actualiser_tutoriel)
 	%SupprimerZombie.pressed.connect(_demander_suppression.bind("zombie"))
 	%SupprimerClassique.pressed.connect(_demander_suppression.bind("classique"))
+	%SupprimerTutoriel.pressed.connect(_demander_suppression.bind("tutoriel"))
 	_creer_confirmation_suppression()
 	SauvegardeClassique.charger()
 	SauvegardeClassique.sauvegarde_changee.connect(_actualiser_classique)
 	_actualiser_classique()
 	SauvegardeZombie.charger()
 	SauvegardeZombie.sauvegarde_changee.connect(_actualiser_zombie)
-	for bouton in [%SupprimerZombie, %SupprimerClassique]:
+	for bouton in [%SupprimerZombie, %SupprimerClassique, %SupprimerTutoriel]:
 		# Une icône remplit le bouton sans dépendre de la taille du caractère dans la police.
 		bouton.text = ""
 		bouton.icone.texture = preload("res://assets/textures/interfaces/titre/croix_suppression.svg")
@@ -62,6 +65,7 @@ func _ready() -> void:
 		for etat in ["font_color", "font_hover_color", "font_pressed_color"]:
 			bouton.add_theme_color_override(etat, Color.WHITE)
 	_actualiser_zombie()
+	_actualiser_tutoriel()
 	%Succes.pressed.connect($MenuSucces.ouvrir)
 	%Options.pressed.connect(Reglages.ouvrir)
 	%Quitter.pressed.connect(get_tree().quit)
@@ -85,6 +89,12 @@ func _jouer_zombie() -> void:
 	else:
 		SauvegardeZombie.reprise.clear()
 		changer_scene("res://scenes/modes/zombie/interfaces/selection_maps/selection_maps.tscn")
+
+func _actualiser_tutoriel() -> void:
+	var disponible: bool = reprise_tutoriel.disponible()
+	%Tutoriel.text = "Continuer le tutoriel" if disponible else "Tutoriel"
+	%Tutoriel.tooltip_text = "Reprendre la formation en cours" if disponible else "Commencer le tutoriel depuis le début"
+	%SupprimerTutoriel.visible = disponible
 
 func _creer_confirmation_suppression() -> void:
 	confirmation_suppression = Window.new()
@@ -142,12 +152,21 @@ func _creer_confirmation_suppression() -> void:
 
 func _demander_suppression(mode: String = "zombie") -> void:
 	mode_suppression = mode
-	message_sauvegarde.text = "Supprimer cette partie %s ?\nVotre progression sera perdue.\nLes succès et les records seront conservés." % mode
+	if mode == "tutoriel":
+		message_sauvegarde.text = "Recommencer le tutoriel depuis le début ?\nLe point de reprise actuel sera supprimé.\nLes succès et les déblocages seront conservés."
+	else:
+		message_sauvegarde.text = "Supprimer cette partie %s ?\nVotre progression sera perdue.\nLes succès et les records seront conservés." % mode
 	confirmation_suppression.popup_centered()
 
 func _supprimer_sauvegarde() -> void:
-	var sauvegarde = SauvegardeZombie if mode_suppression == "zombie" else SauvegardeClassique
-	if sauvegarde.supprimer():
+	var sauvegarde: Node
+	match mode_suppression:
+		"zombie": sauvegarde = SauvegardeZombie
+		"classique": sauvegarde = SauvegardeClassique
+		"tutoriel": sauvegarde = reprise_tutoriel
+		_: return
+	var suppression_reussie: bool = reprise_tutoriel.reinitialiser() if mode_suppression == "tutoriel" else sauvegarde.supprimer()
+	if suppression_reussie:
 		confirmation_suppression.hide()
 	else:
 		message_sauvegarde.text = "Impossible de supprimer la sauvegarde.\nVérifiez les droits d’accès au fichier."

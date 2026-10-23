@@ -4,6 +4,7 @@ signal consigne_changee
 signal ravitaillement_effectue
 signal carte_acquise
 signal salle_reussie
+@export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 2.2
 var progression = preload("res://scenes/modes/tutoriel/07_ravitaillement/progression_ravitaillement.gd").new()
 var actif := false
 var termine: bool:
@@ -13,15 +14,17 @@ var carte: StringName:
 var joueur
 var gestion
 var pompier
+var decor
 var sortie
 var sortie_ouverte := false
+var ouverture_sortie_en_cours := false
 const POSITION_POSTE := Vector3(-2, 1, -34)
 
 func _ready() -> void:
-	var decor = preload("res://scenes/modes/tutoriel/07_ravitaillement/decor_ravitaillement.gd").new()
+	decor = preload("res://scenes/modes/tutoriel/07_ravitaillement/decor_ravitaillement.gd").new()
 	add_child(decor)
 	sortie = decor.sortie
-	sortie.ouverte.connect(func(): sortie_ouverte = true)
+	sortie.ouverture_terminee.connect(func(): sortie_ouverte = true)
 
 func preparer(personnage, ameliorations, camera: Camera3D) -> void:
 	if actif: return
@@ -51,21 +54,33 @@ func interagir() -> void:
 func _sur_acquisition(identifiant: StringName) -> void:
 	if not progression.acquerir(identifiant): return
 	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
-	sortie.ouvrir()
+	decor.autoriser_sortie()
 	carte_acquise.emit()
 	consigne_changee.emit()
 
 func consigne() -> String:
 	if termine: return "La voie est libre. L’équipe prend le relais."
 	if carte == &"": return "E · Parlez au pompier pour choisir votre amélioration."
-	return "Essayez votre amélioration sur le mannequin, puis rejoignez la porte."
+	return "Essayez votre amélioration sur le mannequin, puis ouvrez la porte · E."
 
 func _process(_delta: float) -> void:
 	if not actif or termine or joueur.est_mort: return
 	var ecart: Vector3 = joueur.global_position - POSITION_POSTE
 	ecart.y = 0
 	if ecart.length() < 2.5 and Input.is_action_just_pressed("interact"): interagir()
-	if progression.verifier_sortie(joueur.global_position, sortie_ouverte):
+	var ecart_sortie: Vector3 = joueur.global_position - sortie.global_position
+	ecart_sortie.y = 0.0
+	if carte != &"" and ecart_sortie.length() < distance_ouverture_sortie and Input.is_action_just_pressed("interact"):
+		_ouvrir_sortie()
+
+func _ouvrir_sortie() -> void:
+	if ouverture_sortie_en_cours or sortie_ouverte: return
+	ouverture_sortie_en_cours = true
+	decor.masquer_repere_sortie()
+	sortie.ouvrir()
+	if not sortie.ouverte: await sortie.ouverture_terminee
+	if joueur.est_mort: return
+	if progression.valider_sortie(sortie_ouverte):
 		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		consigne_changee.emit()
 		salle_reussie.emit()

@@ -4,6 +4,8 @@ extends Node3D
 signal ouverte
 
 @export_group("Ouverture")
+## État réservé aux portes d'arrivée déjà franchies lors d'un changement de salle.
+@export var deja_ouverte := false
 ## Angle autour de Y : le signe choisit le côté d'ouverture.
 @export_range(-180.0, 180.0, 1.0) var angle_ouverture: float = -175.0
 ## Une durée courte donne l'impression que le battant est poussé violemment.
@@ -14,6 +16,7 @@ signal ouverte
 @onready var charniere: Node3D = $Charniere
 @onready var voyant: MeshInstance3D = $Voyant
 var ouverture_declenchee := false
+var est_ouverte := false
 var materiau_voyant: StandardMaterial3D
 var materiau_pictogramme: ShaderMaterial
 
@@ -24,6 +27,20 @@ func _ready() -> void:
 	voyant.material_override = materiau_voyant
 	materiau_pictogramme = $Voyant/Pictogramme.get_active_material(0).duplicate() as ShaderMaterial
 	$Voyant/Pictogramme.material_override = materiau_pictogramme
+	if deja_ouverte:
+		autoriser()
+		charniere.rotation_degrees.y += angle_ouverture
+		ouverture_declenchee = true
+		est_ouverte = true
+
+
+func autoriser() -> void:
+	var vert := Color(0.035, 0.65, 0.12)
+	# Fond, pictogramme et lumière changent ensemble ; le personnage et le texte restent blancs.
+	materiau_voyant.albedo_color = vert
+	materiau_voyant.emission = vert
+	materiau_pictogramme.set_shader_parameter("couleur", vert)
+	$Voyant/LumiereSortie.light_color = vert
 
 
 func ouvrir() -> void:
@@ -31,12 +48,7 @@ func ouvrir() -> void:
 	if ouverture_declenchee:
 		return
 	ouverture_declenchee = true
-	var vert := Color(0.035, 0.65, 0.12)
-	# Fond, pictogramme et lumière changent ensemble ; le personnage et le texte restent blancs.
-	materiau_voyant.albedo_color = vert
-	materiau_voyant.emission = vert
-	materiau_pictogramme.set_shader_parameter("couleur", vert)
-	$Voyant/LumiereSortie.light_color = vert
+	autoriser()
 
 
 	# La charnière est au bord du battant : ses enfants tournent autour de ce bord.
@@ -53,4 +65,6 @@ func ouvrir() -> void:
 	# Petit rebond qui ralentit, puis retour plus doux contre le mur.
 	animation.tween_property(charniere, "rotation_degrees:y", angle_retour, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	animation.tween_property(charniere, "rotation_degrees:y", angle_final, 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	animation.tween_callback(func(): ouverte.emit())
+	animation.tween_callback(func():
+		est_ouverte = true
+		ouverte.emit())

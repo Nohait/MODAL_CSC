@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[node name="ReperePassage" type="Node3D"]
+
+[node name="Indication" type="Label3D" parent="."]
+position = Vector3(0, 1.45, 0)
+text = "OUVRIR · E"
+font_size = 54
+pixel_size = 0.006
+modulate = Color(0.62, 1, 0.76, 1)
+outline_modulate = Color(0.025, 0.08, 0.045, 1)
+outline_size = 8
+billboard = 1
+no_depth_test = false

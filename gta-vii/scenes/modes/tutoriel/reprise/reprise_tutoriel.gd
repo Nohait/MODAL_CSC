@@ -104,6 +104,13 @@ func recommencer() -> void:
 	if _debug(): en_attente.reprise_debug = true
 	_charger(CATALOGUE.trouver(StringName(point_courant.salle)).scene)
 
+func reinitialiser() -> bool:
+	if not supprimer(): return false
+	point_courant.clear()
+	en_attente.clear()
+	transition_en_cours = false
+	return true
+
 func _charger(chemin: String) -> void:
 	if Reglages.chargement.en_cours: return
 	transition_en_cours = true

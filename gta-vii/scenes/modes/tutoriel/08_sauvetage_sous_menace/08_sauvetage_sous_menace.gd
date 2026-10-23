@@ -1,6 +1,8 @@
 extends Node3D
 
 signal consigne_changee
+signal salle_reussie
+@export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 2.4
 const SBIRE = preload("res://scenes/ennemis/mobiles/sbire.tscn")
 var progression = preload("res://scenes/modes/tutoriel/08_sauvetage_sous_menace/progression_sauvetage_sous_menace.gd").new()
 var decor
@@ -15,6 +17,7 @@ var victime_blessee := false
 var interface_echec
 var cartes_depart: Dictionary
 var ouverture_en_cours := false
+var sortie_en_cours := false
 
 func preparer(personnage, gestion_escorte, ameliorations) -> void:
 	joueur = personnage
@@ -98,7 +101,13 @@ func recommencer() -> void:
 	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).recommencer()
 
 func _physics_process(delta: float) -> void:
-	if not is_instance_valid(joueur) or progression.perdu or progression.reussi: return
+	if not is_instance_valid(joueur) or progression.perdu: return
+	if progression.reussi:
+		var ecart_sortie: Vector3 = joueur.global_position - decor.sortie.global_position
+		ecart_sortie.y = 0.0
+		if ecart_sortie.length() < distance_ouverture_sortie and Input.is_action_just_pressed("interact"):
+			_ouvrir_sortie()
+		return
 	var porte_proche: bool = joueur.global_position.distance_to(Vector3(0, 1, -53.2)) < 2.0
 	if porte_proche and Input.is_action_just_pressed("interact"): _ouvrir_porte()
 	if is_instance_valid(victime) and victime.vie < vie_precedente: victime_blessee = true
@@ -106,6 +115,7 @@ func _physics_process(delta: float) -> void:
 	if progression.verifier(joueur, victime, escorte):
 		preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 		rappel = ""
+		decor.autoriser_sortie()
 		consigne_changee.emit()
 		return
 	temps_rappel += delta
@@ -123,3 +133,12 @@ func _physics_process(delta: float) -> void:
 	elif progression.dans_zone(joueur.global_position): rappel = "L’habitant est encore derrière vous. Attendez-le ou allez le chercher."
 	else: rappel = "Rejoignez ensemble la zone sécurisée."
 	consigne_changee.emit()
+
+func _ouvrir_sortie() -> void:
+	if sortie_en_cours or decor.sortie.est_ouverte: return
+	sortie_en_cours = true
+	decor.masquer_repere_sortie()
+	decor.sortie.ouvrir()
+	if not decor.sortie.est_ouverte: await decor.sortie.ouverte
+	if progression.perdu or joueur.est_mort: return
+	salle_reussie.emit()

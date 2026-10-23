@@ -11,12 +11,78 @@ signal parcours_termine
 @export_range(4.0, 15.0, 0.5) var distance_ennemi_cible := 7.5
 @export_range(2.0, 8.0, 0.5) var distance_securite_entree := 3.5
 @export_range(2.0, 8.0, 0.5) var distance_securite_victime := 3.0
+@export_range(1.5, 4.0, 0.1) var distance_ouverture_porte := 2.5
 var fin_emise := false
 var sauvetage_retenu: Node3D
+var ouverture_sortie_en_cours := false
+const PORTE_ARRIVEE = preload("res://scenes/decors/porte_sortie.tscn")
+const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
 
 func _preparer_salle(indice: int) -> void:
 	if indice >= 0 and indice < graines_fixes.size(): seed(graines_fixes[indice])
 	super._preparer_salle(indice)
+	var salle := salles.get_child(indice)
+	_masquer_plafonniers(salle)
+	for sortie in salle.get_node("Portes").get_children():
+		_masquer_signalisation_sortie(sortie)
+	if salle.entree.has_node("PorteArriveeTutoriel"): return
+	var porte = PORTE_ARRIVEE.instantiate()
+	porte.name = "PorteArriveeTutoriel"
+	porte.deja_ouverte = true
+	porte.rotation.y = PI
+	porte.position = Vector3(0, 0.1, -0.12)
+	salle.entree.add_child(porte)
+	_masquer_signalisation_sortie(porte)
+
+func _masquer_signalisation_sortie(porte: Node) -> void:
+	var voyant := porte.get_node_or_null("Voyant") as Node3D
+	if voyant != null: voyant.hide()
+	var boitier := porte.get_node_or_null("BoitierSortie") as Node3D
+	if boitier != null: boitier.hide()
+
+func _masquer_plafonniers(salle: Node3D) -> void:
+	for support in salle.find_children("Plafonnier", "Node3D", true, false):
+		for enfant in support.get_children():
+			if enfant is Light3D: continue
+			if enfant is Node3D: enfant.hide()
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	if transition_en_cours or ouverture_sortie_en_cours or not is_instance_valid(salle_actuelle): return
+	if not salle_actuelle.liberee or not Input.is_action_just_pressed("interact"): return
+	var porte := _porte_sortie_proche()
+	if porte != null: _ouvrir_sortie(porte)
+
+func _porte_sortie_proche() -> Node3D:
+	var meilleure: Node3D
+	var meilleure_distance := distance_ouverture_porte
+	for candidate in salle_actuelle.get_node("Portes").get_children():
+		var ecart: Vector3 = candidate.global_position - joueur.global_position
+		ecart.y = 0.0
+		if ecart.length() <= meilleure_distance:
+			meilleure = candidate
+			meilleure_distance = ecart.length()
+	return meilleure
+
+func _ouvrir_sortie(porte: Node3D) -> void:
+	ouverture_sortie_en_cours = true
+	var repere := porte.get_node_or_null("ReperePassage")
+	if repere != null: repere.hide()
+	porte.ouvrir()
+	if not porte.est_ouverte: await porte.ouverte
+	if not is_instance_valid(salle_actuelle) or joueur.est_mort:
+		ouverture_sortie_en_cours = false
+		return
+	_on_sortie_franchie(salle_actuelle)
+
+func liberer_portes(salle: Node3D) -> void:
+	for porte in salle.get_node("Portes").get_children():
+		porte.autoriser()
+		if porte.has_node("ReperePassage"): continue
+		var repere := REPERE_PASSAGE.instantiate()
+		repere.name = "ReperePassage"
+		repere.position = Vector3(0, 0, 1.65)
+		porte.add_child(repere)
 
 func peupler_salle(salle: Node3D) -> void:
 	var emplacements: Array[Vector3] = salle.points_spawn.duplicate()
@@ -98,6 +164,7 @@ func preparer_sortie() -> void:
 
 func passer_salle_suivante() -> void:
 	if indice_salle + 1 < salles.get_child_count():
+		ouverture_sortie_en_cours = false
 		await activer_salle(indice_salle + 1)
 	elif not fin_emise:
 		fin_emise = true

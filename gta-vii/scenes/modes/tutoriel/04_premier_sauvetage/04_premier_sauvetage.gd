@@ -1,12 +1,14 @@
 extends "res://scenes/jeu/main.gd"
 
 signal salle_prete
+@export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 1.8
 @onready var progression = $ProgressionSauvetage
 @onready var salle: Node3D = $SalleFixe
 @onready var victime: CharacterBody3D = $SalleFixe/Victimes/Habitant
 var releve: Node3D
 var passage_salle_suivante := false
 var porte_suivante: StaticBody3D
+var repere_sortie: Node3D
 
 func _ready() -> void:
 	# Le socle commun est conservé, mais aucun parcours ni point de reprise classique n’est lancé.
@@ -103,12 +105,7 @@ func _confirmer_relais() -> void:
 	$Briefing/Panneau/Marge/Disposition/Consigne.text = "L’habitant est pris en charge. Continuez la recherche."
 	$Briefing/Panneau/Marge/Disposition/Rappel.text = "Ouvrez la porte au fond du palier · E."
 	$Briefing/Panneau/Marge/Disposition/Rappel.show()
-	var indication := Label3D.new()
-	indication.text = "POURSUIVRE · E"
-	indication.font_size = 48
-	indication.pixel_size = 0.008
-	indication.position = Vector3(0, 2, -17.8)
-	salle.add_child(indication)
+	repere_sortie.show()
 
 func _preparer_porte_suivante() -> void:
 	# Ouvrir une véritable embrasure dans le fond du palier, sans changer la scène commune.
@@ -117,10 +114,10 @@ func _preparer_porte_suivante() -> void:
 	fond.queue_free()
 	for cote in [-1, 1]:
 		var mur := StaticBody3D.new()
-		mur.position = Vector3(cote * 3, 0.6, -18.15)
+		mur.position = Vector3(cote * 3.05, 1.8, -18.15)
 		var visuel := MeshInstance3D.new()
 		var mesh := BoxMesh.new()
-		mesh.size = Vector3(2.6, 1.2, 0.3)
+		mesh.size = Vector3(2.5, 3.6, 0.3)
 		mesh.material = materiau
 		visuel.mesh = mesh
 		mur.add_child(visuel)
@@ -133,11 +130,16 @@ func _preparer_porte_suivante() -> void:
 	porte_suivante = preload("res://scenes/modes/tutoriel/commun/decors/double_porte.tscn").instantiate()
 	porte_suivante.position = Vector3(0, 1.8, -18.15)
 	salle.add_child(porte_suivante)
+	repere_sortie = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn").instantiate()
+	repere_sortie.position = Vector3(0, 0, -16.45)
+	repere_sortie.hide()
+	salle.add_child(repere_sortie)
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(releve) or not releve.terminee or passage_salle_suivante: return
-	if $player.global_position.distance_to(Vector3(0, 1, -17)) < 1.8 and Input.is_action_just_pressed("interact"):
+	if $player.global_position.distance_to(Vector3(0, 1, -17)) < distance_ouverture_sortie and Input.is_action_just_pressed("interact"):
 		passage_salle_suivante = true
+		repere_sortie.hide()
 		porte_suivante.ouvrir()
 		if not porte_suivante.ouverte: await porte_suivante.ouverture_terminee
 		if $player.BarreDeVie.value <= 0: return
