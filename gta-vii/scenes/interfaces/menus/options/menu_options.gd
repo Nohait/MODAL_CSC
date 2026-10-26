@@ -86,6 +86,7 @@ func _habiller_boutons(parent: Node) -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://scenes/interfaces/menus/onglet_carnet.gdshader")
 	mat.set_shader_parameter("selection", 0.0)
+	mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 	mat.set_shader_parameter("largeur_bord", 4.0)
 	mat.set_shader_parameter("rayon_coin", 6.0)
 	mat.set_shader_parameter("intensite_braises", 0.3)

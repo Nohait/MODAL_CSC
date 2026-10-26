@@ -62,6 +62,7 @@ func _ready() -> void:
 		var fond: TextureRect = bouton.fond
 		fond.material = ShaderMaterial.new()
 		fond.material.shader = preload("res://scenes/interfaces/menus/titre/bouton_supprimer.gdshader")
+		fond.material.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 		for etat in ["font_color", "font_hover_color", "font_pressed_color"]:
 			bouton.add_theme_color_override(etat, Color.WHITE)
 	_actualiser_zombie()

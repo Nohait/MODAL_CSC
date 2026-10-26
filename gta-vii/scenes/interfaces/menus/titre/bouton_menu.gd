@@ -2,6 +2,7 @@ extends Button
 
 const PLAQUE = preload("res://assets/textures/interfaces/titre/plaque_bouton.svg")
 const REFLET = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
+const PLASTIQUE = preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg")
 const POLICE = preload("res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf")
 
 
@@ -34,6 +35,7 @@ func _ready() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = REFLET
 	mat.set_shader_parameter("survol", 0.0)
+	mat.set_shader_parameter("plastique", PLASTIQUE)
 	fond.material = mat
 	add_child(fond)
 	

@@ -99,6 +99,7 @@ func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 			var mat := ShaderMaterial.new()
 			mat.shader = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
 			mat.set_shader_parameter("survol", 0.5)
+			mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 			plaque.material = mat
 			fonds_records.append(plaque)
 	elif id == "victimes_perdues": record.text = "Captives, escorte et camion"

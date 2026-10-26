@@ -31,6 +31,10 @@ var proportion_retard := 0.0:
 
 func _ready() -> void:
 	if texture_cadre != null: cadre.texture = texture_cadre
+	# Le matériau est propre à chaque jauge pour respecter la largeur du cadre étendu.
+	var materiau_cadre := cadre.material.duplicate() as ShaderMaterial
+	cadre.material = materiau_cadre
+	materiau_cadre.set_shader_parameter("taille", size)
 	# Réserver l'extension à l'attaque secondaire sans allonger la barre de mousse.
 	remplissage.offset_right -= largeur_extension
 	texte_valeur.offset_left -= largeur_extension

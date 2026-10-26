@@ -18,10 +18,12 @@
 [ext_resource type="Shader" path="res://scenes/interfaces/menus/onglet_carnet.gdshader" id="11_onglet"]
 
 [ext_resource type="FontFile" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="navigation_font"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg" id="plastic"]
 
 [sub_resource type="ShaderMaterial" id="PochetteBonus"]
 shader = ExtResource("5_booster")
 shader_parameter/taille = Vector2(260, 60)
+shader_parameter/plastique = ExtResource("plastic")
 
 [sub_resource type="StyleBoxEmpty" id="RaccourciVide"]
 
@@ -34,6 +36,7 @@ shader_parameter/intensite_braises = 0.55
 [sub_resource type="ShaderMaterial" id="OngletBonusPapier"]
 shader = ExtResource("11_onglet")
 shader_parameter/taille = Vector2(170, 54)
+shader_parameter/plastique = ExtResource("plastic")
 shader_parameter/largeur_bord = 5.0
 shader_parameter/rayon_coin = 6.0
 shader_parameter/intensite_braises = 0.3
@@ -41,6 +44,7 @@ shader_parameter/intensite_braises = 0.3
 [sub_resource type="ShaderMaterial" id="OngletGlossairePapier"]
 shader = ExtResource("11_onglet")
 shader_parameter/taille = Vector2(170, 54)
+shader_parameter/plastique = ExtResource("plastic")
 shader_parameter/largeur_bord = 5.0
 shader_parameter/rayon_coin = 6.0
 shader_parameter/intensite_braises = 0.3

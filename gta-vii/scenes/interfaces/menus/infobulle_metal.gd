@@ -26,6 +26,7 @@ func _ready() -> void:
 	mat.shader = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
 	mat.set_shader_parameter("survol", 0.0)
 	mat.set_shader_parameter("eclaircissement", 0.12)
+	mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 	fond.material = mat
 	libelle = Label.new()
 	libelle.text = texte

@@ -5,11 +5,19 @@
 [ext_resource type="Shader" path="res://scenes/interfaces/hud/remplissage_equipement.gdshader" id="3"]
 [ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_vie.svg" id="5"]
+[ext_resource type="Shader" path="res://scenes/interfaces/hud/cadre_equipement.gdshader" id="6_cadre"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg" id="7_plastique"]
 
 [sub_resource type="StyleBoxEmpty" id="Vide"]
 
 [sub_resource type="ShaderMaterial" id="Remplissage"]
 shader = ExtResource("3")
+
+[sub_resource type="ShaderMaterial" id="CadrePlastique"]
+shader = ExtResource("6_cadre")
+shader_parameter/taille = Vector2(320, 70)
+shader_parameter/intensite = 0.48
+shader_parameter/plastique = ExtResource("7_plastique")
 
 [sub_resource type="Gradient" id="Blanc"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
@@ -31,6 +39,7 @@ script = ExtResource("1")
 pictogramme = ExtResource("5")
 
 [node name="Cadre" type="TextureRect" parent="."]
+material = SubResource("CadrePlastique")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
