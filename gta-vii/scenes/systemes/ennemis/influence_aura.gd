@@ -1,5 +1,7 @@
 extends MeshInstance3D
 
+const PLACEMENT_ZONE_SOL = preload("res://scenes/systemes/ennemis/placement_zone_sol.gd")
+
 func _ready() -> void:
 	var forme := PlaneMesh.new()
 	forme.size = Vector2(0.8, 0.8)
@@ -9,8 +11,7 @@ func _ready() -> void:
 	mat.set_shader_parameter("puissance", 0.45)
 	material_override = mat
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var collision = get_parent().get_node_or_null("CollisionShape3D")
-	position.y = collision.position.y - collision.shape.height * 0.5 + 0.04 if collision != null and collision.shape is CapsuleShape3D else -0.66
+	position.y = PLACEMENT_ZONE_SOL.hauteur_locale(get_parent(), 0.04, -0.66)
 
 func actualiser(vitesse: float, degats: float, resistance: float) -> void:
 	# Ce sceau indique un bonus reçu, il ne crée pas une nouvelle mutation.

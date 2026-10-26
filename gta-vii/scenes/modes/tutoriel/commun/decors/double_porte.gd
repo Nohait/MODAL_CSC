@@ -3,12 +3,15 @@ extends StaticBody3D
 signal ouverture_terminee
 signal fermeture_terminee
 @export var deja_ouverte := false
+@export var afficher_encadrement := true
 var ouverture_declenchee := false
 var ouverte := false
 var fermeture_en_cours := false
 var charnieres: Array[Node3D] = []
 
 func _ready() -> void:
+	for element in [$MontantGauche, $MontantDroit, $Linteau]:
+		element.visible = afficher_encadrement
 	for cote in ["Gauche", "Droit"]:
 		var charniere := Node3D.new()
 		charniere.name = "Charniere" + cote

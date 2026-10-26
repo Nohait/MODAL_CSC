@@ -54,7 +54,8 @@ func _liberee(_habitante) -> void:
 	if progression.liberee or progression.perdu: return
 	progression.liberee = true
 	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
-	rappel = "La personne vous suit. Approchez de la porte et ouvrez-la avec E."
+	rappel = "La personne vous suit. Approchez de la porte et ouvrez-la."
+	decor.autoriser_porte_interieure()
 	consigne_changee.emit()
 
 func _ouvrir_porte() -> void:
@@ -64,6 +65,7 @@ func _ouvrir_porte() -> void:
 		consigne_changee.emit()
 		return
 	ouverture_en_cours = true
+	decor.masquer_repere_porte()
 	decor.porte.ouvrir()
 	await decor.porte.ouverture_terminee
 	if progression.perdu or joueur.est_mort: return
@@ -122,7 +124,7 @@ func _physics_process(delta: float) -> void:
 	if temps_rappel < 12.0: return
 	temps_rappel = 0.0
 	if not progression.liberee: rappel = "L’habitant est coincé. Approchez-vous et aidez-le à se dégager."
-	elif not progression.porte_ouverte: rappel = "Ouvrez la porte avec E pour poursuivre avec la personne."
+	elif not progression.porte_ouverte: rappel = "Ouvrez la porte pour poursuivre avec la personne."
 	elif victime_blessee:
 		rappel = "L’habitant est blessé ! Écartez la créature de lui."
 		victime_blessee = false

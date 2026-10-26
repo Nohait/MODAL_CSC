@@ -1,5 +1,7 @@
 extends Node3D
 
+const PLACEMENT_ZONE_SOL = preload("res://scenes/systemes/ennemis/placement_zone_sol.gd")
+
 var definition: ModificateurElite
 var horloge := 0.0
 var teinte: ShaderMaterial
@@ -51,11 +53,10 @@ func _habiller() -> void:
 		overlays[mesh] = mesh.material_overlay
 		mesh.material_overlay = teinte
 	anneau = _anneau(0.8, 0.022)
-	# La racine des mobiles se trouve au-dessus du sol.
-	anneau.position.y = -cible.get_node("CollisionShape3D").shape.height / 2.0 if cible.has_node("CollisionShape3D") and cible.get_node("CollisionShape3D").shape is CapsuleShape3D else -0.7
+	anneau.position.y = PLACEMENT_ZONE_SOL.hauteur_locale(cible, 0.03, -0.7)
 	if definition.aura != "aucune" and not presentation:
 		var zone := _anneau(definition.rayon_aura / cible.scale.x, 0.025)
-		zone.position.y = anneau.position.y + 0.02
+		zone.position.y = PLACEMENT_ZONE_SOL.hauteur_locale(cible, 0.05, anneau.position.y + 0.02)
 		zone.material_override.set_shader_parameter("aura", true)
 		zone.material_override.set_shader_parameter("puissance", definition.intensite_zone_aura)
 	symbole = Label3D.new()

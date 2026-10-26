@@ -10,20 +10,23 @@ const ARRIVEE := Vector3(10, 0, -64)
 var ennemis: Node3D
 var porte: StaticBody3D
 var sortie: Node3D
+var repere_porte: Node3D
 var repere_sortie: Node3D
 var liaison: NavigationRegion3D
 const PORTE_POSITION := Vector3(0, 1.8, -54)
 
 func _ready() -> void:
 	STYLE.construire_plan(self, plan)
-	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -46), 3.6)
+	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -46), STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE)
 	var porte_arrivee = DOUBLE_PORTE.instantiate()
 	porte_arrivee.name = "PorteArrivee"
 	porte_arrivee.position = Vector3(0, 1.8, -46)
 	porte_arrivee.rotation.y = PI
 	add_child(porte_arrivee)
 	STYLE.ouvrir_mur(self, &"MurFixe5", Vector3(14, 0, -63), 2.5)
-	for cote in [-1, 1]: STYLE.bloc(self, "Cloison" + str(cote), Vector3(cote * 3.8425, 0.6, -54), Vector3(4.315, 1.2, 0.3), STYLE.MUR)
+	var largeur_cloison: float = (12.0 - STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE) * 0.5
+	var centre_cloison: float = STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE * 0.5 + largeur_cloison * 0.5
+	for cote in [-1, 1]: STYLE.bloc(self, "Cloison" + str(cote), Vector3(cote * centre_cloison, 0.6, -54), Vector3(largeur_cloison, 1.2, 0.3), STYLE.MUR)
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/loungeSofa.glb"), Vector3(-5.3, 0, -50), PI * 0.5)
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/tableCoffee.glb"), Vector3(-5, 0, -48))
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(3.3, 0, -48))
@@ -36,6 +39,10 @@ func _ready() -> void:
 	porte = DOUBLE_PORTE.instantiate()
 	porte.position = PORTE_POSITION
 	add_child(porte)
+	repere_porte = REPERE_PASSAGE.instantiate()
+	repere_porte.position = PORTE_POSITION + Vector3(0, -1.8, 1.65)
+	repere_porte.hide()
+	add_child(repere_porte)
 	var repere = preload("res://scenes/modes/tutoriel/commun/decors/zone_securite.tscn").instantiate()
 	repere.position = ARRIVEE
 	add_child(repere)
@@ -79,6 +86,12 @@ func _ready() -> void:
 func autoriser_sortie() -> void:
 	sortie.autoriser()
 	repere_sortie.show()
+
+func autoriser_porte_interieure() -> void:
+	repere_porte.show()
+
+func masquer_repere_porte() -> void:
+	repere_porte.hide()
 
 func masquer_repere_sortie() -> void:
 	repere_sortie.hide()

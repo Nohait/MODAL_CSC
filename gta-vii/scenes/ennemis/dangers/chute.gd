@@ -91,9 +91,9 @@ func _process(delta: float) -> void:
 func _creer_flaque() -> void:
 	var flaque := FLAQUE.instantiate()
 	# Enfant du parent, pas de la zone : la zone se supprime juste après.
-	# get_parent().add_child(flaque)
-	var flaques = get_parent().get_parent().get_node("FlaquesDeFeu")
-	flaques.add_child(flaque)
+	get_parent().add_child(flaque)
+	#var flaques = get_parent().get_parent().get_node("FlaquesDeFeu")
+	#flaques.add_child(flaque)
 	
 	flaque.global_position = global_position
 	flaque.scale *= rayon*3.0/2.0

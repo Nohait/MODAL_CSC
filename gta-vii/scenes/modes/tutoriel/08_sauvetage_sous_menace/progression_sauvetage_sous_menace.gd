@@ -19,8 +19,8 @@ func verifier(joueur, victime, escorte) -> bool:
 
 func consigne() -> String:
 	if perdu: return "L’habitant n’a pas survécu."
-	if reussi: return "La victime est à l’abri et la menace est écartée. Ouvrez la porte de sortie · E."
+	if reussi: return "La victime est à l’abri et la menace est écartée. Ouvrez la porte de sortie."
 	if not liberee: return "Aidez l’habitant à se dégager, puis accompagnez-le à l’abri."
-	if not porte_ouverte: return "La personne vous suit. Ouvrez la porte avec E pour poursuivre."
+	if not porte_ouverte: return "La personne vous suit. Ouvrez la porte pour poursuivre."
 	if not vaincu: return "Gardez la créature à distance de l’habitant."
 	return "Accompagnez l’habitant jusqu’à la zone sécurisée."

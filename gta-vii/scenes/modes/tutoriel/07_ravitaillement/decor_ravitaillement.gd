@@ -10,7 +10,7 @@ var repere_sortie: Node3D
 
 func _ready() -> void:
 	STYLE.construire_plan(self, plan)
-	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -30), 3.6)
+	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -30), STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE)
 	var porte_arrivee = PORTE.instantiate()
 	porte_arrivee.name = "PorteArrivee"
 	porte_arrivee.position = Vector3(0, 1.8, -30)
@@ -21,7 +21,7 @@ func _ready() -> void:
 	var mannequin = preload("res://scenes/modes/tutoriel/07_ravitaillement/mannequin_entrainement.gd").new()
 	mannequin.position = Vector3(3, 0, -37)
 	add_child(mannequin)
-	STYLE.ouvrir_mur(self, &"MurFixe4", Vector3(0, 0, -46), 3.6)
+	STYLE.ouvrir_mur(self, &"MurFixe4", Vector3(0, 0, -46), STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE)
 	sortie = PORTE.instantiate()
 	sortie.name = "PorteSortie"
 	sortie.position = Vector3(0, 1.8, -46)

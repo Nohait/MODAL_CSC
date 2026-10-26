@@ -1,6 +1,7 @@
 extends "res://scenes/jeu/main.gd"
 
 signal salle_prete
+const STYLE = preload("res://scenes/modes/tutoriel/commun/decors/construction_interieur.gd")
 @export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 1.8
 @onready var progression = $ProgressionSauvetage
 @onready var salle: Node3D = $SalleFixe
@@ -103,7 +104,7 @@ func _prendre_relais() -> void:
 func _confirmer_relais() -> void:
 	releve.parler("Je m’occupe de la victime. Continue, il reste du monde à l’intérieur.", $player, $CameraRig/Camera3D)
 	$Briefing/Panneau/Marge/Disposition/Consigne.text = "L’habitant est pris en charge. Continuez la recherche."
-	$Briefing/Panneau/Marge/Disposition/Rappel.text = "Ouvrez la porte au fond du palier · E."
+	$Briefing/Panneau/Marge/Disposition/Rappel.text = "Ouvrez la porte au fond du palier."
 	$Briefing/Panneau/Marge/Disposition/Rappel.show()
 	repere_sortie.show()
 
@@ -112,12 +113,15 @@ func _preparer_porte_suivante() -> void:
 	var fond = salle.get_node("PalierFond")
 	var materiau = fond.get_node("Visuel").mesh.material
 	fond.queue_free()
+	var demi_largeur_mur: float = 4.3
+	var largeur_segment: float = demi_largeur_mur - STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE * 0.5
+	var centre_segment: float = STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE * 0.5 + largeur_segment * 0.5
 	for cote in [-1, 1]:
 		var mur := StaticBody3D.new()
-		mur.position = Vector3(cote * 3.05, 1.8, -18.15)
+		mur.position = Vector3(cote * centre_segment, 1.8, -18.15)
 		var visuel := MeshInstance3D.new()
 		var mesh := BoxMesh.new()
-		mesh.size = Vector3(2.5, 3.6, 0.3)
+		mesh.size = Vector3(largeur_segment, 3.6, 0.3)
 		mesh.material = materiau
 		visuel.mesh = mesh
 		mur.add_child(visuel)

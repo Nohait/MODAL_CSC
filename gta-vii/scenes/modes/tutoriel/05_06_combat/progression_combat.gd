@@ -55,12 +55,12 @@ func _terminer_rencontre() -> void:
 	consigne_changee.emit()
 
 func consigne() -> String:
-	if autonome and etat == "observation": return "Avancez à votre rythme. Ouvrez la porte avec E quand vous êtes prêt."
+	if autonome and etat == "observation": return "Avancez à votre rythme. Ouvrez la porte quand vous êtes prêt."
 	if autonome and etat == "learning": return "Dégagez la pièce pour continuer."
-	if not fin_provisoire and etat == "sortie": return "La créature est vaincue. Ouvrez la porte du palier · E."
+	if not fin_provisoire and etat == "sortie": return "La créature est vaincue. Ouvrez la porte du palier."
 	if not fin_provisoire and etat == "reussi": return "La voie est libre. Poursuivez à votre rythme."
 	match etat:
-		"observation": return "Une créature rôde derrière la porte. Ouvrez-la quand vous êtes prêt · E."
+		"observation": return "Une créature rôde derrière la porte. Ouvrez-la quand vous êtes prêt."
 		"learning": return "La mousse atteint aussi les créatures. Gardez vos distances."
 		"transition": return "La créature est vaincue."
 		"sortie": return "La créature est vaincue. Rejoignez la sortie. Vous en rencontrerez d’autres plus tard."

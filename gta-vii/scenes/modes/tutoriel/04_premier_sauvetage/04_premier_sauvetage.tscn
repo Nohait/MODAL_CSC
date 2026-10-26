@@ -62,11 +62,11 @@ material = ExtResource("sol")
 size = Vector3(8, 0.3, 6)
 
 [sub_resource type="BoxMesh" id="mesh_MurEntree"]
-size = Vector3(2.35, 1.2, 0.3)
+size = Vector3(2.25, 1.2, 0.3)
 material = ExtResource("mur")
 
 [sub_resource type="BoxShape3D" id="shape_MurEntree"]
-size = Vector3(2.35, 1.2, 0.3)
+size = Vector3(2.25, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_MurOuest"]
 size = Vector3(0.3, 1.2, 8)
@@ -192,20 +192,14 @@ cast_shadow = 0
 
 [node name="Foyers" type="Node3D" parent="SalleFixe/Passage"]
 
-[node name="Foyer1" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
-position = Vector3(-1, 0, 0)
-taille = 2.0
-densite_fumee = 0.5
-
-[node name="Foyer2" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
+[node name="Foyer" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
 position = Vector3(0, 0, 0)
 taille = 2.0
 densite_fumee = 0.5
 
-[node name="Foyer3" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
-position = Vector3(1, 0, 0)
-taille = 2.0
-densite_fumee = 0.5
+[node name="Extinction" parent="SalleFixe/Passage/Foyers/Foyer" index="5"]
+duree_extinction = 3.0
+rayon_contact = 1.65
 
 [node name="SolSalle" type="StaticBody3D" parent="SalleFixe"]
 position = Vector3(0, -0.15, 0)
@@ -241,7 +235,7 @@ mesh = SubResource("mesh_SolPalier")
 shape = SubResource("shape_SolPalier")
 
 [node name="MurEntree" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-2.975, 0.6, 4.15)
+position = Vector3(-3.025, 0.6, 4.15)
 collision_layer = 1
 collision_mask = 0
 
@@ -252,7 +246,7 @@ mesh = SubResource("mesh_MurEntree")
 shape = SubResource("shape_MurEntree")
 
 [node name="MurEntreeDroit" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(2.975, 0.6, 4.15)
+position = Vector3(3.025, 0.6, 4.15)
 collision_layer = 1
 collision_mask = 0
 

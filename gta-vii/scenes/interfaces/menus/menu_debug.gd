@@ -84,7 +84,7 @@ func _input(event: InputEvent) -> void:
 func ouvrir() -> void:
 	# Une autre pause appartient à son menu. Attendre aussi la fin d'une transition
 	# pour ne pas suspendre la préparation des chemins de la prochaine salle.
-	if get_tree().paused or salles.transition_en_cours or joueur.est_mort:
+	if get_tree().paused or salles.transition_en_cours or joueur.est_mort or not is_instance_valid(salles.salle_actuelle):
 		return
 	invincibilite.set_pressed_no_signal(joueur.invincible)
 	degats.set_pressed_no_signal(joueur.extincteur.degats_colossaux_test)

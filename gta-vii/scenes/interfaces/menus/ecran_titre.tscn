@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="logo"]
 [ext_resource type="Script" uid="uid://cpqa6nlacutk5" path="res://scenes/interfaces/menus/titre/ecran_titre.gd" id="script"]
 [ext_resource type="PackedScene" uid="uid://c2jaba7e5anb" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
-[ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
+[ext_resource type="Theme" uid="uid://8ibipqab5vhs" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 [ext_resource type="Shader" uid="uid://nd3ahv5hag2w" path="res://scenes/interfaces/menus/titre/voile_titre.gdshader" id="voile"]
 
 [sub_resource type="Environment" id="Ambiance"]
@@ -174,6 +174,41 @@ text = "×"
 taille_police = 38
 taille_minimale = Vector2(74, 74)
 
+[node name="ActionsTutoriel" type="HBoxContainer" parent="Menu/Colonne" unique_id=887971839]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Tutoriel" parent="Menu/Colonne/ActionsTutoriel" unique_id=624874115 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Lancer la partie de tutoriel en cours de construction"
+text = "Tutoriel"
+
+[node name="SupprimerTutoriel" parent="Menu/Colonne/ActionsTutoriel" unique_id=1916176537 instance=ExtResource("button")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+tooltip_text = "Recommencer le tutoriel depuis le début"
+text = "×"
+taille_police = 38
+taille_minimale = Vector2(74, 74)
+
+[node name="Succes" parent="Menu/Colonne" unique_id=1111282242 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Succès"
+
+[node name="Options" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Options"
+
+[node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quitter le jeu"
+
 [node name="Zombie" type="VBoxContainer" parent="Menu/Colonne" unique_id=1448442008]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -202,41 +237,6 @@ tooltip_text = "Supprimer la partie zombie sauvegardée"
 text = "×"
 taille_police = 38
 taille_minimale = Vector2(74, 74)
-
-[node name="ActionsTutoriel" type="HBoxContainer" parent="Menu/Colonne"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Tutoriel" parent="Menu/Colonne/ActionsTutoriel" unique_id=624874115 instance=ExtResource("button")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Lancer la partie de tutoriel en cours de construction"
-text = "Tutoriel"
-
-[node name="SupprimerTutoriel" parent="Menu/Colonne/ActionsTutoriel" instance=ExtResource("button")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-tooltip_text = "Recommencer le tutoriel depuis le début"
-text = "×"
-taille_police = 38
-taille_minimale = Vector2(74, 74)
-
-[node name="Succes" parent="Menu/Colonne" unique_id=1111282242 instance=ExtResource("button")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Succès"
-
-[node name="Options" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Options"
-
-[node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Quitter le jeu"
 
 [node name="Pied" type="Control" parent="Menu/Colonne" unique_id=142293347]
 layout_mode = 2

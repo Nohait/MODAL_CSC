@@ -4,6 +4,7 @@ extends RefCounted
 const SOL = preload("res://assets/materiaux/sol_appartements.tres")
 const MUR = preload("res://assets/materiaux/mur_appartements.tres")
 const PROFIL = preload("res://scenes/modes/tutoriel/commun/decors/profil_decor.tres")
+const LARGEUR_EMBRASURE_DOUBLE_PORTE := 3.8
 
 static func bloc(parent: Node3D, nom: String, emplacement: Vector3, taille: Vector3, materiau: Material) -> StaticBody3D:
 	var corps := StaticBody3D.new()

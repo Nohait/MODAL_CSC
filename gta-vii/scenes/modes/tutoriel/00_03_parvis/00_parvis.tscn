@@ -1012,6 +1012,7 @@ position = Vector3(0, 1, -6.6)
 shape = SubResource("limite_nord")
 [node name="PorteEntree" parent="Intervention" instance=ExtResource("double_porte")]
 position = Vector3(0, 1.8, -5.7)
+afficher_encadrement = false
 
 [node name="PointRegroupement" type="Node3D" parent="Intervention"]
 script = ExtResource("point_medical")

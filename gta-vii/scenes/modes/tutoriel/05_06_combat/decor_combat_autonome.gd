@@ -9,12 +9,13 @@ var porte_combat: StaticBody3D
 var sortie: Node3D
 var sortie_ouverte := false
 var ennemis: Node3D
+var repere_combat: Node3D
 var repere_sortie: Node3D
 const POSITION_CREATURE := Vector3(3, 0, -22)
 
 func _ready() -> void:
 	STYLE.construire_plan(self, plan)
-	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -10), 3.6)
+	STYLE.ouvrir_mur(self, &"MurFixe0", Vector3(0, 0, -10), STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE)
 	var porte_arrivee = PORTE.instantiate()
 	porte_arrivee.name = "PorteArrivee"
 	porte_arrivee.position = Vector3(0, 1.8, -10)
@@ -28,7 +29,10 @@ func _ready() -> void:
 	for cote in ["Gauche", "Droit"]:
 		porte_combat.get_node("Vantail" + cote).material_override = vitre
 	add_child(porte_combat)
-	STYLE.ouvrir_mur(self, &"MurFixe8", Vector3(0, 0, -30), 3.6)
+	repere_combat = REPERE_PASSAGE.instantiate()
+	repere_combat.position = porte_combat.position + Vector3(0, -1.8, 1.65)
+	add_child(repere_combat)
+	STYLE.ouvrir_mur(self, &"MurFixe8", Vector3(0, 0, -30), STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE)
 	sortie = PORTE.instantiate()
 	sortie.name = "PorteSortie"
 	sortie.position = Vector3(0, 1.8, -30)
@@ -49,6 +53,7 @@ func _ready() -> void:
 	repere_sortie.hide()
 
 func ouvrir_palier() -> void:
+	repere_combat.hide()
 	porte_combat.ouvrir()
 
 func autoriser_sortie() -> void:

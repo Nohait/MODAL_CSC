@@ -61,7 +61,7 @@ func _sur_acquisition(identifiant: StringName) -> void:
 func consigne() -> String:
 	if termine: return "La voie est libre. L’équipe prend le relais."
 	if carte == &"": return "E · Parlez au pompier pour choisir votre amélioration."
-	return "Essayez votre amélioration sur le mannequin, puis ouvrez la porte · E."
+	return "Essayez votre amélioration sur le mannequin, puis ouvrez la porte."
 
 func _process(_delta: float) -> void:
 	if not actif or termine or joueur.est_mort: return
