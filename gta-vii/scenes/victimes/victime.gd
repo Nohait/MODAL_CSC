@@ -437,6 +437,9 @@ func follow_target_node(delta: float) -> void:
 	
 	move_and_slide()
 
+
+
+
 func _direction_sur_navigation(direction_chemin: Vector3) -> Vector3:
 	# Fuir ne doit pas envoyer la victime dans un meuble ou derrière une cloison.
 	var direction_fuite := (direction_chemin + vecteur_fuite()).normalized()
@@ -567,10 +570,44 @@ func mourir() -> void:
 	victim_death_sound.volume_db = -12
 	victim_death_sound.play()
 	
+	_figer_cadavre()
 	died.emit(self)
-	queue_free()
+	
 
 # Feedback de dégâts
+
+func _figer_cadavre() -> void:
+	# Plus une cible pour personne (ennemis, suivi de groupe, etc.).
+	remove_from_group("victims")
+	remove_from_group("victime")
+	follow_target = null
+	velocity = Vector3.ZERO
+
+	# Plus d'interface.
+	interaction_label.visible = false
+	health_bar_sprite.visible = false
+
+	# Plus de collision ni de détection (différé : mourir() peut être appelée depuis un callback physique).
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+	for c in find_children("*", "CollisionShape3D", true, false):
+		c.set_deferred("disabled", true)
+	for a in find_children("*", "Area3D", true, false):
+		a.set_deferred("monitoring", false)
+		a.set_deferred("monitorable", false)
+
+	# Animation de mort : start() saute directement à l'état, quel que soit l'état actuel.
+	playback.start("Death")
+
+	# Si la victime était dans l'escorte, la ramener dans la salle.
+	_deposer_dans_salle.call_deferred()
+
+func _deposer_dans_salle() -> void:
+	if not is_instance_valid(ennemis) or ennemis.get_parent() == null:
+		return
+	var conteneur := ennemis.get_parent().get_node_or_null("Victimes")
+	if conteneur != null and get_parent() != conteneur:
+		reparent(conteneur, true)  # true = garde la position globale
 
 func flash_degats() -> void:
 	var tween_degats := create_tween()
