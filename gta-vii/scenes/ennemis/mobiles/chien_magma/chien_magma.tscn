@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://gu5cgmdb8qiq" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="3_son"]
 
 [sub_resource type="CapsuleShape3D" id="Corps"]
-radius = 0.41992188
+radius = 0.61816406
 height = 1.4050782
 
 [sub_resource type="SphereShape3D" id="Detection"]
