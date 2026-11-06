@@ -18,6 +18,10 @@ var direction_mort_mousse := Vector3.ZERO
 # Seuil dans le parcours : une salle plus tardive reste autorisée aux étages suivants.
 @export_range(1, 10, 1) var premier_etage := 1
 @export_range(1, 5, 1) var premiere_salle := 1
+## Poids relatif parmi les mobiles autorisés en classique. Zéro désactive ce type.
+@export_range(0.0, 100.0, 1.0) var poids_apparition_classique := 60.0
+## Décalage de la racine au-dessus du point de sol, propre à la collision du modèle.
+@export_range(0.0, 5.0, 0.05) var hauteur_apparition_classique := 0.75
 
 @export_group("Progression par étage")
 ## Pourcentage ajouté à la valeur de base par étage après le premier.

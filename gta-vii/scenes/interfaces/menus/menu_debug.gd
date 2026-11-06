@@ -17,6 +17,7 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug
 @onready var choix_ennemis: Control = $ChoixEnnemis
 @onready var bouton_ennemis: Button = %ChoisirEnnemi
 @onready var retour_ennemis: Label = %RetourEnnemis
+var ennemi_selectionne: Dictionary = {}
 
 
 
@@ -76,7 +77,8 @@ func _input(event: InputEvent) -> void:
 			ouvrir()
 		get_viewport().set_input_as_handled()
 	elif menu.visible and event.is_action_pressed("ui_cancel"):
-		if choix_ennemis.visible: _retour_debug()
+		if %ChoixMutation.visible: _retour_liste_ennemis()
+		elif choix_ennemis.visible: _retour_debug()
 		else: fermer()
 		get_viewport().set_input_as_handled()
 
@@ -180,7 +182,7 @@ func _preparer_choix_ennemis() -> void:
 	_styliser_selection(bouton_ennemis)
 	_styliser_selection(%RetourDebug)
 	bouton_ennemis.pressed.connect(_ouvrir_choix_ennemis)
-	%RetourDebug.pressed.connect(_retour_debug)
+	%RetourDebug.pressed.connect(_revenir_choix_ennemis)
 	for categorie in ["Mobiles", "Immobiles", "Mini-boss"]:
 		var titre := Label.new()
 		titre.text = categorie.to_upper()
@@ -198,14 +200,62 @@ func _preparer_choix_ennemis() -> void:
 			bouton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			_styliser_selection(bouton)
 			# Chaque bouton garde l'identifiant du type qu'il doit créer.
-			bouton.pressed.connect(_faire_apparaitre.bind(ennemi.id, ennemi.nom))
+			bouton.pressed.connect(_choisir_ennemi.bind(ennemi))
 			grille.add_child(bouton)
+	_ajouter_choix_mutation("Sans mutation", "Ennemi normal, sans bonus. Aucun tirage aléatoire de mutation.", "normal", Color.WHITE)
+	for mutation in CatalogueEnnemis.MODIFICATEURS:
+		_ajouter_choix_mutation(mutation.titre, mutation.description, mutation.identifiant, mutation.couleur)
+
+func _ajouter_choix_mutation(titre: String, description: String, identifiant: String, couleur: Color) -> void:
+	var ligne := VBoxContainer.new()
+	%ListeMutations.add_child(ligne)
+	var bouton := Button.new()
+	bouton.text = titre
+	bouton.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	bouton.add_theme_color_override("font_color", couleur)
+	_styliser_selection(bouton)
+	bouton.pressed.connect(_choisir_mutation.bind(identifiant, titre))
+	ligne.add_child(bouton)
+	var detail := Label.new()
+	detail.text = description
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail.add_theme_font_size_override("font_size", 16)
+	detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ligne.add_child(detail)
+
+func _choisir_ennemi(fiche: Dictionary) -> void:
+	if not fiche.get("elite_possible", false):
+		_faire_apparaitre(fiche.id, fiche.nom)
+		return
+	ennemi_selectionne = fiche.duplicate()
+	%ListeEnnemis.hide()
+	%ChoixMutation.show()
+	%ChoixMutation.scroll_vertical = 0
+	%TitreEnnemis.text = "%s · MUTATION" % str(fiche.nom).to_upper()
+	%RetourDebug.text = "Retour aux ennemis"
+	retour_ennemis.text = "Une seule mutation par ennemi. Cliquez pour ajouter la variante choisie."
+
+func _choisir_mutation(identifiant: String, titre: String) -> void:
+	if ennemi_selectionne.is_empty(): return
+	_faire_apparaitre(ennemi_selectionne.id, "%s · %s" % [ennemi_selectionne.nom, titre], identifiant)
+
+func _retour_liste_ennemis() -> void:
+	ennemi_selectionne.clear()
+	%ChoixMutation.hide()
+	%ListeEnnemis.show()
+	%TitreEnnemis.text = "CHOISIR UN ENNEMI"
+	%RetourDebug.text = "Retour au menu de test"
+	retour_ennemis.text = "Choisissez un ennemi. Vous pouvez en ajouter plusieurs."
+
+func _revenir_choix_ennemis() -> void:
+	if %ChoixMutation.visible: _retour_liste_ennemis()
+	else: _retour_debug()
 
 func _actualiser_choix_ennemis() -> void:
 	bouton_ennemis.disabled = not salles.peut_creer_ennemi_debug()
 
 func _ouvrir_choix_ennemis() -> void:
-	retour_ennemis.text = "Choisissez un ennemi. Vous pouvez en ajouter plusieurs."
+	_retour_liste_ennemis()
 	$Menu/Centre.hide()
 	choix_ennemis.show()
 
@@ -213,11 +263,11 @@ func _retour_debug() -> void:
 	choix_ennemis.hide()
 	$Menu/Centre.show()
 
-func _faire_apparaitre(identifiant: String, nom: String) -> void:
+func _faire_apparaitre(identifiant: String, nom: String, mutation := "normal") -> void:
 	# Garder la pause pour pouvoir composer un groupe d'ennemis avant de reprendre.
 	# Différer l'ajout évite de modifier les collisions pendant le traitement du clic.
-	_ajouter_ennemi.call_deferred(identifiant, nom)
+	_ajouter_ennemi.call_deferred(identifiant, nom, mutation)
 
-func _ajouter_ennemi(identifiant: String, nom: String) -> void:
-	var succes: bool = salles.creer_ennemi_debug(identifiant)
+func _ajouter_ennemi(identifiant: String, nom: String, mutation: String) -> void:
+	var succes: bool = salles.creer_ennemi_debug(identifiant, mutation)
 	retour_ennemis.text = "%s ajouté. Fermez le menu pour reprendre." % nom if succes else "Aucun emplacement libre pour cet ennemi."

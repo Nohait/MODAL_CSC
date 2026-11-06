@@ -4,12 +4,13 @@ const PLACEMENT_ZONE_SOL = preload("res://scenes/systemes/ennemis/placement_zone
 
 var definition: ModificateurElite
 var horloge := 0.0
-var teinte: ShaderMaterial
 var anneau: MeshInstance3D
 var symbole: Label3D
 var cible: Node3D
 var presentation := false
+var teinte: ShaderMaterial
 var overlays := {}
+var halo_applique := false
 var decalage_sol := 0.0
 var braises: CPUParticles3D
 
@@ -22,17 +23,20 @@ func _ready() -> void:
 		cible.vie *= definition.vie
 		# Agrandir aussi la collision ; la navigation tient compte du nouveau rayon.
 		var collision: CollisionShape3D = cible.get_node("CollisionShape3D")
-		var demi_hauteur := 0.0
-		if collision.shape is CapsuleShape3D: demi_hauteur = collision.shape.height / 2.0
-		elif collision.shape is SphereShape3D: demi_hauteur = collision.shape.radius
-		elif collision.shape is BoxShape3D: demi_hauteur = collision.shape.size.y / 2.0
 		# Garder le bas de la collision au même endroit quand le Colosse grandit.
-		decalage_sol = (demi_hauteur - collision.position.y) * cible.scale.y * (definition.taille - 1.0)
+		decalage_sol = calculer_decalage_sol(collision, cible.scale.y, definition.taille)
 		cible.position.y += decalage_sol
 		cible.scale *= definition.taille
 		cible.hitbox_radius *= definition.taille
 		cible.navigation_agent.radius *= definition.taille
 	_habiller()
+
+static func calculer_decalage_sol(collision: CollisionShape3D, echelle_y: float, taille: float) -> float:
+	var demi_hauteur := 0.0
+	if collision.shape is CapsuleShape3D: demi_hauteur = collision.shape.height / 2.0
+	elif collision.shape is SphereShape3D: demi_hauteur = collision.shape.radius
+	elif collision.shape is BoxShape3D: demi_hauteur = collision.shape.size.y / 2.0
+	return (demi_hauteur - collision.position.y) * echelle_y * (taille - 1.0)
 
 func est_enrage() -> bool:
 	return definition.seuil_rage > 0.0 and not presentation and cible.vie <= cible.vie_max * definition.seuil_rage
@@ -47,11 +51,9 @@ func _habiller() -> void:
 	teinte = ShaderMaterial.new()
 	teinte.shader = preload("res://scenes/systemes/ennemis/habillage_elite.gdshader")
 	teinte.set_shader_parameter("teinte", definition.couleur)
-	teinte.set_shader_parameter("fissures", definition.identifiant == "geant")
-	for mesh in cible.find_children("*", "MeshInstance3D", true, false):
-		if mesh.name in ["Laser", "Disque", "Cercle", "InfluenceAura"] or str(mesh.name).begins_with("Zone"): continue
-		overlays[mesh] = mesh.material_overlay
-		mesh.material_overlay = teinte
+	teinte.set_shader_parameter("opacite_corps", definition.opacite_couleur_corps)
+	teinte.set_shader_parameter("emission", definition.emission_halo)
+	_appliquer_halo()
 	anneau = _anneau(0.8, 0.022)
 	anneau.position.y = PLACEMENT_ZONE_SOL.hauteur_locale(cible, 0.03, -0.7)
 	if definition.aura != "aucune" and not presentation:
@@ -86,10 +88,11 @@ func _anneau(rayon: float, _epaisseur: float) -> MeshInstance3D:
 
 func _process(delta: float) -> void:
 	horloge += delta
-	teinte.set_shader_parameter("horloge", horloge)
 	# L'enragé se met à pulser plus fort dès qu'il passe sous son seuil.
 	var rage := est_enrage()
-	teinte.set_shader_parameter("intensite", definition.intensite_visuelle * (2.0 if rage else 1.0))
+	if not halo_applique: _appliquer_halo()
+	teinte.set_shader_parameter("horloge", horloge)
+	teinte.set_shader_parameter("intensite", definition.intensite_halo * (definition.halo_rage if rage else 1.0))
 	anneau.scale = Vector3.ONE * (1.0 + sin(horloge * (8.0 if rage else 3.0)) * 0.04)
 	symbole.modulate = definition.couleur * (1.4 if rage else 1.0)
 	if braises != null:
@@ -99,6 +102,32 @@ func _process(delta: float) -> void:
 			mouvement.y = 0.0
 			braises.emitting = braises.emitting and mouvement.length() > 0.2
 			braises.direction = (-mouvement.normalized() + Vector3.UP * 0.3).normalized()
+
+func _appliquer_halo() -> void:
+	# Attendre la fin du dissolve pour ne pas révéler la silhouette trop tôt.
+	var apparition := cible.get_node_or_null("ApparitionSbire")
+	if apparition != null and not apparition.termine: return
+	halo_applique = true
+	if definition.intensite_halo <= 0.0: return
+	teinte.set_shader_parameter("intensite", definition.intensite_halo)
+	# Limiter le halo au modèle : le plan transparent d'apparition reste intact.
+	for chemin in ["sbire", "hound", "Sketchfab_Scene"]:
+		var modele := cible.get_node_or_null(chemin)
+		if modele == null: continue
+		for mesh in modele.find_children("*", "MeshInstance3D", true, false):
+			if mesh.mesh == null: continue
+			var materiau_corps := false
+			for surface in range(mesh.mesh.get_surface_count()):
+				if mesh.get_active_material(surface) is BaseMaterial3D:
+					materiau_corps = true
+			if not materiau_corps: continue
+			overlays[mesh] = mesh.material_overlay
+			# Un gel en cours garde la priorité ; il rendra le halo à sa disparition.
+			var precedent: Material = mesh.material_overlay
+			if precedent is ShaderMaterial and precedent.shader != null and precedent.shader.resource_path.ends_with("teinte_givree.gdshader"):
+				overlays[mesh] = null
+			else:
+				mesh.material_overlay = teinte
 
 func retirer() -> void:
 	# Conserver la proportion de PV : revenir à la normale ne soigne personne.

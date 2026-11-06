@@ -47,7 +47,12 @@ func _enregistrer_ennemi(identifiant_instance: int) -> void:
 	if monnaie != null and noeud.has_signal("died"):
 		var valeur: int = noeud.get_meta("valeur_pieces", fiche.cout_difficulte)
 		noeud.died.connect(monnaie.lacher_pieces.bind(noeud, valeur), CONNECT_ONE_SHOT)
-	if fiche.get("elite_possible", false) and randf() * 100.0 < equilibrage.chance(_progression(noeud)):
+	if noeud.has_meta("mutation_debug"):
+		# Un choix explicite, y compris « sans mutation », remplace le tirage aléatoire.
+		var selection := trouver_mutation(str(noeud.get_meta("mutation_debug")))
+		if fiche.get("elite_possible", false) and selection != null:
+			appliquer_elite(noeud, selection)
+	elif fiche.get("elite_possible", false) and randf() * 100.0 < equilibrage.chance(_progression(noeud)):
 		var total := 0.0
 		for mod in MODIFICATEURS: total += mod.poids
 		var tirage := randf() * total
@@ -91,6 +96,11 @@ func appliquer_elite(ennemi: Node3D, mod: ModificateurElite) -> void:
 	effet.definition = mod
 	ennemi.add_child(effet)
 	ennemi.set_meta("variante_glossaire", mod.identifiant)
+
+func trouver_mutation(identifiant: String) -> ModificateurElite:
+	for mod in MODIFICATEURS:
+		if mod.identifiant == identifiant: return mod
+	return null
 
 func a_rencontre(id: String, variante := "") -> bool:
 	return rencontres.has(id) if variante.is_empty() else variante in rencontres.get(id, [])

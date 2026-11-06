@@ -12,6 +12,10 @@ collision_layer = 4
 collision_mask = 15
 script = ExtResource("1")
 vie_max = 35.0
+premier_etage = 3
+premiere_salle = 1
+poids_apparition_classique = 15.0
+hauteur_apparition_classique = 1.2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("Corps")
 [node name="NavigationAgent" type="NavigationAgent3D" parent="."]

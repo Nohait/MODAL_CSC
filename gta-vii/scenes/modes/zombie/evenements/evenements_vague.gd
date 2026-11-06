@@ -127,7 +127,7 @@ func _ennemi_ajoute(ennemi: Node3D) -> void:
 			effet.name = "Dore"
 			ennemi.add_child(effet)
 	var identifiant := ennemi.get_instance_id()
-	if mutation_en_cours() and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(identifiant):
+	if mutation_en_cours() and not ennemi.has_meta("mutation_debug") and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(identifiant):
 		var elite = ennemi.get_node_or_null("Elite")
 		# Mémoriser l'unique mutation d'origine avant le remplacement temporaire.
 		mutations[identifiant] = elite.definition if elite != null else null

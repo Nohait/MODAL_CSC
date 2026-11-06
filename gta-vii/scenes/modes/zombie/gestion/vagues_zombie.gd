@@ -249,7 +249,8 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 		else:
 			_creer_type(salle, emplacement, type)
 		return
-	super.creer_mobile(salle, emplacement)
+	# Le repli zombie reste un sbire, indépendant de la progression du classique.
+	creer_sbire(salle, emplacement)
 
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	# Un sbire ajouté par le debug n'appartient pas au calendrier de la vague.

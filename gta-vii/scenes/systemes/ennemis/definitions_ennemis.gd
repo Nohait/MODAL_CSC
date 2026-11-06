@@ -5,7 +5,8 @@ extends RefCounted
 # hauteur correspond au décalage de la racine au-dessus du sol.
 const ENNEMIS = [
 	{"id": "sbire", "cout_difficulte": 1, "description": "Poursuit le pompier ou les victimes et frappe au corps à corps. Ses flammes annoncent le coup.", "elite_possible": true, "nom": "Sbire", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/sbire.tscn", "hauteur": 0.85},
-	{"id": "chien", "cout_difficulte": 1, "description": "Court vers le pompier, bondit avec son élan puis mord lorsqu’il est très proche.", "elite_possible": true, "nom": "Chien de magma", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn", "hauteur": 0.85},
+	# La capsule décalée descend à -0,91 m : laisser son bas au-dessus du sol (+0,10 m).
+	{"id": "chien", "cout_difficulte": 1, "description": "Court vers le pompier, bondit avec son élan puis mord lorsqu’il est très proche.", "elite_possible": true, "nom": "Chien de magma", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn", "hauteur": 1.05},
 	{"id": "demolisseur", "cout_difficulte": 3, "description": "Ennemi lent et robuste. Privilégie le camion lorsqu’il est présent.", "nom": "Démolisseur", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn", "hauteur": 1.45},
 	{"id": "artilleur", "cout_difficulte": 2, "description": "Tire des boules de feu annoncées depuis son sceptre.", "nom": "Artilleur", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/artilleur/artilleur.tscn", "hauteur": 1.45},
 	{"id": "kamikaze", "cout_difficulte": 1, "description": "Crâne volant qui poursuit le pompier avec un retard de direction et explose au contact.", "elite_possible": true, "nom": "Kamikaze", "categorie": "Mobiles", "scene": "res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn", "hauteur": 1.2},

@@ -11,3 +11,4 @@ couleur = Color(1, 0.55, 0.16, 1)
 symbole = "▲"
 taille = 1.3
 vie = 1.6
+intensite_halo = 0.0
