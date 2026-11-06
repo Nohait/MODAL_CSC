@@ -822,6 +822,7 @@ func actualiser_objectifs() -> void:
 		is_room_cleared = true
 		liberer_portes(salle_actuelle)
 		afficher_victoire()
+		SonsInterface.celebrer_salle_liberee()
 		room_cleared.emit()
 
 func liberer_portes(salle: Node3D) -> void:
