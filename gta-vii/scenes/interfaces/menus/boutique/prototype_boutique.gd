@@ -48,6 +48,7 @@ var categorie_sprinklers: Button
 var note_points: Label
 var bouton_debug: Button
 var mode_points_tutoriel := false
+var reperes_formation: Dictionary = {}
 var joueur_sante: Node
 var escorte_sante: Node
 
@@ -74,6 +75,7 @@ func _ready() -> void:
 	note_points = _texte("1 victime dans l’escorte = 1 point.", 16)
 	note_points.add_theme_color_override("font_color", Color("acbabf"))
 	bloc_points.add_child(note_points)
+	reperes_formation["points"] = bloc_points
 	var titre := _texte("RAVITAILLEMENT", 28)
 	titre.add_theme_font_override("font", POLICE)
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -99,7 +101,9 @@ func _ready() -> void:
 		sante.joueur = joueur_sante
 		sante.escorte = escorte_sante
 		gauche.add_child(sante)
+		reperes_formation["sante"] = sante
 	var renforts := _panneau(gauche, "BONUS PERMANENTS")
+	reperes_formation["boosters"] = renforts
 	var pochettes := HBoxContainer.new()
 	pochettes.alignment = BoxContainer.ALIGNMENT_CENTER
 	pochettes.add_theme_constant_override("separation", 12)
@@ -133,6 +137,7 @@ func _ready() -> void:
 	booster_gratuit.get_node("%Prix").text = "GRATUIT"
 	cadeau.hide()
 	var temporaires := _panneau(gauche, "SOINS ET BONUS TEMPORAIRES")
+	reperes_formation["intervention"] = temporaires
 	var interventions := HBoxContainer.new()
 	interventions.alignment = BoxContainer.ALIGNMENT_CENTER
 	temporaires.add_child(interventions)

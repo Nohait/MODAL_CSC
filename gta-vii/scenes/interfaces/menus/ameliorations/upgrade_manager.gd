@@ -55,6 +55,7 @@ var effets_actifs: Dictionary = {}
 var acquisitions: Array[Dictionary] = []
 var points := 0
 var boutique_tutoriel_active := false
+var presentation_boutique_lancee := false
 var numero_boutique_tutoriel := 0
 var perte_points_tutoriel_confirmee := false
 var carte_choisie_boutique_tutoriel := false
@@ -183,6 +184,11 @@ func ouvrir_choix(_nombre_victimes: int) -> void:
 	# Un fondu court accompagne l'ouverture. Always permet au Tween de vivre en pause.
 	animation = create_tween()
 	animation.tween_property(boutique, "modulate:a", 1.0, 0.2)
+	if boutique_tutoriel_active and numero_boutique_tutoriel == 1 and not presentation_boutique_lancee:
+		presentation_boutique_lancee = true
+		var guide = preload("res://scenes/modes/tutoriel/09_10_points_boutique/presentation_boutique.gd").new()
+		guide.boutique = boutique
+		add_child(guide)
 
 
 func _actualiser_boutique(message: String = "") -> void:
