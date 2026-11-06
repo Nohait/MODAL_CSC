@@ -33,38 +33,33 @@ func mettre_a_jour(etage: int, salle: int, total: int, restants: int, a_venir: i
 	if a_venir > 0:
 		ennemis.text += "  ·  %d À VENIR" % a_venir
 
-func _actualiser_timer(secondes: float) -> void:
+func _actualiser_timer(_secondes: float) -> void:
 	if salle_liberee:
 		return
 	texte_timer.clear()
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
-	if secondes > 0:
-		texte_timer.push_font_size(26)
-		texte_timer.add_text("%d " % victimes_a_liberer)
-		texte_timer.add_image(ICONE_VICTIMES, 22, 22, Color("edf0e9"), INLINE_ALIGNMENT_CENTER)
-		texte_timer.add_text(" À LIBÉRER")
-		texte_timer.pop()
-		texte_timer.add_text("\nSAUVETAGE · %02d s" % ceili(secondes))
-	else:
-		texte_timer.add_text("SAUVETAGE TERMINÉ")
+	texte_timer.push_font_size(22)
+	texte_timer.add_text("%d " % victimes_a_liberer)
+	texte_timer.add_image(ICONE_VICTIMES, 20, 20, Color("edf0e9"), INLINE_ALIGNMENT_CENTER)
+	texte_timer.add_text(" À LIBÉRER")
 	texte_timer.pop()
-	remplissage.bg_color = Color(0.75, 0.23, 0.12) if secondes > 0 and secondes <= 5 and victimes_a_liberer > 0 else Color(0.64, 0.37, 0.16)
+	texte_timer.pop()
 
 func demarrer_timer() -> void:
 	salle_liberee = false
 	temps = 0.0
 	encart.show()
-	timer.show()
-	texte_timer.offset_top = 6.0
-	texte_timer.offset_bottom = 62.0
+	timer.hide()
+	texte_timer.offset_top = 0.0
+	texte_timer.offset_bottom = 34.0
 	_actualiser_timer(timer.value)
 
 func afficher_salle_liberee() -> void:
 	salle_liberee = true
 	encart.show()
 	timer.hide()
-	texte_timer.offset_top = 23.0
-	texte_timer.offset_bottom = 52.0
+	texte_timer.offset_top = 0.0
+	texte_timer.offset_bottom = 34.0
 	texte_timer.clear()
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
 	texte_timer.add_text("Salle libérée !")
@@ -75,18 +70,6 @@ func _reinitialiser_alerte() -> void:
 	temps = 0.0
 	encart.scale = Vector2.ONE
 	encart.modulate.a = 1.0
-
-func _process(delta: float) -> void:
-	var urgence := not salle_liberee and timer.value > 0 and timer.value <= 5 and victimes_a_liberer > 0
-	if urgence:
-		temps += delta
-		# Un cycle par seconde : le panneau grandit, s’éclaircit, puis revient à son état initial.
-		var pulsation := (1.0 - cos(temps * TAU)) / 2.0
-		encart.pivot_offset = encart.size / 2.0
-		encart.scale = Vector2.ONE * (1.0 + pulsation * 0.08)
-		encart.modulate.a = 1.0 - pulsation * 0.45
-	else:
-		_reinitialiser_alerte()
 
 func masquer_pour_boss(interface: Node) -> void:
 	if boss_affiches.is_empty():

@@ -8,7 +8,7 @@ extends Node3D
 @export_range(0.0, 40.0, 0.5) var force_recul := 14.0
 @export_range(0.1, 2.0, 0.05) var duree_recul := 0.5
 @export_group("Présentation")
-@export_range(1.0, 2.0, 0.1) var duree_chute := 1.4
+@export_range(0.3, 2.0, 0.1) var duree_chute := 0.8
 @export_range(2.0, 15.0, 0.5) var duree_presence := 5.0
 @export_range(0.1, 2.0, 0.1) var duree_onde := 0.55
 @export_range(0.5, 3.0, 0.1) var hauteur_modele := 1.2
