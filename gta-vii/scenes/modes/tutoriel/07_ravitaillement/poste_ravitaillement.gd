@@ -4,6 +4,7 @@ signal consigne_changee
 signal ravitaillement_effectue
 signal carte_acquise
 signal salle_reussie
+@export_range(1.5, 4.0, 0.1) var distance_conversation := 2.5
 @export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 2.2
 var progression = preload("res://scenes/modes/tutoriel/07_ravitaillement/progression_ravitaillement.gd").new()
 var actif := false
@@ -14,6 +15,7 @@ var carte: StringName:
 var joueur
 var gestion
 var pompier
+var repere_pompier: Node3D
 var decor
 var sortie
 var sortie_ouverte := false
@@ -36,7 +38,13 @@ func preparer(personnage, ameliorations, camera: Camera3D) -> void:
 	pompier.position = POSITION_POSTE
 	add_child(pompier)
 	pompier.installer_modele(joueur)
-	pompier.parler("Souffle un peu, je m’occupe de ton matériel. On a aussi quelques renforts pour ton extincteur : regarde ce qui te convient, mais tu ne peux en emporter qu’un.", joueur, camera)
+	repere_pompier = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn").instantiate()
+	repere_pompier.name = "InvitationParler"
+	repere_pompier.verbe = "Parler"
+	repere_pompier.position = Vector3(0, -0.8, 1.0)
+	repere_pompier.hide()
+	pompier.add_child(repere_pompier)
+	pompier.parler("Viens me parler, j’ai de quoi renforcer ton extincteur. Tu pourras choisir une amélioration avant de repartir.", joueur, camera)
 	consigne_changee.emit()
 
 func interagir() -> void:
@@ -53,6 +61,7 @@ func interagir() -> void:
 
 func _sur_acquisition(identifiant: StringName) -> void:
 	if not progression.acquerir(identifiant): return
+	repere_pompier.hide()
 	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	decor.autoriser_sortie()
 	carte_acquise.emit()
@@ -60,14 +69,16 @@ func _sur_acquisition(identifiant: StringName) -> void:
 
 func consigne() -> String:
 	if termine: return "La voie est libre. L’équipe prend le relais."
-	if carte == &"": return "E · Parlez au pompier pour choisir votre amélioration."
+	if carte == &"": return "Parlez au pompier pour obtenir votre première amélioration."
 	return "Essayez votre amélioration sur le mannequin, puis ouvrez la porte."
 
 func _process(_delta: float) -> void:
 	if not actif or termine or joueur.est_mort: return
-	var ecart: Vector3 = joueur.global_position - POSITION_POSTE
+	var ecart: Vector3 = joueur.global_position - pompier.global_position
 	ecart.y = 0
-	if ecart.length() < 2.5 and Input.is_action_just_pressed("interact"): interagir()
+	var a_portee := ecart.length() < distance_conversation
+	repere_pompier.visible = a_portee and carte == &""
+	if a_portee and Input.is_action_just_pressed("interact"): interagir()
 	var ecart_sortie: Vector3 = joueur.global_position - sortie.global_position
 	ecart_sortie.y = 0.0
 	if carte != &"" and ecart_sortie.length() < distance_ouverture_sortie and Input.is_action_just_pressed("interact"):

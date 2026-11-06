@@ -752,6 +752,8 @@ func activer_salle(indice: int) -> void:
 
 	# Seul un nouvel étage ajoute son titre au fondu rapide de chaque salle.
 	var changer_etage := is_instance_valid(salle_actuelle) and etage_pour_salle(indice) != ancien_etage
+	# Une reprise ou un saut de debug n'annonce pas une sécurisation fictive.
+	var montrer_montee := changer_etage and is_room_cleared and indice == indice_salle + 1
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
@@ -846,7 +848,8 @@ func activer_salle(indice: int) -> void:
 			musique_jouee.stream.set_sync_stream_volume(1, -5)
 			musique_jouee.stream.set_sync_stream_volume(2, 0)
 			musique_jouee.stream.set_sync_stream_volume(3, 2)
-		await transition_etage.reveler(salle_actuelle.etage)
+	if montrer_montee:
+		await transition_etage.reveler(ancien_etage)
 	else:
 		await transition_etage.reveler_salle()
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_INHERIT

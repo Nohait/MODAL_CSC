@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" path="res://scenes/interfaces/transitions/transition_etage.gd" id="1"]
 [ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="theme"]
-[ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="support"]
 [ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
+[ext_resource type="Script" path="res://scenes/interfaces/transitions/montee_escalier.gd" id="escalier"]
+[ext_resource type="AudioStream" path="res://assets/sounds/transitions/radio_intervention.wav" id="radio"]
 
 [node name="TransitionEtage" type="CanvasLayer"]
 process_mode = 3
@@ -28,7 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Centre" type="CenterContainer" parent="Menu"]
+[node name="Centre" type="MarginContainer" parent="Menu"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,11 +39,10 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panneau" type="Control" parent="Menu/Centre"]
-custom_minimum_size = Vector2(500, 160)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Support" type="Panel" parent="Menu/Centre/Panneau"]
+[node name="Image" type="SubViewportContainer" parent="Menu/Centre/Panneau"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,15 +50,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("support")
+stretch = true
+
+[node name="Vue" type="SubViewport" parent="Menu/Centre/Panneau/Image"]
+unique_name_in_owner = true
+own_world_3d = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 0
+msaa_3d = 1
+
+[node name="Escalier" type="Node3D" parent="Menu/Centre/Panneau/Image/Vue"]
+unique_name_in_owner = true
+script = ExtResource("escalier")
+
+[node name="Bandeau" type="ColorRect" parent="Menu/Centre/Panneau"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -142.0
+mouse_filter = 2
+color = Color(0.065, 0.075, 0.08, 0.94)
 
 [node name="Contenu" type="VBoxContainer" parent="Menu/Centre/Panneau"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 25.0
-offset_top = 24.0
+offset_top = -128.0
 offset_right = -25.0
 offset_bottom = -25.0
 grow_horizontal = 2
@@ -73,13 +94,20 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 38
-text = "Étage 2"
+text = "1er étage sécurisé"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Note" type="Label" parent="Menu/Centre/Panneau/Contenu"]
+unique_name_in_owner = true
 theme_type_variation = &"NoteIntervention"
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 17
 text = "La montée continue…"
 horizontal_alignment = 1
+
+[node name="Radio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("radio")
+volume_db = -15.0
+bus = &"Effets"

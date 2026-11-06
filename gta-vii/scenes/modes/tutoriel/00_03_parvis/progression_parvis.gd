@@ -5,7 +5,7 @@ signal preparation_terminee
 
 const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd")
 @export var etapes: Array[Resource] = []
-@export_range(0.1, 0.8, 0.05) var seuil_reserve_basse := 0.65
+@export_range(0.1, 0.9, 0.05) var seuil_reserve_basse := 0.9
 @export_range(0.85, 1.0, 0.05) var seuil_recharge := 0.95
 @export_range(0.5, 5.0, 0.1) var rayon_exercice_dash := 2.0
 
