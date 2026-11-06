@@ -37,8 +37,8 @@ void fragment() {
 	// Croûte sombre, lave rouge, puis orange très chaud au cœur des coulées.
 	float fusion = smoothstep(0.32, 0.57, roche);
 	float coeur = smoothstep(0.55, 0.73, roche);
-	vec3 couleur = mix(vec3(0.12, 0.025, 0.012), vec3(0.95, 0.20, 0.015), fusion);
-	couleur = mix(couleur, vec3(1.0, 0.73, 0.12), coeur);
+	vec3 couleur = mix(vec3(0.588235, 0.137255, 0.14902), vec3(0.772549, 0.176471, 0.184314), fusion);
+	couleur = mix(couleur, vec3(0.960784, 0.960784, 0.941176), coeur);
 
 	// Un halo discret reste autour du motif original.
 	vec2 pas = TEXTURE_PIXEL_SIZE * 2.0;

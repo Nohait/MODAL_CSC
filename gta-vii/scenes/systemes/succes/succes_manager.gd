@@ -32,7 +32,7 @@ func progresser(critere: String, valeur: int) -> void:
 			debloquer(definition.fiche())
 
 func debloquer(succes: Dictionary) -> void:
-	if OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false): return
+	if Engine.get_meta("tutoriel_debug_actif", false): return
 	# Une seconde victoire ne doit ni doubler le compteur ni rejouer la notification.
 	if est_obtenu(succes.id):
 		return
@@ -45,6 +45,10 @@ func reinitialiser() -> void:
 	# Écrire une sauvegarde vide empêche les anciens succès de revenir au lancement.
 	obtenus.clear()
 	_sauvegarder()
+	succes_reinitialises.emit()
+
+func reinitialiser_memoire() -> void:
+	obtenus.clear()
 	succes_reinitialises.emit()
 
 func _sauvegarder() -> void:

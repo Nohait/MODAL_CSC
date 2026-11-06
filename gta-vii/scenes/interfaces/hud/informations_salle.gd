@@ -40,7 +40,7 @@ func _actualiser_timer(_secondes: float) -> void:
 	texte_timer.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
 	texte_timer.push_font_size(22)
 	texte_timer.add_text("%d " % victimes_a_liberer)
-	texte_timer.add_image(ICONE_VICTIMES, 20, 20, Color("edf0e9"), INLINE_ALIGNMENT_CENTER)
+	texte_timer.add_image(ICONE_VICTIMES, 20, 20, Color("f5f5f0"), INLINE_ALIGNMENT_CENTER)
 	texte_timer.add_text(" À LIBÉRER")
 	texte_timer.pop()
 	texte_timer.pop()

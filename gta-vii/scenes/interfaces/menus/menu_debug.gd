@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-# Always dans la scène permet de recevoir I et de cliquer pendant la pause.
+# Always permet de fermer le menu et de cliquer pendant la pause.
 @onready var joueur = $"../player"
 @onready var salles = $"../Salles/RoomManager"
 @onready var menu: Control = $Menu
@@ -11,14 +11,22 @@ extends CanvasLayer
 @onready var etages: HBoxContainer = %Etages
 @onready var suivant: Button = %Suivant
 @onready var situation: Label = %Situation
-@onready var raccourci: Label = $"../InterfaceTest/EtatInvincibilite"
 var souris_avant: int
 const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug.gd")
 @onready var choix_ennemis: Control = $ChoixEnnemis
 @onready var bouton_ennemis: Button = %ChoisirEnnemi
 @onready var retour_ennemis: Label = %RetourEnnemis
+var ennemi_selectionne: Dictionary = {}
 
 
+
+func _enter_tree() -> void:
+	add_to_group("debug_partie")
+
+func debug_contextuel() -> bool:
+	if menu.visible: fermer()
+	else: ouvrir()
+	return true
 
 func _ready() -> void:
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
@@ -69,14 +77,9 @@ func _recharger_equipements() -> void:
 func _input(event: InputEvent) -> void:
 	if event is not InputEventKey or not event.pressed or event.echo:
 		return
-	if event.physical_keycode == KEY_I or event.keycode == KEY_I:
-		if menu.visible:
-			fermer()
-		else:
-			ouvrir()
-		get_viewport().set_input_as_handled()
-	elif menu.visible and event.is_action_pressed("ui_cancel"):
-		if choix_ennemis.visible: _retour_debug()
+	if menu.visible and event.is_action_pressed("ui_cancel"):
+		if %ChoixMutation.visible: _retour_liste_ennemis()
+		elif choix_ennemis.visible: _retour_debug()
 		else: fermer()
 		get_viewport().set_input_as_handled()
 
@@ -117,28 +120,15 @@ func fermer() -> void:
 
 func _changer_invincibilite(active: bool) -> void:
 	joueur.invincible = active
-	_actualiser_raccourci()
 
 
 func _changer_degats(active: bool) -> void:
 	joueur.extincteur.degats_colossaux_test = active
-	_actualiser_raccourci()
 
 
 func _changer_points_boutique(active: bool) -> void:
 	# La prochaine ouverture initialise 999 points ; les achats les déduisent normalement.
 	ameliorations.points_abondants_test = active
-	_actualiser_raccourci()
-
-
-func _actualiser_raccourci() -> void:
-	raccourci.text = "I : menu de test"
-	if joueur.invincible:
-		raccourci.text += " · Invincible"
-	if joueur.extincteur.degats_colossaux_test:
-		raccourci.text += " · Dégâts colossaux"
-	if ameliorations.points_abondants_test:
-		raccourci.text += " · Points abondants"
 
 
 func _etage_suivant() -> void:
@@ -158,8 +148,8 @@ func _aller_etage(numero: int) -> void:
 
 func _styliser_selection(bouton: Button) -> void:
 	var accent := StyleBoxFlat.new()
-	accent.bg_color = Color("493921")
-	accent.border_color = Color("e7b968")
+	accent.bg_color = Color("343434")
+	accent.border_color = Color("c52d2f")
 	accent.set_border_width_all(2)
 	accent.set_corner_radius_all(5)
 	accent.content_margin_left = 10
@@ -168,7 +158,7 @@ func _styliser_selection(bouton: Button) -> void:
 	accent.content_margin_bottom = 7
 	for etat in ["hover", "pressed", "hover_pressed", "focus"]:
 		bouton.add_theme_stylebox_override(etat, accent)
-	bouton.add_theme_color_override("font_pressed_color", Color("ffe2a4"))
+	bouton.add_theme_color_override("font_pressed_color", Color("f5f5f0"))
 
 func _liberer_salle() -> void:
 	# Reprendre le jeu permet aussi à l’animation des portes de se terminer.
@@ -180,11 +170,11 @@ func _preparer_choix_ennemis() -> void:
 	_styliser_selection(bouton_ennemis)
 	_styliser_selection(%RetourDebug)
 	bouton_ennemis.pressed.connect(_ouvrir_choix_ennemis)
-	%RetourDebug.pressed.connect(_retour_debug)
+	%RetourDebug.pressed.connect(_revenir_choix_ennemis)
 	for categorie in ["Mobiles", "Immobiles", "Mini-boss"]:
 		var titre := Label.new()
 		titre.text = categorie.to_upper()
-		titre.add_theme_color_override("font_color", Color("e7b968"))
+		titre.add_theme_color_override("font_color", Color("c52d2f"))
 		%ListeEnnemis.add_child(titre)
 		var grille := GridContainer.new()
 		grille.columns = 2
@@ -198,14 +188,62 @@ func _preparer_choix_ennemis() -> void:
 			bouton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			_styliser_selection(bouton)
 			# Chaque bouton garde l'identifiant du type qu'il doit créer.
-			bouton.pressed.connect(_faire_apparaitre.bind(ennemi.id, ennemi.nom))
+			bouton.pressed.connect(_choisir_ennemi.bind(ennemi))
 			grille.add_child(bouton)
+	_ajouter_choix_mutation("Sans mutation", "Ennemi normal, sans bonus. Aucun tirage aléatoire de mutation.", "normal", Color.WHITE)
+	for mutation in CatalogueEnnemis.MODIFICATEURS:
+		_ajouter_choix_mutation(mutation.titre, mutation.description, mutation.identifiant, mutation.couleur)
+
+func _ajouter_choix_mutation(titre: String, description: String, identifiant: String, couleur: Color) -> void:
+	var ligne := VBoxContainer.new()
+	%ListeMutations.add_child(ligne)
+	var bouton := Button.new()
+	bouton.text = titre
+	bouton.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	bouton.add_theme_color_override("font_color", couleur)
+	_styliser_selection(bouton)
+	bouton.pressed.connect(_choisir_mutation.bind(identifiant, titre))
+	ligne.add_child(bouton)
+	var detail := Label.new()
+	detail.text = description
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail.add_theme_font_size_override("font_size", 16)
+	detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ligne.add_child(detail)
+
+func _choisir_ennemi(fiche: Dictionary) -> void:
+	if not fiche.get("elite_possible", false):
+		_faire_apparaitre(fiche.id, fiche.nom)
+		return
+	ennemi_selectionne = fiche.duplicate()
+	%ListeEnnemis.hide()
+	%ChoixMutation.show()
+	%ChoixMutation.scroll_vertical = 0
+	%TitreEnnemis.text = "%s · MUTATION" % str(fiche.nom).to_upper()
+	%RetourDebug.text = "Retour aux ennemis"
+	retour_ennemis.text = "Une seule mutation par ennemi. Cliquez pour ajouter la variante choisie."
+
+func _choisir_mutation(identifiant: String, titre: String) -> void:
+	if ennemi_selectionne.is_empty(): return
+	_faire_apparaitre(ennemi_selectionne.id, "%s · %s" % [ennemi_selectionne.nom, titre], identifiant)
+
+func _retour_liste_ennemis() -> void:
+	ennemi_selectionne.clear()
+	%ChoixMutation.hide()
+	%ListeEnnemis.show()
+	%TitreEnnemis.text = "CHOISIR UN ENNEMI"
+	%RetourDebug.text = "Retour au menu de test"
+	retour_ennemis.text = "Choisissez un ennemi. Vous pouvez en ajouter plusieurs."
+
+func _revenir_choix_ennemis() -> void:
+	if %ChoixMutation.visible: _retour_liste_ennemis()
+	else: _retour_debug()
 
 func _actualiser_choix_ennemis() -> void:
 	bouton_ennemis.disabled = not salles.peut_creer_ennemi_debug()
 
 func _ouvrir_choix_ennemis() -> void:
-	retour_ennemis.text = "Choisissez un ennemi. Vous pouvez en ajouter plusieurs."
+	_retour_liste_ennemis()
 	$Menu/Centre.hide()
 	choix_ennemis.show()
 
@@ -213,11 +251,11 @@ func _retour_debug() -> void:
 	choix_ennemis.hide()
 	$Menu/Centre.show()
 
-func _faire_apparaitre(identifiant: String, nom: String) -> void:
+func _faire_apparaitre(identifiant: String, nom: String, mutation := "normal") -> void:
 	# Garder la pause pour pouvoir composer un groupe d'ennemis avant de reprendre.
 	# Différer l'ajout évite de modifier les collisions pendant le traitement du clic.
-	_ajouter_ennemi.call_deferred(identifiant, nom)
+	_ajouter_ennemi.call_deferred(identifiant, nom, mutation)
 
-func _ajouter_ennemi(identifiant: String, nom: String) -> void:
-	var succes: bool = salles.creer_ennemi_debug(identifiant)
+func _ajouter_ennemi(identifiant: String, nom: String, mutation: String) -> void:
+	var succes: bool = salles.creer_ennemi_debug(identifiant, mutation)
 	retour_ennemis.text = "%s ajouté. Fermez le menu pour reprendre." % nom if succes else "Aucun emplacement libre pour cet ennemi."

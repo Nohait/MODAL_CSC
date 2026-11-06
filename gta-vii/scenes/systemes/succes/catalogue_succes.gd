@@ -17,7 +17,7 @@ static func liste() -> Array:
 # Ces premiers succès se vérifient à la victoire, selon la taille de l'escorte.
 const SUCCES := [
 	{"id": "victoire", "titre": "Victoire !", "description": "Remporter une partie.",
-		"rarete": "RARE", "couleur": Color("63a9db"), "escorte_minimum": 0},
+		"rarete": "RARE", "couleur": Color("f5f5f0"), "escorte_minimum": 0},
 	{"id": "sauveteur", "titre": "Sauveteur hors pair", "description": "Remporter une partie avec au moins 10 victimes vivantes dans votre escorte.",
-		"rarete": "ÉPIQUE", "couleur": Color("bc83dd"), "escorte_minimum": 10},
+		"rarete": "ÉPIQUE", "couleur": Color("c52d2f"), "escorte_minimum": 10},
 ]

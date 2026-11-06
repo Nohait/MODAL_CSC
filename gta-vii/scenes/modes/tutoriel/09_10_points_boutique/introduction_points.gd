@@ -13,7 +13,7 @@ func _ready() -> void:
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var voile := ColorRect.new()
-	voile.color = Color(0.02, 0.04, 0.05, 0.72)
+	voile.color = Color(0.062745, 0.062745, 0.062745, 0.72)
 	add_child(voile)
 	voile.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var centre := CenterContainer.new()

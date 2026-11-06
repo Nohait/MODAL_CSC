@@ -8,7 +8,10 @@ extends CanvasLayer
 @export var vie_max := 100.0
 
 func _ready() -> void:
-
+	var reperes_ennemis := preload("res://scenes/interfaces/hud/reperes_ennemis.tscn").instantiate()
+	reperes_ennemis.joueur = get_parent()
+	add_child(reperes_ennemis)
+	move_child(reperes_ennemis, 0)
 	var couche_reperes := CanvasLayer.new()
 	couche_reperes.name = "CoucheReperesVictimes"
 	# Le carnet utilise la couche 30 et ses cartes survolées la couche 31.
@@ -34,11 +37,11 @@ func maj_affichage() -> void:
 	var recharge: bool = not extincteur.is_attacking and extincteur.charge < extincteur.max_charge
 	jauge.afficher_recharge(recharge)
 	if extincteur.is_overheated:
-		jauge.couleur = Color(0.9, 0.32, 0.19)
+		jauge.couleur = Color(0.772549, 0.176471, 0.184314)
 		etat.text = "SURCHAUFFE · Recharge complète requise"
-		etat.modulate = Color(1, 0.6, 0.4)
+		etat.modulate = Color(0.772549, 0.176471, 0.184314)
 	else:
-		jauge.couleur = Color(0.86, 0.8, 0.64)
+		jauge.couleur = Color(0.960784, 0.960784, 0.941176)
 		etat.modulate = Color.WHITE
 		if extincteur.is_attacking:
 			etat.text = "JET EN COURS"

@@ -34,7 +34,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.015, 0.012, 0.012, 0.86)
+color = Color(0.062745, 0.062745, 0.062745, 0.86)
 
 [node name="Panneau" type="Control" parent="Menu"]
 layout_mode = 1
@@ -141,7 +141,7 @@ offset_top = -76.0
 offset_right = 620.0
 offset_bottom = -22.0
 theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.72, 0.61, 0.48, 1)
+theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 text = "Réglages enregistrés automatiquement\nF2 / Start : options · Échap / B : retour"
 
 [node name="Fermer" parent="Menu/Panneau" instance=ExtResource("bouton")]

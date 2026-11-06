@@ -26,8 +26,8 @@ func _ready() -> void:
 	secours.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	secours.position = Vector2(348, 28)
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color("241d18")
-	fond.border_color = Color("b8a17a")
+	fond.bg_color = Color("222222")
+	fond.border_color = Color("bdbdbd")
 	fond.set_border_width_all(1)
 	fond.set_corner_radius_all(5)
 	fond.set_content_margin_all(7)
@@ -37,7 +37,7 @@ func _ready() -> void:
 	secours.add_child(ligne)
 	var icone := TextureRect.new()
 	icone.texture = preload("res://assets/textures/interfaces/ameliorations/pictogrammes/reserve_secours.svg")
-	icone.modulate = Color(2.6, 2.5, 2.2)
+	icone.modulate = Color(2.6, 2.6, 2.6)
 	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icone.custom_minimum_size = Vector2(28, 28)
@@ -68,7 +68,7 @@ func _process(delta: float) -> void:
 	contour.visible = actif
 	if actif:
 		# Un cycle par seconde, discret ; la jauge conserve ses vraies valeurs.
-		contour.self_modulate = Color(2.0, 0.5, 0.4, 0.25 + 0.2 * (sin(temps * TAU) + 1.0))
+		contour.self_modulate = Color(2.0, 0.5, 0.5, 0.25 + 0.2 * (sin(temps * TAU) + 1.0))
 
 func actualiser_secours() -> void:
 	var nombre := 0
@@ -79,7 +79,7 @@ func actualiser_secours() -> void:
 	secours.tooltip_text = "Secours disponibles : %d" % nombre
 
 func afficher_impact_bouclier() -> void:
-	joueur.flash_degats(Color("59bde8"))
+	joueur.flash_degats(Color("f5f5f0"))
 	joueur.get_node("FeedbackSurvie").impact_bouclier()
 	if animation_eclat: animation_eclat.kill()
 	eclat.show()

@@ -4,12 +4,6 @@ const ZONE_FEU = preload("res://scenes/ennemis/dangers/chute.tscn")
 
 var musique_jouee = null
 
-#### FOR DEBUG PURPOSES : L for falling fire
-func _unhandled_input(event: InputEvent) -> void:
-	if not OS.is_debug_build(): return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L:
-		_lancer_sur_joueur()
-
 func _lancer_sur_joueur() -> void:
 	var joueur := get_tree().get_first_node_in_group("player") as Node3D
 	if joueur == null: return
@@ -59,7 +53,6 @@ const VICTIME_SCENE = preload("res://scenes/victimes/victime.tscn")
 # Ancien système conservé dans le projet.
 # La scène n'est simplement plus instanciée automatiquement.
 const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuation.tscn")
-var SonNouvelleVague = preload("res://assets/sounds/ennemis/NouvelleVague.wav")
 
 # Parcours
 
@@ -101,6 +94,17 @@ var nombre_salles: int:
 
 # Seuils lus une fois dans les scènes d'ennemis, sans les ajouter au niveau.
 var seuils_apparition: Dictionary = {}
+var poids_apparition_classiques: Dictionary = {}
+var mobiles_classiques_planifies: Dictionary = {}
+
+@export_group("Diversité des mobiles — classique")
+## Seuils, poids et hauteur se règlent dans la section Apparition de chaque scène.
+@export var types_mobiles_classiques: Array[PackedScene] = [
+	SBIRE_SCENE,
+	preload("res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn"),
+	preload("res://scenes/ennemis/mobiles/blaze/blaze.tscn"),
+	preload("res://scenes/ennemis/mobiles/kamikaze/kamikaze.tscn")
+]
 
 # Vagues
 
@@ -118,6 +122,10 @@ var seuils_apparition: Dictionary = {}
 # Distance horizontale minimale avec le joueur pour une vague normale.
 @export_range(1.5, 10.0, 0.5) var distance_securite_spawn := 3.0
 
+@export_group("Hordes — classique")
+@export var hordes: Resource = preload("res://scenes/salles/hordes_classiques.tres")
+var hordes_salle_actives := false
+
 # Victimes
 
 @export_group("Victimes présentes dès le début")
@@ -133,25 +141,33 @@ var seuils_apparition: Dictionary = {}
 
 
 @export_group("Chutes de feu")
+@export_group("Chutes de feu")
 @export var chutes_actives := true
 ## Premier étage / première salle de l'étage où les chutes apparaissent.
 @export_range(1, 10, 1) var etage_min_chutes := 1
 @export_range(1, 5, 1) var salle_min_chutes := 2
-## Nombre de vagues de chutes par salle : de _min (début du jeu) à _max (dernière salle).
+## >1 : la difficulté des chutes monte plus tard dans le parcours.
+@export_range(1.0, 3.0, 0.1) var courbe_difficulte_chutes := 1.5
+## Nombre de vagues de chutes par salle : de _min (début) à _max (fin).
 @export_range(1, 8, 1) var vagues_chutes_min := 1
-@export_range(1, 8, 1) var vagues_chutes_max := 3
-## Taille d'une vague : 3 à 4 au début, 6 à 10 dans la dernière salle.
-@export_range(1, 10, 1) var taille_chutes_min_debut := 3
-@export_range(1, 10, 1) var taille_chutes_max_debut := 4
-@export_range(1, 10, 1) var taille_chutes_min_fin := 6
-@export_range(1, 10, 1) var taille_chutes_max_fin := 10
+@export_range(1, 8, 1) var vagues_chutes_max := 2
+## Taille d'une vague (début -> fin du jeu).
+@export_range(1, 10, 1) var taille_chutes_min_debut := 1
+@export_range(1, 10, 1) var taille_chutes_max_debut := 2
+@export_range(1, 10, 1) var taille_chutes_min_fin := 2
+@export_range(1, 10, 1) var taille_chutes_max_fin := 4
+## Temps d'avertissement avant l'impact (début -> fin du jeu).
+@export_range(0.5, 5.0, 0.1) var delai_chute_debut := 3.0
+@export_range(0.5, 5.0, 0.1) var delai_chute_fin := 1.5
+## Rayon aléatoire de chaque zone.
+@export_range(0.5, 6.0, 0.1) var rayon_chute_min := 1.5
+@export_range(0.5, 6.0, 0.1) var rayon_chute_max := 3.0
 ## Les zones d'une vague tombent à des moments décalés de 0 à cette durée.
 @export_range(0.0, 3.0, 0.1) var etalement_chutes := 1.0
-## Distance minimale à plat entre deux zones d'une même vague.
-@export_range(1.0, 10.0, 0.5) var distance_min_entre_chutes := 4.0
+## Marge libre entre les bords de deux zones d'une même vague.
+@export_range(0.0, 5.0, 0.1) var marge_entre_chutes := 1.0
 ## Probabilité qu'une vague contienne une zone visant le joueur.
-@export_range(0.0, 1.0, 0.05) var part_chute_sur_joueur := 0.3
-
+@export_range(0.0, 1.0, 0.05) var part_chute_sur_joueur := 0.1
 var chutes_planifiees: Array[Dictionary] = []
 
 # Références
@@ -256,23 +272,56 @@ func planifier_chutes(salle: Node3D) -> void:
 	if not chutes_actives: return
 	if salle.etage < etage_min_chutes: return
 	if salle.etage == etage_min_chutes and salle.numero_dans_etage < salle_min_chutes: return
-	var d := difficulte_salle(salle)
+	var d := pow(difficulte_salle(salle), courbe_difficulte_chutes)
 	var nombre_vagues := roundi(lerpf(vagues_chutes_min, vagues_chutes_max, d))
 	var taille_min := roundi(lerpf(taille_chutes_min_debut, taille_chutes_min_fin, d))
 	var taille_max := maxi(taille_min, roundi(lerpf(taille_chutes_max_debut, taille_chutes_max_fin, d)))
+	var delai := lerpf(delai_chute_debut, delai_chute_fin, d)
 	for i in range(nombre_vagues):
-		# Réparties régulièrement, sans tomber au tout début ni à la toute fin du timer.
 		var restant: float = salle.duree_sauvetage * (1.0 - float(i + 1) / (nombre_vagues + 1))
-		chutes_planifiees.append({"nombre": randi_range(taille_min, taille_max), "restant": restant})
+		chutes_planifiees.append({
+			"nombre": randi_range(taille_min, taille_max),
+			"restant": restant,
+			"delai": delai,
+		})
 
 func ennemi_autorise(scene: PackedScene, salle: Node3D) -> bool:
 	if not seuils_apparition.has(scene):
 		var modele = scene.instantiate()
 		seuils_apparition[scene] = Vector2i(modele.premier_etage, modele.premiere_salle)
+		var poids = modele.get("poids_apparition_classique")
+		poids_apparition_classiques[scene] = maxf(float(poids), 0.0) if poids != null else 0.0
 		modele.free()
 	var seuil: Vector2i = seuils_apparition[scene]
 	# Exemple : étage 1, salle 3 autorise toutes les salles des étages 2 et 3.
 	return salle.etage > seuil.x or (salle.etage == seuil.x and salle.numero_dans_etage >= seuil.y)
+
+func types_mobiles_autorises(salle: Node3D) -> Array[PackedScene]:
+	var types: Array[PackedScene] = []
+	for scene in types_mobiles_classiques:
+		if scene == null or types.has(scene): continue
+		if ennemi_autorise(scene, salle) and poids_apparition_classiques[scene] > 0.0:
+			types.append(scene)
+	return types
+
+func planifier_types_mobiles(salle: Node3D, graine: int) -> void:
+	mobiles_classiques_planifies.clear()
+	var types := types_mobiles_autorises(salle)
+	if types.is_empty(): return
+	var total := 0.0
+	for scene in types: total += poids_apparition_classiques[scene]
+	# Ce tirage indépendant reste stable malgré les effets aléatoires pendant le combat.
+	var hasard := RandomNumberGenerator.new()
+	hasard.seed = graine
+	for emplacement in salle.mobiles_a_creer:
+		var tirage := hasard.randf() * total
+		var selection: PackedScene = types.back()
+		for scene in types:
+			tirage -= poids_apparition_classiques[scene]
+			if tirage < 0.0:
+				selection = scene
+				break
+		mobiles_classiques_planifies[emplacement] = selection
 
 func supplement_mobiles(salle: Node3D) -> int:
 	# Les salles ajoutent une pression progressive ; l'étage ajoute un saut net.
@@ -346,7 +395,7 @@ func peupler_salle(salle: Node3D) -> void:
 		randi_range(nombre_min_ennemis_mobiles + bonus_mobiles, maxi(nombre_min_ennemis_mobiles, nombre_max_ennemis_mobiles) + bonus_mobiles),
 		emplacements.size()
 	)
-	if not ennemi_autorise(SBIRE_SCENE, salle):
+	if types_mobiles_autorises(salle).is_empty():
 		nombre = 0
 	for i in range(nombre):
 		salle.mobiles_a_creer.append(emplacements.pop_back())
@@ -390,65 +439,64 @@ func _process(delta: float) -> void:
 			break
 		salle_actuelle.vagues_planifiees.pop_front()
 		
-		#Alarme de vague
-		var sonVague = AudioStreamPlayer3D.new()
-		sonVague.stream = SonNouvelleVague
-		joueur.add_child(sonVague)
-		sonVague.play()
-		
 		creer_vague(vague.nombre, vague.restant)
 	
 	while not chutes_planifiees.is_empty() and restant <= chutes_planifiees[0].restant:
 		var chute: Dictionary = chutes_planifiees.pop_front()
 		# Une salle déjà libérée n'a plus besoin de pression supplémentaire.
 		if not salle_actuelle.liberee:
-			lancer_vague_chutes(salle_actuelle, chute.nombre)	
+			lancer_vague_chutes(salle_actuelle, chute.nombre, chute.delai)
 	
 	for apparition in salle_actuelle.apparitions_planifiees.duplicate():
 		if restant <= apparition.restant:
 			salle_actuelle.apparitions_planifiees.erase(apparition)
 			_terminer_apparition(salle_actuelle, apparition.position)
 
-func lancer_vague_chutes(salle: Node3D, nombre: int) -> void:
+func lancer_vague_chutes(salle: Node3D, nombre: int, delai: float) -> void:
 	var points: Array[Vector3] = salle.points_spawn.duplicate()
 	points.shuffle()
-	var choisis: Array[Vector3] = []  # positions globales
+	var choisis: Array[Dictionary] = []  # {"pos": Vector3 global, "rayon": float}
 
 	# Une zone vise la position actuelle du joueur : il doit bouger pendant l'avertissement.
 	if is_instance_valid(joueur) and randf() < part_chute_sur_joueur:
-		choisis.append(_sol_sous(joueur))
+		choisis.append({"pos": _sol_sous(joueur), "rayon": randf_range(rayon_chute_min, rayon_chute_max)})
 
-	# Première passe : points espacés pour couvrir toute la pièce.
+	# Première passe : zones qui ne se chevauchent pas (rayons + marge).
 	for p in points:
 		if choisis.size() >= nombre: break
 		var g := salle.to_global(p)
+		var r := randf_range(rayon_chute_min, rayon_chute_max)
 		var libre := true
 		for c in choisis:
-			if Vector2(g.x - c.x, g.z - c.z).length() < distance_min_entre_chutes:
+			if Vector2(g.x - c.pos.x, g.z - c.pos.z).length() < c.rayon + r + marge_entre_chutes:
 				libre = false
 				break
-		if libre: choisis.append(g)
+		if libre: choisis.append({"pos": g, "rayon": r})
 
-	# Seconde passe : si la pièce est trop petite pour l'espacement, compléter sans contrainte.
+	# Seconde passe : pièce trop petite, on complète sans contrainte.
 	for p in points:
 		if choisis.size() >= nombre: break
 		var g := salle.to_global(p)
-		if not choisis.has(g): choisis.append(g)
+		var deja := false
+		for c in choisis:
+			if c.pos.is_equal_approx(g): deja = true
+		if not deja:
+			choisis.append({"pos": g, "rayon": randf_range(rayon_chute_min, rayon_chute_max)})
 
-	for position_sol in choisis:
-		_faire_tomber(salle, position_sol, randf() * etalement_chutes)
+	for c in choisis:
+		_faire_tomber(salle, c.pos, c.rayon, delai, randf() * etalement_chutes)
 
-func _faire_tomber(salle: Node3D, position_sol: Vector3, delai: float) -> void:
+func _faire_tomber(salle: Node3D, position_sol: Vector3, rayon: float, delai_avertissement: float, delai: float) -> void:
 	if delai > 0.0:
 		await get_tree().create_timer(delai).timeout
-	# La salle a pu changer ou se terminer pendant l'attente.
 	if not is_instance_valid(salle) or salle != salle_actuelle or transition_en_cours: return
 	var zone := ZONE_FEU.instantiate()
-	# Dans le conteneur de la salle : désactivées avec elle, et nettoyées par liberer_salle_debug.
+	# À régler avant add_child : _ready() de la zone construit ses disques avec ce rayon.
+	zone.rayon = rayon
+	zone.delai_avertissement = delai_avertissement
 	var conteneur: Node = salle.get_node_or_null("FlaquesDeFeu")
 	(conteneur if conteneur != null else salle).add_child(zone)
 	zone.global_position = position_sol + Vector3.UP * 0.2
-	
 
 # Timer
 
@@ -460,12 +508,16 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	salle.sauvetage_termine = false
 	var point = get_node_or_null("../../PointRepriseClassique")
 	if point != null: point.commencer_salle(self)
+	planifier_types_mobiles(salle, point.graine_combat if point != null else randi())
+	hordes_salle_actives = hordes != null and hordes.est_active(salle.remaining_enemies)
 	salle.duree_sauvetage = randf_range(clampf(duree_min_vagues, 15.0, 30.0), clampf(maxf(duree_min_vagues, duree_max_vagues), 15.0, 30.0))
 	salle.temps_sauvetage_restant = salle.duree_sauvetage
 	var tailles: Array[int] = []
 	var a_planifier: int = salle.mobiles_a_creer.size()
 	var maximum := maximum_vague(salle)
 	var minimum := clampi(taille_min_vague, 1, maximum)
+	if hordes_salle_actives:
+		minimum = clampi(maxi(minimum, hordes.taille_min_vague), 1, maximum)
 	while a_planifier > 0:
 		var taille := mini(a_planifier, randi_range(minimum, maximum))
 		tailles.append(taille)
@@ -531,13 +583,7 @@ func terminer_sauvetage(salle: Node3D) -> void:
 # Vagues
 
 func creer_vague(nombre_prevu: int, restant: float) -> void:
-	var nombre := mini(nombre_prevu, salle_actuelle.mobiles_a_creer.size())
-	for i in range(nombre):
-		var indice := trouver_emplacement_eloigne(salle_actuelle)
-		if indice == -1:
-			indice = 0 # L’annonce prévient le joueur ; ne pas retarder la vague.
-		var emplacement: Vector3 = salle_actuelle.mobiles_a_creer[indice]
-		salle_actuelle.mobiles_a_creer.remove_at(indice)
+	for emplacement in _prelever_vague(salle_actuelle, nombre_prevu):
 		salle_actuelle.mobiles_annonces.append(emplacement)
 		salle_actuelle.apparitions_en_cours += 1
 		var annonce = ANNONCE_SCENE.instantiate()
@@ -548,6 +594,25 @@ func creer_vague(nombre_prevu: int, restant: float) -> void:
 		annonce.terminee.connect(salle_actuelle.annonces_en_cours.erase.bind(annonce), CONNECT_ONE_SHOT)
 		salle_actuelle.add_child(annonce)
 	actualiser_objectifs()
+
+func _prelever_vague(salle: Node3D, nombre_prevu: int) -> Array[Vector3]:
+	var origines: Array[Vector3] = []
+	for i in range(mini(nombre_prevu, salle.mobiles_a_creer.size())):
+		var indice := trouver_emplacement_eloigne(salle)
+		if indice == -1: indice = 0
+		origines.append(salle.mobiles_a_creer[indice])
+		salle.mobiles_a_creer.remove_at(indice)
+	if not hordes_salle_actives or not is_instance_valid(joueur): return origines
+	var reserves: Array[Vector3] = salle.mobiles_a_creer.duplicate()
+	reserves.append_array(salle.mobiles_annonces)
+	var positions: Array[Vector3] = hordes.placer(origines, reserves, salle, salle.carte_ennemis, joueur.global_position, distance_securite_spawn)
+	var types: Array[PackedScene] = []
+	for origine in origines:
+		types.append(mobiles_classiques_planifies.get(origine))
+		mobiles_classiques_planifies.erase(origine)
+	for i in range(positions.size()):
+		mobiles_classiques_planifies[positions[i]] = types[i]
+	return positions
 
 func emplacement_suffisamment_eloigne(salle: Node3D, emplacement: Vector3) -> bool:
 	if not is_instance_valid(joueur):
@@ -579,9 +644,17 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 
 	# Positions encore jamais annoncées.
 	var positions: Array[Vector3] = salle.mobiles_a_creer.duplicate()
+	if hordes_salle_actives:
+		positions.clear()
+		while not salle.mobiles_a_creer.is_empty():
+			var groupe := _prelever_vague(salle, maximum_vague(salle))
+			positions.append_array(groupe)
+			# Réserver aussi ces positions jusqu'à la création de tous les groupes.
+			salle.mobiles_annonces.append_array(groupe)
 
 	# Positions dont l'annonce était encore en cours.
-	positions.append_array(salle.mobiles_annonces)
+	for emplacement in salle.mobiles_annonces:
+		if not positions.has(emplacement): positions.append(emplacement)
 
 	# Retirer les annonces visuelles restantes.
 	for annonce in (salle.annonces_en_cours.duplicate()):
@@ -597,17 +670,36 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 		creer_mobile(salle, emplacement)
 
 func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
-	# Le mode classique conserve ses sbires ; le mode zombie spécialise ce choix.
-	creer_sbire(salle, emplacement)
+	var scene: PackedScene = mobiles_classiques_planifies.get(emplacement)
+	mobiles_classiques_planifies.erase(emplacement)
+	if scene == null:
+		# Un catalogue désactivé ne doit pas laisser un ennemi fantôme bloquer la sortie.
+		salle.remaining_enemies = maxi(0, salle.remaining_enemies - 1)
+		return
+	if scene == SBIRE_SCENE:
+		creer_sbire(salle, emplacement)
+		return
+	var ennemi = scene.instantiate()
+	ennemi.etage = salle.etage
+	ennemi.position = emplacement + Vector3.UP * ennemi.hauteur_apparition_classique
+	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
+	salle.get_node("Ennemis").add_child(ennemi)
+	var agent := ennemi.get_node_or_null("NavigationAgent") as NavigationAgent3D
+	if agent != null: agent.set_navigation_map(salle.carte_ennemis)
+	jouer_son_apparition(ennemi)
+
+func jouer_son_apparition(ennemi: Node3D) -> void:
+	ennemi.add_child(preload("res://scenes/effets/apparition/son_apparition.tscn").instantiate())
 
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	var sbire = SBIRE_SCENE.instantiate()
 	sbire.etage = salle.etage
-	sbire.position = emplacement + Vector3.UP * 0.75
+	sbire.position = emplacement + Vector3.UP * sbire.hauteur_apparition_classique
 	salle.get_node("Ennemis").add_child(sbire)
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	jouer_son_apparition(sbire)
 	return sbire
 
 # Activation d'une salle
@@ -770,6 +862,7 @@ func actualiser_objectifs() -> void:
 		is_room_cleared = true
 		liberer_portes(salle_actuelle)
 		afficher_victoire()
+		SonsInterface.celebrer_salle_liberee()
 		room_cleared.emit()
 
 func liberer_portes(salle: Node3D) -> void:
@@ -914,10 +1007,12 @@ func liberer_salle_debug() -> void:
 func peut_creer_ennemi_debug() -> bool:
 	return is_instance_valid(salle_actuelle) and not transition_en_cours and not salle_actuelle.liberee
 
-func creer_ennemi_debug(identifiant: String) -> bool:
+func creer_ennemi_debug(identifiant: String, mutation := "normal") -> bool:
 	if not peut_creer_ennemi_debug(): return false
 	var description: Dictionary = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug.gd").trouver(identifiant)
 	if description.is_empty(): return false
+	var modification: ModificateurElite = CatalogueEnnemis.trouver_mutation(mutation)
+	if mutation != "normal" and (modification == null or not description.get("elite_possible", false)): return false
 	var ennemi = description.scene.instantiate()
 	if identifiant == "flaque": ennemi.choisir_taille_aleatoire()
 	var positions: Array[Vector3] = salle_actuelle.points_spawn.duplicate()
@@ -925,6 +1020,10 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 		return salle_actuelle.to_global(a).distance_squared_to(joueur.global_position) < salle_actuelle.to_global(b).distance_squared_to(joueur.global_position))
 	# Tester la vraie collision du modèle, avec son éventuel décalage et sa taille.
 	var collision: CollisionShape3D = ennemi.get_node("CollisionShape3D")
+	var taille_mutation := modification.taille if modification != null else 1.0
+	var decalage_mutation := CatalogueEnnemis.ELITE.calculer_decalage_sol(collision, ennemi.scale.y, taille_mutation)
+	var echelle_initiale: Vector3 = ennemi.scale
+	var hauteur: float = 0.75 if identifiant == "sbire" else description.hauteur
 	var requete := PhysicsShapeQueryParameters3D.new()
 	requete.shape = collision.shape
 	requete.collision_mask = 15
@@ -932,7 +1031,8 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 		# Ne pas occuper la place d'une apparition déjà prévue par une vague.
 		if salle_actuelle.mobiles_a_creer.has(emplacement) or salle_actuelle.mobiles_annonces.has(emplacement): continue
 		if not emplacement_suffisamment_eloigne(salle_actuelle, emplacement): continue
-		ennemi.position = emplacement + Vector3.UP * description.hauteur
+		ennemi.position = emplacement + Vector3.UP * (hauteur + decalage_mutation)
+		ennemi.scale = echelle_initiale * taille_mutation
 		requete.transform = salle_actuelle.global_transform * ennemi.transform * collision.transform
 		if not salle_actuelle.get_world_3d().direct_space_state.intersect_shape(requete, 1).is_empty(): continue
 		# Les zones de détection utilisent aussi la couche 16 : ne pas les confondre
@@ -948,15 +1048,20 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 		if identifiant == "sbire":
 			# Cette fonction est spécialisée dans le mode zombie pour l'aggro du camion.
 			ennemi.free()
-			creer_sbire(salle_actuelle, emplacement)
+			ennemi = creer_sbire(salle_actuelle, emplacement)
 		else:
+			# L'enregistrement différé applique ensuite la mutation une seule fois.
+			ennemi.scale = echelle_initiale
+			ennemi.position = emplacement + Vector3.UP * hauteur
 			ennemi.etage = salle_actuelle.etage
 			if identifiant == "tourelle": ennemi.projectiles_tour = salle_actuelle.get_node("ProjectilesTour")
 			ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 			salle_actuelle.get_node("Ennemis").add_child(ennemi)
+			jouer_son_apparition(ennemi)
 			relier_invocation(ennemi, salle_actuelle)
 			var agent = ennemi.get_node_or_null("NavigationAgent")
 			if agent: agent.set_navigation_map(salle_actuelle.carte_ennemis)
+		ennemi.set_meta("mutation_debug", mutation)
 		actualiser_objectifs()
 		return true
 	ennemi.free()
@@ -1011,5 +1116,6 @@ func _invoquer_ennemis(invocations: Array[Dictionary], boss: Node3D, salle: Node
 			ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 			salle.get_node("Ennemis").add_child(ennemi)
 			ennemi.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+			jouer_son_apparition(ennemi)
 		ennemi.set_meta("boss_invocateur", boss.get_instance_id())
 	actualiser_objectifs()

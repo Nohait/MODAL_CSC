@@ -34,8 +34,8 @@ func _ready() -> void:
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titre.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	titre.add_theme_font_size_override("font_size", 48)
-	titre.add_theme_color_override("font_color", Color("ffd898"))
-	titre.add_theme_color_override("font_outline_color", Color("271215"))
+	titre.add_theme_color_override("font_color", Color("f5f5f0"))
+	titre.add_theme_color_override("font_outline_color", Color("101010"))
 	titre.add_theme_constant_override("outline_size", 8)
 	annonce.add_child(titre)
 	encre = ShaderMaterial.new()
@@ -127,7 +127,7 @@ func _ennemi_ajoute(ennemi: Node3D) -> void:
 			effet.name = "Dore"
 			ennemi.add_child(effet)
 	var identifiant := ennemi.get_instance_id()
-	if mutation_en_cours() and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(identifiant):
+	if mutation_en_cours() and not ennemi.has_meta("mutation_debug") and ennemi.has_method("multiplicateur_vitesse") and not mutations.has(identifiant):
 		var elite = ennemi.get_node_or_null("Elite")
 		# Mémoriser l'unique mutation d'origine avant le remplacement temporaire.
 		mutations[identifiant] = elite.definition if elite != null else null

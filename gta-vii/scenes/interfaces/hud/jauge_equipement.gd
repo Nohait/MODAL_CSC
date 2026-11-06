@@ -2,7 +2,7 @@
 extends ProgressBar
 
 @export var titre := "VIE"
-@export var couleur := Color(0.65, 0.16, 0.14):
+@export var couleur := Color(0.772549, 0.176471, 0.184314):
 	set(nouvelle_couleur):
 		couleur = nouvelle_couleur
 		if is_node_ready():
@@ -73,7 +73,7 @@ func reagir_aux_degats(degats: float) -> void:
 		vie_perdue = remplissage.duplicate()
 		vie_perdue.name = "ViePerdue"
 		vie_perdue.material = remplissage.material.duplicate()
-		vie_perdue.material.set_shader_parameter("teinte", Color("e6ac68"))
+		vie_perdue.material.set_shader_parameter("teinte", Color("f5f5f0"))
 		vie_perdue.material.set_shader_parameter("impact", 0.0)
 		vie_perdue.material.set_shader_parameter("recharge", false)
 		add_child(vie_perdue)
@@ -88,7 +88,7 @@ func reagir_aux_degats(degats: float) -> void:
 	animation_perte.tween_property(self, "proportion_retard", proportion, 0.55).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if animation_degats:
 		animation_degats.kill()
-	cadre.self_modulate = Color(1.4, 0.75, 0.65)
+	cadre.self_modulate = Color(1.4, 0.65, 0.65)
 	animation_degats = create_tween().set_parallel(true)
 	# Le cadre retrouve sa couleur pendant que le reflet rouge s'atténue.
 	animation_degats.tween_property(cadre, "self_modulate", Color.WHITE, 0.4)
@@ -105,7 +105,7 @@ func afficher_bouclier(reserve: float) -> void:
 		couche_bouclier = remplissage.duplicate()
 		couche_bouclier.name = "CoucheBouclier"
 		couche_bouclier.material = remplissage.material.duplicate()
-		couche_bouclier.material.set_shader_parameter("teinte", Color("59bde8"))
+		couche_bouclier.material.set_shader_parameter("teinte", Color("f5f5f0"))
 		couche_bouclier.material.set_shader_parameter("impact", 0.0)
 		couche_bouclier.material.set_shader_parameter("recharge", false)
 		add_child(couche_bouclier)
@@ -115,6 +115,6 @@ func afficher_bouclier(reserve: float) -> void:
 	actualiser_valeur()
 	if perte and is_instance_valid(couche_bouclier):
 		if animation_bouclier: animation_bouclier.kill()
-		couche_bouclier.self_modulate = Color(1.5, 1.5, 1.7)
+		couche_bouclier.self_modulate = Color(1.5, 1.5, 1.5)
 		animation_bouclier = create_tween()
 		animation_bouclier.tween_property(couche_bouclier, "self_modulate", Color.WHITE, 0.3)

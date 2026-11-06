@@ -18,22 +18,24 @@ func _ready() -> void:
 	add_theme_constant_override("separation", 6)
 	# Un thème local laisse les textes des boosters inchangés.
 	theme = Theme.new()
-	theme.set_color("font_color", "Label", Color("edf0e9"))
+	theme.set_color("font_color", "Label", Color("f5f5f0"))
 	for etat in ["normal", "hover", "pressed", "disabled"]:
 		var fond := StyleBoxFlat.new()
-		fond.bg_color = Color("24333b") if etat == "normal" else Color("354b57")
+		fond.bg_color = Color("b33429") if etat == "normal" else Color("c14034")
 		if etat == "disabled":
-			fond.bg_color = Color("202a30")
+			fond.bg_color = Color("343434")
+		fond.border_color = Color("969696") if etat == "disabled" else Color("f5f5f0")
+		fond.set_border_width_all(1)
 		fond.set_corner_radius_all(4)
 		fond.content_margin_left = 10
 		fond.content_margin_right = 10
 		fond.content_margin_top = 8
 		fond.content_margin_bottom = 8
 		theme.set_stylebox(etat, "Button", fond)
-		theme.set_color("font_" + etat + "_color" if etat != "normal" else "font_color", "Button", Color("819097") if etat == "disabled" else Color("edf0e9"))
+		theme.set_color("font_" + etat + "_color" if etat != "normal" else "font_color", "Button", Color("969696") if etat == "disabled" else Color("f5f5f0"))
 	var contour := StyleBoxFlat.new()
 	contour.bg_color = Color(0, 0, 0, 0)
-	contour.border_color = Color("e3c65a")
+	contour.border_color = Color("f5f5f0")
 	contour.set_border_width_all(2)
 	contour.set_corner_radius_all(4)
 	theme.set_stylebox("focus", "Button", contour)
@@ -80,10 +82,10 @@ func afficher_progression() -> void:
 	barre.show_percentage = false
 	# Une piste discrète et un remplissage vert rendent l'avancement identifiable.
 	var piste := StyleBoxFlat.new()
-	piste.bg_color = Color("101b21")
+	piste.bg_color = Color("101010")
 	piste.set_corner_radius_all(2)
 	var remplissage := StyleBoxFlat.new()
-	remplissage.bg_color = Color("4c873d")
+	remplissage.bg_color = Color("008e5e")
 	remplissage.set_corner_radius_all(2)
 	barre.add_theme_stylebox_override("background", piste)
 	barre.add_theme_stylebox_override("fill", remplissage)

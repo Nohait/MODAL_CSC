@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/effets/apparition/son_apparition.gd" id="script"]
+[ext_resource type="AudioStream" path="res://assets/sounds/ennemis/apparition/flame.ogg" id="son"]
+
+[node name="SonApparition" type="AudioStreamPlayer3D"]
+editor_description = "Son partagé des apparitions. Stream : fichier à jouer. Volume Db et Max Db : niveau et plafond de proximité. Unit Size et Max Distance : portée. Maximum Simultanes et Distance Regroupement : protection contre les apparitions en groupe."
+stream = ExtResource("son")
+volume_db = -22.0
+max_db = -22.0
+unit_size = 5.0
+max_distance = 28.0
+bus = &"Effets"
+script = ExtResource("script")

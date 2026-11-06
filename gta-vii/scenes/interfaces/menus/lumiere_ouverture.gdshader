@@ -15,7 +15,7 @@ void fragment() {
 	float halo = exp(-distance * etendue);
 	float rais = pow(max(0.0, sin(angle * 7.0 + horloge * 0.3)), 4.0);
 	float coeur = exp(-distance * 12.0);
-	vec3 couleur = mix(vec3(1.0, 0.38, 0.10), vec3(1.0, 0.80, 0.38), coeur);
+	vec3 couleur = mix(vec3(0.772549, 0.176471, 0.184314), vec3(0.960784, 0.960784, 0.941176), coeur);
 	// Une addition douce éclaire l'interface sans la remplacer par un écran blanc.
 	float lumiere = pression * (halo * (0.30 + rais * 0.28) + coeur * 0.18);
 	COLOR = vec4(couleur, lumiere);

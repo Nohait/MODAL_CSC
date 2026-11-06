@@ -6,6 +6,7 @@ var mode_suppression := "zombie"
 var reprise_tutoriel: Node
 @export_range(0.2, 1.2, 0.05) var duree_depart := 0.5
 var temps_titre := 0.0
+var menu_profil: CanvasLayer
 
 func changer_scene(chemin: String) -> void:
 	if changement_en_cours:
@@ -33,6 +34,7 @@ func _restaurer_menu() -> void:
 		bouton.disabled = false
 
 func _ready() -> void:
+	add_to_group("debug_titre")
 	super._ready()
 	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	%ModeZombie.pressed.connect(_jouer_zombie)
@@ -63,6 +65,8 @@ func _ready() -> void:
 		fond.material = ShaderMaterial.new()
 		fond.material.shader = preload("res://scenes/interfaces/menus/titre/bouton_supprimer.gdshader")
 		fond.material.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
+		fond.material.set_shader_parameter("contour_repos", Color("f5f5f0"))
+		fond.material.set_shader_parameter("intensite_plastique", bouton.intensite_texture)
 		for etat in ["font_color", "font_hover_color", "font_pressed_color"]:
 			bouton.add_theme_color_override(etat, Color.WHITE)
 	_actualiser_zombie()
@@ -110,8 +114,8 @@ func _creer_confirmation_suppression() -> void:
 	panneau.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	confirmation_suppression.add_child(panneau)
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("1c232d")
-	style.border_color = Color("b78f62")
+	style.bg_color = Color("222222")
+	style.border_color = Color("bdbdbd")
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(8)
 	style.content_margin_left = 28
@@ -129,7 +133,7 @@ func _creer_confirmation_suppression() -> void:
 	message_sauvegarde.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	message_sauvegarde.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	message_sauvegarde.add_theme_font_size_override("font_size", 23)
-	message_sauvegarde.add_theme_color_override("font_color", Color("edf0e9"))
+	message_sauvegarde.add_theme_color_override("font_color", Color("f5f5f0"))
 	colonne.add_child(message_sauvegarde)
 	var boutons := HBoxContainer.new()
 	boutons.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -194,3 +198,12 @@ func nouvelle_partie() -> void:
 
 func _jouer_tutoriel() -> void:
 	changer_scene(preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).chemin_reprise())
+
+func debug_contextuel() -> bool:
+	if changement_en_cours or confirmation_suppression.visible: return true
+	if not is_instance_valid(menu_profil):
+		menu_profil = preload("res://scenes/interfaces/menus/debug/menu_profil.tscn").instantiate()
+		add_child(menu_profil)
+	if menu_profil.visible: menu_profil.fermer()
+	else: menu_profil.ouvrir()
+	return true

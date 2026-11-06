@@ -86,6 +86,7 @@ func _habiller_boutons(parent: Node) -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://scenes/interfaces/menus/onglet_carnet.gdshader")
 	mat.set_shader_parameter("selection", 0.0)
+	mat.set_shader_parameter("contour_repos", Color("f5f5f0"))
 	mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 	mat.set_shader_parameter("largeur_bord", 4.0)
 	mat.set_shader_parameter("rayon_coin", 6.0)
@@ -104,7 +105,7 @@ func _habiller_boutons(parent: Node) -> void:
 func _creer_titre(texte: String) -> void:
 	var titre := Label.new()
 	titre.text = texte
-	titre.add_theme_color_override("font_color", Color("e3c65a"))
+	titre.add_theme_color_override("font_color", Color("f5f5f0"))
 	titre.add_theme_font_size_override("font_size", 20)
 	contenu.add_child(titre)
 

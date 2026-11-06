@@ -17,6 +17,12 @@ extends Resource
 @export var bonus_aura := 0.25
 
 @export_group("Signature visuelle")
+## Couleur stable sur tout le corps, indépendante de la luminosité du contour.
+@export_range(0.0, 0.8, 0.05) var opacite_couleur_corps := 0.45
+## Transparence du halo et émission lumineuse indépendantes des zones au sol.
+@export_range(0.0, 2.0, 0.05) var intensite_halo := 0.65
+@export_range(0.0, 2.0, 0.05) var emission_halo := 0.1
+@export_range(1.0, 2.0, 0.05) var halo_rage := 1.25
 @export_range(0.0, 2.0, 0.05) var intensite_visuelle := 0.8
 @export_range(0, 30, 1) var particules_visuelles := 8
 @export_range(0.0, 1.5, 0.05) var intensite_zone_aura := 0.65

@@ -7,5 +7,5 @@ void vertex() {
 
 // Éclaircir les traits des pictogrammes sans modifier les SVG utilisés par les cartes.
 void fragment() {
-	COLOR = vec4(vec3(0.94, 0.85, 0.69), texture(TEXTURE, UV).a) * modulation;
+	COLOR = vec4(vec3(0.960784, 0.960784, 0.941176), texture(TEXTURE, UV).a) * modulation;
 }

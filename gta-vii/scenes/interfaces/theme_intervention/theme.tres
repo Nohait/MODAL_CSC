@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://cbrlojs21m4os" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
 [ext_resource type="FontVariation" uid="uid://3a4yqhewh8nx" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
-[ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
+[ext_resource type="StyleBox" uid="uid://c6ffwypqcmt6s" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
 [ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="titre"]
 
 [sub_resource type="StyleBoxFlat" id="disabled"]
@@ -10,12 +10,12 @@ content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.1, 0.14, 0.16, 1)
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.24, 0.3, 0.33, 1)
+border_color = Color(0.203922, 0.203922, 0.203922, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -31,7 +31,7 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.89, 0.776, 0.353, 1)
+border_color = Color(0.960784, 0.960784, 0.941176, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -42,12 +42,12 @@ content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.208, 0.294, 0.341, 1)
+bg_color = Color(0.756863, 0.250980, 0.203922, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.89, 0.776, 0.353, 1)
+border_color = Color(0.960784, 0.960784, 0.941176, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -58,12 +58,12 @@ content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.141, 0.2, 0.231, 1)
+bg_color = Color(0.701961, 0.203922, 0.160784, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.35, 0.43, 0.47, 1)
+border_color = Color(0.960784, 0.960784, 0.941176, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -74,12 +74,12 @@ content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.09, 0.13, 0.16, 1)
+bg_color = Color(0.572549, 0.168627, 0.133333, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.89, 0.776, 0.353, 1)
+border_color = Color(0.960784, 0.960784, 0.941176, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -88,8 +88,8 @@ corner_radius_bottom_left = 4
 [resource]
 default_font = ExtResource("lecture")
 default_font_size = 18
-Button/colors/font_color = Color(0.929, 0.941, 0.914, 1)
-Button/colors/font_disabled_color = Color(0.5, 0.56, 0.59, 1)
+Button/colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
+Button/colors/font_disabled_color = Color(0.588235, 0.588235, 0.588235, 1)
 Button/font_sizes/font_size = 18
 Button/fonts/font = ExtResource("boutons")
 Button/styles/disabled = SubResource("disabled")
@@ -97,13 +97,13 @@ Button/styles/focus = SubResource("focus")
 Button/styles/hover = SubResource("hover")
 Button/styles/normal = SubResource("normal")
 Button/styles/pressed = SubResource("pressed")
-Label/colors/font_color = Color(0.929, 0.941, 0.914, 1)
+Label/colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 NoteIntervention/base_type = &"Label"
-NoteIntervention/colors/font_color = Color(0.675, 0.729, 0.749, 1)
+NoteIntervention/colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 NoteIntervention/font_sizes/font_size = 14
 PanelContainer/styles/panel = ExtResource("panneau")
-RichTextLabel/colors/default_color = Color(0.929, 0.941, 0.914, 1)
+RichTextLabel/colors/default_color = Color(0.960784, 0.960784, 0.941176, 1)
 TitreIntervention/base_type = &"Label"
-TitreIntervention/colors/font_color = Color(0.89, 0.776, 0.353, 1)
+TitreIntervention/colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 TitreIntervention/font_sizes/font_size = 20
 TitreIntervention/fonts/font = ExtResource("titre")

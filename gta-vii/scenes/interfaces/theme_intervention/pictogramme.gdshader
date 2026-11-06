@@ -1,5 +1,5 @@
 shader_type canvas_item;
-uniform vec4 teinte : source_color = vec4(0.929, 0.941, 0.914, 1.0);
+uniform vec4 teinte : source_color = vec4(0.960784, 0.960784, 0.941176, 1.0);
 uniform float survol = 0.0;
 varying vec4 modulation;
 void vertex() { modulation = COLOR; }

@@ -7,7 +7,7 @@
 [ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="Ombre"]
-bg_color = Color(0.015, 0.01, 0.008, 0.85)
+bg_color = Color(0.062745, 0.062745, 0.062745, 0.85)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -23,10 +23,10 @@ shader_parameter/survol = 0.0
 [sub_resource type="StyleBoxFlat" id="Effet"]
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.063, 0.094, 0.114, 1)
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 border_width_top = 1
 border_width_bottom = 1
-border_color = Color(0.286, 0.357, 0.388, 1)
+border_color = Color(0.337255, 0.337255, 0.337255, 1)
 
 [node name="CarteAmelioration" type="Control" unique_id=1155351157]
 process_mode = 3
@@ -100,13 +100,13 @@ mouse_filter = 2
 [node name="Categorie" type="Label" parent="Visuel/Contenu/Organisation/Entete" unique_id=1594370416]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 12
 text = "EXTINCTEUR"
 
 [node name="Marque" type="Label" parent="Visuel/Contenu/Organisation/Entete" unique_id=1851811171]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 14
 text = "MATÉRIEL"
 
@@ -131,14 +131,14 @@ expand_mode = 1
 [node name="Duree" type="Label" parent="Visuel/Contenu/Organisation"]
 visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Titre" type="Label" parent="Visuel/Contenu/Organisation" unique_id=1147516186]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_fonts/font = ExtResource("6")
 theme_override_font_sizes/font_size = 28
 text = "Sous pression"
@@ -149,7 +149,7 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 16
 text = "Un jet plus puissant pour repousser les flammes."
 horizontal_alignment = 1
@@ -158,7 +158,7 @@ autowrap_mode = 3
 
 [node name="Effet" type="Label" parent="Visuel/Contenu/Organisation" unique_id=1316546436]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Effet")
 text = "+20 % de dégâts"
@@ -167,7 +167,7 @@ autowrap_mode = 3
 
 [node name="Invitation" type="Label" parent="Visuel/Contenu/Organisation" unique_id=2126584790]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 12
 text = "CLIQUER POUR CHOISIR"
 horizontal_alignment = 1

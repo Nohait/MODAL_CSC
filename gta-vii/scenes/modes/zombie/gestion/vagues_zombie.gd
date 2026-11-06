@@ -249,7 +249,8 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 		else:
 			_creer_type(salle, emplacement, type)
 		return
-	super.creer_mobile(salle, emplacement)
+	# Le repli zombie reste un sbire, indépendant de la progression du classique.
+	creer_sbire(salle, emplacement)
 
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	# Un sbire ajouté par le debug n'appartient pas au calendrier de la vague.
@@ -261,6 +262,7 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	jouer_son_apparition(sbire)
 	return sbire
 
 func peut_creer_ennemi_debug() -> bool:
@@ -294,6 +296,7 @@ func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> 
 	ennemi.position = emplacement + Vector3.UP * type.hauteur
 	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	salle.get_node("Ennemis").add_child(ennemi)
+	jouer_son_apparition(ennemi)
 	if ennemi.has_signal("mort_mise_en_scene"):
 		get_node("../../VictoireBoss").suivre(ennemi)
 	relier_invocation(ennemi, salle)

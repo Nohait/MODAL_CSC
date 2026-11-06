@@ -4,7 +4,7 @@ extends Control
 signal selectionne
 
 @export var titre := "Renfort"
-@export var couleur := Color("72adb0")
+@export var couleur := Color("008e5e")
 @export var prix := 1
 @export var contenu := "3 cartes communes"
 @export var symbole := "I"
@@ -87,8 +87,8 @@ func actualiser_disponibilite(disponible: bool) -> void:
 	abordable = disponible
 	# Atténuer surtout l'emballage : nom et prix restent lisibles.
 	papier.modulate = Color.WHITE if disponible else Color(0.45, 0.45, 0.45, 0.75)
-	%Titre.self_modulate = Color.WHITE if disponible else Color("a7aeb3")
-	%Prix.self_modulate = Color.WHITE if disponible else Color("a7aeb3")
+	%Titre.self_modulate = Color.WHITE if disponible else Color("969696")
+	%Prix.self_modulate = Color.WHITE if disponible else Color("969696")
 	%Symbole.self_modulate = Color.WHITE if disponible else Color(0.6, 0.6, 0.6)
 	if changement and not Engine.is_editor_hint(): _survol(false)
 

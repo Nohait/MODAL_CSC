@@ -3,12 +3,12 @@
 [ext_resource type="Script" path="res://scenes/interfaces/menus/menu_debug.gd" id="1"]
 
 [sub_resource type="StyleBoxFlat" id="Fond"]
-bg_color = Color(0.08, 0.09, 0.12, 1)
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.9, 0.6, 0.2, 1)
+border_color = Color(0.772549, 0.176471, 0.184314, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -143,16 +143,31 @@ theme_override_constants/margin_bottom = 20
 [node name="Contenu" type="VBoxContainer" parent="ChoixEnnemis/Centre/Panneau/Marge"]
 layout_mode = 2
 theme_override_constants/separation = 14
-[node name="Titre" type="Label" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+[node name="TitreEnnemis" type="Label" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "CHOISIR UN ENNEMI"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(1, 0.88, 0.65, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 [node name="ListeEnnemis" type="VBoxContainer" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
+[node name="ChoixMutation" type="ScrollContainer" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 360)
+layout_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="ListeMutations" type="VBoxContainer" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu/ChoixMutation"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
 [node name="RetourEnnemis" type="Label" parent="ChoixEnnemis/Centre/Panneau/Marge/Contenu"]
 unique_name_in_owner = true
 layout_mode = 2

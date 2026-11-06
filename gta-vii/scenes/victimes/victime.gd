@@ -257,6 +257,7 @@ func _on_detection_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = true
 		if not is_freed:
+			update_interaction_label()
 			interaction_label.visible = true
 
 func _on_detection_body_exited(body: Node3D) -> void:
@@ -455,7 +456,7 @@ func _direction_sur_navigation(direction_chemin: Vector3) -> Vector3:
 
 
 func prendre_degats(degats: float) -> void:
-	if OS.is_debug_build() and get_meta("protection_debug_tutoriel", false): return
+	if get_meta("protection_debug_tutoriel", false): return
 	if est_morte:
 		return
 	var pompier = get_tree().get_first_node_in_group("player")
@@ -474,7 +475,7 @@ func prendre_degats(degats: float) -> void:
 
 # Dégâts du timer
 func actualiser_degats_sauvetage(proportion_ecoulee: float) -> void:
-	if OS.is_debug_build() and get_meta("protection_debug_tutoriel", false): return
+	if get_meta("protection_debug_tutoriel", false): return
 
 	# Une victime libérée n'est plus touchée par le compte à rebours.
 	if est_morte or is_freed:
@@ -640,10 +641,51 @@ func vecteur_fuite() -> Vector3:
 # Texte d'interaction
 
 func update_interaction_label() -> void:
-	var events := InputMap.action_get_events("interact")
-	if events.is_empty():
+	# La victime peut être dans une salle ou directement sous Escorte lors d'une reprise.
+	var joueur := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
+	var utiliser_manette: bool = is_instance_valid(joueur) and not joueur.is_queued_for_deletion() and joueur.get("usingController") == true
+	var texte := ""
+	for event in InputMap.action_get_events("interact"):
+		var est_manette := event is InputEventJoypadButton or event is InputEventJoypadMotion
+		if est_manette != utiliser_manette:
+			continue
+		texte = _texte_evenement(event)
+		break
+	if texte == "":
 		interaction_label.text = "Libérer"
-		return
-	var event := events[0]
+	else:
+		interaction_label.text = "[" + texte + "] Libérer"
+
+
+func _texte_evenement(event: InputEvent) -> String:
 	if event is InputEventKey:
-		interaction_label.text = "[" + event.as_text_physical_keycode() + "] Libérer"
+		return event.as_text_physical_keycode()
+	if event is InputEventMouseButton:
+		return "Clic " + str(event.button_index)
+	if event is InputEventJoypadButton:
+		return _nom_bouton_manette(event.button_index)
+	if event is InputEventJoypadMotion:
+		return _nom_axe_manette(event.axis)
+	return ""
+
+
+func _nom_bouton_manette(index: int) -> String:
+	match index:
+		JOY_BUTTON_A: return "A"
+		JOY_BUTTON_B: return "B"
+		JOY_BUTTON_X: return "X"
+		JOY_BUTTON_Y: return "Y"
+		JOY_BUTTON_LEFT_SHOULDER: return "LB"
+		JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+		JOY_BUTTON_LEFT_STICK: return "L3"
+		JOY_BUTTON_RIGHT_STICK: return "R3"
+		JOY_BUTTON_BACK: return "Retour"
+		JOY_BUTTON_START: return "Start"
+	return "Bouton " + str(index)
+
+
+func _nom_axe_manette(axe: int) -> String:
+	match axe:
+		JOY_AXIS_TRIGGER_LEFT: return "LT"
+		JOY_AXIS_TRIGGER_RIGHT: return "RT"
+	return "Axe " + str(axe)

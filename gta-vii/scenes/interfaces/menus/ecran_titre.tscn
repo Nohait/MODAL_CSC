@@ -59,7 +59,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.035, 0.025, 0.023, 1)
+color = Color(0.062745, 0.062745, 0.062745, 1)
 
 [node name="Illustration" type="SubViewportContainer" parent="." unique_id=773670470]
 layout_mode = 1
@@ -132,8 +132,8 @@ theme_override_constants/separation = 16
 
 [node name="Titre" type="Label" parent="Menu/Colonne" unique_id=1849000450]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
-theme_override_colors/font_outline_color = Color(0.12, 0.055, 0.025, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
+theme_override_colors/font_outline_color = Color(0.133333, 0.133333, 0.133333, 1)
 theme_override_constants/shadow_offset_y = 0
 theme_override_constants/outline_size = 0
 theme_override_fonts/font = ExtResource("logo")
@@ -151,7 +151,7 @@ theme_override_constants/separation = 8
 
 [node name="TitreClassique" type="Label" parent="Menu/Colonne/Classique" unique_id=1487301232]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.76, 0.55, 1)
+theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 theme_override_font_sizes/font_size = 24
 text = "MODE CLASSIQUE"
 
@@ -160,12 +160,16 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="NouvellePartie" parent="Menu/Colonne/Classique/Actions" unique_id=1299801880 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Nouvelle partie"
 
 [node name="SupprimerClassique" parent="Menu/Colonne/Classique/Actions" unique_id=1372984970 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -179,6 +183,8 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Tutoriel" parent="Menu/Colonne/ActionsTutoriel" unique_id=624874115 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -186,6 +192,8 @@ tooltip_text = "Lancer la partie de tutoriel en cours de construction"
 text = "Tutoriel"
 
 [node name="SupprimerTutoriel" parent="Menu/Colonne/ActionsTutoriel" unique_id=1916176537 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -195,16 +203,22 @@ taille_police = 38
 taille_minimale = Vector2(74, 74)
 
 [node name="Succes" parent="Menu/Colonne" unique_id=1111282242 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 text = "Succès"
 
 [node name="Options" parent="Menu/Colonne" unique_id=380368490 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 text = "Options"
 
 [node name="Quitter" parent="Menu/Colonne" unique_id=803109350 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quitter le jeu"
@@ -215,7 +229,7 @@ theme_override_constants/separation = 8
 
 [node name="TitreZombie" type="Label" parent="Menu/Colonne/Zombie" unique_id=1233735702]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.76, 0.55, 1)
+theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 theme_override_font_sizes/font_size = 24
 text = "MODE ZOMBIE"
 
@@ -224,12 +238,16 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="ModeZombie" parent="Menu/Colonne/Zombie/Actions" unique_id=875571490 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Nouvelle partie"
 
 [node name="SupprimerZombie" parent="Menu/Colonne/Zombie/Actions" unique_id=978179078 instance=ExtResource("button")]
+intensite_texture = 0.0
+couleur_infobulle = Color(0.701961, 0.203922, 0.160784, 1)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -244,7 +262,7 @@ size_flags_vertical = 3
 
 [node name="Signature" type="Label" parent="Menu/Colonne" unique_id=266085874]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.47, 0.43, 0.37, 1)
+theme_override_colors/font_color = Color(0.588235, 0.588235, 0.588235, 1)
 theme_override_font_sizes/font_size = 16
 text = "GTA VII  /  PROTOTYPE"
 

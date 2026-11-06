@@ -8,7 +8,6 @@ var onglets: TabContainer
 var disposition: VBoxContainer
 var etat: Label
 var historique: Label
-var indicateur: Label
 var boutons: Dictionary = {}
 var cases: Dictionary = {}
 var evenements: Array[String] = []
@@ -19,7 +18,6 @@ var dernier_etat := ""
 var derniere_salle := ""
 
 static func installer(scene: Node) -> void:
-	if not OS.is_debug_build(): return
 	if scene.has_node("DebugTutoriel"): return
 	if not scene.get_tree().root.has_node("GardeDebugTutoriel"):
 		var garde = preload("res://scenes/modes/tutoriel/debug/garde_debug.gd").new()
@@ -34,6 +32,7 @@ static func installer(scene: Node) -> void:
 	scene.add_child(menu)
 
 func _ready() -> void:
+	add_to_group("debug_tutoriel")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 100
 	commandes = COMMANDES.new(get_parent())
@@ -45,13 +44,6 @@ func _ready() -> void:
 	get_tree().node_added.connect(_ajout)
 
 func _construire() -> void:
-	indicateur = Label.new()
-	indicateur.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(indicateur)
-	indicateur.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	indicateur.offset_left = 20
-	indicateur.offset_top = -30
-	indicateur.offset_bottom = -8
 	panneau = PanelContainer.new()
 	panneau.theme = _theme_menu()
 	add_child(panneau)
@@ -61,10 +53,10 @@ func _construire() -> void:
 	var titre := Label.new()
 	titre.text = "ATELIER DU TUTORIEL"
 	titre.add_theme_font_size_override("font_size", 27)
-	titre.add_theme_color_override("font_color", Color(1, 0.76, 0.38))
+	titre.add_theme_color_override("font_color", Color(0.772549, 0.176471, 0.184314))
 	contenu.add_child(titre)
 	var aide := Label.new()
-	aide.text = "Simulation suspendue · I ou Échap pour fermer · les changements de debug ne sont pas sauvegardés"
+	aide.text = "Simulation suspendue · Échap pour fermer · les changements de debug ne sont pas sauvegardés"
 	aide.add_theme_font_size_override("font_size", 15)
 	contenu.add_child(aide)
 	onglets = TabContainer.new()
@@ -135,7 +127,7 @@ func _page(titre: String) -> VBoxContainer:
 func _section(parent: Control, titre: String) -> VBoxContainer:
 	var cadre := PanelContainer.new()
 	cadre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cadre.add_theme_stylebox_override("panel", _style(Color(0.09, 0.12, 0.17), Color(0.2, 0.27, 0.35)))
+	cadre.add_theme_stylebox_override("panel", _style(Color(0.133333, 0.133333, 0.133333), Color(0.203922, 0.203922, 0.203922)))
 	parent.add_child(cadre)
 	var colonne := VBoxContainer.new()
 	colonne.add_theme_constant_override("separation", 8)
@@ -143,7 +135,7 @@ func _section(parent: Control, titre: String) -> VBoxContainer:
 	var label := Label.new()
 	label.text = titre
 	label.add_theme_font_size_override("font_size", 15)
-	label.add_theme_color_override("font_color", Color(0.9, 0.71, 0.4))
+	label.add_theme_color_override("font_color", Color(0.772549, 0.176471, 0.184314))
 	colonne.add_child(label)
 	return colonne
 
@@ -162,17 +154,17 @@ func _style(fond: Color, bord: Color) -> StyleBoxFlat:
 func _theme_menu() -> Theme:
 	var theme := Theme.new()
 	theme.default_font_size = 17
-	theme.set_color("font_color", "Label", Color(0.9, 0.93, 0.97))
-	theme.set_stylebox("panel", "PanelContainer", _style(Color(0.045, 0.065, 0.095, 0.98), Color(0.38, 0.43, 0.5)))
+	theme.set_color("font_color", "Label", Color(0.960784, 0.960784, 0.941176))
+	theme.set_stylebox("panel", "PanelContainer", _style(Color(0.133333, 0.133333, 0.133333, 0.98), Color(0.337255, 0.337255, 0.337255)))
 	for type in ["Button", "OptionButton", "TabContainer"]:
-		theme.set_stylebox("normal", type, _style(Color(0.12, 0.17, 0.23), Color(0.25, 0.32, 0.4)))
-		theme.set_stylebox("hover", type, _style(Color(0.19, 0.26, 0.34), Color(0.85, 0.64, 0.3)))
-		theme.set_stylebox("pressed", type, _style(Color(0.26, 0.21, 0.13), Color(1, 0.76, 0.38)))
-		theme.set_color("font_color", type, Color(0.93, 0.95, 0.98))
-		theme.set_color("font_hover_color", type, Color(1, 0.82, 0.52))
-	theme.set_stylebox("tab_selected", "TabContainer", _style(Color(0.19, 0.26, 0.34), Color(0.85, 0.64, 0.3)))
-	theme.set_stylebox("tab_unselected", "TabContainer", _style(Color(0.08, 0.11, 0.16), Color(0.25, 0.32, 0.4)))
-	theme.set_stylebox("panel", "TabContainer", _style(Color(0.045, 0.065, 0.095), Color(0.2, 0.27, 0.35)))
+		theme.set_stylebox("normal", type, _style(Color(0.133333, 0.133333, 0.133333), Color(0.337255, 0.337255, 0.337255)))
+		theme.set_stylebox("hover", type, _style(Color(0.203922, 0.203922, 0.203922), Color(0.772549, 0.176471, 0.184314)))
+		theme.set_stylebox("pressed", type, _style(Color(0.203922, 0.203922, 0.203922), Color(0.772549, 0.176471, 0.184314)))
+		theme.set_color("font_color", type, Color(0.960784, 0.960784, 0.941176))
+		theme.set_color("font_hover_color", type, Color(0.772549, 0.176471, 0.184314))
+	theme.set_stylebox("tab_selected", "TabContainer", _style(Color(0.203922, 0.203922, 0.203922), Color(0.772549, 0.176471, 0.184314)))
+	theme.set_stylebox("tab_unselected", "TabContainer", _style(Color(0.133333, 0.133333, 0.133333), Color(0.337255, 0.337255, 0.337255)))
+	theme.set_stylebox("panel", "TabContainer", _style(Color(0.133333, 0.133333, 0.133333), Color(0.203922, 0.203922, 0.203922)))
 	return theme
 
 func _redimensionner() -> void:
@@ -198,13 +190,17 @@ func _case(texte: String, action: Callable) -> void:
 
 func _input(event: InputEvent) -> void:
 	if commandes.transition_en_cours: return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_I:
-		if panneau.visible: fermer()
-		else: ouvrir()
-		get_viewport().set_input_as_handled()
-	elif panneau.visible and event.is_action_pressed("ui_cancel"):
+	if panneau.visible and event.is_action_pressed("ui_cancel"):
 		fermer()
 		get_viewport().set_input_as_handled()
+
+func debug_contextuel() -> bool:
+	if commandes.transition_en_cours: return true
+	if panneau.visible:
+		fermer()
+	elif not get_tree().paused:
+		ouvrir()
+	return true
 
 func ouvrir() -> void:
 	pause_avant = get_tree().paused
@@ -240,7 +236,6 @@ func _process(_delta: float) -> void:
 		derniere_salle = c.salle
 		_journal("Changement de salle : " + derniere_salle)
 	etat.text = commandes.diagnostic()
-	indicateur.text = "DEBUG · sans récompenses · I" if Engine.get_meta("tutoriel_debug_actif", false) else "I · debug tutoriel"
 	var victime = c.get("victime")
 	boutons["Libérer la victime"].disabled = not is_instance_valid(victime) or victime.is_freed or victime.est_morte
 	var foyers_actifs := 0

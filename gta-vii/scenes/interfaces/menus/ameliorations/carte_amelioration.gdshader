@@ -8,20 +8,20 @@ uniform vec2 centre_illustration = vec2(0.5, 0.32);
 uniform float rayon_illustration = 55.0;
 uniform float limite_metal = 0.55;
 
-// Le papier existant fournit la matière ; le centre reste clair pour les textes.
+// La texture existante fournit le relief d'un support sombre et neutre.
 void fragment() {
 	vec4 papier = texture(TEXTURE, UV);
-	papier.rgb *= vec3(0.91, 0.85, 0.73);
+	papier.rgb = mix(vec3(0.062745), vec3(0.133333), dot(papier.rgb, vec3(0.299, 0.587, 0.114)));
 	// Colorer légèrement le papier sans masquer sa texture ni les textes.
 	if (rarete_coloree) {
 		vec2 p = UV * taille;
 		float grain = bruit(p * 0.7);
 		float brossage = sin(p.y * 2.5) * 0.013;
 		float reflet = exp(-pow((UV.x + UV.y * 0.32 - 0.3 - survol * 0.3) / 0.18, 2.0));
-		vec3 plaque = mix(vec3(0.22, 0.20, 0.17), teinte_rarete.rgb * 0.62, 0.7);
+		vec3 plaque = mix(vec3(0.133333, 0.133333, 0.133333), teinte_rarete.rgb * 0.12, 0.7);
 		plaque += (grain - 0.5) * 0.045 + brossage;
 		plaque += mix(teinte_rarete.rgb, vec3(1.0), 0.3) * reflet * (0.24 + niveau_rarete * 0.045);
-		// Une séparation légèrement déchirée raccorde métal sombre et parchemin clair.
+		// Conserver le raccord de la texture entre le bandeau teinté et le support neutre.
 		float separation = limite_metal + (bruit(vec2(UV.x * 22.0, 3.0)) - 0.5) * 0.012;
 		float haut = 1.0 - smoothstep(separation - 0.002, separation + 0.002, UV.y);
 		papier.rgb = mix(papier.rgb, plaque, haut);
@@ -68,7 +68,7 @@ void fragment() {
 		float cendre = bord * 1.8 + bruit(UV * 18.0) * 0.15;
 		float reste = smoothstep(disparition - 0.06, disparition + 0.02, cendre);
 		float incandescent = 1.0 - smoothstep(0.0, 0.055, abs(cendre - disparition));
-		COLOR.rgb = mix(COLOR.rgb, vec3(1.0, 0.4, 0.04), incandescent * 0.85);
+		COLOR.rgb = mix(COLOR.rgb, vec3(0.772549, 0.176471, 0.184314), incandescent * 0.85);
 		COLOR.a *= reste;
 	}
 }

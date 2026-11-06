@@ -5,8 +5,8 @@ uniform vec4 teinte_rarete : source_color = vec4(1.0);
 
 void fragment() {
 	vec4 papier = texture(TEXTURE, UV);
-	papier.rgb *= vec3(0.91, 0.85, 0.73);
-	// Les succès restent des bandeaux de parchemin, avec la couleur de leur rareté.
+	papier.rgb = mix(vec3(0.062745), vec3(0.133333), dot(papier.rgb, vec3(0.299, 0.587, 0.114)));
+	// Le bandeau conserve sa matière, avec une légère teinte liée à la rareté.
 	if (rarete_coloree) {
 		papier.rgb *= mix(vec3(1.0), teinte_rarete.rgb, 0.24);
 	}

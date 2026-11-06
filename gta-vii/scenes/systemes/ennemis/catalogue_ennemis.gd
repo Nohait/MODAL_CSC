@@ -31,7 +31,7 @@ func _noeud_ajoute(noeud: Node) -> void:
 		_enregistrer_ennemi.call_deferred(noeud.get_instance_id())
 
 func _enregistrer_ennemi(identifiant_instance: int) -> void:
-	if OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false): return
+	if Engine.get_meta("tutoriel_debug_actif", false): return
 	# L’aperçu peut avoir été détruit avant cet appel différé.
 	var noeud = instance_from_id(identifiant_instance)
 	if not is_instance_valid(noeud) or not noeud.is_inside_tree() or noeud.has_meta("apercu_glossaire"): return
@@ -47,7 +47,12 @@ func _enregistrer_ennemi(identifiant_instance: int) -> void:
 	if monnaie != null and noeud.has_signal("died"):
 		var valeur: int = noeud.get_meta("valeur_pieces", fiche.cout_difficulte)
 		noeud.died.connect(monnaie.lacher_pieces.bind(noeud, valeur), CONNECT_ONE_SHOT)
-	if fiche.get("elite_possible", false) and randf() * 100.0 < equilibrage.chance(_progression(noeud)):
+	if noeud.has_meta("mutation_debug"):
+		# Un choix explicite, y compris « sans mutation », remplace le tirage aléatoire.
+		var selection := trouver_mutation(str(noeud.get_meta("mutation_debug")))
+		if fiche.get("elite_possible", false) and selection != null:
+			appliquer_elite(noeud, selection)
+	elif fiche.get("elite_possible", false) and randf() * 100.0 < equilibrage.chance(_progression(noeud)):
 		var total := 0.0
 		for mod in MODIFICATEURS: total += mod.poids
 		var tirage := randf() * total
@@ -92,11 +97,16 @@ func appliquer_elite(ennemi: Node3D, mod: ModificateurElite) -> void:
 	ennemi.add_child(effet)
 	ennemi.set_meta("variante_glossaire", mod.identifiant)
 
+func trouver_mutation(identifiant: String) -> ModificateurElite:
+	for mod in MODIFICATEURS:
+		if mod.identifiant == identifiant: return mod
+	return null
+
 func a_rencontre(id: String, variante := "") -> bool:
 	return rencontres.has(id) if variante.is_empty() else variante in rencontres.get(id, [])
 
 func noter_rencontre(id: String, variante: String) -> void:
-	if OS.is_debug_build() and Engine.get_meta("tutoriel_debug_actif", false): return
+	if Engine.get_meta("tutoriel_debug_actif", false): return
 	if a_rencontre(id, variante): return
 	if not rencontres.has(id): rencontres[id] = []
 	rencontres[id].append(variante)
@@ -116,6 +126,12 @@ func debloquer_tout() -> void:
 	fichier.save(SAUVEGARDE)
 	rencontre_ajoutee.emit()
 
+func reinitialiser_memoire() -> void:
+	rencontres.clear()
+	ennemis.clear()
+	delai = 0.0
+	rencontre_ajoutee.emit()
+
 func _physics_process(delta: float) -> void:
 	delai -= delta
 	if delai > 0.0: return
@@ -125,6 +141,8 @@ func _physics_process(delta: float) -> void:
 	var joueur = get_tree().get_first_node_in_group("player")
 	var sources_aura: Array[Node3D] = []
 	for source in ennemis:
+		# Une scène retirée temporairement reste enregistrée, mais ses auras sont suspendues.
+		if not source.is_inside_tree() or not source.is_node_ready(): continue
 		var elite = source.get_node_or_null("Elite")
 		if elite == null or source.get("est_mort") == true or not source.is_visible_in_tree(): continue
 		for mod in [elite.definition]:
@@ -132,6 +150,7 @@ func _physics_process(delta: float) -> void:
 				sources_aura.append(source)
 				break
 	for ennemi in ennemis:
+		if not ennemi.is_inside_tree() or not ennemi.is_node_ready(): continue
 		if not ennemi.is_visible_in_tree() or ennemi.get("est_mort") == true: continue
 		if ennemi.has_method("multiplicateur_degats"):
 			ennemi.vitesse_aura = 1.0

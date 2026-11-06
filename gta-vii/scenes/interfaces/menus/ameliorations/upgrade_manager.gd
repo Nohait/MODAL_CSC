@@ -86,6 +86,7 @@ var branches_zombie: Node
 
 
 func _ready() -> void:
+	add_to_group("debug_boutique")
 	# Les synergies communes complètent celles propres au mode.
 	for definition in [preload("res://scenes/systemes/ameliorations/synergies/hydrant_patinoire.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_essorage.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_circuit.tres")]:
 		if not synergies.has(definition): synergies.append(definition)
@@ -139,7 +140,6 @@ func _ready() -> void:
 	boutique.recharge_murale_demandee.connect(_acheter_recharge_murale)
 	monnaie.solde_change.connect(_actualiser_pieces)
 	boutique.achat_demande.connect(_acheter_booster)
-	boutique.catalogue_debug_demande.connect(ouvrir_catalogue_debug)
 	boutique.defi_demande.connect(_acheter_defi)
 	boutique.continuer_demande.connect(_continuer)
 	boutique.bonus_demandes.connect(func(): get_node("../MenuBonus").ouvrir_menu())
@@ -334,6 +334,15 @@ func _reveler_cartes() -> void:
 		carte.terminer_revelation()
 	revelation_en_cours = false
 
+func debug_contextuel() -> bool:
+	if not boutique_ouverte: return false
+	if not boutique.is_visible_in_tree() and not (catalogue_debug and menu.visible): return false
+	if catalogue_debug and not revelation_en_cours:
+		_retour_boutique()
+	elif not choix_ouverts:
+		ouvrir_catalogue_debug()
+	return true
+
 func ouvrir_catalogue_debug() -> void:
 	if not boutique_ouverte or choix_ouverts: return
 	fond_revelation.hide()
@@ -443,7 +452,7 @@ func ouvrir_booster_formation() -> void:
 	booster.titre = "Formation"
 	booster.contenu = "Trois propositions · une seule carte conservée"
 	booster.symbole = "?"
-	booster.couleur = Color(0.6, 0.67, 0.7)
+	booster.couleur = Color(0.741176, 0.741176, 0.741176)
 	centre.add_child(booster)
 	booster.get_node("%Prix").text = "OFFERT"
 	var ouverture = preload("res://scenes/interfaces/menus/ouverture_booster.tscn").instantiate()
@@ -457,7 +466,6 @@ func ouvrir_booster_formation() -> void:
 	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "Choisissez votre première amélioration. Elle vous accompagne jusqu’à la fin de la partie."
 
 func acquerir_formation_debug(identifiant: StringName) -> void:
-	if not OS.is_debug_build(): return
 	if get_parent().get("session_tutoriel") != true or formation_utilisee or identifiant not in [&"pression", &"reserve", &"recharge"]: return
 	rarete_courante = &"rare"
 	multiplicateur_choix_courant = puissance_rare / 100.0

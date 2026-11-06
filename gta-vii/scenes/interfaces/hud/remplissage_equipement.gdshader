@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform float proportion : hint_range(0.0, 1.0) = 1.0;
-uniform vec4 teinte : source_color = vec4(0.6, 0.15, 0.14, 1.0);
+uniform vec4 teinte : source_color = vec4(0.772549, 0.176471, 0.184314, 1.0);
 uniform bool recharge = false;
 uniform float impact : hint_range(0.0, 1.0) = 0.0;
 
@@ -12,7 +12,7 @@ void fragment() {
 	vec3 couleur = teinte.rgb * relief;
 	// Dix graduations fines évoquent un instrument de mesure.
 	float graduation = smoothstep(0.955, 0.99, fract(UV.x * 10.0));
-	couleur = mix(couleur, vec3(0.08, 0.065, 0.055), graduation * 0.55);
+	couleur = mix(couleur, vec3(0.062745, 0.062745, 0.062745), graduation * 0.55);
 	// Seul le reflet de recharge bouge ; le cadre reste stable.
 	float reflet = recharge ? 0.07 * (sin(TIME * 4.0) + 1.0) : 0.0;
 	// Le changement d’intensité reste réservé à la recharge et aux dégâts.

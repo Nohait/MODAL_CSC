@@ -64,8 +64,8 @@ var touches_par_defaut_manette = {
 		"move_backward": [JOY_AXIS_LEFT_Y, 1.0],
 		"move_left": [JOY_AXIS_LEFT_X, -1.0],
 		"move_right": [JOY_AXIS_LEFT_X, 1.0],
-		"primary_attack": JOY_BUTTON_Y,
-		"dash": JOY_BUTTON_LEFT_SHOULDER,
+		"primary_attack": JOY_AXIS_TRIGGER_RIGHT,
+		"dash":JOY_AXIS_TRIGGER_LEFT
 		}
 """
 		"interact" : KEY_E,
@@ -193,7 +193,7 @@ func _adapter_options() -> void:
 				icone.offset_bottom = 19.0
 				if colonne == $Menu/MenuTouches/ColonneNoms:
 					enfant.disabled = true
-					enfant.add_theme_color_override("font_disabled_color", Color("e9d8b4"))
+					enfant.add_theme_color_override("font_disabled_color", Color("f5f5f0"))
 					enfant.mouse_filter = Control.MOUSE_FILTER_IGNORE
 					enfant.focus_mode = Control.FOCUS_NONE
 			elif enfant.name == "Espace":

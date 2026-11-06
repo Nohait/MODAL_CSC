@@ -40,6 +40,14 @@ var input_victim_control_fait := false
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.3
 
+# Paramètres pour la compatibilité manette
+const STICK_DEADZONE = 0.1
+var visée_longue_active := false
+var usingController := false
+# Visée : uniquement des vecteurs monde (plan XZ)
+var aim_offset := Vector3.ZERO     # décalage depuis le joueur
+var aim_position := Vector3.ZERO   # = global_position + aim_offset
+
 @onready var anim_tree: AnimationTree = $visual/pompier/visual/Armature/AnimationTree
 const PARAM_BLEND := "parameters/blend_position"
 var blend_actuel := Vector2.ZERO
@@ -62,7 +70,23 @@ var duree_tremblement := 0.15
 var hasard_camera := RandomNumberGenerator.new()
 var sauvegarde_position = Vector3()
 var camera_retour := false
-	
+
+func _ready() :
+	var stick_L := InputEventJoypadButton.new()
+	stick_L.button_index = JOY_BUTTON_LEFT_STICK
+	var stick_R := InputEventJoypadButton.new()
+	stick_R.button_index = JOY_BUTTON_RIGHT_STICK
+	InputMap.action_erase_event("victim_control",stick_L)
+	InputMap.action_erase_event("victime_nav_auto",stick_R)
+	InputMap.action_add_event("victime_nav_auto",stick_L)
+	InputMap.action_add_event("victim_control",stick_R)
+
+#Detection du controlleur
+func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf(event.axis_value) > 0.15):
+		usingController = true
+	elif event is InputEventMouseMotion or (event is InputEventMouseButton and event.pressed):
+		usingController = false
 	
 func secouer_camera(force: float = 0.3, duree: float = 0.15) -> void:
 	hasard_camera.randomize()
@@ -80,11 +104,91 @@ func get_dash_cooldown() -> float:
 	return dash_cooldown
 
 
+# Gestion de la visée
+func updateAim() -> void:
+	var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+	var stick_actif := stick.length() > STICK_DEADZONE
+
+	if Input.is_action_pressed("victim_control"):
+		visée_longue_active = true
+	if Input.is_action_just_released("victim_control"):
+		bouger_victime(aim_position)  # position de la frame précédente
+		visée_longue_active = false
+
+	if stick_actif:
+		usingController = true
+
+	if usingController:
+		if stick_actif:
+			aim_offset = _stick_to_offset(stick)
+		elif aim_offset.length() < 0.1:
+			# Aucune visée encore : viser devant le joueur.
+			var avant: Vector3 = -visual.global_transform.basis.z
+			avant.y = 0.0
+			aim_offset = avant.normalized() * 3.0
+	else:
+		var p = _screen_to_ground(get_viewport().get_mouse_position())
+		if p != null:
+			aim_offset = Vector3(p.x - global_position.x, 0.0, p.z - global_position.z)
+
+	aim_position = global_position + aim_offset
+	aim_position.y = visual.global_position.y
+
+
+func _stick_to_offset(stick: Vector2) -> Vector3:
+	var max_distance: float = $SecondaryAttack/AttaqueBouche.portee
+	if visée_longue_active:
+		max_distance = 2*max_distance
+	var strength := clampf(
+		(stick.length() - STICK_DEADZONE) / (1.0 - STICK_DEADZONE), 0.0, 1.0)
+	return _ground_dir(stick.normalized()) * strength * max_distance
+
+
+func getScreenAimDistance() -> float:
+	var size := get_viewport().get_visible_rect().size
+	var corners := [Vector2.ZERO, Vector2(size.x, 0.0), Vector2(0.0, size.y), size]
+	var max_distance := 0.0
+	for corner in corners:
+		var p = _screen_to_ground(corner)
+		if p != null:
+			max_distance = maxf(max_distance,
+				Vector2(global_position.x, global_position.z).distance_to(Vector2(p.x, p.z)))
+	return max_distance
+
+
+# x = droite, y = bas (comme Input.get_vector) -> direction horizontale monde
+func _ground_dir(v: Vector2) -> Vector3:
+	var forward := -camera.global_transform.basis.z
+	var right := camera.global_transform.basis.x
+	forward.y = 0.0
+	right.y = 0.0
+	return right.normalized() * v.x + forward.normalized() * (-v.y)
+
+# Raycast écran -> plan du sol (null si pas d'intersection)
+func _screen_to_ground(screen_pos: Vector2) -> Variant:
+	var origin := camera.project_ray_origin(screen_pos)
+	var dir := camera.project_ray_normal(screen_pos)
+	return Plane(Vector3.UP, 0.0).intersects_ray(origin, dir)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		usingController = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
 func _physics_process(delta: float) -> void:
 	protection_secours = maxf(0.0, protection_secours - delta)
 	if entree_automatique:
 		_avancer_entree(delta)
 		return
+	updateAim()
+	if usingController:
+		# Plus de updateControllerCursor()
+		Input.set_mouse_mode(
+			Input.MOUSE_MODE_VISIBLE if Input.is_action_pressed("victim_control")
+			else Input.MOUSE_MODE_HIDDEN)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
@@ -114,8 +218,8 @@ func _physics_process(delta: float) -> void:
 	camera_forward = camera_forward.normalized()
 	camera_right = camera_right.normalized()
 
-	#On récupère la direction du joueur, par rapport à la caméra
-	var direction := camera_right * input_dir.x + camera_forward * (-input_dir.y)
+	# Déplacement : remplace tout le bloc camera_forward / camera_right
+	var direction := _ground_dir(input_dir)
 	
 	#Secousse si attaque (on a besoin de delta donc on le met dans le physique process)
 	if camera_tremble > 0.0:
@@ -168,47 +272,15 @@ func _physics_process(delta: float) -> void:
 			velocity.z = 0.0
 		
 	
-	#VISEE DU JOUEUR
+	# Visée du joueur : remplace getAimPosition()
+	if aim_position.distance_squared_to(visual.global_position) > 0.001:
+		visual.look_at(aim_position, Vector3.UP)
+
 	
-	#Recuperation de la position de la souris
-	#Le viewport est la zone dans laquelle le jeu est rendu 
-	#On récupère donc le vecteur position de la souris en 2D, sur l'écran.
-	var mouse_position = CursorManager.position_curseur
-	
-	#Pour passer de la position 2D de la souris à une position en 3D dans le monde
-	#On veut créer un vecteur qui passe par la caméra et le point de l'écran désigné par la souris
-	#Puis regarder en quel point le rayon dirigé par ce vecteur intercepte le sol
-	
-	#ray_origin donne la position de la caméra, origine du vecteur
-	var ray_origin := camera.project_ray_origin(mouse_position)
-	#ray_direction donne sa direction
-	var ray_direction := camera.project_ray_normal(mouse_position)
-	#On crée un plan horizontal en donnant sa normale et sa hauteur
-	var ground_plane := Plane(Vector3.UP, 0.0)
-	
-	#On regarde quand est_ce que le rayon calculé précédemment
-	#intercepte ce plan
-	#on ne met pas de ":=" car il peut n'y avoir aucune intersection (renvoie null)
-	var target_position = ground_plane.intersects_ray(ray_origin, ray_direction)
-	
-	if target_position != null:
-		#On place la position de la cible sur la position du visuel
-		#(evite de regarder vers le sol)
-		target_position.y = visual.global_position.y
-		
-		#On s'oriente vers ce point, en gardant y comme verticale
-		visual.look_at(target_position, Vector3.UP)
-	
-		if Input.is_action_just_pressed("victim_control"):
-			if not input_victim_control_fait:
-				input_victim_control_fait = true
-				bouger_victime(target_position)
-		else:
-			input_victim_control_fait = false
-				
-		# Rappel sur Q physique : A sur AZERTY, distinct de la touche physique A du déplacement.
-		if Input.is_action_just_pressed("victime_nav_auto"):
-			victim_manager.retour_nav_auto()
+
+	# Retour à la navigation automatique
+	if Input.is_action_just_pressed("victime_nav_auto"):
+		victim_manager.retour_nav_auto()
 	
 	if Input.is_action_pressed("primary_attack"):
 		extincteur.start_primary_attack()

@@ -8,7 +8,7 @@
 [sub_resource type="StyleBoxFlat" id="Focus"]
 bg_color = Color(0, 0, 0, 0)
 border_width_bottom = 2
-border_color = Color(0.89, 0.776, 0.353, 1)
+border_color = Color(0.960784, 0.960784, 0.941176, 1)
 
 [sub_resource type="StyleBoxTexture" id="Rempli"]
 content_margin_top = 6.0
@@ -29,7 +29,7 @@ content_margin_left = 3.0
 content_margin_top = 4.0
 content_margin_right = 3.0
 content_margin_bottom = 4.0
-bg_color = Color(0.42, 0.45, 0.48, 1)
+bg_color = Color(0.588235, 0.588235, 0.588235, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -44,7 +44,7 @@ HSlider/styles/focus = SubResource("Focus")
 HSlider/styles/grabber_area = SubResource("Rempli")
 HSlider/styles/grabber_area_highlight = SubResource("Rempli")
 HSlider/styles/slider = SubResource("Rail")
-Label/colors/font_color = Color(0.929, 0.941, 0.914, 1)
+Label/colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 VScrollBar/styles/grabber = SubResource("Defilement")
 VScrollBar/styles/grabber_highlight = SubResource("Defilement")
 VScrollBar/styles/grabber_pressed = SubResource("Defilement")

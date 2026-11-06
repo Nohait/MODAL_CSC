@@ -3,7 +3,6 @@ extends Control
 # Interface réutilisée en jeu. F6 conserve un mode de démonstration indépendant.
 signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
-signal catalogue_debug_demande
 signal continuer_demande
 signal recharge_murale_demandee
 signal sprinkler_demande(sprinkler: Node3D)
@@ -46,7 +45,6 @@ var tuiles_sprinklers: Array[Dictionary] = []
 var choix_sprinklers: Window
 var categorie_sprinklers: Button
 var note_points: Label
-var bouton_debug: Button
 var mode_points_tutoriel := false
 var reperes_formation: Dictionary = {}
 var joueur_sante: Node
@@ -65,7 +63,7 @@ func _ready() -> void:
 	bloc_points.add_child(entete)
 	var icone := TextureRect.new()
 	icone.texture = ICONE
-	icone.modulate = Color("edf0e9")
+	icone.modulate = Color("f5f5f0")
 	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icone.custom_minimum_size = Vector2(30, 30)
 	icone.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -73,7 +71,7 @@ func _ready() -> void:
 	compteur = _texte("", 24)
 	entete.add_child(compteur)
 	note_points = _texte("1 victime dans l’escorte = 1 point.", 16)
-	note_points.add_theme_color_override("font_color", Color("acbabf"))
+	note_points.add_theme_color_override("font_color", Color("bdbdbd"))
 	bloc_points.add_child(note_points)
 	reperes_formation["points"] = bloc_points
 	var titre := _texte("RAVITAILLEMENT", 28)
@@ -109,7 +107,7 @@ func _ready() -> void:
 	pochettes.add_theme_constant_override("separation", 12)
 	renforts.add_child(pochettes)
 	var propositions: Array[Dictionary] = [
-		{"id": &"commun", "titre": "Commun", "couleur": Color("c6ac86"), "prix": 1, "puissance": puissance_commune, "symbole": "I"},
+		{"id": &"commun", "titre": "Commun", "couleur": Color("f5f5f0"), "prix": 1, "puissance": puissance_commune, "symbole": "I"},
 		{"id": &"rare", "titre": "Rare", "couleur": Color("569ccb"), "prix": 2, "puissance": puissance_rare, "symbole": "II"},
 		{"id": &"epique", "titre": "Épique", "couleur": Color("af77c8"), "prix": 3, "puissance": puissance_epique, "symbole": "III"},
 		{"id": &"legendaire", "titre": "Légendaire", "couleur": Color("efc35b"), "prix": 5, "puissance": 200.0, "symbole": "IV", "contenu": "3 choix · surtout légendaires"}
@@ -123,7 +121,7 @@ func _ready() -> void:
 	var bloc_cadeau := _panneau(gauche, "VOTRE BOOSTER OFFERT")
 	cadeau = bloc_cadeau.get_parent()
 	var cadre_cadeau := cadeau.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	cadre_cadeau.bg_color = Color("243b48")
+	cadre_cadeau.bg_color = Color("222222")
 	cadre_cadeau.border_color = Color("569ccb")
 	cadeau.add_theme_stylebox_override("panel", cadre_cadeau)
 	bloc_cadeau.get_child(0).horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -145,7 +143,7 @@ func _ready() -> void:
 		if proposition.get("categorie", "permanent") == "temporaire":
 			_ajouter_booster(interventions, proposition)
 	if interventions.get_child_count() == 0:
-		_ajouter_booster(interventions, {"id": &"temporaire", "titre": "Intervention", "couleur": Color("55b5a5"), "prix": 1, "puissance": 100, "symbole": "+", "contenu": "Soins et protection"})
+		_ajouter_booster(interventions, {"id": &"temporaire", "titre": "Intervention", "couleur": Color("008e5e"), "prix": 1, "puissance": 100, "symbole": "+", "contenu": "Soins et protection"})
 
 	var droite := VBoxContainer.new()
 	droite.custom_minimum_size.x = 300
@@ -175,37 +173,26 @@ func _ready() -> void:
 	contenu.add_child(retour)
 	if not mode_demonstration:
 		var continuer = Button.new()
-		continuer.add_theme_font_size_override("font_size", 18)
-		continuer.custom_minimum_size = Vector2(300, 40)
+		continuer.add_theme_font_size_override("font_size", 24)
+		continuer.custom_minimum_size = Vector2(420, 64)
 		continuer.text = "Continuer vers la prochaine salle"
 		continuer.focus_mode = Control.FOCUS_NONE
-		continuer.custom_minimum_size.y = 40
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
-	if not mode_demonstration and OS.is_debug_build():
-		bouton_debug = Button.new()
-		bouton_debug.add_theme_font_size_override("font_size", 16)
-		bouton_debug.custom_minimum_size = Vector2(300, 40)
-		bouton_debug.name = "DebugCartes"
-		bouton_debug.text = "Debug : toutes les cartes du mode"
-		bouton_debug.focus_mode = Control.FOCUS_NONE
-		bouton_debug.pressed.connect(func(): catalogue_debug_demande.emit())
-		contenu.add_child(bouton_debug)
 	_actualiser_budget()
 
 func configurer_tutoriel_points(actif: bool, points: int) -> void:
 	mode_points_tutoriel = actif
 	panneau_defis.visible = not actif
-	if is_instance_valid(bouton_debug): bouton_debug.visible = not actif
 	if actif:
 		cadeau.hide()
-		compteur.add_theme_color_override("font_color", Color("ef9b3d"))
+		compteur.add_theme_color_override("font_color", Color("c52d2f"))
 		compteur.add_theme_font_size_override("font_size", 28)
 		note_points.text = "1 victime vivante dans l’escorte = 1 point."
 	for booster in boosters:
 		var recommande: bool = actif and booster.get_meta("rarete") == &"commun" and points >= booster.prix
-		booster.get_node("%Prix").modulate = Color("ef9b3d") if recommande else Color.WHITE
-		booster.get_node("%Titre").modulate = Color("fff1d6") if recommande else Color.WHITE
+		booster.get_node("%Prix").modulate = Color("c52d2f") if recommande else Color.WHITE
+		booster.get_node("%Titre").modulate = Color("f5f5f0") if recommande else Color.WHITE
 
 
 func _ajouter_booster(parent: Control, proposition: Dictionary) -> void:
@@ -286,8 +273,8 @@ func _panneau(parent: Control, titre: String, defi: bool = false) -> VBoxContain
 	parent.add_child(panneau)
 	var style := StyleBoxFlat.new()
 	# Une nuance plus sombre sépare les défis du matériel.
-	style.bg_color = Color("1a252c") if defi else Color("1e2a31")
-	style.border_color = Color("52636b")
+	style.bg_color = Color("222222") if defi else Color("222222")
+	style.border_color = Color("565656")
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(4)
 	style.content_margin_left = 20
@@ -308,7 +295,7 @@ func _texte(texte: String, taille: int) -> Label:
 	var etiquette := Label.new()
 	etiquette.text = texte
 	etiquette.add_theme_font_size_override("font_size", taille)
-	etiquette.add_theme_color_override("font_color", Color("edf0e9"))
+	etiquette.add_theme_color_override("font_color", Color("f5f5f0"))
 	return etiquette
 
 
@@ -399,8 +386,8 @@ func ajouter_ravitaillement() -> void:
 	# La tuile reste un seul bouton : ses enfants ne capturent pas les clics.
 	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var cadre := StyleBoxFlat.new()
-		cadre.bg_color = Color("24333b") if etat == "normal" or etat == "disabled" else Color("354b57")
-		cadre.border_color = Color("687d86")
+		cadre.bg_color = Color("343434") if etat == "disabled" else Color("b33429") if etat == "normal" else Color("c14034")
+		cadre.border_color = Color("f5f5f0")
 		cadre.set_border_width_all(2)
 		cadre.set_corner_radius_all(6)
 		recharge_murale.add_theme_stylebox_override(etat, cadre)
