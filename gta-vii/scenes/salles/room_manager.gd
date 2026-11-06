@@ -2,6 +2,8 @@ extends Node
 
 const ZONE_FEU = preload("res://scenes/ennemis/dangers/chute.tscn")
 
+var musique_jouee = null
+
 #### FOR DEBUG PURPOSES : L for falling fire
 func _unhandled_input(event: InputEvent) -> void:
 	if not OS.is_debug_build(): return
@@ -207,6 +209,10 @@ func demarrer_partie() -> void:
 	var depart := int(point.reprise.indice) if point != null and not point.reprise.is_empty() else indice_salle_depart
 	await activer_salle(clampi(depart, 0, nombre_salles - 1))
 	partie_prete.emit()
+	
+	#musique
+	musique_jouee = get_parent().get_node("Musique") as AudioStreamPlayer
+	musique_jouee.play()
 
 # Population
 
@@ -692,8 +698,16 @@ func activer_salle(indice: int) -> void:
 	var jouer_course := preparer_entree_salle()
 	# Les ressources et la navigation sont prêtes : laisser voir la course d’entrée.
 	Reglages.chargement.terminer()
-	# Révéler la nouvelle pièce avant la course ; le combat et son timer restent gelés.
+	# Révéler la nouvelle piqsazeèce avant la course ; le combat et son timer restent gelés.
+	
 	if changer_etage:
+		#On ajoute des musiques pour le feedback auditif
+		if salle_actuelle.etage-1 == 1:
+			musique_jouee.stream.set_sync_stream_volume(1, -3)
+		else:
+			musique_jouee.stream.set_sync_stream_volume(1, -5)
+			musique_jouee.stream.set_sync_stream_volume(2, 0)
+			musique_jouee.stream.set_sync_stream_volume(3, 2)
 		await transition_etage.reveler(salle_actuelle.etage)
 	else:
 		await transition_etage.reveler_salle()
