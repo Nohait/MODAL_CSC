@@ -10,10 +10,10 @@ extends Node3D
 var roomSize := Vector2i(1, 1)
 
 # Matériau appliqué aux cases de sol.
-@export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_appartements.tres")
+@export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_1.tres")
 
 # Matériau des murs et des morceaux de mur autour des portes.
-@export var materiau_murs: StandardMaterial3D = preload("res://assets/materiaux/mur_appartements.tres")
+@export var materiau_murs: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_1.tres")
 
 @export_group("Habillage procédural")
 @export var habillage: HabillageSalle = preload("res://scenes/salles/habillage_classique.tres")

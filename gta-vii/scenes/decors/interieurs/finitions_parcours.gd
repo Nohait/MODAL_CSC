@@ -6,6 +6,7 @@ const GEOMETRIE = preload("res://scenes/decors/interieurs/geometrie_decorative.g
 
 @export var actif := true
 @export var regrouper_finitions := true
+@export var etages_sans_soubassement: Array[int] = []
 @export var bois: Material = preload("res://assets/materiaux/appartements/bois_finitions.tres")
 @export var teintes: Array[Color] = [Color(0.59, 0.62, 0.57), Color(0.48, 0.58, 0.6), Color(0.56, 0.57, 0.63)]
 @export_range(0.3, 0.8, 0.05) var hauteur_soubassement := 0.7
@@ -14,6 +15,7 @@ const GEOMETRIE = preload("res://scenes/decors/interieurs/geometrie_decorative.g
 
 func appliquer(generateur: Node3D, decor: Node3D, etage: int) -> void:
 	if not actif or teintes.is_empty(): return
+	var soubassement_actif := etage not in etages_sans_soubassement
 	var peinture := StandardMaterial3D.new()
 	peinture.albedo_color = teintes[clampi(etage - 1, 0, teintes.size() - 1)]
 	peinture.roughness = 0.75
@@ -46,13 +48,14 @@ func appliquer(generateur: Node3D, decor: Node3D, etage: int) -> void:
 				taille[axe] = 0.02
 				taille[tangent] = maxf(0.01, taille[tangent] - 0.004)
 				taille.y = maxf(0.01, hauteur - hauteur_plinthe - hauteur_moulure - 0.004)
-				GEOMETRIE.bloc(finitions, "Soubassement", position, taille, peinture)
+				if soubassement_actif:
+					GEOMETRIE.bloc(finitions, "Soubassement", position, taille, peinture)
 				# Les baguettes dépassent de quelques millimètres ; aucune face ne se superpose au mur.
 				taille[axe] = 0.035
 				taille.y = hauteur_plinthe
 				position.y = boite.position.y + hauteur_plinthe / 2
 				GEOMETRIE.bloc(finitions, "Plinthe", position, taille, bois)
-				if hauteur < hauteur_soubassement: continue
+				if not soubassement_actif or hauteur < hauteur_soubassement: continue
 				taille.y = hauteur_moulure
 				position.y = boite.position.y + hauteur - hauteur_moulure / 2
 				GEOMETRIE.bloc(finitions, "Moulure", position, taille, bois)

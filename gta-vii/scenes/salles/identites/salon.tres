@@ -14,7 +14,7 @@
 [resource]
 script = ExtResource("script")
 titre = "Salon évacué"
-couleur_soubassement = Color(0.57, 0.63, 0.56, 1)
+couleur_soubassement = Color(0.43, 0.44, 0.4, 1)
 pieces = Array[PackedScene]([ExtResource("p0"), ExtResource("p1")])
 compositions_annexes = Array[Resource]([ExtResource("c0"), ExtResource("c1"), ExtResource("c2")])
 nombre_fenetres = 3

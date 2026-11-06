@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dmiycwh10oa14" path="res://assets/textures/extincteur/pulverisation.png" id="texture_jet"]
+
+[sub_resource type="Gradient" id="FonduJet"]
+offsets = PackedFloat32Array(0, 0.08, 0.65, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.75, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="TransparenceJet"]
+gradient = SubResource("FonduJet")
+
+[sub_resource type="Curve" id="DiametreJet"]
+_data = [Vector2(0, 0.09), 0.0, 0.0, 0, 0, Vector2(0.25, 0.2265), 0.0, 0.0, 0, 0, Vector2(1, 0.48), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="ExpansionJet"]
+curve = SubResource("DiametreJet")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdvy"]
+emission_shape = 1
+emission_sphere_radius = 0.035
+angle_min = -180.0
+angle_max = 180.0
+inherit_velocity_ratio = 1.0
+direction = Vector3(0, 0, -1)
+spread = 15.0
+flatness = 0.25
+initial_velocity_min = 5.6
+initial_velocity_max = 5.6
+angular_velocity_min = -35.0
+angular_velocity_max = 35.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.85
+scale_max = 1.15
+scale_curve = SubResource("ExpansionJet")
+color_ramp = SubResource("TransparenceJet")
+anim_speed_max = 11.71
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+collision_use_scale = true
+
+[sub_resource type="StandardMaterial3D" id="MateriauJet"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.5, 1.5, 1.5, 0.8)
+albedo_texture = ExtResource("texture_jet")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="ImagePulverisation"]
+material = SubResource("MateriauJet")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sysh0"]
+radius = 2.8
+
+[node name="JetMousse" type="GPUParticles3D"]
+cast_shadow = 0
+amount = 340
+lifetime = 0.5
+preprocess = 1.0
+visibility_aabb = AABB(-9, -9, -9, 18, 18, 18)
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_bqdvy")
+draw_pass_1 = SubResource("ImagePulverisation")
+

@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://cbrlojs21m4os" path="res://assets/fonts/barlow_condensed/BarlowCondensed-SemiBold.ttf" id="boutons"]
 [ext_resource type="FontVariation" uid="uid://3a4yqhewh8nx" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
-[ext_resource type="StyleBox" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
+[ext_resource type="StyleBox" uid="uid://c6ffwypqcmt6s" path="res://scenes/interfaces/theme_intervention/panneau.tres" id="panneau"]
 [ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="titre"]
 
 [sub_resource type="StyleBoxFlat" id="disabled"]
