@@ -129,6 +129,8 @@ func _ready() -> void:
 	room_manager.victimes_supplementaires_reserve = defis.victimes_supplementaires
 	boutique = BOUTIQUE.instantiate()
 	boutique.mode_demonstration = false
+	boutique.joueur_sante = joueur
+	boutique.escorte_sante = escorte
 	boutique.catalogue = offres_boosters()
 	add_child(boutique)
 	boutique.hide()

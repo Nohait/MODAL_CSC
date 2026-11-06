@@ -48,6 +48,8 @@ var categorie_sprinklers: Button
 var note_points: Label
 var bouton_debug: Button
 var mode_points_tutoriel := false
+var joueur_sante: Node
+var escorte_sante: Node
 
 
 func _ready() -> void:
@@ -92,6 +94,11 @@ func _ready() -> void:
 	gauche.size_flags_stretch_ratio = 1.6
 	gauche.add_theme_constant_override("separation", 18)
 	colonnes.add_child(gauche)
+	if not mode_demonstration:
+		var sante := preload("res://scenes/interfaces/menus/boutique/etat_sante_boutique.gd").new()
+		sante.joueur = joueur_sante
+		sante.escorte = escorte_sante
+		gauche.add_child(sante)
 	var renforts := _panneau(gauche, "BONUS PERMANENTS")
 	var pochettes := HBoxContainer.new()
 	pochettes.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -249,7 +256,7 @@ func _actualiser_budget() -> void:
 		ligne.actualiser_budget(points_demo)
 	for booster in boosters:
 		var verrouille: bool = booster.get_meta("verrouille", false)
-		booster.modulate.a = 0.55 if booster.prix > points_demo or verrouille else 1.0
+		booster.actualiser_disponibilite(booster.prix <= points_demo and not verrouille)
 		booster.tooltip_text = "Aucune légendaire disponible : obtenez ses prérequis ou relancez une partie." if verrouille else ("Points insuffisants" if booster.prix > points_demo else "")
 
 func actualiser_legendaire(disponible: bool) -> void:
