@@ -646,10 +646,14 @@ func activer_salle(indice: int) -> void:
 	await get_tree().physics_frame
 	salle_actuelle.cuire_navigation()
 	salle_actuelle.preparer_regions_navigation()
+	# Le décor vient de changer de parent : attendre sa publication physique.
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 
 	# Joueur
 	joueur.extincteur.vider_jet()
 	joueur.global_position = salle_actuelle.entree.to_global(Vector3(0, 1.1, 1.6))
+	_ajuster_hauteur_arrivee()
 	joueur.velocity = Vector3.ZERO
 	joueur.is_dashing = false
 	joueur.dash_time_left = 0.0
@@ -947,6 +951,26 @@ func jouer_entree_salle(arrivee: Vector3) -> void:
 	# Le mode zombie peut prolonger l'arrivée, sans changer celle du mode classique.
 	joueur.commencer_entree(arrivee)
 	await joueur.entree_terminee
+
+func _ajuster_hauteur_arrivee() -> void:
+	var collision := joueur.get_node("CollisionShape3D") as CollisionShape3D
+	var capsule := collision.shape as CapsuleShape3D
+	if capsule == null:
+		return
+	var requete := PhysicsRayQueryParameters3D.create(
+		joueur.global_position + Vector3.UP,
+		joueur.global_position - Vector3.UP * 3.0,
+		1,
+		[joueur.get_rid()]
+	)
+	var contact: Dictionary = joueur.get_world_3d().direct_space_state.intersect_ray(requete)
+	if contact.is_empty():
+		push_error("Aucun sol détecté sous l'entrée de la salle %d." % (indice_salle + 1))
+		return
+	# Placer le bas de la capsule au-dessus du sol, même si sa taille évolue.
+	var bas_capsule: float = collision.global_position.y - capsule.height * collision.global_basis.y.length() * 0.5
+	var hauteur_sol: float = contact.position.y
+	joueur.global_position.y += maxf(0.0, hauteur_sol + joueur.safe_margin * 2.0 - bas_capsule)
 
 func preparer_entree_salle() -> bool:
 	var point = get_node_or_null("../../PointRepriseClassique")
