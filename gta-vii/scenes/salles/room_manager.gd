@@ -121,6 +121,10 @@ var mobiles_classiques_planifies: Dictionary = {}
 # Distance horizontale minimale avec le joueur pour une vague normale.
 @export_range(1.5, 10.0, 0.5) var distance_securite_spawn := 3.0
 
+@export_group("Hordes — classique")
+@export var hordes: Resource = preload("res://scenes/salles/hordes_classiques.tres")
+var hordes_salle_actives := false
+
 # Victimes
 
 @export_group("Victimes présentes dès le début")
@@ -506,12 +510,15 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	var point = get_node_or_null("../../PointRepriseClassique")
 	if point != null: point.commencer_salle(self)
 	planifier_types_mobiles(salle, point.graine_combat if point != null else randi())
+	hordes_salle_actives = hordes != null and hordes.est_active(salle.remaining_enemies)
 	salle.duree_sauvetage = randf_range(clampf(duree_min_vagues, 15.0, 30.0), clampf(maxf(duree_min_vagues, duree_max_vagues), 15.0, 30.0))
 	salle.temps_sauvetage_restant = salle.duree_sauvetage
 	var tailles: Array[int] = []
 	var a_planifier: int = salle.mobiles_a_creer.size()
 	var maximum := maximum_vague(salle)
 	var minimum := clampi(taille_min_vague, 1, maximum)
+	if hordes_salle_actives:
+		minimum = clampi(maxi(minimum, hordes.taille_min_vague), 1, maximum)
 	while a_planifier > 0:
 		var taille := mini(a_planifier, randi_range(minimum, maximum))
 		tailles.append(taille)
@@ -577,13 +584,7 @@ func terminer_sauvetage(salle: Node3D) -> void:
 # Vagues
 
 func creer_vague(nombre_prevu: int, restant: float) -> void:
-	var nombre := mini(nombre_prevu, salle_actuelle.mobiles_a_creer.size())
-	for i in range(nombre):
-		var indice := trouver_emplacement_eloigne(salle_actuelle)
-		if indice == -1:
-			indice = 0 # L’annonce prévient le joueur ; ne pas retarder la vague.
-		var emplacement: Vector3 = salle_actuelle.mobiles_a_creer[indice]
-		salle_actuelle.mobiles_a_creer.remove_at(indice)
+	for emplacement in _prelever_vague(salle_actuelle, nombre_prevu):
 		salle_actuelle.mobiles_annonces.append(emplacement)
 		salle_actuelle.apparitions_en_cours += 1
 		var annonce = ANNONCE_SCENE.instantiate()
@@ -594,6 +595,25 @@ func creer_vague(nombre_prevu: int, restant: float) -> void:
 		annonce.terminee.connect(salle_actuelle.annonces_en_cours.erase.bind(annonce), CONNECT_ONE_SHOT)
 		salle_actuelle.add_child(annonce)
 	actualiser_objectifs()
+
+func _prelever_vague(salle: Node3D, nombre_prevu: int) -> Array[Vector3]:
+	var origines: Array[Vector3] = []
+	for i in range(mini(nombre_prevu, salle.mobiles_a_creer.size())):
+		var indice := trouver_emplacement_eloigne(salle)
+		if indice == -1: indice = 0
+		origines.append(salle.mobiles_a_creer[indice])
+		salle.mobiles_a_creer.remove_at(indice)
+	if not hordes_salle_actives or not is_instance_valid(joueur): return origines
+	var reserves: Array[Vector3] = salle.mobiles_a_creer.duplicate()
+	reserves.append_array(salle.mobiles_annonces)
+	var positions: Array[Vector3] = hordes.placer(origines, reserves, salle, salle.carte_ennemis, joueur.global_position, distance_securite_spawn)
+	var types: Array[PackedScene] = []
+	for origine in origines:
+		types.append(mobiles_classiques_planifies.get(origine))
+		mobiles_classiques_planifies.erase(origine)
+	for i in range(positions.size()):
+		mobiles_classiques_planifies[positions[i]] = types[i]
+	return positions
 
 func emplacement_suffisamment_eloigne(salle: Node3D, emplacement: Vector3) -> bool:
 	if not is_instance_valid(joueur):
@@ -625,9 +645,17 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 
 	# Positions encore jamais annoncées.
 	var positions: Array[Vector3] = salle.mobiles_a_creer.duplicate()
+	if hordes_salle_actives:
+		positions.clear()
+		while not salle.mobiles_a_creer.is_empty():
+			var groupe := _prelever_vague(salle, maximum_vague(salle))
+			positions.append_array(groupe)
+			# Réserver aussi ces positions jusqu'à la création de tous les groupes.
+			salle.mobiles_annonces.append_array(groupe)
 
 	# Positions dont l'annonce était encore en cours.
-	positions.append_array(salle.mobiles_annonces)
+	for emplacement in salle.mobiles_annonces:
+		if not positions.has(emplacement): positions.append(emplacement)
 
 	# Retirer les annonces visuelles restantes.
 	for annonce in (salle.annonces_en_cours.duplicate()):
