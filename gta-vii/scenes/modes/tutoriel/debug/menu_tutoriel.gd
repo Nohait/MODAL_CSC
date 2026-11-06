@@ -8,7 +8,6 @@ var onglets: TabContainer
 var disposition: VBoxContainer
 var etat: Label
 var historique: Label
-var indicateur: Label
 var boutons: Dictionary = {}
 var cases: Dictionary = {}
 var evenements: Array[String] = []
@@ -19,7 +18,6 @@ var dernier_etat := ""
 var derniere_salle := ""
 
 static func installer(scene: Node) -> void:
-	if not OS.is_debug_build(): return
 	if scene.has_node("DebugTutoriel"): return
 	if not scene.get_tree().root.has_node("GardeDebugTutoriel"):
 		var garde = preload("res://scenes/modes/tutoriel/debug/garde_debug.gd").new()
@@ -34,6 +32,7 @@ static func installer(scene: Node) -> void:
 	scene.add_child(menu)
 
 func _ready() -> void:
+	add_to_group("debug_tutoriel")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 100
 	commandes = COMMANDES.new(get_parent())
@@ -45,13 +44,6 @@ func _ready() -> void:
 	get_tree().node_added.connect(_ajout)
 
 func _construire() -> void:
-	indicateur = Label.new()
-	indicateur.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(indicateur)
-	indicateur.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	indicateur.offset_left = 20
-	indicateur.offset_top = -30
-	indicateur.offset_bottom = -8
 	panneau = PanelContainer.new()
 	panneau.theme = _theme_menu()
 	add_child(panneau)
@@ -64,7 +56,7 @@ func _construire() -> void:
 	titre.add_theme_color_override("font_color", Color(1, 0.76, 0.38))
 	contenu.add_child(titre)
 	var aide := Label.new()
-	aide.text = "Simulation suspendue · I ou Échap pour fermer · les changements de debug ne sont pas sauvegardés"
+	aide.text = "Simulation suspendue · Échap pour fermer · les changements de debug ne sont pas sauvegardés"
 	aide.add_theme_font_size_override("font_size", 15)
 	contenu.add_child(aide)
 	onglets = TabContainer.new()
@@ -198,13 +190,17 @@ func _case(texte: String, action: Callable) -> void:
 
 func _input(event: InputEvent) -> void:
 	if commandes.transition_en_cours: return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_I:
-		if panneau.visible: fermer()
-		else: ouvrir()
-		get_viewport().set_input_as_handled()
-	elif panneau.visible and event.is_action_pressed("ui_cancel"):
+	if panneau.visible and event.is_action_pressed("ui_cancel"):
 		fermer()
 		get_viewport().set_input_as_handled()
+
+func debug_contextuel() -> bool:
+	if commandes.transition_en_cours: return true
+	if panneau.visible:
+		fermer()
+	elif not get_tree().paused:
+		ouvrir()
+	return true
 
 func ouvrir() -> void:
 	pause_avant = get_tree().paused
@@ -240,7 +236,6 @@ func _process(_delta: float) -> void:
 		derniere_salle = c.salle
 		_journal("Changement de salle : " + derniere_salle)
 	etat.text = commandes.diagnostic()
-	indicateur.text = "DEBUG · sans récompenses · I" if Engine.get_meta("tutoriel_debug_actif", false) else "I · debug tutoriel"
 	var victime = c.get("victime")
 	boutons["Libérer la victime"].disabled = not is_instance_valid(victime) or victime.is_freed or victime.est_morte
 	var foyers_actifs := 0

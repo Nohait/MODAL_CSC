@@ -33,6 +33,7 @@ var retour_en_cours := false
 
 
 func _ready() -> void:
+	add_to_group("debug_carnet")
 	for onglet in boutons_carnet:
 		var papier_onglet: TextureRect = onglet.get_node("Papier")
 		papier_onglet.material = papier_onglet.material.duplicate()
@@ -275,3 +276,6 @@ func _retourner_titre() -> void:
 		return
 	arbre.paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func debug_contextuel() -> bool:
+	return menu.is_visible_in_tree()

@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-# Always dans la scène permet de recevoir I et de cliquer pendant la pause.
+# Always permet de fermer le menu et de cliquer pendant la pause.
 @onready var joueur = $"../player"
 @onready var salles = $"../Salles/RoomManager"
 @onready var menu: Control = $Menu
@@ -11,7 +11,6 @@ extends CanvasLayer
 @onready var etages: HBoxContainer = %Etages
 @onready var suivant: Button = %Suivant
 @onready var situation: Label = %Situation
-@onready var raccourci: Label = $"../InterfaceTest/EtatInvincibilite"
 var souris_avant: int
 const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug.gd")
 @onready var choix_ennemis: Control = $ChoixEnnemis
@@ -20,6 +19,14 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug
 var ennemi_selectionne: Dictionary = {}
 
 
+
+func _enter_tree() -> void:
+	add_to_group("debug_partie")
+
+func debug_contextuel() -> bool:
+	if menu.visible: fermer()
+	else: ouvrir()
+	return true
 
 func _ready() -> void:
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
@@ -70,13 +77,7 @@ func _recharger_equipements() -> void:
 func _input(event: InputEvent) -> void:
 	if event is not InputEventKey or not event.pressed or event.echo:
 		return
-	if event.physical_keycode == KEY_I or event.keycode == KEY_I:
-		if menu.visible:
-			fermer()
-		else:
-			ouvrir()
-		get_viewport().set_input_as_handled()
-	elif menu.visible and event.is_action_pressed("ui_cancel"):
+	if menu.visible and event.is_action_pressed("ui_cancel"):
 		if %ChoixMutation.visible: _retour_liste_ennemis()
 		elif choix_ennemis.visible: _retour_debug()
 		else: fermer()
@@ -119,28 +120,15 @@ func fermer() -> void:
 
 func _changer_invincibilite(active: bool) -> void:
 	joueur.invincible = active
-	_actualiser_raccourci()
 
 
 func _changer_degats(active: bool) -> void:
 	joueur.extincteur.degats_colossaux_test = active
-	_actualiser_raccourci()
 
 
 func _changer_points_boutique(active: bool) -> void:
 	# La prochaine ouverture initialise 999 points ; les achats les déduisent normalement.
 	ameliorations.points_abondants_test = active
-	_actualiser_raccourci()
-
-
-func _actualiser_raccourci() -> void:
-	raccourci.text = "I : menu de test"
-	if joueur.invincible:
-		raccourci.text += " · Invincible"
-	if joueur.extincteur.degats_colossaux_test:
-		raccourci.text += " · Dégâts colossaux"
-	if ameliorations.points_abondants_test:
-		raccourci.text += " · Points abondants"
 
 
 func _etage_suivant() -> void:

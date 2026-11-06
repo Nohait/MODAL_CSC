@@ -29,7 +29,6 @@ func _ready() -> void:
 	_preparer_choix_vagues()
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(choix_ennemis)
-	_actualiser_raccourci()
 
 func ouvrir() -> void:
 	if get_tree().paused or salles.transition_en_cours or joueur.est_mort:
@@ -45,13 +44,6 @@ func ouvrir() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	menu.show()
 	get_tree().paused = true
-
-func _actualiser_raccourci() -> void:
-	raccourci.text = "I : menu de test"
-	if joueur.invincible:
-		raccourci.text += " · Invincible"
-	if joueur.extincteur.degats_colossaux_test:
-		raccourci.text += " · Dégâts colossaux"
 
 func _etage_suivant() -> void:
 	_aller_etage(salles.vague_actuelle + 1)

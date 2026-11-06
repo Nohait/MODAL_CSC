@@ -218,12 +218,6 @@ func _physics_process(delta: float) -> void:
 		if delais_impacts[id] <= 0.0:
 			delais_impacts.erase(id)
 
-	if Input.is_key_label_pressed(KEY_J):
-		modifier(15,10)
-	if Input.is_key_label_pressed(KEY_K):
-		modifier(30,2)
-	if Input.is_key_label_pressed(KEY_M):
-		modifier(15,2.8)
 	if is_attacking:
 		temps_tir += delta
 		var emettre := not jet_pulse or fmod(temps_tir, 0.6) < 0.22

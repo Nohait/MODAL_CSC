@@ -25,6 +25,7 @@ Reglages="*res://scenes/systemes/reglages/reglages.gd"
 StatistiquesZombie="*res://scenes/modes/zombie/statistiques/statistiques_zombie.gd"
 SauvegardeZombie="*res://scenes/modes/zombie/sauvegarde/sauvegarde_zombie.gd"
 SauvegardeClassique="*res://scenes/jeu/sauvegarde/sauvegarde_classique.gd"
+AccesDebug="*res://scenes/systemes/debug/acces_debug.gd"
 
 [display]
 

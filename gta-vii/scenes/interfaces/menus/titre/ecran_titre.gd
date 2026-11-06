@@ -6,6 +6,7 @@ var mode_suppression := "zombie"
 var reprise_tutoriel: Node
 @export_range(0.2, 1.2, 0.05) var duree_depart := 0.5
 var temps_titre := 0.0
+var menu_profil: CanvasLayer
 
 func changer_scene(chemin: String) -> void:
 	if changement_en_cours:
@@ -33,6 +34,7 @@ func _restaurer_menu() -> void:
 		bouton.disabled = false
 
 func _ready() -> void:
+	add_to_group("debug_titre")
 	super._ready()
 	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	%ModeZombie.pressed.connect(_jouer_zombie)
@@ -194,3 +196,12 @@ func nouvelle_partie() -> void:
 
 func _jouer_tutoriel() -> void:
 	changer_scene(preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).chemin_reprise())
+
+func debug_contextuel() -> bool:
+	if changement_en_cours or confirmation_suppression.visible: return true
+	if not is_instance_valid(menu_profil):
+		menu_profil = preload("res://scenes/interfaces/menus/debug/menu_profil.tscn").instantiate()
+		add_child(menu_profil)
+	if menu_profil.visible: menu_profil.fermer()
+	else: menu_profil.ouvrir()
+	return true

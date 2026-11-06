@@ -3,7 +3,6 @@ extends Control
 # Interface réutilisée en jeu. F6 conserve un mode de démonstration indépendant.
 signal achat_demande(rarete: StringName)
 signal defi_demande(identifiant: StringName)
-signal catalogue_debug_demande
 signal continuer_demande
 signal recharge_murale_demandee
 signal sprinkler_demande(sprinkler: Node3D)
@@ -46,7 +45,6 @@ var tuiles_sprinklers: Array[Dictionary] = []
 var choix_sprinklers: Window
 var categorie_sprinklers: Button
 var note_points: Label
-var bouton_debug: Button
 var mode_points_tutoriel := false
 var reperes_formation: Dictionary = {}
 var joueur_sante: Node
@@ -182,21 +180,11 @@ func _ready() -> void:
 		continuer.custom_minimum_size.y = 40
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
-	if not mode_demonstration and OS.is_debug_build():
-		bouton_debug = Button.new()
-		bouton_debug.add_theme_font_size_override("font_size", 16)
-		bouton_debug.custom_minimum_size = Vector2(300, 40)
-		bouton_debug.name = "DebugCartes"
-		bouton_debug.text = "Debug : toutes les cartes du mode"
-		bouton_debug.focus_mode = Control.FOCUS_NONE
-		bouton_debug.pressed.connect(func(): catalogue_debug_demande.emit())
-		contenu.add_child(bouton_debug)
 	_actualiser_budget()
 
 func configurer_tutoriel_points(actif: bool, points: int) -> void:
 	mode_points_tutoriel = actif
 	panneau_defis.visible = not actif
-	if is_instance_valid(bouton_debug): bouton_debug.visible = not actif
 	if actif:
 		cadeau.hide()
 		compteur.add_theme_color_override("font_color", Color("ef9b3d"))

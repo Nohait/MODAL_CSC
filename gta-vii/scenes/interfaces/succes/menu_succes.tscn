@@ -135,13 +135,6 @@ theme_override_constants/separation = 14
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Reinitialiser" parent="Pochette/Marge/Contenu/Bas" unique_id=717601028 instance=ExtResource("button")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(310, 64)
-layout_mode = 2
-text = "Debug : réinitialiser les succès"
-taille_police = 20
-
 [node name="Espace" type="Control" parent="Pochette/Marge/Contenu/Bas" unique_id=1993261391]
 layout_mode = 2
 size_flags_horizontal = 3
