@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bsk238q653gxr" path="res://scenes/joueur/player_pompier.tscn" id="2_6e3g7"]
 [ext_resource type="PackedScene" uid="uid://cj5mcflqq4lnc" path="res://scenes/armes/extincteur/extincteur.tscn" id="2_g2els"]
 [ext_resource type="Script" uid="uid://dfxh4erirujb7" path="res://scenes/interfaces/hud/interface_joueur.gd" id="4_interface"]
-[ext_resource type="PackedScene" path="res://scenes/interfaces/hud/jauge_equipement.tscn" id="5_jauge"]
+[ext_resource type="PackedScene" uid="uid://ckxg3qt4q431k" path="res://scenes/interfaces/hud/jauge_equipement.tscn" id="5_jauge"]
 [ext_resource type="Texture2D" uid="uid://uiwdov1ysn5g" path="res://assets/textures/interfaces/hud/icone_mousse.svg" id="6_mousse"]
 [ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="7_police"]
 [ext_resource type="Script" uid="uid://b7hbwlqcmioay" path="res://scenes/joueur/sons/pas_joueur.gd" id="8_pas"]

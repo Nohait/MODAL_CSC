@@ -65,6 +65,7 @@ const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuat
 ## Salle activée au chargement, utilisée par les parcours qui reprennent en cours de route.
 @export_range(0, 49, 1) var indice_salle_depart := 0
 const SALLES_PAR_ETAGE := 5
+signal etage_1
 var nombre_salles: int:
 	get:
 		return nombre_salles_personnalise if nombre_salles_personnalise > 0 else nombre_etages * SALLES_PAR_ETAGE
@@ -387,8 +388,6 @@ func peupler_salle(salle: Node3D) -> void:
 		salle.get_node("Ennemis").add_child(flaque)
 		flaque.choisir_taille_aleatoire()
 		flaque.position = emplacements.pop_back() + Vector3.UP * 0.2
-		flaque.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
-		salle.remaining_enemies += 1
 
 	# Mobiles à venir
 	var bonus_mobiles := supplement_mobiles(salle)
@@ -799,6 +798,8 @@ func activer_salle(indice: int) -> void:
 	if changer_etage:
 		#On ajoute des musiques pour le feedback auditif
 		if salle_actuelle.etage-1 == 1:
+			etage_1.emit()
+			$InterfaceSalle/HUD/Bouche_Incendie.show()
 			musique_jouee.stream.set_sync_stream_volume(1, -3)
 		else:
 			musique_jouee.stream.set_sync_stream_volume(1, -5)

@@ -6,7 +6,7 @@ extends Node3D
 @export var generate := false
 @export var apercu_auto := false
 @export var roomSizeMax := Vector2i(10, 9)
-@export var roomSizeMin := Vector2i(7, 7)
+@export var roomSizeMin := Vector2i(6, 6)
 var roomSize := Vector2i(1, 1)
 
 # Matériau appliqué aux cases de sol.
@@ -80,7 +80,7 @@ func regenerer_apercu() -> void:
 var sortie_avec_escalier := false
 var entree_avec_escalier := false
 
-func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1, debut_etage: bool = false) -> Node3D:
+func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1, debut_etage: bool = false, indice_salle: int =1) -> Node3D:
 	sortie_avec_escalier = fin_etage
 	entree_avec_escalier = debut_etage
 
@@ -94,7 +94,8 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
 
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.
-	roomSize = roomSize.clamp(roomSizeMin, roomSizeMax)
+	roomSizeMax -= Vector2i(etage-1,etage-1)
+	roomSize = Vector2i(randi_range(roomSizeMin.x, roomSizeMax.x),randi_range(roomSizeMin.y, roomSizeMax.y))
 	salle_en_creation = ROOM_SCENE.instantiate()
 	generateRoom()
 
