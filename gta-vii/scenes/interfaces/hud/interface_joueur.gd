@@ -8,6 +8,7 @@ extends CanvasLayer
 @export var vie_max := 100.0
 
 func _ready() -> void:
+
 	var couche_reperes := CanvasLayer.new()
 	couche_reperes.name = "CoucheReperesVictimes"
 	# Le carnet utilise la couche 30 et ses cartes survolées la couche 31.

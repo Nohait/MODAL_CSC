@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cmq32471ox5aa"]
 
-[ext_resource type="Script" path="res://scenes/armes/bouche_incendie/presentation_bouche.gd" id="script"]
+[ext_resource type="Script" uid="uid://ch50p3cniooqa" path="res://scenes/armes/bouche_incendie/presentation_bouche.gd" id="script"]
 
-[node name="PresentationBouche" type="Node3D"]
+[node name="PresentationBouche" type="Node3D" unique_id=1388279497]
 script = ExtResource("script")

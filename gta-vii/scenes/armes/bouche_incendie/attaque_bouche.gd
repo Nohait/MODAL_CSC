@@ -72,41 +72,12 @@ var ombre: MeshInstance3D
 var souffle_lance := false
 @onready var cartes_bouche: Node = $AmeliorationsBouche
 
+var active = false
+
 func _ready() -> void:
-	# Une action dédiée permet de changer la touche sans dépendre de l'extincteur.
-	if not InputMap.has_action("attaque_bouche"):
-		InputMap.add_action("attaque_bouche")
-		var clic := InputEventMouseButton.new()
-		clic.button_index = MOUSE_BUTTON_RIGHT
-		InputMap.action_add_event("attaque_bouche", clic)
-	disque = MeshInstance3D.new()
-	var plan := PlaneMesh.new()
-	plan.size = Vector2.ONE * rayon * 2.0
-	disque.mesh = plan
-	disque.top_level = true
-	disque.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	materiau = ShaderMaterial.new()
-	materiau.shader = SHADER
-	materiau.set_shader_parameter("epaisseur_contour", epaisseur_contour)
-	disque.material_override = materiau
-	add_child(disque)
-	disque.hide()
-	icone = TextureRect.new()
-	icone.texture = preload("res://scenes/armes/bouche_incendie/icone_bouche.svg")
-	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	# Désactiver la taille minimale de la texture AVANT de fixer celle du HUD.
-	icone.size = Vector2.ONE * taille_pictogramme
-	icone.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	recharge_icone = ShaderMaterial.new()
-	recharge_icone.shader = preload("res://scenes/armes/bouche_incendie/recharge_icone.gdshader")
-	recharge_icone.set_shader_parameter("silhouette", preload("res://scenes/armes/bouche_incendie/silhouette_bouche.svg"))
-	icone.material = recharge_icone
-	var jauge: Control = joueur.get_node("Interface/Reserve/Jauge")
-	jauge.add_child(icone)
-	# Suivre le remplissage de la barre, et non le centre de son cadre avec titre.
-	jauge.resized.connect(_aligner_icone)
-	jauge.get_node("Remplissage").resized.connect(_aligner_icone)
-	_aligner_icone.call_deferred()
+	
+	await joueur.ready
+	joueur.get_parent().get_node("Salles").get_node("RoomManager").etage_1.connect(_on_etage_1)
 
 func _aligner_icone() -> void:
 	var jauge: Control = icone.get_parent()
@@ -121,10 +92,10 @@ func _input(event: InputEvent) -> void:
 	if get_tree().paused or joueur.est_mort or joueur.entree_automatique or phase != "disponible": return
 	if event is InputEventMouseButton:
 		CursorManager.position_curseur = event.position
-	if event.is_action_pressed("attaque_bouche"):
+	if active and event.is_action_pressed("attaque_bouche"):
 		vise = true
 		cycle_visee = 0.0
-	elif event.is_action_released("attaque_bouche") and vise:
+	elif active and event.is_action_released("attaque_bouche") and vise:
 		_actualiser_cible()
 		vise = false
 		if emplacement_valide: _lancer()
@@ -133,79 +104,80 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func _physics_process(delta: float) -> void:
-	# Une salle peut changer sans recréer le joueur : ne pas emporter l'attaque.
-	if phase != "disponible" and (not is_instance_valid(salle_depart) or salle_depart != _salle_actuelle()):
-		_terminer()
-	if joueur.est_mort or joueur.entree_automatique:
-		vise = false
-		if phase == "disponible": disque.hide()
-	if vise:
-		# Un relâchement absorbé par un menu ne doit pas lancer une attaque au retour.
-		if not Input.is_action_pressed("attaque_bouche"):
+	if active:
+		# Une salle peut changer sans recréer le joueur : ne pas emporter l'attaque.
+		if phase != "disponible" and (not is_instance_valid(salle_depart) or salle_depart != _salle_actuelle()):
+			_terminer()
+		if joueur.est_mort or joueur.entree_automatique:
 			vise = false
-			disque.hide()
-		else:
-			# Une onde de prévisualisation ; aucun dégât n'est appliqué ici.
-			var plan: PlaneMesh = disque.mesh
-			plan.size = Vector2.ONE * cartes_bouche.rayon() * 2.0
-			cycle_visee = fmod(cycle_visee + delta / duree_cycle_visee, 1.0)
-			materiau.set_shader_parameter("cycle_visee", cycle_visee)
-			_actualiser_cible()
-	if phase == "disponible": return
-	temps += delta
-	cartes_bouche.avancer(delta)
-	if phase == "chute":
-		var p := clampf(temps / cartes_bouche.chute(), 0.0, 1.0)
-		ombre.material_override.set_shader_parameter("approche", p * p)
-		if p >= 0.65 and not souffle_lance:
-			souffle_lance = true
-			_jouer_son_impact(son_chute, volume_chute_db)
-		var acceleration := pow(p, acceleration_fonte) if cartes_bouche.valeur(&"hydrant_fonte") > 0 else p * p
-		corps.global_position = cible + Vector3.UP * hauteur_chute * (1.0 - acceleration)
-		recharge_icone.set_shader_parameter("recharge", clampf(temps / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
-		if p >= 1.0:
-			phase = "presence"
-			temps = 0.0
-			materiau.set_shader_parameter("progression", 0.0)
-			materiau.set_shader_parameter("couleur", Color(0.65, 0.9, 1.0, 0.85))
-			corps.collision_layer = 1
-			# Les deux cartes de navigation doivent contourner la bouche posée.
-			corps.add_to_group("obstacles_navigation")
-			corps.set_meta("salle_navigation", salle_depart)
-			salle_depart.demander_navigation()
-			# Tout le disque frappe à l'atterrissage ; l'onde suivante est visuelle.
-			cartes_bouche.atterrir()
-			_eclabousser()
-			var couronne = preload("res://scenes/armes/bouche_incendie/couronne_eau.tscn").instantiate()
-			couronne.rayon = cartes_bouche.rayon()
-			couronne.hauteur = hauteur_couronne_eau * (ampleur_eau_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
-			couronne.duree = duree_onde
-			corps.add_child(couronne)
-			if cartes_bouche.valeur(&"hydrant_electrique") > 0:
-				var arcs = preload("res://scenes/armes/bouche_incendie/arcs_electriques.gd").new()
-				arcs.onde = true
-				arcs.rayon = cartes_bouche.rayon()
-				arcs.duree = duree_onde
-				couronne.add_child(arcs)
-			ombre.hide()
-			_jouer_son_impact(son_impact, volume_impact_db, tonalite_impact_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
-			_jouer_son_impact(son_eau, volume_eau_db)
-			joueur.secouer_camera(force_camera_impact * (force_camera_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0), duree_camera_impact)
-			_animer_impact()
-	elif phase == "presence":
-		var p := clampf(temps / duree_onde, 0.0, 1.0)
-		materiau.set_shader_parameter("progression", p)
-		disque.visible = p < 1.0
-		recharge_icone.set_shader_parameter("recharge", clampf((cartes_bouche.chute() + temps) / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
-		# Une pulsation continue annonce la fin sans faire disparaître le modèle entre deux cycles.
-		var avertissement := maxf(0.0, temps - (cartes_bouche.presence() - duree_avertissement))
-		if avertissement > 0.0:
-			var pulsation := (1.0 - cos(avertissement * TAU * frequence_pulsation)) * 0.5
-			var opacite := lerpf(1.0, opacite_minimale, pulsation)
-			opacite *= clampf((cartes_bouche.presence() - temps) / duree_fondu_final, 0.0, 1.0)
-			for mat in materiaux_modele:
-				mat.set_shader_parameter("opacite", opacite)
-		if temps >= cartes_bouche.presence(): _terminer()
+			if phase == "disponible": disque.hide()
+		if vise:
+			# Un relâchement absorbé par un menu ne doit pas lancer une attaque au retour.
+			if not Input.is_action_pressed("attaque_bouche"):
+				vise = false
+				disque.hide()
+			else:
+				# Une onde de prévisualisation ; aucun dégât n'est appliqué ici.
+				var plan: PlaneMesh = disque.mesh
+				plan.size = Vector2.ONE * cartes_bouche.rayon() * 2.0
+				cycle_visee = fmod(cycle_visee + delta / duree_cycle_visee, 1.0)
+				materiau.set_shader_parameter("cycle_visee", cycle_visee)
+				_actualiser_cible()
+		if phase == "disponible": return
+		temps += delta
+		cartes_bouche.avancer(delta)
+		if phase == "chute":
+			var p := clampf(temps / cartes_bouche.chute(), 0.0, 1.0)
+			ombre.material_override.set_shader_parameter("approche", p * p)
+			if p >= 0.65 and not souffle_lance:
+				souffle_lance = true
+				_jouer_son_impact(son_chute, volume_chute_db)
+			var acceleration := pow(p, acceleration_fonte) if cartes_bouche.valeur(&"hydrant_fonte") > 0 else p * p
+			corps.global_position = cible + Vector3.UP * hauteur_chute * (1.0 - acceleration)
+			recharge_icone.set_shader_parameter("recharge", clampf(temps / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
+			if p >= 1.0:
+				phase = "presence"
+				temps = 0.0
+				materiau.set_shader_parameter("progression", 0.0)
+				materiau.set_shader_parameter("couleur", Color(0.65, 0.9, 1.0, 0.85))
+				corps.collision_layer = 1
+				# Les deux cartes de navigation doivent contourner la bouche posée.
+				corps.add_to_group("obstacles_navigation")
+				corps.set_meta("salle_navigation", salle_depart)
+				salle_depart.demander_navigation()
+				# Tout le disque frappe à l'atterrissage ; l'onde suivante est visuelle.
+				cartes_bouche.atterrir()
+				_eclabousser()
+				var couronne = preload("res://scenes/armes/bouche_incendie/couronne_eau.tscn").instantiate()
+				couronne.rayon = cartes_bouche.rayon()
+				couronne.hauteur = hauteur_couronne_eau * (ampleur_eau_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
+				couronne.duree = duree_onde
+				corps.add_child(couronne)
+				if cartes_bouche.valeur(&"hydrant_electrique") > 0:
+					var arcs = preload("res://scenes/armes/bouche_incendie/arcs_electriques.gd").new()
+					arcs.onde = true
+					arcs.rayon = cartes_bouche.rayon()
+					arcs.duree = duree_onde
+					couronne.add_child(arcs)
+				ombre.hide()
+				_jouer_son_impact(son_impact, volume_impact_db, tonalite_impact_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0)
+				_jouer_son_impact(son_eau, volume_eau_db)
+				joueur.secouer_camera(force_camera_impact * (force_camera_fonte if cartes_bouche.valeur(&"hydrant_fonte") > 0 else 1.0), duree_camera_impact)
+				_animer_impact()
+		elif phase == "presence":
+			var p := clampf(temps / duree_onde, 0.0, 1.0)
+			materiau.set_shader_parameter("progression", p)
+			disque.visible = p < 1.0
+			recharge_icone.set_shader_parameter("recharge", clampf((cartes_bouche.chute() + temps) / (cartes_bouche.chute() + cartes_bouche.presence()), 0.0, 1.0))
+			# Une pulsation continue annonce la fin sans faire disparaître le modèle entre deux cycles.
+			var avertissement := maxf(0.0, temps - (cartes_bouche.presence() - duree_avertissement))
+			if avertissement > 0.0:
+				var pulsation := (1.0 - cos(avertissement * TAU * frequence_pulsation)) * 0.5
+				var opacite := lerpf(1.0, opacite_minimale, pulsation)
+				opacite *= clampf((cartes_bouche.presence() - temps) / duree_fondu_final, 0.0, 1.0)
+				for mat in materiaux_modele:
+					mat.set_shader_parameter("opacite", opacite)
+			if temps >= cartes_bouche.presence(): _terminer()
 
 func _actualiser_cible() -> void:
 	var camera: Camera3D = joueur.camera
@@ -392,3 +364,49 @@ func _salle_actuelle() -> Node:
 	if is_instance_valid(joueur.ameliorations):
 		return joueur.ameliorations.room_manager.salle_actuelle
 	return joueur.get_parent()
+	
+func _on_etage_1():
+	active = true
+	
+	# Une action dédiée permet de changer la touche sans dépendre de l'extincteur.
+	if not InputMap.has_action("attaque_bouche"):
+		InputMap.add_action("attaque_bouche")
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_RIGHT
+		InputMap.action_add_event("attaque_bouche", clic)
+	disque = MeshInstance3D.new()
+	var plan := PlaneMesh.new()
+	plan.size = Vector2.ONE * rayon * 2.0
+	
+	#disque
+	disque.mesh = plan
+	disque.top_level = true
+	disque.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	materiau = ShaderMaterial.new()
+	materiau.shader = SHADER
+	materiau.set_shader_parameter("epaisseur_contour", epaisseur_contour)
+	disque.material_override = materiau
+	add_child(disque)
+	disque.hide()
+	
+	#icone
+	icone = TextureRect.new()
+	icone.texture = preload("res://scenes/armes/bouche_incendie/icone_bouche.svg")
+	icone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	# Désactiver la taille minimale de la texture AVANT de fixer celle du HUD.
+	icone.size = Vector2.ONE * taille_pictogramme
+	icone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	recharge_icone = ShaderMaterial.new()
+	recharge_icone.shader = preload("res://scenes/armes/bouche_incendie/recharge_icone.gdshader")
+	recharge_icone.set_shader_parameter("silhouette", preload("res://scenes/armes/bouche_incendie/silhouette_bouche.svg"))
+	icone.material = recharge_icone
+
+	var jauge: Control = joueur.get_node("Interface/Reserve/Jauge")
+	jauge.add_child(icone)
+	# Suivre le remplissage de la barre, et non le centre de son cadre avec titre.
+	jauge.resized.connect(_aligner_icone)
+	jauge.get_node("Remplissage").resized.connect(_aligner_icone)
+	
+	_aligner_icone.call_deferred()
+	icone.show()
+	

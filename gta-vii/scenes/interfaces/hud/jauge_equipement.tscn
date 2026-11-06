@@ -1,23 +1,27 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://ckxg3qt4q431k"]
 
-[ext_resource type="Script" path="res://scenes/interfaces/hud/jauge_equipement.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/cadre_equipement.svg" id="2"]
-[ext_resource type="Shader" path="res://scenes/interfaces/hud/remplissage_equipement.gdshader" id="3"]
-[ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="4"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/icone_vie.svg" id="5"]
-[ext_resource type="Shader" path="res://scenes/interfaces/hud/cadre_equipement.gdshader" id="6_cadre"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg" id="7_plastique"]
+[ext_resource type="Script" uid="uid://1r1egkgbwmlm" path="res://scenes/interfaces/hud/jauge_equipement.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://3n0727x2w86e" path="res://assets/textures/interfaces/hud/cadre_equipement.svg" id="2"]
+[ext_resource type="Shader" uid="uid://bk2ff4uopdj3o" path="res://scenes/interfaces/hud/remplissage_equipement.gdshader" id="3"]
+[ext_resource type="FontVariation" uid="uid://bcs57m8kbr0ue" path="res://assets/fonts/rubik/accent.tres" id="4"]
+[ext_resource type="Texture2D" uid="uid://cdus35hwqiyu2" path="res://assets/textures/interfaces/hud/icone_vie.svg" id="5"]
+[ext_resource type="Shader" uid="uid://dx366nmxmucsq" path="res://scenes/interfaces/hud/cadre_equipement.gdshader" id="6_cadre"]
+[ext_resource type="Texture2D" uid="uid://cmp8t5x15ub28" path="res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg" id="7_plastique"]
 
 [sub_resource type="StyleBoxEmpty" id="Vide"]
 
-[sub_resource type="ShaderMaterial" id="Remplissage"]
-shader = ExtResource("3")
-
-[sub_resource type="ShaderMaterial" id="CadrePlastique"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pp55b"]
 shader = ExtResource("6_cadre")
+shader_parameter/plastique = ExtResource("7_plastique")
 shader_parameter/taille = Vector2(320, 70)
 shader_parameter/intensite = 0.48
-shader_parameter/plastique = ExtResource("7_plastique")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ekxd3"]
+shader = ExtResource("3")
+shader_parameter/proportion = 1.0
+shader_parameter/teinte = Color(0.65, 0.16, 0.14, 1)
+shader_parameter/recharge = false
+shader_parameter/impact = 0.0
 
 [sub_resource type="Gradient" id="Blanc"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
@@ -27,7 +31,7 @@ gradient = SubResource("Blanc")
 width = 8
 height = 8
 
-[node name="JaugeEquipement" type="ProgressBar"]
+[node name="JaugeEquipement" type="ProgressBar" unique_id=500648234]
 custom_minimum_size = Vector2(320, 70)
 mouse_filter = 2
 theme_override_styles/background = SubResource("Vide")
@@ -38,8 +42,8 @@ show_percentage = false
 script = ExtResource("1")
 pictogramme = ExtResource("5")
 
-[node name="Cadre" type="TextureRect" parent="."]
-material = SubResource("CadrePlastique")
+[node name="Cadre" type="TextureRect" parent="." unique_id=391988054]
+material = SubResource("ShaderMaterial_pp55b")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,19 +54,7 @@ mouse_filter = 2
 texture = ExtResource("2")
 expand_mode = 1
 
-[node name="Remplissage" type="TextureRect" parent="."]
-material = SubResource("Remplissage")
-layout_mode = 1
-anchor_right = 1.0
-offset_left = 59.0
-offset_top = 38.0
-offset_right = -24.0
-offset_bottom = 54.0
-mouse_filter = 2
-texture = SubResource("Surface")
-expand_mode = 1
-
-[node name="Icone" type="TextureRect" parent="."]
+[node name="Icone" type="TextureRect" parent="." unique_id=1627716513]
 layout_mode = 0
 offset_left = 18.0
 offset_top = 21.0
@@ -72,27 +64,39 @@ mouse_filter = 2
 texture = ExtResource("5")
 expand_mode = 1
 
-[node name="Titre" type="Label" parent="."]
+[node name="Remplissage" type="TextureRect" parent="." unique_id=23405260]
+material = SubResource("ShaderMaterial_ekxd3")
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 59.0
+offset_top = 38.0
+offset_right = -24.0
+offset_bottom = 54.0
+mouse_filter = 2
+texture = SubResource("Surface")
+expand_mode = 1
+
+[node name="Titre" type="Label" parent="." unique_id=1889404689]
 layout_mode = 0
 offset_left = 61.0
 offset_top = 6.0
 offset_right = 183.0
 offset_bottom = 30.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 16
 text = "VIE"
 
-[node name="Valeur" type="Label" parent="."]
+[node name="Valeur" type="Label" parent="." unique_id=708885522]
 layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -122.0
 offset_top = 6.0
 offset_right = -24.0
 offset_bottom = 30.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.929, 0.941, 0.914, 1)
 theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 15
