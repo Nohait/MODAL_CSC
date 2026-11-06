@@ -20,6 +20,8 @@ func preparer_entree(gestion: Node) -> bool:
 	if reprise.is_empty(): return true
 	var niveau := get_parent()
 	var joueur = gestion.joueur
+	var statistiques := niveau.get_node_or_null("StatistiquesClassiques")
+	if statistiques != null: statistiques.restaurer(reprise.get("statistiques", {}), gestion.indice_salle)
 	niveau.get_node("UpgradeManager").restaurer_sauvegarde(reprise.ameliorations)
 	niveau.get_node("VictimManager").restaurer_sauvegarde(reprise.escorte, gestion.salle_actuelle)
 	niveau.get_node("UpgradeManager/DefiManager").restaurer_sauvegarde(reprise.defis)
@@ -63,6 +65,8 @@ func commencer_salle(gestion: Node) -> void:
 		"evacuees": niveau.get_node("VictimManager").evacuated_count,
 		"defis": niveau.get_node("UpgradeManager/DefiManager").capturer_sauvegarde(),
 		"population": _capturer_population(gestion.salle_actuelle)}
+	var statistiques := niveau.get_node_or_null("StatistiquesClassiques")
+	if statistiques != null: point["statistiques"] = statistiques.capturer()
 	if not SauvegardeClassique.enregistrer(point):
 		gestion.afficher_message("Sauvegarde impossible · reprise non garantie")
 	# Même durée de sauvetage et même planification des vagues lors d'une reprise.

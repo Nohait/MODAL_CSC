@@ -927,6 +927,8 @@ func passer_salle_suivante() -> void:
 	else:
 		# Compter les victimes encore vivantes avant que la scène du niveau soit détruite.
 		if not get_parent().get_parent().session_tutoriel:
+			var statistiques := get_node_or_null("../../StatistiquesClassiques")
+			if statistiques != null: statistiques.terminer(true)
 			if not preload("res://scenes/systemes/sauvegarde/progression_interventions.gd").enregistrer_victoire():
 				push_warning("La victoire n’a pas pu être enregistrée dans la progression durable.")
 			SauvegardeClassique.supprimer()

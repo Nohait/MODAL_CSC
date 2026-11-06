@@ -1,6 +1,8 @@
 extends CanvasLayer
 
 signal ameliorations_changees
+signal amelioration_acquise(identifiant: StringName)
+signal points_depenses(nombre: int)
 signal booster_formation_acquis(identifiant: StringName)
 var formation_en_cours := false
 var formation_utilisee := false
@@ -225,6 +227,7 @@ func _acheter_defi(id: StringName) -> void:
 		if offre.id == id and points >= offre.prix:
 			if defis.accepter(id):
 				points -= offre.prix
+				points_depenses.emit(offre.prix)
 				_actualiser_boutique("Défi accepté : %s. Il commence dans la prochaine salle." % offre.titre)
 			return
 
@@ -254,6 +257,7 @@ func _acheter_booster(rarete: StringName) -> void:
 			_actualiser_boutique("Vous n’avez pas assez de points pour ce booster.")
 			return
 		points -= offre.prix
+		points_depenses.emit(offre.prix)
 	perte_points_tutoriel_confirmee = false
 	choix_ouverts = true
 	catalogue_debug = false
@@ -493,6 +497,7 @@ func appliquer_amelioration(identifiant: StringName) -> void:
 		recalculer_effets()
 	ameliorations_changees.emit()
 	synergy_manager.verifier(cartes_obtenues, mode_jeu)
+	amelioration_acquise.emit(identifiant)
 
 func _recevoir_synergie(definition: Synergie) -> void:
 	var carte := definition.carte

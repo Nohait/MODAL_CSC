@@ -18,6 +18,9 @@ func _ready() -> void:
 	$player.died.connect(_on_player_died, CONNECT_ONE_SHOT)
 	# Tous les enfants doivent avoir terminé leur _ready avant de générer les salles.
 	if $UpgradeManager.mode_jeu == "classique" and not session_tutoriel:
+		var statistiques = preload("res://scenes/jeu/statistiques_classiques.gd").new()
+		statistiques.name = "StatistiquesClassiques"
+		add_child(statistiques)
 		var point = preload("res://scenes/jeu/sauvegarde/point_reprise_classique.gd").new()
 		point.name = "PointRepriseClassique"
 		add_child(point)
@@ -25,6 +28,8 @@ func _ready() -> void:
 
 
 func _on_player_died() -> void:
+	var statistiques := get_node_or_null("StatistiquesClassiques")
+	if statistiques != null: statistiques.terminer(false)
 	if $UpgradeManager.mode_jeu == "classique" and not session_tutoriel: SauvegardeClassique.supprimer()
 	# Arrêter le combat immédiatement. L'écran suivant rétablira un arbre non pausé.
 	get_tree().paused = true

@@ -4,6 +4,12 @@ func _init() -> void:
 	chemin_fichier = "user://partie_classique.save"
 
 func _valide(point: Dictionary) -> bool:
+	if point.has("statistiques"):
+		if not point.statistiques is Dictionary: return false
+		if not point.statistiques.get("compteurs") is Dictionary: return false
+		if not point.statistiques.get("partiel") is bool: return false
+		for valeur in point.statistiques.compteurs.values():
+			if not valeur is int and not valeur is float: return false
 	if point.get("version") != VERSION: return false
 	if not point.get("indice") is int or not point.get("etages") is int: return false
 	if point.etages < 1 or point.etages > 10 or point.indice < 0 or point.indice >= point.etages * 5: return false
