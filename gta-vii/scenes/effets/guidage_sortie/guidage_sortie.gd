@@ -22,9 +22,9 @@ func _ready() -> void:
 	visuel.position = -visuel.mesh.get_aabb().get_center()
 	visuel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.95, 0.07, 0.035)
+	mat.albedo_color = Color(0.8, 0.8, 0.9)
 	mat.emission_enabled = true
-	mat.emission = Color(0.75, 0.02, 0.01)
+	mat.emission = Color(0, 0.6, 0.9)
 	mat.emission_energy_multiplier = 0.8
 	visuel.material_override = mat
 	support.add_child(visuel)
