@@ -10,8 +10,16 @@ var duree_restante := 5.0
 @export_range(0.02, 0.5, 0.01) var largeur_trainee := 0.18
 @export var effet_impact: PackedScene = preload("res://scenes/effets/combat/impact_boule_feu.tscn")
 var trainee: MeshInstance3D
+var neutralise := false
+
+func neutraliser() -> void:
+	neutralise = true
+	set_physics_process(false)
+	hide()
+	queue_free()
 
 func _ready() -> void:
+	add_to_group("projectiles_ennemis")
 	trainee = preload("res://scenes/effets/feu/trainee_projectile.gd").new()
 	trainee.duree = duree_trainee
 	trainee.largeur = largeur_trainee * global_basis.get_scale().x
@@ -23,20 +31,21 @@ func _ready() -> void:
 		look_at(global_position + direction, haut)
 
 func _physics_process(delta: float) -> void:
+	if neutralise or is_queued_for_deletion(): return
 	duree_restante -= delta
 	if duree_restante <= 0.0:
 		queue_free()
 		return
 	var destination := global_position + direction * vitesse * delta
 	# Balayer tout le trajet de cette frame évite de traverser un mur ou une cible.
-	var requete := PhysicsRayQueryParameters3D.create(global_position, destination, 11)
+	var requete := PhysicsRayQueryParameters3D.create(global_position, destination, 43)
 	if is_instance_valid(tireur): requete.exclude = [tireur.get_rid()]
 	var impact := get_world_3d().direct_space_state.intersect_ray(requete)
 	if not impact.is_empty():
 		trainee.ajouter_point(impact.position)
 		var corps = impact.collider
-		if (corps.is_in_group("player") or corps.is_in_group("victime")) and corps.has_method("prendre_degats"):
-			corps.prendre_degats(degats)
+		if corps.is_in_group("player") or corps.is_in_group("victime") or corps.is_in_group("leurres_mousse"):
+			preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").frapper(corps, degats, tireur if is_instance_valid(tireur) else null)
 		if effet_impact:
 			var effet = effet_impact.instantiate()
 			get_parent().add_child(effet)

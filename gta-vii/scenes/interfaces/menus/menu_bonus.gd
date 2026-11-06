@@ -189,7 +189,7 @@ func actualiser_affichage() -> void:
 		carte.lecture_seule = true
 		carte.identifiant = definition.identifiant
 		carte.titre = definition.titre
-		carte.description = definition.description
+		carte.description = definition.description_pour()
 		carte.illustration = definition.pictogramme
 		carte.rarete = acquisition.rarete
 		carte.categorie = definition.type_bonus.to_upper()

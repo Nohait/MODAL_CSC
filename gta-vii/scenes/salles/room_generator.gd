@@ -80,7 +80,7 @@ func regenerer_apercu() -> void:
 var sortie_avec_escalier := false
 var entree_avec_escalier := false
 
-func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1, debut_etage: bool = false, indice_salle: int =1) -> Node3D:
+func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: int = 1, debut_etage: bool = false, indice_salle: int =1, limites_reprise: Dictionary = {}) -> Node3D:
 	sortie_avec_escalier = fin_etage
 	entree_avec_escalier = debut_etage
 
@@ -94,9 +94,12 @@ func generer_salle(nombre_arrivants: int = 1, fin_etage: bool = false, etage: in
 	murs_actuels = [materiau_murs, murs_etage_2, murs_etage_3][indice]
 
 	# Toujours repartir d'une nouvelle scène : aucune salle ne partage ses compteurs.
-	roomSizeMax -= Vector2i(etage-1,etage-1)
-	roomSize = Vector2i(randi_range(roomSizeMin.x, roomSizeMax.x),randi_range(roomSizeMin.y, roomSizeMax.y))
+	# Les limites ne doivent pas dépendre des salles déjà construites avant une reprise.
+	var taille_min: Vector2i = limites_reprise.get("minimum", roomSizeMin)
+	var taille_max: Vector2i = limites_reprise.get("maximum", (roomSizeMax - Vector2i.ONE * (etage - 1)).max(taille_min))
+	roomSize = Vector2i(randi_range(taille_min.x, taille_max.x), randi_range(taille_min.y, taille_max.y))
 	salle_en_creation = ROOM_SCENE.instantiate()
+	salle_en_creation.set_meta("limites_generation", {"minimum": taille_min, "maximum": taille_max})
 	generateRoom()
 
 	# Une découpe extrême ne doit pas enlever toutes les places réservées aux acteurs.
@@ -228,12 +231,13 @@ func displayRoom() -> void:
 
 	# Chaque case est désormais un corps fixe : le sol est visible ET solide.
 	for cellule in cellules_disponibles:
-				creer_bloc(
+		creer_bloc(
 			position_cellule(cellule),
 			Vector3(TILE_SIZE, 0.2, TILE_SIZE),
 			Color(0.3, 0.32, 0.34),
 			sol_actuel
 		)
+		salle_en_creation.get_node("Navigation/Decor").get_child(-1).set_meta("sol_jouable", true)
 
 func displayWalls() -> void:
 
@@ -499,6 +503,7 @@ func creer_entree(cellule: Vector2i, direction: Vector2i) -> void:
 	var longueur := 4.5 if entree_avec_escalier else 6.0
 	var taille_sol := Vector3(2.5, 0.2, longueur) if direction.x == 0 else Vector3(longueur, 0.2, 2.5)
 	creer_bloc(centre + normale * longueur / 2.0, taille_sol, Color.WHITE, sol_actuel)
+	salle_en_creation.get_node("Navigation/Decor").get_child(-1).set_meta("sol_jouable", true)
 	creer_murs_sortie(centre, normale, direction, longueur, 3.0)
 	if entree_avec_escalier:
 		for i in range(6):

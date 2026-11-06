@@ -54,7 +54,7 @@ func choisir_cible() -> void:
 		if ecart.length() <= distance_proche:
 			distance_proche = ecart.length()
 			cible = corps
-
+	cible = preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").choisir(self, cible, distance_lacher)
 
 func _physics_process(delta: float) -> void:
 	attente_navigation = maxf(0.0, attente_navigation - delta)

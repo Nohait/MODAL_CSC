@@ -248,7 +248,9 @@ func _preparer_salle(indice: int) -> void:
 		* (victimes_supplementaires_reserve + maxi(nombre_min_victimes, nombre_max_victimes)),
 		fin_etage,
 		etage_pour_salle(i),
-		i > 0 and i % SALLES_PAR_ETAGE == 0
+		i > 0 and i % SALLES_PAR_ETAGE == 0,
+		i + 1,
+		point.limites_generation(self) if point != null else {}
 	)
 	salle.etage = etage_pour_salle(i)
 	salle.numero_dans_etage = i % SALLES_PAR_ETAGE + 1

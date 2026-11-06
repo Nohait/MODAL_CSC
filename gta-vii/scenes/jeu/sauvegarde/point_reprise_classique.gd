@@ -28,6 +28,11 @@ func preparer_entree(gestion: Node) -> bool:
 	_restaurer_population(gestion, reprise.population)
 	ETAT.appliquer_champs(joueur, reprise.joueur, CHAMPS_JOUEUR)
 	joueur.global_position = reprise.joueur.position
+	if not _sur_sol_jouable(joueur, gestion.salle_actuelle):
+		# Une ancienne géométrie ne doit jamais replacer le joueur dans le décor annexe.
+		joueur.global_position = gestion.salle_actuelle.entree.to_global(Vector3(0, 1.1, -1.4))
+		push_warning("Position de reprise hors du sol jouable : retour au seuil de la salle.")
+	gestion._ajuster_hauteur_arrivee()
 	joueur.velocity = Vector3.ZERO
 	joueur.is_dashing = false
 	joueur.BarreDeVie.value = reprise.joueur.vie
@@ -44,6 +49,24 @@ func preparer_entree(gestion: Node) -> bool:
 	joueur.process_mode = Node.PROCESS_MODE_DISABLED
 	return false
 
+func limites_generation(gestion: Node) -> Dictionary:
+	if reprise.is_empty(): return {}
+	if reprise.has("limites_generation"): return reprise.limites_generation
+	# Les anciennes parties avaient cumulé la réduction à chaque salle parcourue.
+	var maximum: Vector2i = gestion.generateur.roomSizeMax
+	for indice in range(int(reprise.indice) + 1):
+		maximum -= Vector2i.ONE * (gestion.etage_pour_salle(indice) - 1)
+	return {"minimum": gestion.generateur.roomSizeMin, "maximum": maximum}
+
+func _sur_sol_jouable(joueur: CharacterBody3D, salle: Node3D) -> bool:
+	var requete := PhysicsRayQueryParameters3D.create(
+		joueur.global_position + Vector3.UP,
+		joueur.global_position - Vector3.UP * 3.0, 1, [joueur.get_rid()])
+	var contact: Dictionary = joueur.get_world_3d().direct_space_state.intersect_ray(requete)
+	if contact.is_empty(): return false
+	var sol := contact.collider as Node3D
+	return sol != null and salle.is_ancestor_of(sol) and sol.get_meta("sol_jouable", false)
+
 func commencer_salle(gestion: Node) -> void:
 	if not reprise.is_empty():
 		gestion.joueur.process_mode = mode_joueur
@@ -59,6 +82,7 @@ func commencer_salle(gestion: Node) -> void:
 	etat.arme = ETAT.lire_champs(joueur.extincteur, CHAMPS_ARME)
 	var point := {"version": SauvegardeClassique.VERSION, "indice": gestion.indice_salle,
 		"etages": gestion.nombre_etages, "graines": graines.duplicate(), "graine_combat": graine_combat,
+		"limites_generation": gestion.salle_actuelle.get_meta("limites_generation").duplicate(),
 		"joueur": etat, "pieces": niveau.get_node("Monnaie").solde,
 		"ameliorations": niveau.get_node("UpgradeManager").capturer_sauvegarde(),
 		"escorte": niveau.get_node("VictimManager").capturer_sauvegarde(),

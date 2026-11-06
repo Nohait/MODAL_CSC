@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:
 	var direction: Vector3 = arme.direction_jet()
 	# Échantillonner aussi l'intérieur du cône, pour repérer les petits obstacles.
 	for index in range(nombre_rayons):
-		var angle: float = lerpf(-arme.demi_angle_jet, arme.demi_angle_jet, float(index) / (nombre_rayons - 1))
+		var angle: float = lerpf(-arme.angle_jet_effectif(), arme.angle_jet_effectif(), float(index) / (nombre_rayons - 1))
 		var fin: Vector3 = depart + direction.rotated(Vector3.UP, deg_to_rad(angle)) * arme.portee_jet
 		var requete := PhysicsRayQueryParameters3D.create(depart, fin, masque_contacts, exclusions)
 		# Les zones de détection et d'attaque ne sont pas des surfaces solides.

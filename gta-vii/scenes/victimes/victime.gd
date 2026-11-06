@@ -1,5 +1,16 @@
 extends CharacterBody3D
 
+var liberation_deja_effectuee := false
+var acceleration_secours_restante := 0.0
+var facteur_secours := 1.0
+
+func accelerer_escorte(facteur: float, duree: float) -> void:
+	facteur_secours = maxf(1.0, facteur)
+	acceleration_secours_restante = maxf(0.0, duree)
+
+func vitesse_secours() -> float:
+	return facteur_secours if acceleration_secours_restante > 0.0 else 1.0
+
 const EFFET_LIBERATION = preload("res://scenes/effets/liberation/liberation_victime.tscn")
 
 
@@ -167,6 +178,7 @@ var is_freed := false
 var ennemis: Node = null
 
 func _ready() -> void:
+	liberation_deja_effectuee = is_freed
 	hasard_appel.randomize()
 	# Chaque cri part de la victime, avec la même atténuation pour les deux enregistrements.
 	for appel in appels_secours:
@@ -229,13 +241,14 @@ func _animate() -> void:
 		rotation.y = atan2(velocity.x, velocity.z) 
 
 	# Blend Idle (0) <-> Run (1)
-	var vitesse_max := speed * multiplicateur_vitesse
+	var vitesse_max := speed * multiplicateur_vitesse * vitesse_secours()
 	var blend := 0.0
 	if is_freed and vitesse_max > 0.0:
 		blend = clampf(vitesse_horizontale.length() / vitesse_max, 0.0, 1.0)
 	anim_tree.set("parameters/Locomotion/blend_position", blend)
 
 func _physics_process(_delta: float) -> void:
+	acceleration_secours_restante = maxf(0.0, acceleration_secours_restante - _delta)
 	if est_morte:
 		return
 
@@ -268,6 +281,12 @@ func free_victim() -> void:
 	if est_morte or is_freed:
 		return
 	is_freed = true
+	if not liberation_deja_effectuee:
+		liberation_deja_effectuee = true
+		var pompier = get_tree().get_first_node_in_group("player")
+		if is_instance_valid(pompier) and is_instance_valid(pompier.ameliorations):
+			var secours = pompier.ameliorations.effets_cartes.get_node_or_null("secours")
+			if secours != null: secours.soigner_liberation(self)
 	$"Sons/UI/liberation".play()
 	waiting = false
 	interaction_label.visible = false
@@ -311,7 +330,7 @@ func _suivre_groupe(delta: float) -> void:
 	if joueur == null: return
 	_maj_groupe(get_tree(), joueur, rayon_joueur, rayon_fleche, rayon_lien)
 
-	var vitesse_max := speed * multiplicateur_vitesse * facteur_vitesse_perso
+	var vitesse_max := speed * multiplicateur_vitesse * vitesse_secours() * facteur_vitesse_perso
 	var vitesse_voulue := Vector3.ZERO
 
 	if not est_proche_cible:
@@ -419,7 +438,7 @@ func follow_target_node(delta: float) -> void:
 				facteur = clampf(distance, 0.0, 1.0)
 			else:
 				facteur = clampf((distance - stop_distance) / distance_ralentissement, 0.0, 1.0)
-			vitesse_voulue = direction * speed * multiplicateur_vitesse * facteur
+			vitesse_voulue = direction * speed * multiplicateur_vitesse * vitesse_secours() * facteur
 	
 	#si le facteur est null, c'est qu'on est arrivé, et si on est arrivé alros qu'on suit une fleche, on déclenche le timer
 	if waiting == true or (follow_target.is_in_group("fleche") and facteur <= 0):

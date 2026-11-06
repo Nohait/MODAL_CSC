@@ -80,7 +80,7 @@ func atterrir() -> void:
 	
 	prochaine_onde = intervalle_ondes
 	_installer_presentation(attaque.corps, attaque.dessin)
-	onde(attaque.cible, 1.0, false, false)
+	onde(attaque.cible, 1.0, false, false, true)
 	if valeur(&"hydrant_perimetre") > 0:
 		var effets = attaque.joueur.ameliorations.effets_cartes
 		var glace := valeur(&"hydrant_patinoire") > 0
@@ -121,7 +121,7 @@ func avancer(delta: float) -> void:
 	for i in range(retours.size() - 1, -1, -1):
 		retours[i].attente -= delta
 		if retours[i].attente <= 0.0:
-			onde(retours[i].position, 1.0 if retours[i].final else puissance_ondes, not retours[i].final, true)
+			onde(retours[i].position, 1.0 if retours[i].final else puissance_ondes, not retours[i].final, true, false, retours[i].final)
 			retours.remove_at(i)
 	var extinction: float = presence() - maxf(attaque.duree_avertissement, delai_retour + 0.1)
 	if valeur(&"hydrant_final") > 0 and not final_lance and attaque.temps >= extinction:
@@ -130,7 +130,7 @@ func avancer(delta: float) -> void:
 			onde(attaque.cible, puissance_ondes, true, true)
 			retours.append({"attente": delai_retour, "position": attaque.cible, "final": true})
 		else:
-			onde(attaque.cible, 1.0, false, true)
+			onde(attaque.cible, 1.0, false, true, false, true)
 	var dash: bool = attaque.joueur.is_dashing
 	if dash and not dash_precedent and not appui_utilise and valeur(&"hydrant_appui") > 0:
 		if attaque.joueur.global_position.distance_to(attaque.cible) <= distance_point_appui:
@@ -178,7 +178,9 @@ func _ennemis(position: Vector3) -> Array[Node3D]:
 		if attaque.get_world_3d().direct_space_state.intersect_ray(ray).is_empty(): resultat.append(ennemi)
 	return resultat
 
-func onde(position: Vector3, facteur: float, retour: bool, visuel: bool) -> void:
+func onde(position: Vector3, facteur: float, retour: bool, visuel: bool, impact := false, finale := false) -> void:
+	if (impact and valeur(&"hydrant_rideau") > 0) or (finale and valeur(&"hydrant_contre_salve") > 0):
+		_detruire_projectiles(position)
 	var electrique := valeur(&"hydrant_electrique") > 0
 	for presentation in presentations:
 		if is_instance_valid(presentation) and presentation.global_position.distance_squared_to(position) < 0.1:
@@ -202,6 +204,14 @@ func onde(position: Vector3, facteur: float, retour: bool, visuel: bool) -> void
 	if visuel: _dessiner_onde(position, retour, electrique)
 	if not retour and valeur(&"hydrant_retour") > 0 and not final_lance:
 		retours.append({"attente": delai_retour, "position": position, "final": false})
+
+func _detruire_projectiles(position: Vector3) -> void:
+	for projectile in get_tree().get_nodes_in_group("projectiles_ennemis"):
+		if not is_instance_valid(projectile) or projectile.is_queued_for_deletion(): continue
+		if not attaque.salle_depart.is_ancestor_of(projectile): continue
+		var ecart: Vector3 = projectile.global_position - position
+		ecart.y = 0.0
+		if ecart.length() <= rayon(): projectile.neutraliser()
 
 func _dessiner_onde(position: Vector3, retour: bool, electrique: bool) -> void:
 	var couronne = preload("res://scenes/armes/bouche_incendie/couronne_eau.tscn").instantiate()
@@ -267,7 +277,7 @@ func _actualiser_double() -> void:
 	double_corps.set_meta("salle_navigation", attaque.salle_depart)
 	attaque.salle_depart.demander_navigation()
 	_installer_presentation(double_corps, double_corps.get_child(0))
-	onde(double_cible, 1.0, false, true)
+	onde(double_cible, 1.0, false, true, true)
 	attaque._jouer_son_impact(attaque.son_impact, attaque.volume_impact_db - 3.0)
 
 func _installer_presentation(corps: Node3D, modele: Node3D) -> void:

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/sirene_diversion.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"par_ici"
+titre = "Par ici !"
+description = "Votre dash laisse un leurre à votre point de départ. Les ennemis proches peuvent l’attaquer."
+pictogramme = ExtResource("icone")
+modes = 1
+effet = "par_ici"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 1.0
+texte_effet = "Durée maximale : {duree} s · Délai : {intervalle} s"
+prerequis = Array[StringName]([])
+rayon = 9.0
+duree_effet = 2.0
+intervalle = 5.0

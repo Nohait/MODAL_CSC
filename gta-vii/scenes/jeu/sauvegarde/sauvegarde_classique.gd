@@ -4,6 +4,10 @@ func _init() -> void:
 	chemin_fichier = "user://partie_classique.save"
 
 func _valide(point: Dictionary) -> bool:
+	if point.has("limites_generation"):
+		if not point.limites_generation is Dictionary: return false
+		for cle in ["minimum", "maximum"]:
+			if not point.limites_generation.get(cle) is Vector2i: return false
 	if point.has("statistiques"):
 		if not point.statistiques is Dictionary: return false
 		if not point.statistiques.get("compteurs") is Dictionary: return false

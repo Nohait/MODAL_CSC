@@ -107,6 +107,4 @@ func _mort() -> void:
 		# Différer l'appel évite une autre mort au milieu du signal died actuel.
 		effets.call_deferred("explosion", position, 2.5, degats_explosion, true)
 	if enrobage_restant > 0 and effets.valeur("reaction_chaine") > 0:
-		for ennemi in effets.ennemis_proches(position, effets.valeur("reaction_chaine")):
-			if ennemi == get_parent(): continue
-			effets.etat(ennemi).enrobage_restant = 3.0
+		effets.propager_enrobage(position, get_parent())

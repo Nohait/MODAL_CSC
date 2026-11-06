@@ -198,6 +198,7 @@ func tirer_projectile() -> void:
 	if not is_instance_valid(cible) or not is_instance_valid(projectiles_tour):
 		return
 	var projectile = projectile_scene.instantiate()
+	projectile.tireur = self
 	# Transmettre les dégâts déjà ajustés ; ne pas multiplier une deuxième fois.
 	projectile.degats = degats_ennemi
 	projectile.etage = etage

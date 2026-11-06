@@ -149,6 +149,7 @@ func _physics_process(delta):
 
 	#On définit la cible.
 	#Il y a un timer pour eviter que le sbire soit indécis
+	if not is_instance_valid(cible) or cible.is_queued_for_deletion(): cible = null
 	if cible == null:
 		chgt_cible_timer = 0.0
 	chgt_cible_timer -= delta
@@ -197,7 +198,7 @@ func _physics_process(delta):
 			velocity = Vector3.ZERO
 
 			if attaque_timer < 0.0:
-				if cible.is_in_group("player") or cible.is_in_group("victime"):
+				if cible.is_in_group("player") or cible.is_in_group("victime") or cible.is_in_group("leurres_mousse"):
 					commencer_preparation()
 
 #On detecte pour bypass le cooldown de changer de cible dans choisir_cible() pour sortir instantanément de l'idle
@@ -255,6 +256,7 @@ func suivre_cible_navigation() -> void:
 	move_and_slide()
 
 func choisir_cible():
+	if not is_instance_valid(cible) or cible.is_queued_for_deletion(): cible = null
 	var cible_avant = cible #on sauvegardde la cible
 	var bodies = SurfaceDetection.get_overlapping_bodies()
 	if cible != null and !en_idle:
@@ -272,6 +274,8 @@ func choisir_cible():
 				distance_min = distance_body
 				cible = body
 
+	var avec_leurre = preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").choisir(self, cible if cible != cible_idle else null, distance_detection)
+	if is_instance_valid(avec_leurre): cible = avec_leurre
 	chgt_cible_timer = chgt_cible_cooldown
 	if cible != cible_avant:
 		en_idle = false
@@ -421,7 +425,7 @@ func attaque() -> void:
 		return
 	# Un seul appel direct : aucune création de projectile, aucun dégât différé.
 	var degats: float = round(randf_range(0.9, 1.1) * degats_sbire * multiplicateur_degats() * 100.0) / 100.0
-	cible_attaque.prendre_degats(degats)
+	preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").frapper(cible_attaque, degats, self)
 
 func _jouer_frappe() -> void:
 	if anim == null or not anim.has_animation(ANIM_FRAPPE):

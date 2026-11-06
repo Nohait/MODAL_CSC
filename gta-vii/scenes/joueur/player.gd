@@ -285,7 +285,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("primary_attack"):
 		extincteur.start_primary_attack()
 	else:
-		extincteur.stop_primary_attack()
+		extincteur.stop_primary_attack(Input.is_action_just_released("primary_attack"))
 	
 	animate(delta)
 	move_and_slide()

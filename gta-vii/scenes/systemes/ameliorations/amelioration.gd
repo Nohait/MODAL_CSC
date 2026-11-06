@@ -7,8 +7,9 @@ extends Resource
 @export var pictogramme: Texture2D
 @export_flags("Classique", "Zombie") var modes := 3
 @export var active := true
+@export var prototype_debug := false
 @export_enum("permanent", "temporaire") var type_bonus := "permanent"
-@export_enum("degats", "charge", "recharge", "vie_max", "soin_joueur", "soin_victimes", "blindage_camion", "bouclier_camion", "jet_givre", "dernier_souffle", "bouclier_joueur", "reserve_secours", "escorte_agile", "sirene", "choc_thermique", "verglas", "gel_profond", "brise_glace", "mousse_persistante", "mousse_expansive", "enrobage", "reaction_chaine", "jet_pulse", "double_lance", "sillage_secours", "depart_pression", "freinage_urgence", "deuxieme_souffle", "intervention_eclair", "retour_pression", "surpression", "formation_serree", "passage_securise", "priorite_blesses", "courage_contagieux", "equipe_soutien", "extraction_urgence", "circuit_secours", "eau_glacee", "reseau_interconnecte", "reserve_collective", "zone_repli", "gyrophare_intervention", "maintenance_preventive", "dash_assaut", "dash_sauvetage", "predateur_elites", "recyclage", "verre_ardent", "jet_lourd", "jet_mobile", "ancrage", "mise_a_distance", "revanche", "soin_victoire", "reserve_elite", "blizzard_proximite", "synergie_belier", "synergie_samu", "hydrant_express", "hydrant_zone", "hydrant_fonte", "hydrant_distance", "hydrant_patiente", "hydrant_retour", "hydrant_fuite", "hydrant_perimetre", "hydrant_robinet", "hydrant_demontage", "hydrant_appui", "hydrant_raccord", "hydrant_belier", "hydrant_final", "hydrant_double", "hydrant_electrique", "hydrant_patinoire", "hydrant_essorage", "hydrant_circuit") var effet := "degats"
+@export_enum("degats", "charge", "recharge", "vie_max", "soin_joueur", "soin_victimes", "blindage_camion", "bouclier_camion", "jet_givre", "dernier_souffle", "bouclier_joueur", "reserve_secours", "escorte_agile", "sirene", "choc_thermique", "verglas", "gel_profond", "brise_glace", "mousse_persistante", "mousse_expansive", "enrobage", "reaction_chaine", "jet_pulse", "double_lance", "sillage_secours", "depart_pression", "freinage_urgence", "deuxieme_souffle", "intervention_eclair", "retour_pression", "surpression", "formation_serree", "passage_securise", "priorite_blesses", "courage_contagieux", "equipe_soutien", "extraction_urgence", "circuit_secours", "eau_glacee", "reseau_interconnecte", "reserve_collective", "zone_repli", "gyrophare_intervention", "maintenance_preventive", "dash_assaut", "dash_sauvetage", "predateur_elites", "recyclage", "verre_ardent", "jet_lourd", "jet_mobile", "ancrage", "mise_a_distance", "revanche", "soin_victoire", "reserve_elite", "blizzard_proximite", "synergie_belier", "synergie_samu", "hydrant_express", "hydrant_zone", "hydrant_fonte", "hydrant_distance", "hydrant_patiente", "hydrant_retour", "hydrant_fuite", "hydrant_perimetre", "hydrant_robinet", "hydrant_demontage", "hydrant_appui", "hydrant_raccord", "hydrant_belier", "hydrant_final", "hydrant_double", "hydrant_electrique", "hydrant_patinoire", "hydrant_essorage", "hydrant_circuit", "dernier_metre", "coupure_nette", "coup_de_pointe", "hydrant_rideau", "hydrant_contre_salve", "point_suture", "issue_secours", "par_ici", "plastron_mousse", "prise_piege") var effet := "degats"
 @export_group("Obtention et rareté")
 @export var obtention_unique := false
 # Identifiants des cartes à obtenir avant que celle-ci entre dans les tirages.
@@ -34,6 +35,16 @@ extends Resource
 @export_range(1.0, 60.0, 0.5) var intervalle := 10.0
 # Dernier souffle compare la vie actuelle à la vie maximale.
 @export_range(1.0, 100.0, 1.0) var seuil_vie := 25.0
+
+@export_group("Réserve de mousse")
+@export_range(1.0, 99.0, 1.0) var seuil_reserve := 25.0
+@export_range(1.0, 100.0, 1.0) var seuil_rearmement := 50.0
+@export_range(2.0, 80.0, 1.0) var demi_angle := 25.0
+@export_range(0.1, 1.0, 0.05) var largeur_minimale := 0.45
+@export_range(0.0, 40.0, 0.5) var force_recul := 14.0
+
+func description_pour() -> String:
+	return description.format({"seuil": String.num(seuil_reserve, 1), "rearmement": String.num(seuil_rearmement, 1)})
 
 func texte_pour(gain: float) -> String:
 	var texte := texte_effet.format({"valeur": String.num(gain, 2), "contrepartie": String.num(contrepartie, 2),

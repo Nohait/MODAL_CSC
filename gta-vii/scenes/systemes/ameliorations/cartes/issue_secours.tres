@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/escorte_agile.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"issue_secours"
+titre = "Issue de secours"
+description = "Quand vous dashez, les victimes proches qui vous escortent accélèrent brièvement pour vous suivre."
+pictogramme = ExtResource("icone")
+modes = 1
+effet = "issue_secours"
+obtention_unique = true
+puissance_variable = false
+rarete = "epique"
+valeur = 70.0
+texte_effet = "+%s %% de vitesse pendant {duree} s"
+prerequis = Array[StringName]([])
+rayon = 6
+duree_effet = 1.5
+prototype_debug = true

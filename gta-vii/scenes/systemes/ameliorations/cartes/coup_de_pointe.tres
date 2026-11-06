@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/depart_pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"coup_de_pointe"
+titre = "Coup de pointe"
+description = "La bouffée de Coupure nette devient étroite et beaucoup plus puissante. Elle traverse les ennemis alignés."
+pictogramme = ExtResource("icone")
+modes = 1
+effet = "coup_de_pointe"
+obtention_unique = true
+puissance_variable = false
+rarete = "synergie"
+valeur = 135.0
+texte_effet = "%s dégâts"
+prerequis = Array[StringName]([])
+rayon = 7
+demi_angle = 8
+force_recul = 20

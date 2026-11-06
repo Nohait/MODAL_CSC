@@ -93,6 +93,9 @@ func _ready() -> void:
 	for definition in [preload("res://scenes/systemes/ameliorations/synergies/hydrant_patinoire.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_essorage.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_circuit.tres")]:
 		if not synergies.has(definition): synergies.append(definition)
 	synergy_manager = preload("res://scenes/systemes/ameliorations/synergy_manager.gd").new()
+	if mode_jeu == "classique":
+		for definition in [preload("res://scenes/systemes/ameliorations/synergies/coup_de_pointe.tres"), preload("res://scenes/systemes/ameliorations/synergies/hydrant_contre_salve.tres"), preload("res://scenes/systemes/ameliorations/synergies/prise_piege.tres")]:
+			if not synergies.has(definition): synergies.append(definition)
 	synergy_manager.catalogue = synergies
 	synergy_manager.synergie_decouverte.connect(_recevoir_synergie)
 	add_child(synergy_manager)
@@ -297,7 +300,7 @@ func _afficher_cartes(propositions: Array, avec_revelation := false) -> void:
 					titres.append(requise.titre if requise != null else String(id))
 			carte.statut = "REQUIERT : " + ", ".join(titres) if not titres.is_empty() else "INCOMPATIBLE AVEC VOTRE BUILD"
 		carte.titre = definition.titre
-		carte.description = definition.description
+		carte.description = definition.description_pour()
 		carte.illustration = definition.pictogramme
 		carte.rarete = proposition.rarete
 		carte.categorie = definition.type_bonus.to_upper()
@@ -691,6 +694,7 @@ func _process(delta: float) -> void:
 func _cartes_achetables(type_bonus: String) -> Array[Amelioration]:
 	var resultat: Array[Amelioration] = []
 	for definition in catalogue_ameliorations.disponibles(mode_jeu, type_bonus):
+		if definition.prototype_debug: continue
 		if definition.obtention_unique and cartes_obtenues.has(definition.identifiant): continue
 		if not prerequis_remplis(definition): continue
 		resultat.append(definition)
@@ -743,6 +747,8 @@ func capturer_sauvegarde() -> Dictionary:
 		copie.erase("definition")
 		cartes.append(copie)
 	return {"acquisitions": cartes, "cartes_obtenues": cartes_obtenues.duplicate(true),
+		"coupure_armee": extincteur.reserve_classique.armee if is_instance_valid(extincteur.reserve_classique) else true,
+		"recharge_leurre": effets_cartes.get_node("leurres").restant if effets_cartes.has_node("leurres") else 0.0,
 		"synergies": synergy_manager.decouvertes.duplicate(true),
 		"effets": preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd").lire_champs(effets_cartes,
 			["courage_restant", "protection_restant", "position_abri", "attente_equipe", "reseau_restant", "temps_ecoule"]),
@@ -768,5 +774,7 @@ func restaurer_sauvegarde(etat: Dictionary) -> void:
 	var copie = preload("res://scenes/systemes/sauvegarde/etat_sauvegarde.gd")
 	copie.appliquer_champs(effets_cartes, etat.effets)
 	if branches_zombie != null: copie.appliquer_champs(branches_zombie, etat.branches)
+	if is_instance_valid(extincteur.reserve_classique): extincteur.reserve_classique.armee = bool(etat.get("coupure_armee", true))
+	if effets_cartes.has_node("leurres"): effets_cartes.get_node("leurres").restant = maxf(0.0, float(etat.get("recharge_leurre", 0.0)))
 	recalculer_effets()
 	ameliorations_changees.emit()

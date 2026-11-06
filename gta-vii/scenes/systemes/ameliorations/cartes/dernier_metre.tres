@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/surpression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"dernier_metre"
+titre = "Dernier mètre"
+description = "Plus votre réserve baisse, plus le jet se resserre et inflige de dégâts."
+pictogramme = ExtResource("icone")
+modes = 1
+effet = "dernier_metre"
+obtention_unique = true
+puissance_variable = false
+rarete = "rare"
+valeur = 100.0
+texte_effet = "Jusqu’à +%s %% de dégâts"
+prerequis = Array[StringName]([])
+largeur_minimale = 0.45

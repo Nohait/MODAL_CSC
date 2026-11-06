@@ -96,7 +96,7 @@ func _creer_carte(definition: Amelioration, parent: Control) -> Control:
 	var carte: Control = CARTE.instantiate()
 	carte.lecture_seule = true
 	carte.titre = definition.titre
-	carte.description = definition.description
+	carte.description = definition.description_pour()
 	carte.effet_affiche = definition.texte_pour(definition.valeur)
 	carte.illustration = definition.pictogramme
 	carte.rarete = definition.rarete

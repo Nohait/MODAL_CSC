@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Amelioration" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/amelioration.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/textures/interfaces/ameliorations/pictogrammes/depart_pression.svg" id="icone"]
+[resource]
+script = ExtResource("script")
+identifiant = &"coupure_nette"
+titre = "Coupure nette"
+description = "Relâchez le tir à {seuil} % de mousse ou moins pour projeter une bouffée qui blesse et repousse. Se réarme au-dessus de {rearmement} %. La surchauffe ne la déclenche pas."
+pictogramme = ExtResource("icone")
+modes = 1
+effet = "coupure_nette"
+obtention_unique = true
+puissance_variable = false
+rarete = "epique"
+valeur = 45.0
+texte_effet = "%s dégâts"
+prerequis = Array[StringName]([])
+rayon = 5
+demi_angle = 28
+seuil_reserve = 25
+seuil_rearmement = 50
+force_recul = 14

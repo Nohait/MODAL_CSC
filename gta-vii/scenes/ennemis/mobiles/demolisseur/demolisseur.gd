@@ -58,6 +58,7 @@ func choisir_cible() -> void:
 		if ecart.length() <= distance_proche:
 			distance_proche = ecart.length()
 			cible = corps
+	cible = preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").choisir(self, cible, distance_lacher)
 
 func _physics_process(delta: float) -> void:
 	# Le gel profond suspend aussi la préparation des attaques, pas seulement la marche.
@@ -149,7 +150,7 @@ func _frapper() -> void:
 		var direction: Vector3 = cible_attaque.global_position - global_position
 		direction.y = 0.0
 		if _distance_au_bord(cible_attaque) <= portee_frappe and direction.normalized().dot(direction_frappe) >= 0.5 and _voie_libre(cible_attaque):
-			cible_attaque.prendre_degats(degats_frappe)
+			preload("res://scenes/systemes/ameliorations/classique/ciblage_leurre.gd").frapper(cible_attaque, degats_frappe, self)
 	cooldown_frappe = delai_frappe
 	etat = "repos"
 	temps_etat = repos_frappe

@@ -1,5 +1,11 @@
 extends Node3D
 
+signal tir_relache
+var reserve_classique: Node
+
+func angle_jet_effectif() -> float:
+	return demi_angle_jet * reserve_classique.facteur_largeur() if is_instance_valid(reserve_classique) else demi_angle_jet
+
 const RETOUR_COMBAT = preload("res://scenes/effets/combat/retour_combat.gd")
 
 @onready var particles: GPUParticles3D = $AttaquePrincipale/GPUParticles3D
@@ -114,7 +120,7 @@ func _ready() -> void:
 func configurer_jet() -> void:
 	var simulation := particles.process_material as ParticleProcessMaterial
 	# Spread représente déjà un DEMI-angle dans Godot : ne pas le multiplier par 2.
-	simulation.spread = demi_angle_jet * (0.35 if double_lance else 1.0)
+	simulation.spread = angle_jet_effectif() * (0.35 if double_lance else 1.0)
 	simulation.initial_velocity_min = vitesse_jet
 	simulation.initial_velocity_max = vitesse_jet
 	# Le diamètre augmente au cours du trajet : fin à la buse, plus diffus au loin.
@@ -149,8 +155,11 @@ func direction_jet() -> Vector3:
 
 
 func actualiser_position_jet() -> void:
+	var dispersion := angle_jet_effectif() * (0.35 if double_lance else 1.0)
+	particles.process_material.spread = dispersion
+	if is_instance_valid(particles_secondaires): particles_secondaires.process_material.spread = dispersion
 	var direction := direction_jet()
-	var ecart := deg_to_rad(demi_angle_jet * 0.65) if double_lance else 0.0
+	var ecart := deg_to_rad(angle_jet_effectif() * 0.65) if double_lance else 0.0
 	particles.global_transform = Transform3D(Basis.looking_at(direction.rotated(Vector3.UP, ecart)), muzzle.global_position)
 	if is_instance_valid(particles_secondaires):
 		particles_secondaires.global_transform = Transform3D(Basis.looking_at(direction.rotated(Vector3.UP, -ecart)), muzzle.global_position)
@@ -172,7 +181,8 @@ func start_primary_attack() -> void:
 			$SonTirSansMousse.play() 
 	
 
-func stop_primary_attack() -> void:
+func stop_primary_attack(volontaire := false) -> void:
+	var relache := volontaire and is_attacking and not is_overheated and not panne_evenement and not get_tree().paused
 	# Arrêter l'émission ; les portions déjà parties continuent leur trajet.
 	if is_attacking:
 		regler_souffle(false)
@@ -180,6 +190,7 @@ func stop_primary_attack() -> void:
 	emission_effective = false
 	particles.emitting = false
 	if is_instance_valid(particles_secondaires): particles_secondaires.emitting = false
+	if relache: tir_relache.emit()
 
 func regler_souffle(en_marche: bool) -> void:
 	# Interrompre le fondu précédent permet aussi de reprendre un tir très rapidement.
@@ -282,7 +293,7 @@ func cible_dans_jet(position_cible: Vector3, rayon_cible: float) -> bool:
 	var direction := direction_jet()
 	var avant := Vector2(direction.x, direction.z)
 	var directions: Array[Vector2] = [avant]
-	var angle_limite := deg_to_rad(demi_angle_jet)
+	var angle_limite := deg_to_rad(angle_jet_effectif())
 	if double_lance:
 		directions = [avant.rotated(angle_limite * 0.65), avant.rotated(-angle_limite * 0.65)]
 		angle_limite *= 0.35

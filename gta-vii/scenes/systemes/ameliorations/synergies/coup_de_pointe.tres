@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Synergie" format=3]
+[ext_resource type="Script" path="res://scenes/systemes/ameliorations/synergie.gd" id="script"]
+[ext_resource type="Resource" path="res://scenes/systemes/ameliorations/cartes/coup_de_pointe.tres" id="carte"]
+[resource]
+script = ExtResource("script")
+identifiant = &"coup_de_pointe"
+ingredients = Array[StringName]([&"dernier_metre", &"coupure_nette"])
+carte = ExtResource("carte")
+modes = 1

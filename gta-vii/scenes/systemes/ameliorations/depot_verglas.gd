@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 	if arme.portions_jet.is_empty(): return
 	attente = intervalle_depot
 	var directions: Array[Vector3] = [arme.direction_jet()]
-	var angle: float = arme.demi_angle_jet
+	var angle: float = arme.angle_jet_effectif()
 	if arme.double_lance:
 		directions = [directions[0].rotated(Vector3.UP, deg_to_rad(angle * 0.65)), directions[0].rotated(Vector3.UP, deg_to_rad(-angle * 0.65))]
 		angle *= 0.35

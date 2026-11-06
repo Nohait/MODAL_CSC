@@ -30,6 +30,12 @@ func _ready() -> void:
 	gestion.escorte.escort_changed.connect(_suivre_victimes)
 	_suivre_victimes()
 	add_child(preload("res://scenes/systemes/ameliorations/depot_verglas.tscn").instantiate())
+	if gestion.mode_jeu == "classique":
+		for fichier in [preload("res://scenes/systemes/ameliorations/classique/reserve_mousse.gd"), preload("res://scenes/systemes/ameliorations/classique/secours.gd"), preload("res://scenes/systemes/ameliorations/classique/leurres.gd")]:
+			var composant = fichier.new()
+			composant.name = fichier.resource_path.get_file().get_basename()
+			composant.effets = self
+			add_child(composant)
 
 func reinitialiser_etape() -> void:
 	if has_node("DepotVerglas"): $DepotVerglas.reinitialiser()
@@ -91,7 +97,14 @@ func multiplicateur_jet() -> float:
 	if depuis_dash <= 1.5: facteur *= 1.0 + valeur("depart_pression") / 100.0
 	if valeur("jet_pulse") > 0: facteur *= 1.0 + valeur("jet_pulse") / 100.0
 	if is_instance_valid(gestion.branches_zombie): facteur *= gestion.branches_zombie.multiplicateur_jet()
+	if is_instance_valid(gestion.extincteur.reserve_classique): facteur *= gestion.extincteur.reserve_classique.facteur_degats()
 	return facteur
+
+func propager_enrobage(position: Vector3, exclu: Node = null, visuel := false) -> void:
+	if valeur("reaction_chaine") <= 0.0: return
+	for ennemi in ennemis_proches(position, valeur("reaction_chaine")):
+		if ennemi != exclu: etat(ennemi).enrobage_restant = 3.0
+	if visuel: bouffee(position + Vector3.UP)
 
 func multiplicateur_recharge() -> float:
 	var nombre: int = gestion.escorte.freed_victims.size()
