@@ -15,7 +15,7 @@
 [ext_resource type="Theme" uid="uid://4yvbquuw1ee3" path="res://scenes/interfaces/theme_intervention/theme.tres" id="13_pe8er"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/dialogues/tutoriel_bouche.gd" id="14_i0q18"]
+[ext_resource type="Script" uid="uid://dqp5ql7ls2qmt" path="res://scenes/modes/tutoriel/commun/dialogues/tutoriel_bouche.gd" id="14_i0q18"]
 [ext_resource type="Theme" uid="uid://8ibipqab5vhs" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="15_rvg8i"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
 [ext_resource type="Texture2D" uid="uid://bgqh1g4lovn6u" path="res://assets/textures/controles/lt.png" id="16_hx8k8"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/systemes/monnaie/monnaie.tscn" id="17_monnaie"]
 [ext_resource type="Texture2D" uid="uid://dcts3wn3job8n" path="res://assets/textures/controles/right_mouse.png" id="17_sdqu5"]
 [ext_resource type="Texture2D" uid="uid://b1f2y072jmapt" path="res://assets/animated_texture/spritesheet_bouche.png" id="18_hvhr0"]
+[ext_resource type="AudioStream" uid="uid://0u6mcbahjij4" path="res://assets/sounds/evenements/salle_liberee.wav" id="19_i0q18"]
 [ext_resource type="Script" uid="uid://bfmvoxlm7r7gt" path="res://scenes/salles/incendies/eclairage_incendie.gd" id="eclairage_incendie"]
 
 [sub_resource type="Environment" id="Environment_test"]
@@ -933,7 +934,7 @@ text = "Salle libérée !"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="FondBouche" type="ColorRect" parent="Salles/RoomManager/InterfaceSalle/HUD"]
+[node name="FondBouche" type="ColorRect" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=1955076171]
 visible = false
 z_index = 19
 layout_mode = 1
@@ -942,7 +943,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0, 0, 0, 0.65)
 
 [node name="Bouche_Incendie" type="PanelContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=1714117134]
@@ -962,7 +962,6 @@ offset_right = 530.0
 offset_bottom = 255.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 theme = ExtResource("13_pe8er")
 script = ExtResource("14_i0q18")
 
@@ -1018,7 +1017,6 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = ""
 autowrap_mode = 2
 
 [node name="Texte4" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=489706841]
@@ -1044,17 +1042,17 @@ texture = ExtResource("17_sdqu5")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=443911812]
 libraries/ = SubResource("AnimationLibrary_ajq55")
 
-[node name="EspaceCommandes" type="Control" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+[node name="EspaceCommandes" type="Control" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=931654452]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
-[node name="Consigne" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+[node name="Consigne" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=140588610]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Maintiens pour viser, puis relâche pour lancer."
 autowrap_mode = 2
 
-[node name="Fermer" type="Button" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+[node name="Fermer" type="Button" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=1879541029]
 custom_minimum_size = Vector2(190, 48)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -1065,6 +1063,9 @@ position = Vector2(796, 107)
 scale = Vector2(0.4175, 0.47555557)
 sprite_frames = SubResource("SpriteFrames_18ogr")
 frame_progress = 0.6264414
+
+[node name="SonSalleLiberee" type="AudioStreamPlayer" parent="Salles/RoomManager" unique_id=1405032288]
+stream = ExtResource("19_i0q18")
 
 [node name="MenuBonus" parent="." unique_id=1886819313 instance=ExtResource("11_bonus")]
 

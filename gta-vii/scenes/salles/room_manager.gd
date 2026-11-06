@@ -928,6 +928,7 @@ func actualiser_objectifs() -> void:
 	if conditions_sortie_remplies(salle_actuelle) and not is_room_cleared:
 		salle_actuelle.liberee = true
 		is_room_cleared = true
+		$SonSalleLiberee.play()
 		liberer_portes(salle_actuelle)
 		afficher_victoire()
 		SonsInterface.celebrer_salle_liberee()
