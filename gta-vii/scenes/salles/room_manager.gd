@@ -59,7 +59,6 @@ const VICTIME_SCENE = preload("res://scenes/victimes/victime.tscn")
 # Ancien système conservé dans le projet.
 # La scène n'est simplement plus instanciée automatiquement.
 const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuation.tscn")
-var SonNouvelleVague = preload("res://assets/sounds/ennemis/NouvelleVague.wav")
 
 # Parcours
 
@@ -391,12 +390,6 @@ func _process(delta: float) -> void:
 			break
 		salle_actuelle.vagues_planifiees.pop_front()
 		
-		#Alarme de vague
-		var sonVague = AudioStreamPlayer3D.new()
-		sonVague.stream = SonNouvelleVague
-		joueur.add_child(sonVague)
-		sonVague.play()
-		
 		creer_vague(vague.nombre, vague.restant)
 	
 	while not chutes_planifiees.is_empty() and restant <= chutes_planifiees[0].restant:
@@ -601,6 +594,9 @@ func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
 	# Le mode classique conserve ses sbires ; le mode zombie spécialise ce choix.
 	creer_sbire(salle, emplacement)
 
+func jouer_son_apparition(ennemi: Node3D) -> void:
+	ennemi.add_child(preload("res://scenes/effets/apparition/son_apparition.tscn").instantiate())
+
 func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	var sbire = SBIRE_SCENE.instantiate()
 	sbire.etage = salle.etage
@@ -609,6 +605,7 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	jouer_son_apparition(sbire)
 	return sbire
 
 # Activation d'une salle
@@ -953,6 +950,7 @@ func creer_ennemi_debug(identifiant: String) -> bool:
 			if identifiant == "tourelle": ennemi.projectiles_tour = salle_actuelle.get_node("ProjectilesTour")
 			ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 			salle_actuelle.get_node("Ennemis").add_child(ennemi)
+			jouer_son_apparition(ennemi)
 			relier_invocation(ennemi, salle_actuelle)
 			var agent = ennemi.get_node_or_null("NavigationAgent")
 			if agent: agent.set_navigation_map(salle_actuelle.carte_ennemis)
@@ -1010,5 +1008,6 @@ func _invoquer_ennemis(invocations: Array[Dictionary], boss: Node3D, salle: Node
 			ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 			salle.get_node("Ennemis").add_child(ennemi)
 			ennemi.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+			jouer_son_apparition(ennemi)
 		ennemi.set_meta("boss_invocateur", boss.get_instance_id())
 	actualiser_objectifs()

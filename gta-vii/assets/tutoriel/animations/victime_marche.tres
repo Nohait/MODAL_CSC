@@ -1369,6 +1369,14 @@ tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
 
+tracks/195/type = "rotation_3d"
+tracks/195/imported = false
+tracks/195/enabled = true
+tracks/195/path = NodePath("Armature")
+tracks/195/interp = 1
+tracks/195/loop_wrap = true
+tracks/195/keys = PackedFloat32Array(0, 1, 0.70710677, 0, 0, 0.70710677)
+
 [sub_resource type="Animation" id="Animation_sbpqy"]
 length = 1.3333334
 loop_mode = 1
@@ -2737,6 +2745,14 @@ tracks/194/path = NodePath("Armature/Skeleton3D:mixamorig2_RightToe_End")
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
+
+tracks/195/type = "rotation_3d"
+tracks/195/imported = false
+tracks/195/enabled = true
+tracks/195/path = NodePath("Armature")
+tracks/195/interp = 1
+tracks/195/loop_wrap = true
+tracks/195/keys = PackedFloat32Array(0, 1, 0.70710677, 0, 0, 0.70710677)
 
 [resource]
 _data = {

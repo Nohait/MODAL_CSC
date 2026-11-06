@@ -261,6 +261,7 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 	sbire.get_node("NavigationAgent").set_navigation_map(salle.carte_ennemis)
 	sbire.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	sbire.add_child(preload("res://scenes/effets/apparition/apparition_sbire.tscn").instantiate())
+	jouer_son_apparition(sbire)
 	return sbire
 
 func peut_creer_ennemi_debug() -> bool:
@@ -294,6 +295,7 @@ func _creer_type(salle: Node3D, emplacement: Vector3, type: TypeEnnemiVague) -> 
 	ennemi.position = emplacement + Vector3.UP * type.hauteur
 	ennemi.died.connect(_on_enemy_died.bind(salle), CONNECT_ONE_SHOT)
 	salle.get_node("Ennemis").add_child(ennemi)
+	jouer_son_apparition(ennemi)
 	if ennemi.has_signal("mort_mise_en_scene"):
 		get_node("../../VictoireBoss").suivre(ennemi)
 	relier_invocation(ennemi, salle)

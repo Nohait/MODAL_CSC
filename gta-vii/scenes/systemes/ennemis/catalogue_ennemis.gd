@@ -125,6 +125,8 @@ func _physics_process(delta: float) -> void:
 	var joueur = get_tree().get_first_node_in_group("player")
 	var sources_aura: Array[Node3D] = []
 	for source in ennemis:
+		# Une scène retirée temporairement reste enregistrée, mais ses auras sont suspendues.
+		if not source.is_inside_tree() or not source.is_node_ready(): continue
 		var elite = source.get_node_or_null("Elite")
 		if elite == null or source.get("est_mort") == true or not source.is_visible_in_tree(): continue
 		for mod in [elite.definition]:
@@ -132,6 +134,7 @@ func _physics_process(delta: float) -> void:
 				sources_aura.append(source)
 				break
 	for ennemi in ennemis:
+		if not ennemi.is_inside_tree() or not ennemi.is_node_ready(): continue
 		if not ennemi.is_visible_in_tree() or ennemi.get("est_mort") == true: continue
 		if ennemi.has_method("multiplicateur_degats"):
 			ennemi.vitesse_aura = 1.0
