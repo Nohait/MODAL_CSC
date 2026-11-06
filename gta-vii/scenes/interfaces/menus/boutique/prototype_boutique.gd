@@ -386,7 +386,7 @@ func ajouter_ravitaillement() -> void:
 	# La tuile reste un seul bouton : ses enfants ne capturent pas les clics.
 	for etat in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var cadre := StyleBoxFlat.new()
-		cadre.bg_color = Color("343434") if etat == "disabled" else Color("af2b1e") if etat == "normal" else Color("c0362a")
+		cadre.bg_color = Color("343434") if etat == "disabled" else Color("b33429") if etat == "normal" else Color("c14034")
 		cadre.border_color = Color("f5f5f0")
 		cadre.set_border_width_all(2)
 		cadre.set_corner_radius_all(6)

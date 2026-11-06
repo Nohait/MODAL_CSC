@@ -21,7 +21,7 @@ func _ready() -> void:
 	theme.set_color("font_color", "Label", Color("f5f5f0"))
 	for etat in ["normal", "hover", "pressed", "disabled"]:
 		var fond := StyleBoxFlat.new()
-		fond.bg_color = Color("af2b1e") if etat == "normal" else Color("c0362a")
+		fond.bg_color = Color("b33429") if etat == "normal" else Color("c14034")
 		if etat == "disabled":
 			fond.bg_color = Color("343434")
 		fond.border_color = Color("969696") if etat == "disabled" else Color("f5f5f0")
