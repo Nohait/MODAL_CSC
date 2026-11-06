@@ -9,6 +9,7 @@ var escorte: Node
 var liste: HBoxContainer
 var plus: Button
 var fenetre: Window
+var voile: CanvasLayer
 var details: VBoxContainer
 var fermer: Button
 var capacite := -1
@@ -53,11 +54,17 @@ func _actualiser() -> void:
 	if is_instance_valid(joueur):
 		etat.append(["Pompier", float(joueur.BarreDeVie.value), float(joueur.BarreDeVie.max_value)])
 	var nombre := 0
+	var victimes: Array = []
 	if is_instance_valid(escorte):
 		for victime in escorte.freed_victims:
 			if not is_instance_valid(victime) or victime.is_queued_for_deletion() or victime.est_morte: continue
 			nombre += 1
-			etat.append(["Victime %d" % nombre, float(victime.vie), float(victime.vie_max)])
+			victimes.append([nombre, float(victime.vie), float(victime.vie_max)])
+	# Trier uniquement l'affichage ; garder le numéro et l'ordre réel de l'escorte.
+	victimes.sort_custom(func(a: Array, b: Array) -> bool:
+		return a[0] < b[0] if a[1] == b[1] else a[1] < b[1])
+	for victime: Array in victimes:
+		etat.append(["Victime %d" % victime[0], victime[1], victime[2]])
 	var largeur := 320.0 * echelle_apercu + 8.0
 	var nombre_visible := maxi(1, floori(size.x / largeur))
 	if nombre_visible < etat.size():
@@ -97,6 +104,16 @@ func _ajouter_sante(nom: String, vie: float, maximum: float, parent: Control, co
 		parent.add_child(barre)
 
 func _creer_fenetre() -> void:
+	# Une couche plein écran évite que le voile soit limité au défilement de la boutique.
+	voile = CanvasLayer.new()
+	voile.layer = 90
+	voile.visible = false
+	add_child(voile)
+	var fond := ColorRect.new()
+	fond.color = Color(0.08, 0.08, 0.08, 0.65)
+	fond.mouse_filter = Control.MOUSE_FILTER_STOP
+	voile.add_child(fond)
+	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fenetre = Window.new()
 	fenetre.borderless = true
 	fenetre.size = Vector2i(390, 460)
@@ -104,6 +121,8 @@ func _creer_fenetre() -> void:
 	fenetre.exclusive = true
 	fenetre.visible = false
 	add_child(fenetre)
+	# Synchroniser aussi les fermetures provoquées par le masquage de la boutique.
+	fenetre.visibility_changed.connect(func(): voile.visible = fenetre.visible)
 	fenetre.close_requested.connect(_fermer)
 	fenetre.window_input.connect(func(event: InputEvent):
 		if event.is_action_pressed("ui_cancel"):
