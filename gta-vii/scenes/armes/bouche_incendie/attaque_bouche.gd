@@ -74,6 +74,10 @@ var souffle_lance := false
 
 func _ready() -> void:
 	# Une action dédiée permet de changer la touche sans dépendre de l'extincteur.
+	var b9 := InputEventJoypadButton.new()
+	b9.button_index = JOY_BUTTON_LEFT_SHOULDER
+	InputMap.action_add_event("attaque_bouche",b9)
+	
 	if not InputMap.has_action("attaque_bouche"):
 		InputMap.add_action("attaque_bouche")
 		var clic := InputEventMouseButton.new()
@@ -116,15 +120,23 @@ func _aligner_icone() -> void:
 	icone.position = Vector2(jauge.size.x - 39.0 - icone.size.x / 2.0, barre.position.y + barre.size.y / 2.0 - icone.size.y / 2.0 + decalage_vertical_pictogramme)
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton and event.pressed:
+		print("JOY bouton=", event.button_index, " device=", event.device,
+			" action_ok=", event.is_action("attaque_bouche"))
 	# Le HUD peut absorber les événements souris avant _unhandled_input.
 	# Lire cette action ici, uniquement pendant le jeu, comme le jet principal.
-	if get_tree().paused or joueur.est_mort or joueur.entree_automatique or phase != "disponible": return
-	if event is InputEventMouseButton:
-		CursorManager.position_curseur = event.position
+	if get_tree().paused or joueur.est_mort or joueur.entree_automatique or phase != "disponible":
+		return
+	
 	if event.is_action_pressed("attaque_bouche"):
+		print("PRESSÉ phase=", phase, " ctrl=", joueur.usingController)
+	
+	if event.is_action_pressed("attaque_bouche"):
+		print("DEBUG ATTAQUE B")
 		vise = true
 		cycle_visee = 0.0
 	elif event.is_action_released("attaque_bouche") and vise:
+
 		_actualiser_cible()
 		vise = false
 		if emplacement_valide: _lancer()
@@ -216,11 +228,11 @@ func _actualiser_cible() -> void:
 	var support := espace.intersect_ray(PhysicsRayQueryParameters3D.create(joueur.global_position + Vector3.UP * 0.2, joueur.global_position - Vector3.UP * 4.0, masque_decor))
 	if not support.is_empty(): hauteur_sol_visee = support.position.y
 	var hauteur_sol := hauteur_sol_visee
-	var souris: Vector2 = CursorManager.position_curseur
-	var point = Plane(Vector3.UP, hauteur_sol).intersects_ray(camera.project_ray_origin(souris), camera.project_ray_normal(souris))
-	if point == null: return
-	var direction: Vector3 = point - joueur.global_position
+	#FLAG1
+	
+	var direction: Vector3 = joueur.aim_position - joueur.global_position
 	direction.y = 0.0
+	
 	cible = joueur.global_position + direction.limit_length(cartes_bouche.portee())
 	cible.y = hauteur_sol
 	# Chercher la vraie surface du sol, et non supposer que son dessus est à zéro.
