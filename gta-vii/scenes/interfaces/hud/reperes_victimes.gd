@@ -1,7 +1,7 @@
 extends Control
 
 @export var logo: Texture2D = preload("res://assets/textures/interfaces/ameliorations/icone_victimes.svg")
-@export var couleur := Color(0.38, 0.86, 0.50)
+@export var couleur := Color(0, 0.556863, 0.368627)
 @export_range(16.0, 48.0, 1.0) var taille := 26.0
 @export_range(30.0, 100.0, 1.0) var marge := 48.0
 @export_range(25.0, 100.0, 1.0) var decalage_visible := 44.0
@@ -84,11 +84,11 @@ func _dessiner_repere(centre: Vector2, direction: Vector2, repere: Dictionary, h
 		vie = clampf(float(victime.vie) / maxf(float(victime.vie_max), 0.001), 0.0, 1.0)
 	var teinte := couleur
 	if mort:
-		teinte = Color(1.0, 0.28, 0.23)
+		teinte = Color(0.929412, 0.32549, 0.333333)
 	elif vie <= seuil_critique:
-		teinte = Color(1.0, 0.65, 0.18)
+		teinte = Color(0.772549, 0.176471, 0.184314)
 		teinte.a = lerpf(0.45, 1.0, (sin(horloge * TAU / periode_alerte) + 1.0) * 0.5)
-	var fond := Color(0.035, 0.055, 0.055, 0.9)
+	var fond := Color(0.062745, 0.062745, 0.062745, 0.9)
 	draw_circle(centre, taille * 0.65, fond)
 	if mort:
 		var rayon := taille * 0.23

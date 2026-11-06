@@ -15,7 +15,7 @@ script = ExtResource("script")
 layout_mode = 1
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.045, 0.03, 0.025, 1)
+color = Color(0.062745, 0.062745, 0.062745, 1)
 mouse_filter = 2
 
 [node name="Contenu" type="VBoxContainer" parent="."]
@@ -31,7 +31,7 @@ layout_mode = 2
 text = "MODE ZOMBIE"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.82, 0.55, 0.29, 1)
+theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 
 [node name="Titre" type="Label" parent="Contenu"]
 layout_mode = 2

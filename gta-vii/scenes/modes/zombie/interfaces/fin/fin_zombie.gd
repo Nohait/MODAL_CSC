@@ -41,12 +41,12 @@ func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 	var bloc := PanelContainer.new()
 	bloc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color(0.035, 0.045, 0.055, 0.82)
+	fond.bg_color = Color(0.062745, 0.062745, 0.062745, 0.82)
 	fond.set_border_width_all(1)
 	fond.set_corner_radius_all(5)
 	fond.shadow_size = 3
 	fond.shadow_color = Color(0, 0, 0, 0.25)
-	fond.border_color = Color(0.40, 0.36, 0.28, 0.6)
+	fond.border_color = Color(0.337255, 0.337255, 0.337255, 0.6)
 	fond.content_margin_left = 16
 	fond.content_margin_right = 16
 	fond.content_margin_top = 12
@@ -80,7 +80,7 @@ func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 	colonne.add_child(valeur)
 	var record := Label.new()
 	record.add_theme_font_size_override("font_size", 15)
-	record.add_theme_color_override("font_color", Color("b9a081"))
+	record.add_theme_color_override("font_color", Color("bdbdbd"))
 	colonne.add_child(record)
 	var id: String = ligne.id
 	if id in StatistiquesZombie.RECORDS:
@@ -88,7 +88,7 @@ func _creer_statistique(ligne: Dictionary, indice: int) -> void:
 		record.text = "NOUVEAU RECORD" if nouveau else "Meilleur : %s" % _formater_valeur(StatistiquesZombie.records.get(id, 0.0), id)
 		if nouveau:
 			fond.bg_color = Color.TRANSPARENT
-			record.add_theme_color_override("font_color", Color("ffe1a0"))
+			record.add_theme_color_override("font_color", Color("008e5e"))
 			var plaque := TextureRect.new()
 			plaque.texture = preload("res://assets/textures/interfaces/titre/plaque_bouton.svg")
 			plaque.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

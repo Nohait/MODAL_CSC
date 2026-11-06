@@ -10,9 +10,17 @@ var teinte: ShaderMaterial
 func _ready() -> void:
 	teinte = ShaderMaterial.new()
 	teinte.shader = preload("res://scenes/effets/combat/teinte_givree.gdshader")
-	for mesh in get_parent().get_node("sbire/Armature/Skeleton3D/defaultMaterial").find_children("*", "MeshInstance3D", true, false):
-		overlays[mesh] = mesh.material_overlay
-		mesh.material_overlay = teinte
+	# Les mobiles partagent le ralentissement, mais pas la hiérarchie de leur modèle.
+	# Limiter la teinte au corps pour préserver les indicateurs et effets de combat.
+	for chemin in ["sbire", "hound", "Sketchfab_Scene"]:
+		var modele := get_parent().get_node_or_null(chemin)
+		if modele == null: continue
+		var meshes := modele.find_children("*", "MeshInstance3D", true, false)
+		if modele is MeshInstance3D: meshes.append(modele)
+		for mesh in meshes:
+			if mesh.mesh == null: continue
+			overlays[mesh] = mesh.material_overlay
+			mesh.material_overlay = teinte
 
 func appliquer(pourcentage: float, duree: float) -> void:
 	multiplicateur = 1.0 - clampf(pourcentage, 0.0, 80.0) / 100.0
@@ -21,7 +29,7 @@ func appliquer(pourcentage: float, duree: float) -> void:
 func _physics_process(delta: float) -> void:
 	restant -= delta
 	if restant > 0.0: return
-	# Rendre les matériaux initiaux ; les autres sbires gardent leurs propres matériaux.
+	# Rendre les matériaux initiaux ; les autres ennemis gardent leurs propres matériaux.
 	multiplicateur = 1.0
 	for mesh in overlays:
 		if not is_instance_valid(mesh): continue

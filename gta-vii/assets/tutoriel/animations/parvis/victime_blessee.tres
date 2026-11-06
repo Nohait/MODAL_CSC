@@ -1369,7 +1369,6 @@ tracks/194/path = NodePath("Armature/Skeleton3D:mixamorig2_RightToe_End")
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
-
 tracks/195/type = "rotation_3d"
 tracks/195/imported = false
 tracks/195/enabled = true
@@ -2746,7 +2745,6 @@ tracks/194/path = NodePath("Armature/Skeleton3D:mixamorig2_RightToe_End")
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
-
 tracks/195/type = "rotation_3d"
 tracks/195/imported = false
 tracks/195/enabled = true
@@ -4123,7 +4121,6 @@ tracks/194/path = NodePath("Armature/Skeleton3D:mixamorig2_RightToe_End")
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
-
 tracks/195/type = "rotation_3d"
 tracks/195/imported = false
 tracks/195/enabled = true
@@ -5501,7 +5498,6 @@ tracks/194/path = NodePath("Armature/Skeleton3D:mixamorig2_RightToe_End")
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = PackedFloat32Array(0, 1, 1, 0.99999994, 0.99999994)
-
 tracks/195/type = "rotation_3d"
 tracks/195/imported = false
 tracks/195/enabled = true

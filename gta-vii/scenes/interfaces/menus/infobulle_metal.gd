@@ -3,6 +3,8 @@ extends PanelContainer
 var texte := ""
 var libelle: Label
 var fond: TextureRect
+@export var couleur_fond := Color("222222")
+@export_range(0.0, 1.0, 0.01) var intensite_texture := 0.58
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -25,6 +27,9 @@ func _ready() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://scenes/interfaces/menus/titre/bouton_menu.gdshader")
 	mat.set_shader_parameter("survol", 0.0)
+	mat.set_shader_parameter("fond_bouton", couleur_fond)
+	mat.set_shader_parameter("contour_repos", Color("f5f5f0"))
+	mat.set_shader_parameter("intensite_plastique", intensite_texture)
 	mat.set_shader_parameter("eclaircissement", 0.12)
 	mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
 	fond.material = mat
@@ -37,7 +42,7 @@ func _ready() -> void:
 	libelle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	libelle.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	libelle.add_theme_font_size_override("font_size", 17)
-	libelle.add_theme_color_override("font_color", Color("f2e4ce"))
+	libelle.add_theme_color_override("font_color", Color("f5f5f0"))
 	libelle.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	libelle.add_theme_constant_override("shadow_offset_y", 1)
 	add_child(libelle)

@@ -81,7 +81,7 @@ func _ajouter_sante(nom: String, vie: float, maximum: float, parent: Control, co
 	var barre = JAUGE.instantiate()
 	barre.titre = nom
 	if nom != "Pompier":
-		barre.couleur = Color(0.38, 0.86, 0.50)
+		barre.couleur = Color(0, 0.556863, 0.368627)
 		barre.pictogramme = ICONE_VICTIMES
 	barre.max_value = maxf(maximum, 1.0)
 	barre.value = vie

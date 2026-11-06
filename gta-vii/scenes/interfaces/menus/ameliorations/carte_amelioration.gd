@@ -139,7 +139,7 @@ func _montrer_face(puissance: int) -> void:
 	# Une flambée brève à la découverte, puis retour aux braises habituelles.
 	create_tween().tween_property(self, "intensite_braises", intensite_avant, 0.8)
 	var eclat := preload("res://scenes/interfaces/menus/ameliorations/eclat_revelation.gd").new()
-	eclat.teinte = CATALOGUE.COULEURS.get(StringName(rarete), Color("e5ce9f"))
+	eclat.teinte = CATALOGUE.COULEURS.get(StringName(rarete), Color("f5f5f0"))
 	eclat.puissance = puissance
 	eclat.size = size
 	visuel.add_child(eclat)
@@ -232,7 +232,7 @@ func actualiser_contenu() -> void:
 	var marque: Label = $Visuel/Contenu/Organisation/Entete/Marque
 	marque.text = CATALOGUE.NOMS.get(StringName(rarete), "MATÉRIEL").to_upper()
 	marque.add_theme_color_override("font_color", teinte.lightened(0.3))
-	$Visuel/Contenu/Organisation/Entete/Categorie.add_theme_color_override("font_color", Color("acbabf"))
+	$Visuel/Contenu/Organisation/Entete/Categorie.add_theme_color_override("font_color", Color("bdbdbd"))
 	image.material.set_shader_parameter("teinte", teinte.lightened(0.25))
 	$Visuel/Contenu/Organisation/Titre.text = titre
 	$Visuel/Contenu/Organisation/Description.text = description

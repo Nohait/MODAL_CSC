@@ -17,7 +17,7 @@ shader = ExtResource("skin")
 shader_parameter/largeur_bord = 7.0
 shader_parameter/rayon_coin = 6.0
 shader_parameter/intensite_braises = 0.4
-shader_parameter/teinte_pochette = Color(0.32, 0.2, 0.16, 1)
+shader_parameter/teinte_pochette = Color(0.203922, 0.203922, 0.203922, 1)
 shader_parameter/luminosite_pochette = 1.1
 
 [node name="EcranVictoire" type="Control"]
@@ -37,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.035, 0.025, 0.023, 1)
+color = Color(0.062745, 0.062745, 0.062745, 1)
 
 [node name="Centre" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -92,7 +92,7 @@ layout_mode = 2
 text = "IMMEUBLE LIBÉRÉ"
 theme_override_font_sizes/font_size = 52
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(1, 0.87, 0.59, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 
 [node name="Description" type="Label" parent="Centre/Panneau/Marge/Contenu"]
 layout_mode = 2

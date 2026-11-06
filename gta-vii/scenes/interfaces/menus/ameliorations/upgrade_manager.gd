@@ -452,7 +452,7 @@ func ouvrir_booster_formation() -> void:
 	booster.titre = "Formation"
 	booster.contenu = "Trois propositions · une seule carte conservée"
 	booster.symbole = "?"
-	booster.couleur = Color(0.6, 0.67, 0.7)
+	booster.couleur = Color(0.741176, 0.741176, 0.741176)
 	centre.add_child(booster)
 	booster.get_node("%Prix").text = "OFFERT"
 	var ouverture = preload("res://scenes/interfaces/menus/ouverture_booster.tscn").instantiate()

@@ -28,7 +28,7 @@ func _ready() -> void:
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var fond := ColorRect.new()
-	fond.color = Color(0.02, 0.04, 0.05, 0.8)
+	fond.color = Color(0.062745, 0.062745, 0.062745, 0.8)
 	add_child(fond)
 	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var centre := CenterContainer.new()

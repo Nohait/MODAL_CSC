@@ -2,7 +2,7 @@ shader_type canvas_item;
 
 uniform sampler2D silhouette;
 uniform float recharge : hint_range(0.0, 1.0) = 1.0;
-uniform vec4 couleur_remplissage : source_color = vec4(0.75, 0.16, 0.1, 1.0);
+uniform vec4 couleur_remplissage : source_color = vec4(0.772549, 0.176471, 0.184314, 1.0);
 
 void fragment() {
 	vec4 contour = texture(TEXTURE, UV);

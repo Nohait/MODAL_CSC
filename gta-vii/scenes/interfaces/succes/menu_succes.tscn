@@ -17,21 +17,21 @@ shader_parameter/horloge = 0.0
 shader_parameter/point_lumiere = Vector2(0.25, 0.15)
 shader_parameter/intensite_braises = 0.4
 shader_parameter/braises_personnalisees = false
-shader_parameter/teinte_braises = Color(1, 0.68, 0.2, 1)
-shader_parameter/teinte_pochette = Color(0.32, 0.2, 0.16, 1)
+shader_parameter/teinte_braises = Color(0.960784, 0.960784, 0.941176, 1)
+shader_parameter/teinte_pochette = Color(0.203922, 0.203922, 0.203922, 1)
 shader_parameter/intensite_metal = 1.0
 shader_parameter/luminosite_pochette = 1.1
 shader_parameter/cote_dechirure = 0.0
 
 [sub_resource type="StyleBoxFlat" id="BarreVide"]
-bg_color = Color(0.08, 0.10, 0.12, 1)
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="BarrePleine"]
-bg_color = Color(0.59, 0.74, 0.43, 1)
+bg_color = Color(0, 0.556863, 0.368627, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -55,7 +55,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.01, 0.01, 0.015, 0.88)
+color = Color(0.062745, 0.062745, 0.062745, 0.88)
 
 [node name="Pochette" type="Control" parent="." unique_id=1163537025]
 layout_mode = 1

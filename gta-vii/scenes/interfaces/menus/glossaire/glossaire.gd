@@ -25,7 +25,7 @@ func _ready() -> void:
 	catalogue = get_node("/root/CatalogueEnnemis")
 	add_theme_constant_override("separation", 24)
 	add_theme_font_override("font", POLICE)
-	add_theme_color_override("font_color", Color("efd9b5"))
+	add_theme_color_override("font_color", Color("f5f5f0"))
 	var colonne := VBoxContainer.new()
 	colonne.custom_minimum_size.x = 230
 	add_child(colonne)
@@ -51,8 +51,8 @@ func _ready() -> void:
 	var cadre := PanelContainer.new()
 	cadre.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color(0.07, 0.09, 0.11, 0.85)
-	fond.border_color = Color("936443")
+	fond.bg_color = Color(0.062745, 0.062745, 0.062745, 0.85)
+	fond.border_color = Color("c52d2f")
 	fond.set_border_width_all(1)
 	fond.set_corner_radius_all(12)
 	cadre.add_theme_stylebox_override("panel", fond)
@@ -106,13 +106,13 @@ func _texte(texte: String, taille: int) -> Label:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return label
 
-func _bouton(texte: String, couleur := Color("efd9b5")) -> Button:
+func _bouton(texte: String, couleur := Color("f5f5f0")) -> Button:
 	var bouton := preload("res://scenes/interfaces/menus/glossaire/bouton_glossaire.gd").new()
 	bouton.accent = couleur
 	bouton.text = texte
 	bouton.custom_minimum_size.y = 40
 	bouton.add_theme_color_override("font_color", couleur)
-	bouton.add_theme_color_override("font_disabled_color", Color("88786f"))
+	bouton.add_theme_color_override("font_disabled_color", Color("969696"))
 	return bouton
 
 func actualiser() -> void:
@@ -133,7 +133,7 @@ func _ouvrir_fiche(fiche: Dictionary) -> void:
 	titre.text = fiche.nom
 	_vider(versions)
 	boutons_versions.clear()
-	_ajouter_version("normal", "Classique", Color("efd9b5"))
+	_ajouter_version("normal", "Classique", Color("f5f5f0"))
 	_ajouter_version("doree", "Dorée", Color("f7c443"))
 	if fiche.get("elite_possible", false):
 		for mod in catalogue.MODIFICATEURS:
@@ -143,7 +143,7 @@ func _ouvrir_fiche(fiche: Dictionary) -> void:
 
 func _ajouter_version(id: String, nom: String, couleur: Color) -> void:
 	var connue: bool = catalogue.a_rencontre(fiche_actuelle.id, id)
-	var bouton := _bouton(nom if connue else "?", couleur if connue else Color("88786f"))
+	var bouton := _bouton(nom if connue else "?", couleur if connue else Color("969696"))
 	bouton.disabled = not connue
 	bouton.toggle_mode = true
 	boutons_versions[id] = bouton

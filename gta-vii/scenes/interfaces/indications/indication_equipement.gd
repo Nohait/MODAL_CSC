@@ -6,8 +6,8 @@ static func habiller(titre: Label3D, nom: String) -> Label3D:
 	titre.font = preload("res://assets/fonts/rubik/accent.tres")
 	titre.font_size = 25
 	titre.pixel_size = 0.006
-	titre.modulate = Color("e8d6b5")
-	titre.outline_modulate = Color("171b20")
+	titre.modulate = Color("f5f5f0")
+	titre.outline_modulate = Color("101010")
 	titre.outline_size = 5
 	var etat := Label3D.new()
 	etat.name = "DetailEquipement"
@@ -15,7 +15,7 @@ static func habiller(titre: Label3D, nom: String) -> Label3D:
 	etat.font_size = 20
 	etat.pixel_size = titre.pixel_size
 	etat.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	etat.outline_modulate = Color("171b20")
+	etat.outline_modulate = Color("101010")
 	etat.outline_size = 4
 	etat.position.y = -0.19
 	titre.add_child(etat)

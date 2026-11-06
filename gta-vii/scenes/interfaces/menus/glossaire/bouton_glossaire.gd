@@ -1,6 +1,6 @@
 extends Button
 
-var accent := Color("b18c60")
+var accent := Color("bdbdbd")
 var papier: TextureRect
 var temps := 0.0
 var survol := 0.0
@@ -15,8 +15,8 @@ func _ready() -> void:
 		marge.content_margin_bottom = 10
 		add_theme_stylebox_override(etat, marge)
 	add_theme_font_size_override("font_size", 17)
-	add_theme_color_override("font_hover_color", Color("fff0d4"))
-	add_theme_color_override("font_pressed_color", Color("fff0d4"))
+	add_theme_color_override("font_hover_color", Color("f5f5f0"))
+	add_theme_color_override("font_pressed_color", Color("f5f5f0"))
 	papier = TextureRect.new()
 	papier.texture = preload("res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png")
 	papier.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -27,6 +27,8 @@ func _ready() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://scenes/interfaces/menus/onglet_carnet.gdshader")
 	mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
+	mat.set_shader_parameter("contour_repos", Color("f5f5f0"))
+	mat.set_shader_parameter("intensite_plastique", 0.0)
 	mat.set_shader_parameter("largeur_bord", 4.0)
 	mat.set_shader_parameter("rayon_coin", 6.0)
 	mat.set_shader_parameter("intensite_braises", 0.35)

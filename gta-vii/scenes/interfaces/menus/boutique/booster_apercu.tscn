@@ -14,7 +14,7 @@ shader_parameter/survol = 0.0
 shader_parameter/horloge = 247.64353988888138
 shader_parameter/point_lumiere = Vector2(0.25, 0.15)
 shader_parameter/intensite_braises = 0.6
-shader_parameter/teinte_pochette = Color(0.44705883, 0.6784314, 0.6901961, 1)
+shader_parameter/teinte_pochette = Color(0, 0.556863, 0.368627, 1)
 shader_parameter/intensite_metal = 1.200000057
 
 [node name="Booster" type="Control" unique_id=2012591704]
@@ -80,7 +80,7 @@ mouse_filter = 2
 
 [node name="Symbole" type="Label" parent="Visuel" unique_id=1257524206]
 unique_name_in_owner = true
-modulate = Color(0.6129412, 0.774902, 0.78313726, 1)
+modulate = Color(0.741176, 0.741176, 0.741176, 1)
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5

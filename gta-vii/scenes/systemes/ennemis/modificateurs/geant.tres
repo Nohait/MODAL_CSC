@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="ModificateurElite" format=3]
+[gd_resource type="Resource" script_class="ModificateurElite" format=3 uid="uid://can5on5wwt502"]
 
-[ext_resource type="Script" path="res://scenes/systemes/ennemis/modificateur_elite.gd" id="1"]
+[ext_resource type="Script" uid="uid://qlyyashi7yyo" path="res://scenes/systemes/ennemis/modificateur_elite.gd" id="1"]
 
 [resource]
 script = ExtResource("1")

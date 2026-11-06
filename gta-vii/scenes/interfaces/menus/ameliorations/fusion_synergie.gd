@@ -11,7 +11,7 @@ func presenter(synergie: Synergie, catalogue: CatalogueAmeliorations) -> void:
 	layer = 75 # Les notifications de succès restent visibles au-dessus.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var fond := ColorRect.new()
-	fond.color = Color(0.025, 0.035, 0.05, 0.96)
+	fond.color = Color(0.062745, 0.062745, 0.062745, 0.96)
 	add_child(fond)
 	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var titre := Label.new()
@@ -19,7 +19,7 @@ func presenter(synergie: Synergie, catalogue: CatalogueAmeliorations) -> void:
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titre.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	titre.add_theme_font_size_override("font_size", 42)
-	titre.add_theme_color_override("font_color", Color("8ff4ef"))
+	titre.add_theme_color_override("font_color", Color("008e5e"))
 	fond.add_child(titre)
 	titre.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	titre.position.y = 40
@@ -47,7 +47,7 @@ func presenter(synergie: Synergie, catalogue: CatalogueAmeliorations) -> void:
 	add_child(lecteur)
 	if son != null: lecteur.play()
 	var flash := ColorRect.new()
-	flash.color = Color(0.5, 1.0, 0.9, 0.65)
+	flash.color = Color(0, 0.556863, 0.368627, 0.65)
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fond.add_child(flash)
 	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -61,7 +61,7 @@ func presenter(synergie: Synergie, catalogue: CatalogueAmeliorations) -> void:
 	braises.gravity = Vector2.ZERO
 	braises.initial_velocity_min = 90.0
 	braises.initial_velocity_max = 240.0
-	braises.color = Color("8ff4ef")
+	braises.color = Color("008e5e")
 	braises.position = centre
 	var texture := GradientTexture2D.new()
 	texture.width = 16

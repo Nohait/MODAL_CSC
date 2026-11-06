@@ -1,5 +1,8 @@
-[gd_resource type="Resource" script_class="FinitionsParcours" load_steps=2 format=3]
-[ext_resource type="Script" path="res://scenes/decors/interieurs/finitions_parcours.gd" id="script"]
+[gd_resource type="Resource" script_class="FinitionsParcours" format=3 uid="uid://cmn6e5emxruf5"]
+
+[ext_resource type="Material" path="res://assets/materiaux/appartements/bois_finitions.tres" id="1_5pmsh"]
+[ext_resource type="Script" uid="uid://0nxfbkujmopx" path="res://scenes/decors/interieurs/finitions_parcours.gd" id="script"]
+
 [resource]
 script = ExtResource("script")
 etages_sans_soubassement = Array[int]([1])

@@ -34,8 +34,8 @@ func _ready() -> void:
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titre.add_theme_font_override("font", preload("res://assets/fonts/rubik/accent.tres"))
 	titre.add_theme_font_size_override("font_size", 48)
-	titre.add_theme_color_override("font_color", Color("ffd898"))
-	titre.add_theme_color_override("font_outline_color", Color("271215"))
+	titre.add_theme_color_override("font_color", Color("f5f5f0"))
+	titre.add_theme_color_override("font_outline_color", Color("101010"))
 	titre.add_theme_constant_override("outline_size", 8)
 	annonce.add_child(titre)
 	encre = ShaderMaterial.new()

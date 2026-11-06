@@ -75,9 +75,9 @@ func _ready() -> void:
 	vie_barre.size = Vector2(160, 18)
 	vie_barre.show_percentage = false
 	var fond := StyleBoxFlat.new()
-	fond.bg_color = Color("30231d")
+	fond.bg_color = Color("222222")
 	var plein := StyleBoxFlat.new()
-	plein.bg_color = Color("92b86e")
+	plein.bg_color = Color("008e5e")
 	vie_barre.add_theme_stylebox_override("background", fond)
 	vie_barre.add_theme_stylebox_override("fill", plein)
 	viewport.add_child(vie_barre)
@@ -97,7 +97,7 @@ func _ready() -> void:
 	barre_bouclier.size = Vector2(160, 12)
 	barre_bouclier.show_percentage = false
 	var bleu := StyleBoxFlat.new()
-	bleu.bg_color = Color("55b5eb")
+	bleu.bg_color = Color("f5f5f0")
 	barre_bouclier.add_theme_stylebox_override("fill", bleu)
 	barre_bouclier.add_theme_stylebox_override("background", fond)
 	vue_bouclier.add_child(barre_bouclier)

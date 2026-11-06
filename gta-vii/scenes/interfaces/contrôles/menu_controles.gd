@@ -193,7 +193,7 @@ func _adapter_options() -> void:
 				icone.offset_bottom = 19.0
 				if colonne == $Menu/MenuTouches/ColonneNoms:
 					enfant.disabled = true
-					enfant.add_theme_color_override("font_disabled_color", Color("e9d8b4"))
+					enfant.add_theme_color_override("font_disabled_color", Color("f5f5f0"))
 					enfant.mouse_filter = Control.MOUSE_FILTER_IGNORE
 					enfant.focus_mode = Control.FOCUS_NONE
 			elif enfant.name == "Espace":

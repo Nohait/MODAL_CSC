@@ -19,8 +19,8 @@ void fragment() {
 	float fissures = 1.0 - smoothstep(0.025, 0.095, abs(n - 0.5));
 	float chaleur = 0.75 + 0.25 * sin(TIME * vitesse * 4.0 + n * 15.0 + UV.x * 8.0);
 	float relief = pow(max(0.0, sin(UV.y * 3.14159)), 0.5);
-	vec3 couleur = mix(vec3(0.22, 0.025, 0.025), vec3(0.65, 0.09, 0.035), relief);
-	couleur = mix(couleur, vec3(1.0, 0.43, 0.10), fissures * chaleur * intensite);
+	vec3 couleur = mix(vec3(0.588235, 0.137255, 0.14902), vec3(0.772549, 0.176471, 0.184314), relief);
+	couleur = mix(couleur, vec3(1.0, 0.466667, 0.47451), fissures * chaleur * intensite);
 	float bord = smoothstep(0.0, 0.09, UV.y) * smoothstep(0.0, 0.09, 1.0 - UV.y);
 	COLOR = vec4(couleur, step(UV.x, progression) * bord);
 }

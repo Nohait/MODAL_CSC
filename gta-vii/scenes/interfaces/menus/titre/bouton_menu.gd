@@ -11,6 +11,8 @@ var fond: TextureRect
 var icone: TextureRect
 
 @export var taille_minimale := Vector2(300, 74)
+@export_range(0.0, 1.0, 0.01) var intensite_texture := 0.58
+@export var couleur_infobulle := Color("222222")
 
 func _ready() -> void:
 	custom_minimum_size = taille_minimale
@@ -19,10 +21,10 @@ func _ready() -> void:
 		add_theme_stylebox_override(etat, StyleBoxEmpty.new())
 	add_theme_font_override("font", POLICE)
 	add_theme_font_size_override("font_size", taille_police)
-	add_theme_color_override("font_color", Color("edf0e9"))
+	add_theme_color_override("font_color", Color("f5f5f0"))
 	add_theme_color_override("font_hover_color", Color("ffffff"))
-	add_theme_color_override("font_pressed_color", Color("e3c65a"))
-	add_theme_color_override("font_shadow_color", Color(0.015, 0.02, 0.025, 0.9))
+	add_theme_color_override("font_pressed_color", Color("f5f5f0"))
+	add_theme_color_override("font_shadow_color", Color(0.062745, 0.062745, 0.062745, 0.9))
 	add_theme_constant_override("shadow_offset_y", 2)
 	
 	fond = TextureRect.new()
@@ -36,6 +38,8 @@ func _ready() -> void:
 	mat.shader = REFLET
 	mat.set_shader_parameter("survol", 0.0)
 	mat.set_shader_parameter("plastique", PLASTIQUE)
+	mat.set_shader_parameter("contour_repos", Color("f5f5f0"))
+	mat.set_shader_parameter("intensite_plastique", intensite_texture)
 	fond.material = mat
 	add_child(fond)
 	
@@ -70,5 +74,7 @@ func _make_custom_tooltip(texte: String) -> Object:
 	if texte.strip_edges().is_empty(): return null
 	var bulle = preload("res://scenes/interfaces/menus/infobulle_metal.gd").new()
 	bulle.texte = texte
+	bulle.couleur_fond = couleur_infobulle
+	bulle.intensite_texture = intensite_texture
 	return bulle
 	

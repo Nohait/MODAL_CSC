@@ -24,7 +24,7 @@ func _preparer() -> void:
 	symbole.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	symbole.pixel_size = refuge.icone_victimes.pixel_size
 	symbole.no_depth_test = true
-	symbole.modulate = Color("ff8b75")
+	symbole.modulate = Color("ed5355")
 	add_child(symbole)
 	nombre = Label3D.new()
 	nombre.text = "−1"
@@ -32,7 +32,7 @@ func _preparer() -> void:
 	nombre.pixel_size = 0.01
 	nombre.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	nombre.no_depth_test = true
-	nombre.modulate = Color("ff8b75")
+	nombre.modulate = Color("ed5355")
 	add_child(nombre)
 	son = AudioStreamPlayer3D.new()
 	son.stream = preload("res://assets/sounds/victimes/mort/victim_death2.wav")

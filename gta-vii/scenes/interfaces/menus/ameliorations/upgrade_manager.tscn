@@ -30,7 +30,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0.063, 0.086, 0.102, 0.98)
+color = Color(0.062745, 0.062745, 0.062745, 0.98)
 
 [node name="FondRevelation" type="ColorRect" parent="Menu"]
 visible = false
@@ -66,7 +66,7 @@ theme_override_constants/separation = 26
 
 [node name="Titre" type="Label" parent="Menu/Defilement/Centre/Marge/Contenu"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.89, 0.776, 0.353, 1)
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_font_sizes/font_size = 26
 text = "CHOISIR UNE AMÉLIORATION"
 horizontal_alignment = 1
@@ -79,7 +79,7 @@ theme_override_constants/v_separation = 24
 
 [node name="Note" type="Label" parent="Menu/Defilement/Centre/Marge/Contenu"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.675, 0.729, 0.749, 1)
+theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 theme_override_font_sizes/font_size = 16
 autowrap_mode = 3
 text = "Choisissez un renfort pour la suite. Il reste actif jusqu’à la fin de la partie."

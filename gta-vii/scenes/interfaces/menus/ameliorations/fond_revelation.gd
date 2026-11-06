@@ -5,7 +5,7 @@ const RARETES = preload("res://scenes/systemes/ameliorations/tirage_amelioration
 var horloge := 0.0
 var arrivee := 0.0
 var eclat := 0.0
-var teinte := Color("b8a897")
+var teinte := Color("bdbdbd")
 var rarete_revelee := -1
 var animation_arrivee: Tween
 var animation_eclat: Tween
@@ -16,7 +16,7 @@ func preparer() -> void:
 	arrivee = 0.0
 	eclat = 0.0
 	# Commencer neutre : ni le booster ni une carte encore cachée ne dévoilent la couleur.
-	teinte = Color("b8a897")
+	teinte = Color("bdbdbd")
 	rarete_revelee = -1
 	material.set_shader_parameter("teinte", teinte)
 	material.set_shader_parameter("teinte_eclat", teinte)
@@ -38,7 +38,7 @@ func accentuer(rarete: StringName) -> void:
 	var puissance := maxi(0, RARETES.find(rarete))
 	if puissance > rarete_revelee:
 		rarete_revelee = puissance
-		var nouvelle_teinte: Color = PALETTE.COULEURS.get(rarete, Color("e4b56d"))
+		var nouvelle_teinte: Color = PALETTE.COULEURS.get(rarete, Color("f5f5f0"))
 		material.set_shader_parameter("teinte_eclat", nouvelle_teinte)
 		if animation_teinte:
 			animation_teinte.kill()

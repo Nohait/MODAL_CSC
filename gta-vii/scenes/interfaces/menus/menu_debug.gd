@@ -148,8 +148,8 @@ func _aller_etage(numero: int) -> void:
 
 func _styliser_selection(bouton: Button) -> void:
 	var accent := StyleBoxFlat.new()
-	accent.bg_color = Color("493921")
-	accent.border_color = Color("e7b968")
+	accent.bg_color = Color("343434")
+	accent.border_color = Color("c52d2f")
 	accent.set_border_width_all(2)
 	accent.set_corner_radius_all(5)
 	accent.content_margin_left = 10
@@ -158,7 +158,7 @@ func _styliser_selection(bouton: Button) -> void:
 	accent.content_margin_bottom = 7
 	for etat in ["hover", "pressed", "hover_pressed", "focus"]:
 		bouton.add_theme_stylebox_override(etat, accent)
-	bouton.add_theme_color_override("font_pressed_color", Color("ffe2a4"))
+	bouton.add_theme_color_override("font_pressed_color", Color("f5f5f0"))
 
 func _liberer_salle() -> void:
 	# Reprendre le jeu permet aussi à l’animation des portes de se terminer.
@@ -174,7 +174,7 @@ func _preparer_choix_ennemis() -> void:
 	for categorie in ["Mobiles", "Immobiles", "Mini-boss"]:
 		var titre := Label.new()
 		titre.text = categorie.to_upper()
-		titre.add_theme_color_override("font_color", Color("e7b968"))
+		titre.add_theme_color_override("font_color", Color("c52d2f"))
 		%ListeEnnemis.add_child(titre)
 		var grille := GridContainer.new()
 		grille.columns = 2

@@ -86,7 +86,7 @@ func _process(_delta: float) -> void:
 
 func _dessiner() -> void:
 	var ecran := get_viewport().get_visible_rect()
-	var sombre := Color(0.02, 0.035, 0.04, 0.72)
+	var sombre := Color(0.062745, 0.062745, 0.062745, 0.72)
 	if not is_instance_valid(cible):
 		voile.draw_rect(ecran, sombre)
 		return
@@ -95,7 +95,7 @@ func _dessiner() -> void:
 	voile.draw_rect(Rect2(0, trou.end.y, ecran.size.x, ecran.size.y - trou.end.y), sombre)
 	voile.draw_rect(Rect2(0, trou.position.y, trou.position.x, trou.size.y), sombre)
 	voile.draw_rect(Rect2(trou.end.x, trou.position.y, ecran.size.x - trou.end.x, trou.size.y), sombre)
-	voile.draw_rect(trou, Color("e3c65a"), false, 2.0)
+	voile.draw_rect(trou, Color("f5f5f0"), false, 2.0)
 
 func _input(event: InputEvent) -> void:
 	# La présentation est modale : aucun raccourci ne doit acheter ou fermer derrière.

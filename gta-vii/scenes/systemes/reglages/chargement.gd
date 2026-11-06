@@ -15,7 +15,7 @@ func _ready() -> void:
 	layer = 110
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	fond = ColorRect.new()
-	fond.color = Color("10181e")
+	fond.color = Color("101010")
 	add_child(fond)
 	fond.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var centre := CenterContainer.new()
@@ -31,12 +31,12 @@ func _ready() -> void:
 	titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titre.add_theme_font_override("font", preload("res://assets/fonts/Almendra-Bold.ttf"))
 	titre.add_theme_font_size_override("font_size", 68)
-	titre.add_theme_color_override("font_color", Color("edf0e9"))
+	titre.add_theme_color_override("font_color", Color("f5f5f0"))
 	colonne.add_child(titre)
 	etape = Label.new()
 	etape.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	etape.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	etape.add_theme_color_override("font_color", Color("acbabf"))
+	etape.add_theme_color_override("font_color", Color("bdbdbd"))
 	etape.add_theme_font_size_override("font_size", 22)
 	colonne.add_child(etape)
 	barre = ProgressBar.new()
@@ -44,11 +44,11 @@ func _ready() -> void:
 	barre.show_percentage = false
 	for nom in ["background", "fill"]:
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color("e3c65a") if nom == "fill" else Color("1e2a31")
+		style.bg_color = Color("c52d2f") if nom == "fill" else Color("222222")
 		style.set_corner_radius_all(4)
 		if nom == "background":
 			style.set_border_width_all(2)
-			style.border_color = Color("52636b")
+			style.border_color = Color("565656")
 		barre.add_theme_stylebox_override(nom, style)
 	colonne.add_child(barre)
 	echec = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
