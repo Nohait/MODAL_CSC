@@ -109,6 +109,8 @@ script = ExtResource("12_generateur")
 
 [node name="RoomManager" type="Node3D" parent="Salles" unique_id=1555917378]
 script = ExtResource("9_85g3d")
+vagues_chutes_max = 5
+etalement_chutes = 0.7
 
 [node name="InterfaceSalle" type="CanvasLayer" parent="Salles/RoomManager" unique_id=1830693134]
 layer = 2

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cryadkfm6dhap" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dgkjj8fmhrdea" path="res://assets/modeles/ennemis/mobiles/chien_magma/hound.tscn" id="2_rb57g"]
+[ext_resource type="PackedScene" uid="uid://bjx2f0wfr6cnn" path="res://scenes/effets/feu/flames.tscn" id="3_j2y7r"]
 [ext_resource type="AudioStream" uid="uid://gu5cgmdb8qiq" path="res://assets/sounds/ennemis/chien_magma/grognement_bond.wav" id="3_son"]
 
 [sub_resource type="CapsuleShape3D" id="Corps"]
@@ -15,20 +16,48 @@ radius = 20.0
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1")
-vie_max = 50.0
-premier_etage = 1
 premiere_salle = 3
 poids_apparition_classique = 25.0
 hauteur_apparition_classique = 1.05
+vie_max = 50.0
 
 [node name="hound" parent="." unique_id=40788998 instance=ExtResource("2_rb57g")]
 
 [node name="Skeleton3D" parent="hound" index="0" unique_id=383374503]
 transform = Transform3D(0.01734228, 0, 0, 0, 0.01734228, 0, 0, 0, 0.01734228, 0, -0.65963507, 0.6369397)
-bones/1/rotation = Quaternion(-0.09875452, 6.5252393e-06, -1.5306772e-07, 0.9951118)
-bones/2/position = Vector3(1.143754e-10, 11.779899, -1.1980534e-05)
-bones/6/position = Vector3(4.760317, 11.742448, 2.043426)
-bones/11/position = Vector3(-4.7603254, 11.74245, 2.043406)
+bones/1/rotation = Quaternion(-0.09875068, -4.6906003e-05, 0.008736289, 0.9950739)
+bones/2/position = Vector3(9.151445e-11, 11.7799, -7.428704e-06)
+bones/6/position = Vector3(4.760316, 11.742453, 2.04342)
+bones/11/position = Vector3(-4.7603264, 11.742455, 2.043396)
+
+[node name="front_toe_R" type="BoneAttachment3D" parent="hound/Skeleton3D" index="1" unique_id=1461533922]
+transform = Transform3D(-0.999845, -0.016433677, 0.00621706, 0.016210737, -0.7263148, 0.68719774, -0.006777456, 0.6871774, 0.72645766, -11.176994, 7.391638, -4.8508234)
+bone_name = "DEF-front_foot.R"
+bone_idx = 14
+
+[node name="vfx_fire" parent="hound/Skeleton3D/front_toe_R" unique_id=1657664350 instance=ExtResource("3_j2y7r")]
+transform = Transform3D(30, 0, 0, 0, -23.5736, 18.554926, 0, -18.554926, -23.5736, 2.6017342, 3.541279, -0.36902162)
+
+[node name="front_toe_L" type="BoneAttachment3D" parent="hound/Skeleton3D" index="2" unique_id=654472107]
+transform = Transform3D(0.92017144, -0.008971028, -0.39142838, 0.16137671, -0.9021467, 0.40010273, -0.35670772, -0.4312721, -0.82872903, 17.328512, 11.27951, 7.940031)
+bone_name = "DEF-front_foot.L"
+bone_idx = 9
+
+[node name="vfx_fire" parent="hound/Skeleton3D/front_toe_L" unique_id=152002928 instance=ExtResource("3_j2y7r")]
+transform = Transform3D(30, 0, 0, 0, -22.369503, 19.99013, 0, -19.99013, -22.369503, -2.1913838, -1.0084543, -1.915443)
+
+[node name="head" type="BoneAttachment3D" parent="hound/Skeleton3D" index="3" unique_id=1724392274]
+transform = Transform3D(0.9998472, -0.010703696, 0.013810986, 7.63555e-06, -0.79015857, -0.6129287, 0.017473157, 0.6128286, -0.7900253, -0.740891, 33.722134, 15.762376)
+bone_name = "DEF-jaw"
+bone_idx = 5
+
+[node name="vfx_fire" parent="hound/Skeleton3D/head" unique_id=418790855 instance=ExtResource("3_j2y7r")]
+transform = Transform3D(99.924706, -1.4901161e-08, -1.9399048, 0.37244108, -49.769096, 4.79612, -3.8618922, -4.799734, -49.731617, 0.0017092186, 10.467112, 2.98207)
+
+[node name="spine" type="BoneAttachment3D" parent="hound/Skeleton3D" index="4" unique_id=1160195289]
+transform = Transform3D(0.9998472, -0.017376307, -0.0018236825, 8.0316095e-06, 0.10483889, -0.99450445, 0.017471693, 0.99434096, 0.10481707, -0.40178263, 45.453915, -3.6479158)
+bone_name = "DEF-spine.008"
+bone_idx = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=411930196]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2071349, 0.36611938)
