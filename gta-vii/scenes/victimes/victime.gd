@@ -641,7 +641,9 @@ func vecteur_fuite() -> Vector3:
 # Texte d'interaction
 
 func update_interaction_label() -> void:
-	var utiliser_manette: bool = $"../../../../../player".usingController
+	# La victime peut être dans une salle ou directement sous Escorte lors d'une reprise.
+	var joueur := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
+	var utiliser_manette: bool = is_instance_valid(joueur) and not joueur.is_queued_for_deletion() and joueur.get("usingController") == true
 	var texte := ""
 	for event in InputMap.action_get_events("interact"):
 		var est_manette := event is InputEventJoypadButton or event is InputEventJoypadMotion
