@@ -46,6 +46,17 @@ func bilan_vide() -> Dictionary:
 		"degats_recus": 0.0, "pieces_collectees": 0, "points_depenses": 0,
 		"ameliorations_choisies": 0}
 
+func reinitialiser_memoire() -> void:
+	actif = false
+	session += 1
+	niveau = null
+	records.clear()
+	dernier_bilan.clear()
+	compteurs = bilan_vide()
+	ennemis_suivis.clear()
+	victimes_suivies.clear()
+	solde_precedent = 0
+
 func _process(delta: float) -> void:
 	# Process Mode hérité : les pauses de boutique, Carnet et Options ne comptent pas.
 	if actif and not get_tree().paused and is_instance_valid(niveau): compteurs.temps += delta

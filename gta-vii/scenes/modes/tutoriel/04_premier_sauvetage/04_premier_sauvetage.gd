@@ -151,7 +151,3 @@ func _process(_delta: float) -> void:
 
 func afficher_ecran_mort() -> void:
 	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).afficher_echec(self, "Vous êtes tombé pendant le sauvetage.")
-
-func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
-		preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).recommencer()

@@ -1,0 +1,98 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/interfaces/menus/debug/menu_profil.gd" id="1"]
+[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="2"]
+
+[node name="DebugProfil" type="CanvasLayer"]
+process_mode = 3
+layer = 110
+script = ExtResource("1")
+
+[node name="Fond" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="Centre" type="CenterContainer" parent="Fond"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panneau" type="PanelContainer" parent="Fond/Centre"]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+theme = ExtResource("2")
+
+[node name="Marge" type="MarginContainer" parent="Fond/Centre/Panneau"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Contenu" type="VBoxContainer" parent="Fond/Centre/Panneau/Marge"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Titre" type="Label" parent="Fond/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "OUTILS DE TEST · PROFIL LOCAL"
+
+[node name="Description" type="Label" parent="Fond/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Effacer les succès, le glossaire, les records, les déblocages et toutes les reprises (classique, zombie et tutoriel).\n\nCette action est irréversible et concerne uniquement cet ordinateur. Les sauvegardes locales ne sont pas incluses dans l’export du jeu."
+autowrap_mode = 3
+
+[node name="Reglages" type="CheckBox" parent="Fond/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+button_pressed = true
+text = "Réinitialiser aussi les réglages et les commandes"
+
+[node name="Instruction" type="Label" parent="Fond/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Saisissez EFFACER pour autoriser la remise à zéro."
+
+[node name="Confirmation" type="LineEdit" parent="Fond/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+max_length = 7
+placeholder_text = "EFFACER"
+
+[node name="Resultat" type="Label" parent="Fond/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Fond/Centre/Panneau/Marge/Contenu"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Annuler" type="Button" parent="Fond/Centre/Panneau/Marge/Contenu/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Fermer"
+
+[node name="Effacer" type="Button" parent="Fond/Centre/Panneau/Marge/Contenu/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Tout réinitialiser"

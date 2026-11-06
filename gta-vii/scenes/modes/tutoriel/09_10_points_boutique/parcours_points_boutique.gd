@@ -84,9 +84,6 @@ func _partie_prete() -> void:
 func afficher_ecran_mort() -> void:
 	REPRISE.obtenir(get_tree()).afficher_echec(self, "Vous n’avez pas pu poursuivre l’intervention.")
 
-func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
-		REPRISE.obtenir(get_tree()).recommencer()
 
 func debug_contexte() -> Dictionary:
 	var salle = gestion_salles.salle_actuelle

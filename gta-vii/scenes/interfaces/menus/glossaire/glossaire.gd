@@ -21,6 +21,7 @@ var version_actuelle := "normal"
 var boutons_versions: Dictionary = {}
 
 func _ready() -> void:
+	add_to_group("debug_glossaire")
 	catalogue = get_node("/root/CatalogueEnnemis")
 	add_theme_constant_override("separation", 24)
 	add_theme_font_override("font", POLICE)
@@ -33,10 +34,6 @@ func _ready() -> void:
 	defilement.custom_minimum_size.x = 230
 	defilement.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	colonne.add_child(defilement)
-	var debug := _bouton("DEBUG — Tout débloquer")
-	debug.tooltip_text = "Débloquer tous les ennemis et variantes, y compris pour les prochaines parties."
-	debug.pressed.connect(catalogue.debloquer_tout)
-	colonne.add_child(debug)
 	liste = VBoxContainer.new()
 	liste.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	liste.add_theme_constant_override("separation", 8)
@@ -227,3 +224,8 @@ func _vider(parent: Node) -> void:
 	for enfant in parent.get_children():
 		parent.remove_child(enfant)
 		enfant.queue_free()
+
+func debug_contextuel() -> bool:
+	if not is_visible_in_tree(): return false
+	catalogue.debloquer_tout()
+	return true

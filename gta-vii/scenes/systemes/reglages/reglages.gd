@@ -104,6 +104,17 @@ func sauvegarder() -> void:
 	var erreur := fichier.save(FICHIER)
 	if erreur != OK: push_warning("Impossible de sauvegarder les options : %s" % error_string(erreur))
 
+func reinitialiser() -> void:
+	# Le profil a été effacé : rétablir aussi les valeurs déjà chargées en mémoire.
+	InputMap.load_from_project_settings()
+	volumes = {"general": 1.0, "ambiance": 1.0, "effets": 1.0, "musique": 1.0}
+	for categorie in volumes: _appliquer_volume(categorie)
+	sensibilite = 1.0
+	get_node("/root/CursorManager").vitesse = 1000.0
+	graphismes.appliquer(2)
+	mode_fenetre = int(ProjectSettings.get_setting("display/window/size/mode", DisplayServer.WINDOW_MODE_WINDOWED))
+	DisplayServer.window_set_mode(mode_fenetre)
+
 func _decrire_evenement(event: InputEvent) -> Dictionary:
 	# Des données simples dans le fichier, plutôt que des objets sérialisés.
 	if event is InputEventKey:

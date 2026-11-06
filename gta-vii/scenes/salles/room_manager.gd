@@ -4,12 +4,6 @@ const ZONE_FEU = preload("res://scenes/ennemis/dangers/chute.tscn")
 
 var musique_jouee = null
 
-#### FOR DEBUG PURPOSES : L for falling fire
-func _unhandled_input(event: InputEvent) -> void:
-	if not OS.is_debug_build(): return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L:
-		_lancer_sur_joueur()
-
 func _lancer_sur_joueur() -> void:
 	var joueur := get_tree().get_first_node_in_group("player") as Node3D
 	if joueur == null: return
