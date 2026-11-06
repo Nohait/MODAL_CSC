@@ -1,5 +1,7 @@
 extends "res://scenes/interfaces/menus/navigation_menus.gd"
 
+const PROGRESSION = preload("res://scenes/systemes/sauvegarde/progression_interventions.gd")
+var progression: Dictionary = {}
 var confirmation_suppression: Window
 var message_sauvegarde: Label
 var mode_suppression := "zombie"
@@ -32,26 +34,26 @@ func _restaurer_menu() -> void:
 	decor.depart_en_cours = false
 	for bouton: BaseButton in $Menu.find_children("*", "BaseButton", true, false):
 		bouton.disabled = false
+	_actualiser_progression()
 
 func _ready() -> void:
 	add_to_group("debug_titre")
 	super._ready()
 	$Menu/Colonne/Titre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	%ModeZombie.pressed.connect(_jouer_zombie)
-	%Tutoriel.pressed.connect(_jouer_tutoriel)
+	progression = PROGRESSION.lire()
 	reprise_tutoriel = preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree())
 	reprise_tutoriel.charger()
-	reprise_tutoriel.sauvegarde_changee.connect(_actualiser_tutoriel)
+	reprise_tutoriel.sauvegarde_changee.connect(_actualiser_classique)
 	%SupprimerZombie.pressed.connect(_demander_suppression.bind("zombie"))
 	%SupprimerClassique.pressed.connect(_demander_suppression.bind("classique"))
-	%SupprimerTutoriel.pressed.connect(_demander_suppression.bind("tutoriel"))
 	_creer_confirmation_suppression()
 	SauvegardeClassique.charger()
 	SauvegardeClassique.sauvegarde_changee.connect(_actualiser_classique)
 	_actualiser_classique()
 	SauvegardeZombie.charger()
 	SauvegardeZombie.sauvegarde_changee.connect(_actualiser_zombie)
-	for bouton in [%SupprimerZombie, %SupprimerClassique, %SupprimerTutoriel]:
+	for bouton in [%SupprimerZombie, %SupprimerClassique]:
 		# Une icône remplit le bouton sans dépendre de la taille du caractère dans la police.
 		bouton.text = ""
 		bouton.icone.texture = preload("res://assets/textures/interfaces/titre/croix_suppression.svg")
@@ -70,7 +72,6 @@ func _ready() -> void:
 		for etat in ["font_color", "font_hover_color", "font_pressed_color"]:
 			bouton.add_theme_color_override(etat, Color.WHITE)
 	_actualiser_zombie()
-	_actualiser_tutoriel()
 	%Succes.pressed.connect($MenuSucces.ouvrir)
 	%Options.pressed.connect(Reglages.ouvrir)
 	%Quitter.pressed.connect(get_tree().quit)
@@ -81,11 +82,17 @@ func _ready() -> void:
 
 func _actualiser_zombie() -> void:
 	var disponible := SauvegardeZombie.disponible()
+	var debloque: bool = progression.get("zombie_debloque", false)
 	%ModeZombie.text = "Continuer" if disponible else "Nouvelle partie"
 	%ModeZombie.tooltip_text = "Reprendre au début de la vague %d" % SauvegardeZombie.dernier_point.vague if disponible else "Choisir une map et commencer une partie zombie"
-	%SupprimerZombie.visible = disponible
+	%ModeZombie.disabled = not debloque
+	%ModeZombie.fond.material.set_shader_parameter("grise", not debloque)
+	if not debloque:
+		%ModeZombie.tooltip_text = "Remportez une partie en mode classique pour débloquer le mode zombie"
+	%SupprimerZombie.visible = disponible and debloque
 
 func _jouer_zombie() -> void:
+	if changement_en_cours or not progression.get("zombie_debloque", false): return
 	if SauvegardeZombie.disponible():
 		if SauvegardeZombie.preparer_reprise():
 			changer_scene("res://scenes/modes/zombie/mode_zombie.tscn")
@@ -95,11 +102,15 @@ func _jouer_zombie() -> void:
 		SauvegardeZombie.reprise.clear()
 		changer_scene("res://scenes/modes/zombie/interfaces/selection_maps/selection_maps.tscn")
 
-func _actualiser_tutoriel() -> void:
-	var disponible: bool = reprise_tutoriel.disponible()
-	%Tutoriel.text = "Continuer le tutoriel" if disponible else "Tutoriel"
-	%Tutoriel.tooltip_text = "Reprendre la formation en cours" if disponible else "Commencer le tutoriel depuis le début"
-	%SupprimerTutoriel.visible = disponible
+func _actualiser_progression() -> void:
+	progression = PROGRESSION.lire()
+	_actualiser_classique()
+	_actualiser_zombie()
+
+func _formation_a_poursuivre() -> bool:
+	if progression.get("formation", false): return false
+	# Une ancienne reprise classique reste accessible sans lui attribuer de déblocage.
+	return reprise_tutoriel.disponible() or not SauvegardeClassique.disponible()
 
 func _creer_confirmation_suppression() -> void:
 	confirmation_suppression = Window.new()
@@ -156,30 +167,35 @@ func _creer_confirmation_suppression() -> void:
 	confirmation_suppression.hide()
 
 func _demander_suppression(mode: String = "zombie") -> void:
+	if mode == "classique" and not progression.get("formation", false): return
+	if mode == "zombie" and not progression.get("zombie_debloque", false): return
 	mode_suppression = mode
-	if mode == "tutoriel":
-		message_sauvegarde.text = "Recommencer le tutoriel depuis le début ?\nLe point de reprise actuel sera supprimé.\nLes succès et les déblocages seront conservés."
-	else:
-		message_sauvegarde.text = "Supprimer cette partie %s ?\nVotre progression sera perdue.\nLes succès et les records seront conservés." % mode
+	message_sauvegarde.text = "Supprimer cette partie %s ?\nVotre progression sera perdue.\nLes succès et les déblocages seront conservés." % mode
 	confirmation_suppression.popup_centered()
 
 func _supprimer_sauvegarde() -> void:
+	if mode_suppression == "classique" and not progression.get("formation", false): return
+	if mode_suppression == "zombie" and not progression.get("zombie_debloque", false): return
 	var sauvegarde: Node
 	match mode_suppression:
 		"zombie": sauvegarde = SauvegardeZombie
 		"classique": sauvegarde = SauvegardeClassique
-		"tutoriel": sauvegarde = reprise_tutoriel
 		_: return
-	var suppression_reussie: bool = reprise_tutoriel.reinitialiser() if mode_suppression == "tutoriel" else sauvegarde.supprimer()
+	var suppression_reussie: bool = sauvegarde.supprimer()
 	if suppression_reussie:
 		confirmation_suppression.hide()
 	else:
 		message_sauvegarde.text = "Impossible de supprimer la sauvegarde.\nVérifiez les droits d’accès au fichier."
 
 func _actualiser_classique() -> void:
+	if _formation_a_poursuivre():
+		%NouvellePartie.text = "Continuer" if reprise_tutoriel.disponible() else "Nouvelle partie"
+		%NouvellePartie.tooltip_text = "Reprendre la formation en cours" if reprise_tutoriel.disponible() else "Commencer votre première intervention par la formation"
+		%SupprimerClassique.hide()
+		return
 	var disponible := SauvegardeClassique.disponible()
 	%NouvellePartie.text = "Continuer" if disponible else "Nouvelle partie"
-	%SupprimerClassique.visible = disponible
+	%SupprimerClassique.visible = disponible and progression.get("formation", false)
 	if disponible:
 		var indice: int = SauvegardeClassique.dernier_point.indice
 		%NouvellePartie.tooltip_text = "Reprendre la salle %d de l’étage %d" % [indice % 5 + 1, indice / 5 + 1]
@@ -188,6 +204,10 @@ func _actualiser_classique() -> void:
 
 func nouvelle_partie() -> void:
 	# Le bouton commun est relié par navigation_menus ; seul le titre propose une reprise.
+	if changement_en_cours: return
+	if _formation_a_poursuivre():
+		changer_scene(reprise_tutoriel.chemin_reprise())
+		return
 	if SauvegardeClassique.disponible():
 		if not SauvegardeClassique.preparer_reprise():
 			_actualiser_classique()
@@ -196,14 +216,12 @@ func nouvelle_partie() -> void:
 		SauvegardeClassique.reprise.clear()
 	changer_scene("res://scenes/jeu/main.tscn")
 
-func _jouer_tutoriel() -> void:
-	changer_scene(preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).chemin_reprise())
-
 func debug_contextuel() -> bool:
 	if changement_en_cours or confirmation_suppression.visible: return true
 	if not is_instance_valid(menu_profil):
 		menu_profil = preload("res://scenes/interfaces/menus/debug/menu_profil.tscn").instantiate()
 		add_child(menu_profil)
+		menu_profil.profil_modifie.connect(_actualiser_progression)
 	if menu_profil.visible: menu_profil.fermer()
 	else: menu_profil.ouvrir()
 	return true

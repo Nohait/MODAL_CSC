@@ -17,6 +17,7 @@ static func lire() -> Dictionary:
 	return etat
 
 static func enregistrer_formation() -> bool:
+	# Seule la conclusion appelle cette méthode, même après un raccourci de playtest.
 	return _enregistrer(false)
 
 static func enregistrer_victoire() -> bool:
@@ -28,8 +29,12 @@ static func hydrant_debloque() -> bool:
 static func enregistrer_hydrant() -> bool:
 	return _enregistrer(false, true)
 
-static func _enregistrer(victoire: bool, hydrant := false) -> bool:
-	if Engine.get_meta("tutoriel_debug_actif", false): return true
+static func debloquer_pour_debug() -> bool:
+	return _enregistrer(false, false, true)
+
+static func _enregistrer(victoire: bool, hydrant := false, tout_debloquer := false) -> bool:
+	# Isoler les récompenses du debug, mais enregistrer réellement la fin de formation.
+	if not tout_debloquer and (victoire or hydrant) and Engine.get_meta("tutoriel_debug_actif", false): return true
 	var fichier = load("res://scenes/systemes/sauvegarde/progression_interventions.gd").new()
 	fichier.charger()
 	if not fichier.erreur_lecture.is_empty():
@@ -38,7 +43,12 @@ static func _enregistrer(victoire: bool, hydrant := false) -> bool:
 	var etat: Dictionary = fichier.dernier_point.duplicate(true)
 	if etat.is_empty():
 		etat = {"version": VERSION, "formation": false, "victoires_apres_formation": 0, "zombie_debloque": false}
-	if hydrant:
+	if tout_debloquer:
+		# Ouvrir les modes et l'équipement sans inventer de victoire ni de succès.
+		etat.formation = true
+		etat.zombie_debloque = true
+		etat["hydrant_debloque"] = true
+	elif hydrant:
 		etat["hydrant_debloque"] = true
 	elif victoire:
 		if not etat.formation:

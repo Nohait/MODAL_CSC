@@ -84,6 +84,9 @@ func verifier() -> void:
 	var titre = load("res://scenes/interfaces/menus/ecran_titre.tscn").instantiate()
 	root.add_child(titre)
 	current_scene = titre
+	# Ce scénario teste la reprise après formation, sans modifier la progression persistante.
+	titre.progression = {"formation": true}
+	titre._actualiser_classique()
 	assert(titre.get_node("%NouvellePartie").text == "Continuer")
 	assert(titre.get_node("%SupprimerClassique").visible)
 	titre.nouvelle_partie()
@@ -108,6 +111,8 @@ func verifier() -> void:
 	paused = false
 	titre = load("res://scenes/interfaces/menus/ecran_titre.tscn").instantiate()
 	root.add_child(titre)
+	titre.progression = {"formation": true}
+	titre._actualiser_classique()
 	titre._demander_suppression("classique")
 	titre._supprimer_sauvegarde()
 	assert(not sauvegarde.disponible())

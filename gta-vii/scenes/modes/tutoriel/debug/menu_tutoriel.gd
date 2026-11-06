@@ -56,7 +56,8 @@ func _construire() -> void:
 	titre.add_theme_color_override("font_color", Color(0.772549, 0.176471, 0.184314))
 	contenu.add_child(titre)
 	var aide := Label.new()
-	aide.text = "Simulation suspendue · Échap pour fermer · les changements de debug ne sont pas sauvegardés"
+	aide.text = "Simulation suspendue · Échap pour fermer · exercices non sauvegardés"
+	aide.tooltip_text = "Les aides et les sauts de debug ne sont pas sauvegardés. Atteindre la conclusion valide toutefois la fin de formation pour tester la suite en classique."
 	aide.add_theme_font_size_override("font_size", 15)
 	contenu.add_child(aide)
 	onglets = TabContainer.new()

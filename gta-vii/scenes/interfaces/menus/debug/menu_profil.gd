@@ -1,6 +1,9 @@
 extends CanvasLayer
 
+signal profil_modifie
+
 const PROFIL = preload("res://scenes/systemes/debug/reinitialisation_profil.gd")
+const PROGRESSION = preload("res://scenes/systemes/sauvegarde/progression_interventions.gd")
 @onready var confirmation: LineEdit = %Confirmation
 @onready var effacer: Button = %Effacer
 @onready var resultat: Label = %Resultat
@@ -11,6 +14,7 @@ func _ready() -> void:
 	%Annuler.pressed.connect(fermer)
 	confirmation.text_changed.connect(func(texte: String): effacer.disabled = texte != "EFFACER")
 	effacer.pressed.connect(_effacer)
+	%Debloquer.pressed.connect(_debloquer)
 	hide()
 
 func ouvrir() -> void:
@@ -23,6 +27,14 @@ func ouvrir() -> void:
 	resultat.text = ""
 	show()
 	%Annuler.grab_focus()
+
+func _debloquer() -> void:
+	if not visible: return
+	if PROGRESSION.debloquer_pour_debug():
+		resultat.text = "Classique sans tutoriel, mode zombie et bouche à incendie débloqués. Les parties et les succès sont conservés."
+		profil_modifie.emit()
+	else:
+		resultat.text = "Impossible d’enregistrer les déblocages. Vérifiez l’accès à la sauvegarde."
 
 func fermer() -> void:
 	if not visible: return
@@ -45,3 +57,4 @@ func _effacer() -> void:
 	else:
 		resultat.text = "Remise à zéro incomplète :\n" + "\n".join(erreurs) + "\nLes autres éléments ont été effacés. Corrigez le problème puis réessayez."
 	%Annuler.grab_focus()
+	profil_modifie.emit()

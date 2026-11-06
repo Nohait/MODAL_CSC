@@ -45,6 +45,14 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "OUTILS DE TEST · PROFIL LOCAL"
 
+[node name="Debloquer" type="Button" parent="Fond/Centre/Panneau/Marge/Contenu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Tout débloquer"
+tooltip_text = "Accéder au classique sans tutoriel, au zombie et à la bouche à incendie. Les parties et les succès sont conservés."
+
 [node name="Description" type="Label" parent="Fond/Centre/Panneau/Marge/Contenu"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
