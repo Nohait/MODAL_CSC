@@ -107,10 +107,10 @@ func _ready() -> void:
 	pochettes.add_theme_constant_override("separation", 12)
 	renforts.add_child(pochettes)
 	var propositions: Array[Dictionary] = [
-		{"id": &"commun", "titre": "Commun", "couleur": Color("969696"), "prix": 1, "puissance": puissance_commune, "symbole": "I"},
-		{"id": &"rare", "titre": "Rare", "couleur": Color("f5f5f0"), "prix": 2, "puissance": puissance_rare, "symbole": "II"},
-		{"id": &"epique", "titre": "Épique", "couleur": Color("c52d2f"), "prix": 3, "puissance": puissance_epique, "symbole": "III"},
-		{"id": &"legendaire", "titre": "Légendaire", "couleur": Color("ff7779"), "prix": 5, "puissance": 200.0, "symbole": "IV", "contenu": "3 choix · surtout légendaires"}
+		{"id": &"commun", "titre": "Commun", "couleur": Color("f5f5f0"), "prix": 1, "puissance": puissance_commune, "symbole": "I"},
+		{"id": &"rare", "titre": "Rare", "couleur": Color("569ccb"), "prix": 2, "puissance": puissance_rare, "symbole": "II"},
+		{"id": &"epique", "titre": "Épique", "couleur": Color("af77c8"), "prix": 3, "puissance": puissance_epique, "symbole": "III"},
+		{"id": &"legendaire", "titre": "Légendaire", "couleur": Color("efc35b"), "prix": 5, "puissance": 200.0, "symbole": "IV", "contenu": "3 choix · surtout légendaires"}
 	]
 	if not catalogue.is_empty():
 		propositions = catalogue
@@ -122,13 +122,13 @@ func _ready() -> void:
 	cadeau = bloc_cadeau.get_parent()
 	var cadre_cadeau := cadeau.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
 	cadre_cadeau.bg_color = Color("222222")
-	cadre_cadeau.border_color = Color("f5f5f0")
+	cadre_cadeau.border_color = Color("569ccb")
 	cadeau.add_theme_stylebox_override("panel", cadre_cadeau)
 	bloc_cadeau.get_child(0).horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var centre := HBoxContainer.new()
 	centre.alignment = BoxContainer.ALIGNMENT_CENTER
 	bloc_cadeau.add_child(centre)
-	_ajouter_booster(centre, {"id": &"rare_gratuit", "titre": "Rare", "couleur": Color("f5f5f0"), "prix": 0, "puissance": puissance_rare, "symbole": "II", "contenu": "Un cadeau bien mérité"})
+	_ajouter_booster(centre, {"id": &"rare_gratuit", "titre": "Rare", "couleur": Color("569ccb"), "prix": 0, "puissance": puissance_rare, "symbole": "II", "contenu": "Un cadeau bien mérité"})
 	booster_gratuit = boosters.back()
 	booster_gratuit.niveau_eclat = 1
 	booster_gratuit.get_node("Visuel/Papier").material.set_shader_parameter("niveau_eclat", 1.0)
@@ -173,11 +173,10 @@ func _ready() -> void:
 	contenu.add_child(retour)
 	if not mode_demonstration:
 		var continuer = Button.new()
-		continuer.add_theme_font_size_override("font_size", 18)
-		continuer.custom_minimum_size = Vector2(300, 40)
+		continuer.add_theme_font_size_override("font_size", 24)
+		continuer.custom_minimum_size = Vector2(420, 64)
 		continuer.text = "Continuer vers la prochaine salle"
 		continuer.focus_mode = Control.FOCUS_NONE
-		continuer.custom_minimum_size.y = 40
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
 	_actualiser_budget()

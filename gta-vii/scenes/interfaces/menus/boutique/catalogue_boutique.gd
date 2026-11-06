@@ -2,10 +2,10 @@ extends RefCounted
 
 # Palette partagée : les cartes tirées peuvent avoir une autre rareté que le booster.
 const COULEURS = {
-	&"commun": Color("969696"),
-	&"rare": Color("f5f5f0"),
-	&"epique": Color("c52d2f"),
-	&"legendaire": Color("ff7779"),
+	&"commun": Color("f5f5f0"),
+	&"rare": Color("569ccb"),
+	&"epique": Color("af77c8"),
+	&"legendaire": Color("efc35b"),
 	&"temporaire": Color("008e5e"),
 	&"synergie": Color("008e5e")
 }
