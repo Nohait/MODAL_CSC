@@ -65,7 +65,7 @@ const EVACUATION_SCENE = preload("res://scenes/victimes/evacuation/point_evacuat
 ## Salle activée au chargement, utilisée par les parcours qui reprennent en cours de route.
 @export_range(0, 49, 1) var indice_salle_depart := 0
 const SALLES_PAR_ETAGE := 5
-signal etage_1
+signal bouche_debloquee
 var nombre_salles: int:
 	get:
 		return nombre_salles_personnalise if nombre_salles_personnalise > 0 else nombre_etages * SALLES_PAR_ETAGE
@@ -798,8 +798,6 @@ func activer_salle(indice: int) -> void:
 	if changer_etage:
 		#On ajoute des musiques pour le feedback auditif
 		if salle_actuelle.etage-1 == 1:
-			etage_1.emit()
-			$InterfaceSalle/HUD/Bouche_Incendie.show()
 			musique_jouee.stream.set_sync_stream_volume(1, -3)
 		else:
 			musique_jouee.stream.set_sync_stream_volume(1, -5)
@@ -821,6 +819,19 @@ func activer_salle(indice: int) -> void:
 	demarrer_sauvetage(salle_actuelle)
 	salle_commencee.emit(salle_actuelle)
 	actualiser_objectifs()
+	_presenter_bouche_si_necessaire()
+
+func _presenter_bouche_si_necessaire() -> void:
+	if get_parent().get_parent().session_tutoriel or salle_actuelle.etage != 2: return
+	var progression = preload("res://scenes/systemes/sauvegarde/progression_interventions.gd")
+	if progression.hydrant_debloque(): return
+	# Le déblocage survit à la mort et aux nouvelles parties, indépendamment de la reprise.
+	if not progression.enregistrer_hydrant():
+		push_warning("Impossible d'enregistrer le déblocage de la bouche à incendie.")
+		afficher_message("Déblocage non enregistré. Vérifiez l'accès aux sauvegardes.")
+		return
+	bouche_debloquee.emit()
+	$InterfaceSalle/HUD/Bouche_Incendie.ouvrir()
 
 # Mort / libération
 

@@ -7,7 +7,7 @@ func _init() -> void:
 func _valide(point: Dictionary) -> bool:
 	return point.get("version") == VERSION and point.get("formation") is bool \
 		and point.get("victoires_apres_formation") is int and point.victoires_apres_formation >= 0 \
-		and point.get("zombie_debloque") is bool
+		and point.get("zombie_debloque") is bool and point.get("hydrant_debloque", false) is bool
 
 static func lire() -> Dictionary:
 	var fichier = load("res://scenes/systemes/sauvegarde/progression_interventions.gd").new()
@@ -22,7 +22,13 @@ static func enregistrer_formation() -> bool:
 static func enregistrer_victoire() -> bool:
 	return _enregistrer(true)
 
-static func _enregistrer(victoire: bool) -> bool:
+static func hydrant_debloque() -> bool:
+	return bool(lire().get("hydrant_debloque", false))
+
+static func enregistrer_hydrant() -> bool:
+	return _enregistrer(false, true)
+
+static func _enregistrer(victoire: bool, hydrant := false) -> bool:
 	if Engine.get_meta("tutoriel_debug_actif", false): return true
 	var fichier = load("res://scenes/systemes/sauvegarde/progression_interventions.gd").new()
 	fichier.charger()
@@ -32,7 +38,9 @@ static func _enregistrer(victoire: bool) -> bool:
 	var etat: Dictionary = fichier.dernier_point.duplicate(true)
 	if etat.is_empty():
 		etat = {"version": VERSION, "formation": false, "victoires_apres_formation": 0, "zombie_debloque": false}
-	if victoire:
+	if hydrant:
+		etat["hydrant_debloque"] = true
+	elif victoire:
 		if not etat.formation:
 			fichier.free()
 			return true

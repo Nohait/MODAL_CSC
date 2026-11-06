@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 const EFFET_LIBERATION = preload("res://scenes/effets/liberation/liberation_victime.tscn")
-@onready var victime_manager = preload("res://scenes/victimes/victim_manager.gd")
 
 
 @export_group("Retour visuel — libération")

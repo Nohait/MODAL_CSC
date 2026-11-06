@@ -72,12 +72,15 @@ var ombre: MeshInstance3D
 var souffle_lance := false
 @onready var cartes_bouche: Node = $AmeliorationsBouche
 
-var active = false
+var active := false
 
 func _ready() -> void:
-	
-	await joueur.ready
-	joueur.get_parent().get_node("Salles").get_node("RoomManager").etage_1.connect(_on_etage_1)
+	if not joueur.is_node_ready(): await joueur.ready
+	var gestion = joueur.get_parent().get_node_or_null("Salles/RoomManager")
+	if gestion != null and gestion.has_signal("bouche_debloquee"):
+		gestion.bouche_debloquee.connect(activer)
+	if preload("res://scenes/systemes/sauvegarde/progression_interventions.gd").hydrant_debloque():
+		activer()
 
 func _aligner_icone() -> void:
 	var jauge: Control = icone.get_parent()
@@ -87,6 +90,7 @@ func _aligner_icone() -> void:
 	icone.position = Vector2(jauge.size.x - 39.0 - icone.size.x / 2.0, barre.position.y + barre.size.y / 2.0 - icone.size.y / 2.0 + decalage_vertical_pictogramme)
 
 func _input(event: InputEvent) -> void:
+	if not active: return
 	if event is InputEventJoypadButton and event.pressed:
 		print("JOY bouton=", event.button_index, " device=", event.device,
 			" action_ok=", event.is_action("attaque_bouche"))
@@ -373,7 +377,8 @@ func _salle_actuelle() -> Node:
 		return joueur.ameliorations.room_manager.salle_actuelle
 	return joueur.get_parent()
 	
-func _on_etage_1():
+func activer() -> void:
+	if active: return
 	active = true
 	
 	# Une action dédiée permet de changer la touche sans dépendre de l'extincteur.

@@ -697,6 +697,9 @@ func _cartes_achetables(type_bonus: String) -> Array[Amelioration]:
 	return resultat
 
 func prerequis_remplis(definition: Amelioration) -> bool:
+	if definition.effet.begins_with("hydrant_"):
+		var attaque = joueur.get_node_or_null("SecondaryAttack/AttaqueBouche")
+		if attaque == null or not attaque.active: return false
 	for id in definition.incompatibles:
 		if cartes_obtenues.has(id): return false
 	# Vérifier aussi l'autre sens pour éviter une exclusivité à sens unique.

@@ -15,7 +15,7 @@
 [ext_resource type="Theme" uid="uid://4yvbquuw1ee3" path="res://scenes/interfaces/theme_intervention/theme.tres" id="13_pe8er"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/ameliorations/upgrade_manager.tscn" id="13_upgrades"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/menu_debug.tscn" id="14_debug"]
-[ext_resource type="Script" uid="uid://dwfuwym5pltuj" path="res://scenes/modes/tutoriel/commun/dialogues/bulle_dialogue.gd" id="14_i0q18"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/dialogues/tutoriel_bouche.gd" id="14_i0q18"]
 [ext_resource type="Theme" uid="uid://8ibipqab5vhs" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="15_rvg8i"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/transitions/transition_etage.tscn" id="15_transition"]
 [ext_resource type="Texture2D" uid="uid://bgqh1g4lovn6u" path="res://assets/textures/controles/lt.png" id="16_hx8k8"]
@@ -933,25 +933,46 @@ text = "Salle libérée !"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Bouche_Incendie" type="PanelContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=1714117134]
+[node name="FondBouche" type="ColorRect" parent="Salles/RoomManager/InterfaceSalle/HUD"]
 visible = false
+z_index = 19
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.65)
+
+[node name="Bouche_Incendie" type="PanelContainer" parent="Salles/RoomManager/InterfaceSalle/HUD" unique_id=1714117134]
+process_mode = 3
+visible = false
+z_index = 20
 custom_minimum_size = Vector2(500, 0)
-layout_mode = 0
-offset_left = 300.0
-offset_top = 280.0
-offset_right = 1300.0
-offset_bottom = 660.0
-mouse_filter = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -530.0
+offset_top = -255.0
+offset_right = 530.0
+offset_bottom = 255.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
 theme = ExtResource("13_pe8er")
 script = ExtResource("14_i0q18")
 
 [node name="Marge" type="MarginContainer" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie" unique_id=156063085]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 400
+theme_override_constants/margin_bottom = 24
 
 [node name="Disposition" type="VBoxContainer" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge" unique_id=901861953]
 layout_mode = 2
@@ -997,8 +1018,7 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "
-------------------------------------------------------------------------------------------------------------"
+text = ""
 autowrap_mode = 2
 
 [node name="Texte4" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=489706841]
@@ -1006,8 +1026,8 @@ custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 theme = ExtResource("15_rvg8i")
 theme_override_font_sizes/font_size = 20
-text = "INVOQUE UN EXCTINCTEUR DEPUIS LE PLAFOND
-POUR INFLIGER DES DEGATS DE ZONE"
+text = "INVOQUE UNE BOUCHE À INCENDIE DEPUIS LE PLAFOND
+POUR INFLIGER DES DÉGÂTS DE ZONE"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -1023,7 +1043,22 @@ texture = ExtResource("17_sdqu5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition" unique_id=443911812]
 libraries/ = SubResource("AnimationLibrary_ajq55")
-autoplay = &"new_animation"
+
+[node name="EspaceCommandes" type="Control" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Consigne" type="Label" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Maintiens pour viser, puis relâche pour lancer."
+autowrap_mode = 2
+
+[node name="Fermer" type="Button" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge/Disposition"]
+custom_minimum_size = Vector2(190, 48)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Compris"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Salles/RoomManager/InterfaceSalle/HUD/Bouche_Incendie/Marge" unique_id=447175604]
 position = Vector2(796, 107)
