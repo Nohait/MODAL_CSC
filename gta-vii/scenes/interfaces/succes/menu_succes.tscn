@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://b0ef6y0v02eac" path="res://scenes/interfaces/menus/titre/surface_menu.gd" id="surface"]
 [ext_resource type="Theme" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
+
 [sub_resource type="ShaderMaterial" id="Skin"]
 shader = ExtResource("skin")
 shader_parameter/taille = Vector2(320, 480)
@@ -31,7 +33,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="BarrePleine"]
-bg_color = Color(0, 0.556863, 0.368627, 1)
+bg_color = Color(0.701961, 0.203922, 0.160784, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -59,10 +61,10 @@ color = Color(0.062745, 0.062745, 0.062745, 0.88)
 
 [node name="Pochette" type="Control" parent="." unique_id=1163537025]
 layout_mode = 1
-anchor_left = 0.13
-anchor_top = 0.12
-anchor_right = 0.87
-anchor_bottom = 0.88
+anchor_left = 0.10
+anchor_top = 0.08
+anchor_right = 0.90
+anchor_bottom = 0.92
 
 [node name="Papier" type="TextureRect" parent="Pochette" unique_id=975040178]
 material = SubResource("Skin")
@@ -91,18 +93,18 @@ theme_override_constants/margin_bottom = 34
 
 [node name="Contenu" type="VBoxContainer" parent="Pochette/Marge" unique_id=1485467270]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 14
 
 [node name="Titre" type="Label" parent="Pochette/Marge/Contenu" unique_id=72027853]
 layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "CARNET DES SUCCÈS"
+theme_override_font_sizes/font_size = 44
+text = "SUCCÈS"
 
 [node name="Compteur" type="Label" parent="Pochette/Marge/Contenu" unique_id=2090633500]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "0 / 2 succès obtenus"
+theme_override_font_sizes/font_size = 20
+text = "0 / 8 succès obtenus"
 
 [node name="Progression" type="ProgressBar" parent="Pochette/Marge/Contenu" unique_id=1085870676]
 unique_name_in_owner = true
@@ -110,14 +112,15 @@ custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_styles/background = SubResource("BarreVide")
 theme_override_styles/fill = SubResource("BarrePleine")
-max_value = 2.0
+max_value = 8.0
 show_percentage = false
 
 [node name="Note" type="Label" parent="Pochette/Marge/Contenu" unique_id=1549693411]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("lecture")
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
-text = "Vos succès sont conservés entre les parties."
+text = "Vos faits d’armes, conservés entre les parties."
 autowrap_mode = 3
 
 [node name="Defilement" type="ScrollContainer" parent="Pochette/Marge/Contenu" unique_id=2110286314]
@@ -141,6 +144,8 @@ size_flags_horizontal = 3
 
 [node name="Fermer" parent="Pochette/Marge/Contenu/Bas" unique_id=1307854574 instance=ExtResource("button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 64)
+custom_minimum_size = Vector2(220, 56)
 layout_mode = 2
 text = "Retour"
+taille_minimale = Vector2(220, 56)
+taille_police = 24

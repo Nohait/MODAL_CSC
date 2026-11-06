@@ -14,18 +14,17 @@
 
 [ext_resource type="Texture2D" path="res://assets/textures/interfaces/titre/medaille_succes.svg" id="medal"]
 
+[ext_resource type="FontVariation" path="res://assets/fonts/rubik/lecture.tres" id="lecture"]
+
 [sub_resource type="ShaderMaterial" id="Skin"]
 shader = ExtResource("skin")
-shader_parameter/largeur_bord = 7.0
-shader_parameter/rayon_coin = 6.0
-shader_parameter/intensite_braises = 0.4
 shader_parameter/rarete_coloree = true
 
 [sub_resource type="StyleBoxEmpty" id="Vide"]
 
 
 [node name="LigneSucces" type="PanelContainer"]
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 112)
 theme = ExtResource("theme")
 theme_override_styles/panel = SubResource("Vide")
 script = ExtResource("script")
@@ -45,19 +44,19 @@ script = ExtResource("surface")
 
 [node name="Marge" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_top = 22
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 22
-theme_override_constants/margin_bottom = 22
+theme_override_constants/margin_bottom = 16
 
 
 [node name="Ligne" type="HBoxContainer" parent="Marge"]
 layout_mode = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 18
 
 [node name="Medaille" type="TextureRect" parent="Marge/Ligne"]
 layout_mode = 2
-custom_minimum_size = Vector2(76, 76)
+custom_minimum_size = Vector2(64, 64)
 size_flags_vertical = 4
 texture = ExtResource("medal")
 expand_mode = 1
@@ -73,14 +72,16 @@ theme_override_constants/separation = 7
 [node name="Titre" type="Label" parent="Marge/Ligne/Textes"]
 layout_mode = 2
 text = "Succès"
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 26
+autowrap_mode = 3
 theme_override_colors/font_color = Color(0.960784, 0.960784, 0.941176, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
 
 [node name="Description" type="Label" parent="Marge/Ligne/Textes"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("lecture")
 text = "Description"
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 19
 autowrap_mode = 3
 theme_override_colors/font_color = Color(0.741176, 0.741176, 0.741176, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
@@ -89,7 +90,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
 layout_mode = 2
 text = "RARE"
 theme_override_font_sizes/font_size = 18
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(120, 0)
 size_flags_vertical = 4
 horizontal_alignment = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)

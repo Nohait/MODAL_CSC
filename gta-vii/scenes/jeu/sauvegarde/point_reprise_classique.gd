@@ -120,4 +120,4 @@ func _restaurer_population(gestion: Node, population: Dictionary) -> void:
 		victime.died.connect(gestion._on_victim_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
 	salle.mobiles_a_creer.assign(population.mobiles)
-	salle.remaining_enemies = salle.get_node("Ennemis").get_child_count() + salle.mobiles_a_creer.size()
+	salle.remaining_enemies = gestion.compter_ennemis_presents(salle) + salle.mobiles_a_creer.size()

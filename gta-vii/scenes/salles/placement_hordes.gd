@@ -10,46 +10,50 @@ extends Resource
 @export_range(0.5, 2.0, 0.05) var rayon_collision := 0.95
 @export_range(1.0, 4.0, 0.1) var hauteur_collision := 2.6
 @export_range(0.1, 1.0, 0.05) var tolerance_navigation := 0.35
-@export_range(8, 64, 1) var essais_par_centre := 32
+## Neuf candidats par case de 5 m : centre, côtés et diagonales.
+## La collision décide lesquels peuvent être occupés simultanément.
+@export_range(0.8, 1.6, 0.1) var ecartement_points := 1.4
 
 func est_active(population: int) -> bool:
 	return actif and population >= seuil_population
 
-func placer(origines: Array[Vector3], reserves: Array[Vector3], salle: Node3D, carte: RID, joueur: Vector3, distance_joueur: float) -> Array[Vector3]:
-	if origines.size() < 2 or not carte.is_valid() or NavigationServer3D.map_get_iteration_id(carte) == 0:
-		return origines
+func points_mobiles(centres: Array[Vector3]) -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	for centre in centres:
+		points.append(centre)
+		for z in [-1, 0, 1]:
+			for x in [-1, 0, 1]:
+				if x != 0 or z != 0:
+					points.append(centre + Vector3(x, 0, z) * ecartement_points)
+	return points
+
+func placer(origines: Array[Vector3], reserves: Array[Vector3], salle: Node3D, carte: RID, joueur: Vector3, distance_joueur: float, nombre := -1, regrouper := true) -> Array[Vector3]:
+	if nombre < 0: nombre = origines.size()
+	if nombre == 0 or not carte.is_valid() or NavigationServer3D.map_get_iteration_id(carte) == 0:
+		return []
 	var espace := salle.get_world_3d().direct_space_state
-	var volume := CylinderShape3D.new()
-	volume.radius = rayon_collision
-	volume.height = maxf(hauteur_collision, rayon_collision * 2.0)
-	var requete := PhysicsShapeQueryParameters3D.new()
-	requete.shape = volume
-	requete.collision_mask = 15 # Décor, joueur, ennemis et victimes.
-	for origine in origines:
+	var requete := _requete_volume()
+	var meilleur: Array[Vector3] = []
+	var candidats := points_mobiles(origines)
+	var contacts: Dictionary = {}
+	var centres: Array[Vector3] = []
+	if regrouper and nombre > 1:
+		centres.assign(candidats)
+	for origine in centres:
 		var centre := salle.to_global(origine)
-		var groupe: Array[Vector3] = []
-		for i in range(essais_par_centre + 1):
-			# Une spirale déterministe teste d'abord le centre, puis sa proximité.
-			var distance := rayon * sqrt(float(i) / essais_par_centre)
-			var angle := i * PI * (3.0 - sqrt(5.0))
-			var candidat := centre + Vector3(cos(angle), 0.0, sin(angle)) * distance
-			if not _assez_loin(candidat, joueur, distance_joueur): continue
-			var libre := true
-			for point in groupe:
-				if not _assez_loin(candidat, salle.to_global(point), maxf(espacement, rayon_collision * 2.0)):
-					libre = false
-					break
-			if not libre: continue
-			for point in reserves:
-				if not _assez_loin(candidat, salle.to_global(point), maxf(espacement, rayon_collision * 2.0)):
-					libre = false
-					break
-			if not libre: continue
-			var sol := espace.intersect_ray(PhysicsRayQueryParameters3D.create(candidat + Vector3.UP * 3.0, candidat - Vector3.UP * 2.0, 1))
-			if sol.is_empty() or sol.normal.y < 0.9: continue
+		if not _espacement_libre(salle, centre, reserves): continue
+		if not contacts.has(origine): contacts[origine] = _contact_libre(salle, carte, centre, joueur, distance_joueur, requete)
+		if contacts[origine].is_empty(): continue
+		var groupe: Array[Vector3] = [origine]
+		for point in candidats:
+			var candidat := salle.to_global(point)
+			if candidat.distance_squared_to(centre) > rayon * rayon: continue
+			if not _espacement_libre(salle, candidat, groupe) or not _espacement_libre(salle, candidat, reserves): continue
+			# Une même position n'interroge la physique qu'une fois pour toute la vague.
+			if not contacts.has(point): contacts[point] = _contact_libre(salle, carte, candidat, joueur, distance_joueur, requete)
+			var sol: Dictionary = contacts[point]
+			if sol.is_empty(): continue
 			var surface: Vector3 = sol.position
-			var navigable := NavigationServer3D.map_get_closest_point(carte, surface)
-			if navigable.distance_to(surface) > tolerance_navigation: continue
 			# Ne pas constituer une horde à cheval sur un mur ou autour d'un grand trou.
 			if not groupe.is_empty():
 				var premier := salle.to_global(groupe[0])
@@ -61,14 +65,54 @@ func placer(origines: Array[Vector3], reserves: Array[Vector3], salle: Node3D, c
 				var longueur := 0.0
 				for j in range(1, trajet.size()): longueur += trajet[j - 1].distance_to(trajet[j])
 				if longueur > premier.distance_to(surface) + tolerance_navigation * 2.0: continue
-			requete.transform = Transform3D(Basis.IDENTITY, surface + Vector3.UP * (volume.height * 0.5 + 0.05))
-			if not espace.intersect_shape(requete, 1).is_empty(): continue
-			# Conserver la hauteur de référence des points initiaux et le décalage propre au modèle.
-			candidat.y = centre.y
-			groupe.append(salle.to_local(candidat))
-			if groupe.size() == origines.size(): return groupe
-	# Ne jamais perdre un ennemi ni forcer une apparition dans un obstacle.
-	return origines
+			groupe.append(point)
+			if groupe.size() == nombre: return groupe
+		if groupe.size() > meilleur.size(): meilleur = groupe
+	# Si une horde complète ne tient pas, compléter avec les autres points sûrs.
+	# Un résultat partiel laisse le reste de la vague en attente.
+	for origine in candidats:
+		var candidat := salle.to_global(origine)
+		if not _espacement_libre(salle, candidat, meilleur) or not _espacement_libre(salle, candidat, reserves): continue
+		if not contacts.has(origine): contacts[origine] = _contact_libre(salle, carte, candidat, joueur, distance_joueur, requete)
+		if contacts[origine].is_empty(): continue
+		meilleur.append(origine)
+		if meilleur.size() == nombre: break
+	return meilleur
+
+func emplacement_libre(salle: Node3D, carte: RID, emplacement: Vector3, joueur: Vector3, distance_joueur: float) -> bool:
+	if not carte.is_valid() or NavigationServer3D.map_get_iteration_id(carte) == 0: return false
+	return not _contact_libre(salle, carte, salle.to_global(emplacement), joueur, distance_joueur, _requete_volume()).is_empty()
+
+func _requete_volume() -> PhysicsShapeQueryParameters3D:
+	var volume := CylinderShape3D.new()
+	volume.radius = rayon_collision
+	volume.height = maxf(hauteur_collision, rayon_collision * 2.0)
+	var requete := PhysicsShapeQueryParameters3D.new()
+	requete.shape = volume
+	requete.collision_mask = 15 # Décor, joueur, ennemis et victimes.
+	return requete
+
+func _contact_libre(salle: Node3D, carte: RID, candidat: Vector3, joueur: Vector3, distance_joueur: float, requete: PhysicsShapeQueryParameters3D) -> Dictionary:
+	if not _assez_loin(candidat, joueur, distance_joueur): return {}
+	var espace := salle.get_world_3d().direct_space_state
+	var sol := espace.intersect_ray(PhysicsRayQueryParameters3D.create(candidat + Vector3.UP * 3.0, candidat - Vector3.UP * 2.0, 1))
+	if sol.is_empty() or sol.normal.y < 0.9: return {}
+	var surface: Vector3 = sol.position
+	var ecart := NavigationServer3D.map_get_closest_point(carte, surface) - surface
+	# La cuisson relève le maillage par pas de hauteur : ce décalage n'est pas un trou.
+	var marge_verticale := maxf(tolerance_navigation, NavigationServer3D.map_get_cell_height(carte) * 2.0)
+	if absf(ecart.y) > marge_verticale: return {}
+	ecart.y = 0.0
+	if ecart.length() > tolerance_navigation: return {}
+	var volume := requete.shape as CylinderShape3D
+	requete.transform = Transform3D(Basis.IDENTITY, surface + Vector3.UP * (volume.height * 0.5 + 0.05))
+	if not espace.intersect_shape(requete, 1).is_empty(): return {}
+	return sol
+
+func _espacement_libre(salle: Node3D, candidat: Vector3, reserves: Array[Vector3]) -> bool:
+	for point in reserves:
+		if not _assez_loin(candidat, salle.to_global(point), maxf(espacement, rayon_collision * 2.0)): return false
+	return true
 
 func _assez_loin(a: Vector3, b: Vector3, minimum: float) -> bool:
 	var ecart := Vector2(a.x - b.x, a.z - b.z)

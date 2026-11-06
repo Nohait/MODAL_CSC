@@ -36,6 +36,7 @@ func _process(delta: float) -> void:
 
 func _admissible(ennemi: Node) -> bool:
 	return is_instance_valid(ennemi) and ennemi is Node3D \
+		and not ennemi.is_in_group("flaque") \
 		and ennemi.is_inside_tree() and not ennemi.is_queued_for_deletion() \
 		and ennemi.get_viewport() == get_viewport() \
 		and ennemi.is_visible_in_tree() and ennemi.can_process() \

@@ -2,37 +2,13 @@ extends Control
 
 const LIGNE = preload("res://scenes/interfaces/succes/ligne_succes.tscn")
 var animation: Tween
-var horloge := 0.0
 var confirmation_debug: ConfirmationDialog
 
 func _ready() -> void:
 	add_to_group("debug_modal")
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(self)
 	%Fermer.pressed.connect(fermer)
-	for bouton in [%Fermer]:
-		var mat := ShaderMaterial.new()
-		mat.shader = preload("res://scenes/interfaces/menus/onglet_carnet.gdshader")
-		mat.set_shader_parameter("selection", 0.0)
-		mat.set_shader_parameter("contour_repos", Color("f5f5f0"))
-		mat.set_shader_parameter("plastique", preload("res://assets/textures/interfaces/matieres/plastic_001/plastic_001_color.jpg"))
-		mat.set_shader_parameter("largeur_bord", 4.0)
-		mat.set_shader_parameter("rayon_coin", 6.0)
-		mat.set_shader_parameter("intensite_braises", 0.3)
-		bouton.fond.texture = preload("res://assets/textures/interfaces/ameliorations/texture_carte_300x450_r16.png")
-		bouton.fond.material = mat
 	hide()
-
-func _process(delta: float) -> void:
-	if not visible:
-		return
-	horloge += delta
-	for bouton in [%Fermer]:
-		var mat: ShaderMaterial = bouton.fond.material
-		var cible := 0.65 if bouton.is_hovered() or bouton.has_focus() else 0.0
-		var actuel: float = mat.get_shader_parameter("selection")
-		mat.set_shader_parameter("selection", lerpf(actuel, cible, 1.0 - exp(-12.0 * delta)))
-		mat.set_shader_parameter("horloge", horloge)
-		mat.set_shader_parameter("taille", bouton.size)
 
 func actualiser_liste() -> void:
 	for enfant in %Liste.get_children():

@@ -12,14 +12,14 @@ extends Area3D
 var etage := 1
 
 
-# Les flaques initiales annoncent leur destruction au RoomManager.
+# Les flaques annoncent leur extinction, sans compter pour la fin de salle.
 signal died
 signal degats_subis(quantite: float)
 var est_mort := false
 
 @export_group("Statistiques de base")
 @export var degats_flaque := 5.0
-@export var vie_max := 30.0
+@export var vie_max := 10.0
 var vie = vie_max
 @export var attaque_cooldown = 1.0
 var attaque_timer = 0.0 #temps initialisé à 0

@@ -95,7 +95,13 @@ var nombre_salles: int:
 # Seuils lus une fois dans les scènes d'ennemis, sans les ajouter au niveau.
 var seuils_apparition: Dictionary = {}
 var poids_apparition_classiques: Dictionary = {}
-var mobiles_classiques_planifies: Dictionary = {}
+var mobiles_classiques_planifies: Array[PackedScene] = []
+var types_mobiles_annonces: Dictionary = {}
+var vagues_classiques_actives := false
+var mobiles_a_annoncer := 0
+var attente_emplacements := 0.0
+var temps_apparitions := 0.0
+var placement_mobiles: Resource
 
 @export_group("Diversité des mobiles — classique")
 ## Seuils, poids et hauteur se règlent dans la section Apparition de chaque scène.
@@ -121,6 +127,8 @@ var mobiles_classiques_planifies: Dictionary = {}
 
 # Distance horizontale minimale avec le joueur pour une vague normale.
 @export_range(1.5, 10.0, 0.5) var distance_securite_spawn := 3.0
+## Une vague bloquée réessaie sans attendre la mort de la vague précédente.
+@export_range(0.1, 2.0, 0.1) var delai_reessai_spawn := 0.5
 
 @export_group("Hordes — classique")
 @export var hordes: Resource = preload("res://scenes/salles/hordes_classiques.tres")
@@ -307,7 +315,13 @@ func types_mobiles_autorises(salle: Node3D) -> Array[PackedScene]:
 	return types
 
 func planifier_types_mobiles(salle: Node3D, graine: int) -> void:
+	vagues_classiques_actives = true
+	mobiles_a_annoncer = 0
+	attente_emplacements = 0.0
+	temps_apparitions = 0.0
+	placement_mobiles = hordes if hordes != null else preload("res://scenes/salles/placement_hordes.gd").new()
 	mobiles_classiques_planifies.clear()
+	types_mobiles_annonces.clear()
 	var types := types_mobiles_autorises(salle)
 	if types.is_empty(): return
 	var total := 0.0
@@ -323,7 +337,8 @@ func planifier_types_mobiles(salle: Node3D, graine: int) -> void:
 			if tirage < 0.0:
 				selection = scene
 				break
-		mobiles_classiques_planifies[emplacement] = selection
+		# Deux ennemis peuvent préférer le même point, mais gardent chacun leur type.
+		mobiles_classiques_planifies.append(selection)
 
 func supplement_mobiles(salle: Node3D) -> int:
 	# Les salles ajoutent une pression progressive ; l'étage ajoute un saut net.
@@ -393,18 +408,23 @@ func peupler_salle(salle: Node3D) -> void:
 
 	# Mobiles à venir
 	var bonus_mobiles := supplement_mobiles(salle)
-	var nombre := mini(
-		randi_range(nombre_min_ennemis_mobiles + bonus_mobiles, maxi(nombre_min_ennemis_mobiles, nombre_max_ennemis_mobiles) + bonus_mobiles),
-		emplacements.size()
-	)
+	var nombre := randi_range(nombre_min_ennemis_mobiles + bonus_mobiles, maxi(nombre_min_ennemis_mobiles, nombre_max_ennemis_mobiles) + bonus_mobiles)
 	if types_mobiles_autorises(salle).is_empty():
 		nombre = 0
-	for i in range(nombre):
-		salle.mobiles_a_creer.append(emplacements.pop_back())
+	nombre = _planifier_mobiles(salle, emplacements, nombre)
 
 	# Ils comptent immédiatement comme ennemis de la salle.
 	# La porte ne peut donc pas s'ouvrir entre deux vagues.
 	salle.remaining_enemies += nombre
+
+func _planifier_mobiles(salle: Node3D, emplacements: Array[Vector3], nombre: int) -> int:
+	# Ce sont des préférences, pas des réservations pour toute la salle.
+	# Les mêmes points peuvent servir plusieurs fois, après contrôle lors de chaque vague.
+	var candidats: Array[Vector3] = emplacements if not emplacements.is_empty() else salle.points_spawn
+	if candidats.is_empty(): return 0
+	for i in range(nombre):
+		salle.mobiles_a_creer.append(candidats[candidats.size() - 1 - i % candidats.size()])
+	return nombre
 
 # Ancien système de types
 
@@ -428,10 +448,11 @@ func _process(delta: float) -> void:
 	if (transition_en_cours or not is_instance_valid(salle_actuelle)):
 		return
 
-	if not salle_actuelle.sauvetage_en_cours:
-		return
-	actualiser_sauvetage(delta)
-	if not salle_actuelle.sauvetage_en_cours:
+	if vagues_classiques_actives:
+		temps_apparitions += delta
+	if salle_actuelle.sauvetage_en_cours:
+		actualiser_sauvetage(delta)
+	elif not vagues_classiques_actives:
 		return
 	var restant: float = salle_actuelle.temps_sauvetage_restant
 	# Les annonces commencent avant leur échéance, mais le calendrier décide du spawn.
@@ -450,9 +471,14 @@ func _process(delta: float) -> void:
 			lancer_vague_chutes(salle_actuelle, chute.nombre, chute.delai)
 	
 	for apparition in salle_actuelle.apparitions_planifiees.duplicate():
-		if restant <= apparition.restant:
+		var arrivee: bool = temps_apparitions >= apparition.temps if vagues_classiques_actives else restant <= apparition.restant
+		if arrivee:
 			salle_actuelle.apparitions_planifiees.erase(apparition)
 			_terminer_apparition(salle_actuelle, apparition.position)
+	if vagues_classiques_actives and mobiles_a_annoncer > 0:
+		attente_emplacements -= delta
+		if attente_emplacements <= 0.0:
+			creer_vague(0, restant)
 
 func lancer_vague_chutes(salle: Node3D, nombre: int, delai: float) -> void:
 	var points: Array[Vector3] = salle.points_spawn.duplicate()
@@ -577,7 +603,7 @@ func terminer_sauvetage(salle: Node3D) -> void:
 				continue
 			victime.actualiser_degats_sauvetage(1.0)
 
-	# À zéro seconde, aucun mobile planifié ne doit rester en attente.
+	# À zéro seconde, toutes les vagues restantes deviennent éligibles.
 	forcer_spawn_mobiles_restants(salle)
 	if salle == salle_actuelle:
 		actualiser_objectifs()
@@ -585,36 +611,45 @@ func terminer_sauvetage(salle: Node3D) -> void:
 # Vagues
 
 func creer_vague(nombre_prevu: int, restant: float) -> void:
-	for emplacement in _prelever_vague(salle_actuelle, nombre_prevu):
+	if vagues_classiques_actives:
+		mobiles_a_annoncer += nombre_prevu
+		nombre_prevu = mini(mobiles_a_annoncer, maximum_vague(salle_actuelle))
+		attente_emplacements = delai_reessai_spawn
+	var positions := _prelever_vague(salle_actuelle, nombre_prevu)
+	if vagues_classiques_actives: mobiles_a_annoncer -= positions.size()
+	for emplacement in positions:
 		salle_actuelle.mobiles_annonces.append(emplacement)
 		salle_actuelle.apparitions_en_cours += 1
 		var annonce = ANNONCE_SCENE.instantiate()
 		annonce.position = emplacement + Vector3.UP * 0.13
 		annonce.duree = duree_annonce
 		salle_actuelle.annonces_en_cours.append(annonce)
-		salle_actuelle.apparitions_planifiees.append({"position": emplacement, "restant": restant})
+		salle_actuelle.apparitions_planifiees.append({"position": emplacement, "restant": restant, "temps": temps_apparitions + duree_annonce})
 		annonce.terminee.connect(salle_actuelle.annonces_en_cours.erase.bind(annonce), CONNECT_ONE_SHOT)
 		salle_actuelle.add_child(annonce)
 	actualiser_objectifs()
 
 func _prelever_vague(salle: Node3D, nombre_prevu: int) -> Array[Vector3]:
+	if vagues_classiques_actives:
+		if not is_instance_valid(joueur): return []
+		var candidats: Array[Vector3] = []
+		for point in salle.mobiles_a_creer + salle.points_spawn:
+			# Une annonce reportée contient un sous-point : ne pas le prendre pour une nouvelle case.
+			if salle.points_spawn.has(point) and not candidats.has(point): candidats.append(point)
+		var nombre := mini(nombre_prevu, salle.mobiles_a_creer.size())
+		var positions: Array[Vector3] = placement_mobiles.placer(candidats, salle.mobiles_annonces, salle, salle.carte_ennemis, joueur.global_position, distance_securite_spawn, nombre, hordes_salle_actives)
+		for position in positions:
+			salle.mobiles_a_creer.pop_front()
+			types_mobiles_annonces[position] = mobiles_classiques_planifies.pop_front()
+		return positions
+	# Le zombie conserve ses positions et ses types planifiés par son propre gestionnaire.
 	var origines: Array[Vector3] = []
 	for i in range(mini(nombre_prevu, salle.mobiles_a_creer.size())):
 		var indice := trouver_emplacement_eloigne(salle)
 		if indice == -1: indice = 0
 		origines.append(salle.mobiles_a_creer[indice])
 		salle.mobiles_a_creer.remove_at(indice)
-	if not hordes_salle_actives or not is_instance_valid(joueur): return origines
-	var reserves: Array[Vector3] = salle.mobiles_a_creer.duplicate()
-	reserves.append_array(salle.mobiles_annonces)
-	var positions: Array[Vector3] = hordes.placer(origines, reserves, salle, salle.carte_ennemis, joueur.global_position, distance_securite_spawn)
-	var types: Array[PackedScene] = []
-	for origine in origines:
-		types.append(mobiles_classiques_planifies.get(origine))
-		mobiles_classiques_planifies.erase(origine)
-	for i in range(positions.size()):
-		mobiles_classiques_planifies[positions[i]] = types[i]
-	return positions
+	return origines
 
 func emplacement_suffisamment_eloigne(salle: Node3D, emplacement: Vector3) -> bool:
 	if not is_instance_valid(joueur):
@@ -635,6 +670,13 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 		return
 	salle.mobiles_annonces.erase(emplacement)
 	salle.apparitions_en_cours = maxi(salle.apparitions_en_cours - 1, 0)
+	if vagues_classiques_actives and (salle != salle_actuelle or transition_en_cours or not is_instance_valid(joueur) or not placement_mobiles.emplacement_libre(salle, salle.carte_ennemis, emplacement, joueur.global_position, distance_securite_spawn)):
+		# Quelqu'un peut entrer dans l'annonce : reporter ce mobile, sans le perdre ni le dupliquer.
+		salle.mobiles_a_creer.append(emplacement)
+		mobiles_classiques_planifies.append(types_mobiles_annonces.get(emplacement))
+		types_mobiles_annonces.erase(emplacement)
+		mobiles_a_annoncer += 1
+		return
 	if (salle != salle_actuelle or transition_en_cours):
 		salle.mobiles_a_creer.append(emplacement)
 	else:
@@ -643,16 +685,15 @@ func _terminer_apparition(salle: Node3D, emplacement: Vector3) -> void:
 		actualiser_objectifs()
 
 func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
+	if vagues_classiques_actives:
+		# Le délai de sauvetage ne doit pas forcer des ennemis dans un point occupé.
+		salle.vagues_planifiees.clear()
+		mobiles_a_annoncer = salle.mobiles_a_creer.size()
+		attente_emplacements = 0.0
+		return
 
 	# Positions encore jamais annoncées.
 	var positions: Array[Vector3] = salle.mobiles_a_creer.duplicate()
-	if hordes_salle_actives:
-		positions.clear()
-		while not salle.mobiles_a_creer.is_empty():
-			var groupe := _prelever_vague(salle, maximum_vague(salle))
-			positions.append_array(groupe)
-			# Réserver aussi ces positions jusqu'à la création de tous les groupes.
-			salle.mobiles_annonces.append_array(groupe)
 
 	# Positions dont l'annonce était encore en cours.
 	for emplacement in salle.mobiles_annonces:
@@ -672,8 +713,8 @@ func forcer_spawn_mobiles_restants(salle: Node3D) -> void:
 		creer_mobile(salle, emplacement)
 
 func creer_mobile(salle: Node3D, emplacement: Vector3) -> void:
-	var scene: PackedScene = mobiles_classiques_planifies.get(emplacement)
-	mobiles_classiques_planifies.erase(emplacement)
+	var scene: PackedScene = types_mobiles_annonces.get(emplacement)
+	types_mobiles_annonces.erase(emplacement)
 	if scene == null:
 		# Un catalogue désactivé ne doit pas laisser un ennemi fantôme bloquer la sortie.
 		salle.remaining_enemies = maxi(0, salle.remaining_enemies - 1)
@@ -855,6 +896,17 @@ func _on_enemy_died(salle: Node3D) -> void:
 	if salle == salle_actuelle:
 		actualiser_objectifs()
 
+func compter_ennemis_presents(salle: Node3D) -> int:
+	var nombre := 0
+	var rappel := _on_enemy_died.bind(salle)
+	for ennemi in salle.get_node("Ennemis").get_children():
+		if ennemi.is_in_group("flaque"): continue
+		if ennemi.is_queued_for_deletion() or ennemi.get("est_mort") == true: continue
+		# Le conteneur contient aussi des flaques qui ne conditionnent pas la sortie.
+		if ennemi.has_signal("died") and ennemi.is_connected("died", rappel):
+			nombre += 1
+	return nombre
+
 # Objectifs
 
 func actualiser_objectifs() -> void:
@@ -954,8 +1006,6 @@ func passer_salle_suivante() -> void:
 func ajouter_population_defi(salle: Node3D, mobiles: int, victimes: int) -> Vector2i:
 	var libres: Array[Vector3] = []
 	for point in salle.points_spawn:
-		if salle.mobiles_a_creer.has(point):
-			continue
 		var occupe := false
 		for conteneur in [salle.get_node("Ennemis"), salle.get_node("Victimes")]:
 			for entite in conteneur.get_children():
@@ -982,10 +1032,8 @@ func ajouter_population_defi(salle: Node3D, mobiles: int, victimes: int) -> Vect
 		victime.died.connect(_on_victim_died.bind(salle), CONNECT_ONE_SHOT)
 		salle.remaining_victims += 1
 		ajoutes.y += 1
-	for i in range(mini(mobiles, libres.size())):
-		salle.mobiles_a_creer.append(libres.pop_back())
-		salle.remaining_enemies += 1
-		ajoutes.x += 1
+	ajoutes.x = _planifier_mobiles(salle, libres, mobiles)
+	salle.remaining_enemies += ajoutes.x
 	return ajoutes
 
 func liberer_salle_debug() -> void:
@@ -993,8 +1041,8 @@ func liberer_salle_debug() -> void:
 		return
 	var salle := salle_actuelle
 	# Annuler les vagues sans créer des ennemis juste pour les supprimer ensuite.
-	var en_attente: int = salle.mobiles_a_creer.size() + salle.mobiles_annonces.size()
-	salle.remaining_enemies = maxi(salle.remaining_enemies - en_attente, 0)
+	# Recompter les participants réels répare aussi un ancien compteur incohérent.
+	salle.remaining_enemies = compter_ennemis_presents(salle)
 	for annonce in salle.annonces_en_cours:
 		if is_instance_valid(annonce):
 			annonce.queue_free()
@@ -1003,7 +1051,11 @@ func liberer_salle_debug() -> void:
 	salle.mobiles_annonces.clear()
 	salle.vagues_planifiees.clear()
 	salle.apparitions_planifiees.clear()
+	chutes_planifiees.clear()
 	salle.apparitions_en_cours = 0
+	mobiles_a_annoncer = 0
+	mobiles_classiques_planifies.clear()
+	types_mobiles_annonces.clear()
 	# Arrêter le sauvetage sans appliquer ses dégâts de fin aux victimes.
 	salle.sauvetage_en_cours = false
 	salle.sauvetage_termine = true
@@ -1013,6 +1065,7 @@ func liberer_salle_debug() -> void:
 	for ennemi in salle.get_node("Ennemis").get_children():
 		if not ennemi.is_queued_for_deletion() and ennemi.has_method("mourir"):
 			ennemi.mourir()
+	salle.remaining_enemies = compter_ennemis_presents(salle)
 	for conteneur in ["ProjectilesTour", "FlaquesDeFeu"]:
 		for danger in salle.get_node(conteneur).get_children():
 			danger.queue_free()
@@ -1044,7 +1097,7 @@ func creer_ennemi_debug(identifiant: String, mutation := "normal") -> bool:
 	requete.collision_mask = 15
 	for emplacement in positions:
 		# Ne pas occuper la place d'une apparition déjà prévue par une vague.
-		if salle_actuelle.mobiles_a_creer.has(emplacement) or salle_actuelle.mobiles_annonces.has(emplacement): continue
+		if salle_actuelle.mobiles_annonces.has(emplacement): continue
 		if not emplacement_suffisamment_eloigne(salle_actuelle, emplacement): continue
 		ennemi.position = emplacement + Vector3.UP * (hauteur + decalage_mutation)
 		ennemi.scale = echelle_initiale * taille_mutation
@@ -1059,7 +1112,9 @@ func creer_ennemi_debug(identifiant: String, mutation := "normal") -> bool:
 				dans_flaque = true
 				break
 		if dans_flaque: continue
-		salle_actuelle.remaining_enemies += 1
+		var compte_comme_ennemi: bool = not ennemi.is_in_group("flaque")
+		if compte_comme_ennemi:
+			salle_actuelle.remaining_enemies += 1
 		if identifiant == "sbire":
 			# Cette fonction est spécialisée dans le mode zombie pour l'aggro du camion.
 			ennemi.free()
@@ -1070,7 +1125,8 @@ func creer_ennemi_debug(identifiant: String, mutation := "normal") -> bool:
 			ennemi.position = emplacement + Vector3.UP * hauteur
 			ennemi.etage = salle_actuelle.etage
 			if identifiant == "tourelle": ennemi.projectiles_tour = salle_actuelle.get_node("ProjectilesTour")
-			ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
+			if compte_comme_ennemi:
+				ennemi.died.connect(_on_enemy_died.bind(salle_actuelle), CONNECT_ONE_SHOT)
 			salle_actuelle.get_node("Ennemis").add_child(ennemi)
 			jouer_son_apparition(ennemi)
 			relier_invocation(ennemi, salle_actuelle)
