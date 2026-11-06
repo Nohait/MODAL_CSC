@@ -5,15 +5,15 @@ extends Node3D
 # Le générateur construit le décor ; le RoomManager décide du contenu et du parcours.
 @export var generate := false
 @export var apercu_auto := false
-@export var roomSizeMax := Vector2i(10, 10)
-@export var roomSizeMin := Vector2i(10, 10)
+@export var roomSizeMax := Vector2i(10, 9)
+@export var roomSizeMin := Vector2i(7, 7)
 var roomSize := Vector2i(1, 1)
 
 # Matériau appliqué aux cases de sol.
-@export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_appartements.tres")
+@export var materiau_sol: StandardMaterial3D = preload("res://assets/materiaux/sol_etage_1.tres")
 
 # Matériau des murs et des morceaux de mur autour des portes.
-@export var materiau_murs: StandardMaterial3D = preload("res://assets/materiaux/mur_appartements.tres")
+@export var materiau_murs: StandardMaterial3D = preload("res://assets/materiaux/mur_etage_1.tres")
 
 @export_group("Habillage procédural")
 @export var habillage: HabillageSalle = preload("res://scenes/salles/habillage_classique.tres")
@@ -524,11 +524,10 @@ func creer_entree(cellule: Vector2i, direction: Vector2i) -> void:
 	fond.material_override = noir
 	fond.position = Vector3(0, 0.28 if entree_avec_escalier else 1.6, 7.5 if entree_avec_escalier else 6.0)
 	entree.add_child(fond)
-	# Une butée invisible empêche de sortir du niveau derrière le rideau noir.
-	var fin := 7.5 if entree_avec_escalier else 6.0
-	var hauteur := -1.32 if entree_avec_escalier else 0.0
+	# Bloquer le retour au bout du sol plat, avant la première marche descendante.
 	var taille_fond := Vector3(2.5, 3.0, 0.2) if direction.x == 0 else Vector3(0.2, 3.0, 2.5)
-	creer_bloc(centre + normale * fin + Vector3.UP * (hauteur + 1.6), taille_fond, Color.BLACK, null, true)
+	creer_bloc(centre + normale * longueur + Vector3.UP * 1.6, taille_fond, Color.BLACK, null, true)
+	salle_en_creation.get_node("Navigation/Decor").get_child(-1).name = "ButeeEntree"
 
 func creer_ombre_entree(entree: Node3D, depart: float, longueur: float, hauteur: float, debut: float, fin: float) -> void:
 	# Trois plans fins : le sol puis les deux murs, avec un fondu continu.

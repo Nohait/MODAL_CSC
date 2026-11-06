@@ -8,6 +8,14 @@ extends CanvasLayer
 @export var vie_max := 100.0
 
 func _ready() -> void:
+	var couche_reperes := CanvasLayer.new()
+	couche_reperes.name = "CoucheReperesVictimes"
+	# Le carnet utilise la couche 30 et ses cartes survolées la couche 31.
+	couche_reperes.layer = 32
+	add_child(couche_reperes)
+	var reperes := preload("res://scenes/interfaces/hud/reperes_victimes.tscn").instantiate()
+	reperes.joueur = get_parent()
+	couche_reperes.add_child(reperes)
 	jauge.max_value = extincteur.max_charge
 	BarreDeVie.max_value = vie_max
 	BarreDeVie.value = vie_max

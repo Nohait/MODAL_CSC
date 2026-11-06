@@ -2,3 +2,4 @@
 [ext_resource type="Script" path="res://scenes/decors/interieurs/finitions_parcours.gd" id="script"]
 [resource]
 script = ExtResource("script")
+etages_sans_soubassement = Array[int]([1])

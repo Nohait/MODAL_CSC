@@ -2,6 +2,8 @@ extends CanvasLayer
 
 signal chargement_echoue
 
+@export_range(30.0, 600.0, 10.0) var delai_sans_progression := 120.0
+@export_range(60.0, 1800.0, 30.0) var duree_max_ressources := 600.0
 
 var en_cours := false
 var fond: ColorRect
@@ -67,59 +69,80 @@ func ouvrir(chemin: String) -> void:
 	# Dessiner le panneau avant de lancer la lecture des modèles et textures.
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var erreur := ResourceLoader.load_threaded_request(chemin, "PackedScene")
-	if erreur != OK:
-		_signaler_echec()
-		return
-	while true:
-		var progression: Array = []
-		var statut := ResourceLoader.load_threaded_get_status(chemin, progression)
-		if not progression.is_empty(): barre.value = float(progression[0]) * 100.0
-		if statut == ResourceLoader.THREAD_LOAD_LOADED: break
-		if statut != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			_signaler_echec()
-			return
-		await get_tree().process_frame
-	var scene := ResourceLoader.load_threaded_get(chemin) as PackedScene
+	var scene: PackedScene = await _charger_scene(chemin)
+	if scene == null: return
 	if chemin == "res://scenes/modes/zombie/mode_zombie.tscn":
 		var carte: Variant = get_tree().get_meta("map_zombie", "res://scenes/modes/zombie/maps/hall.tscn")
 		if carte is String:
 			etape.text = "Chargement de l’arène…"
 			barre.value = 0.0
-			if ResourceLoader.load_threaded_request(carte, "PackedScene") != OK:
-				_signaler_echec()
-				return
-			while ResourceLoader.load_threaded_get_status(carte) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-				var progression_carte: Array = []
-				ResourceLoader.load_threaded_get_status(carte, progression_carte)
-				if not progression_carte.is_empty(): barre.value = progression_carte[0] * 100.0
-				await get_tree().process_frame
-			if ResourceLoader.load_threaded_get_status(carte) != ResourceLoader.THREAD_LOAD_LOADED:
-				_signaler_echec()
-				return
+			var scene_carte: PackedScene = await _charger_scene(carte)
+			if scene_carte == null: return
 			# Une référence forte garde l'arène en cache jusqu'à son instanciation.
-			get_tree().set_meta("map_zombie_chargee", ResourceLoader.load_threaded_get(carte))
+			get_tree().set_meta("map_zombie_chargee", scene_carte)
 	etape.text = "Préparation du niveau et de la navigation…"
 	# La barre mesure les ressources, pas une estimation fictive de la navigation.
 	barre.hide()
 	await get_tree().process_frame
-	erreur = get_tree().change_scene_to_packed(scene)
+	var erreur := get_tree().change_scene_to_packed(scene)
 	if erreur != OK: _signaler_echec()
 	# RoomManager retire le panneau lorsque l'entrée du joueur est prête.
+
+func _charger_scene(chemin: String) -> PackedScene:
+	var debut := Time.get_ticks_msec()
+	print("[Chargement] Début : ", chemin)
+	# Une requête abandonnée peut encore tourner : ne pas en lancer une seconde.
+	var statut := ResourceLoader.load_threaded_get_status(chemin)
+	if statut != ResourceLoader.THREAD_LOAD_IN_PROGRESS and statut != ResourceLoader.THREAD_LOAD_LOADED:
+		var erreur := ResourceLoader.load_threaded_request(chemin, "PackedScene")
+		print("[Chargement] Requête retournée : %s, code %d, %.2f s" % [chemin, erreur, (Time.get_ticks_msec() - debut) / 1000.0])
+		if erreur != OK:
+			_signaler_echec("Requête refusée : %s (erreur %d)." % [chemin, erreur])
+			return null
+	var derniere_avance := debut
+	var prochain_journal := debut + 10000
+	var maximum := -1.0
+	while true:
+		var progression: Array = []
+		statut = ResourceLoader.load_threaded_get_status(chemin, progression)
+		if not progression.is_empty():
+			var valeur := float(progression[0])
+			barre.value = valeur * 100.0
+			if valeur > maximum:
+				maximum = valeur
+				derniere_avance = Time.get_ticks_msec()
+		if statut == ResourceLoader.THREAD_LOAD_LOADED:
+			print("[Chargement] Ressource prête, récupération : ", chemin)
+			var scene := ResourceLoader.load_threaded_get(chemin) as PackedScene
+			print("[Chargement] Récupération terminée : %s, %.2f s" % [chemin, (Time.get_ticks_msec() - debut) / 1000.0])
+			if scene == null:
+				_signaler_echec("La ressource chargée n'est pas une scène : " + chemin)
+			return scene
+		if statut != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			_signaler_echec("Chargement interrompu : %s (statut %d)." % [chemin, statut])
+			return null
+		var maintenant := Time.get_ticks_msec()
+		if maintenant >= prochain_journal:
+			print("[Chargement] %s : %.1f %%, %.1f s écoulées, %.1f s sans progression" % [chemin, maxf(maximum, 0.0) * 100.0, (maintenant - debut) / 1000.0, (maintenant - derniere_avance) / 1000.0])
+			prochain_journal = maintenant + 10000
+		if maintenant - derniere_avance >= delai_sans_progression * 1000.0 or maintenant - debut >= duree_max_ressources * 1000.0:
+			_signaler_echec("Délai dépassé : %s, progression %.1f %%, durée %.1f s, moteur %s." % [chemin, maxf(maximum, 0.0) * 100.0, (maintenant - debut) / 1000.0, Engine.get_version_info().string])
+			return null
+		await get_tree().process_frame
+	return null
 
 func terminer() -> void:
 	fond.hide()
 	en_cours = false
 
-func _signaler_echec() -> void:
-	etape.text = "Impossible de charger le niveau."
+func _signaler_echec(detail: String = "Échec du changement de scène.") -> void:
+	etape.text = "Le chargement n’a pas abouti.\nRevenez à l’écran précédent pour réessayer."
 	barre.hide()
 	echec.show()
+	echec.grab_focus()
 	chargement_echoue.emit()
-	push_error("Échec du chargement du niveau.")
+	push_error("Échec du chargement du niveau. " + detail)
 
 func _input(_evenement: InputEvent) -> void:
 	if en_cours and not echec.visible:
 		get_viewport().set_input_as_handled()
-
-

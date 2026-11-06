@@ -1,7 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/interfaces/hud/informations_salle.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/textures/interfaces/hud/plaque_salle.svg" id="2"]
 [ext_resource type="FontVariation" path="res://assets/fonts/rubik/accent.tres" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="FondTimer"]
@@ -17,7 +16,7 @@ bg_color = Color(0.64, 0.37, 0.16, 1)
 
 [node name="InformationsSalle" type="Control"]
 offset_right = 420.0
-offset_bottom = 123.0
+offset_bottom = 86.0
 mouse_filter = 2
 script = ExtResource("1")
 
@@ -53,22 +52,14 @@ text = "ENNEMIS RESTANTS"
 horizontal_alignment = 1
 
 [node name="TimerContainer" type="Control" parent="."]
-offset_left = 20.0
-offset_top = 47.0
-offset_right = 400.0
-offset_bottom = 123.0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 340.0
+offset_bottom = 86.0
 mouse_filter = 2
-
-[node name="Fond" type="TextureRect" parent="TimerContainer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("2")
-expand_mode = 1
 
 [node name="TimerBar" type="ProgressBar" parent="TimerContainer"]
+visible = false
 layout_mode = 1
 anchor_right = 1.0
 offset_left = 18.0
@@ -86,10 +77,13 @@ show_percentage = false
 [node name="TimerText" type="RichTextLabel" parent="TimerContainer"]
 layout_mode = 1
 anchor_right = 1.0
-offset_top = 6.0
-offset_bottom = 62.0
+offset_top = 0.0
+offset_bottom = 34.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.929, 0.941, 0.914, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/normal_font = ExtResource("3")
 theme_override_font_sizes/normal_font_size = 15
 scroll_active = false

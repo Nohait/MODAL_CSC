@@ -17,6 +17,7 @@ var animation: Tween
 # Valeur progressive entre 0 et 1, commune au reflet et aux bordures lumineuses.
 var accent_survol := 0.0
 var temps := 0.0
+var abordable := true
 
 
 func _ready() -> void:
@@ -66,7 +67,7 @@ func _draw() -> void:
 
 
 func _survol(active: bool) -> void:
-	active = active or has_focus()
+	active = (active or has_focus()) and abordable
 	# Arrêter le Tween conserve la valeur actuelle : même si la souris entre et
 	# ressort vite, le reflet repart de sa position présente, sans se téléporter.
 	if animation:
@@ -80,6 +81,16 @@ func _survol(active: bool) -> void:
 	animation.tween_property(visuel, "rotation", deg_to_rad(-0.6 - niveau_eclat * 0.35) if active else 0.0, 0.24).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	# Relever la pochette sans déplacer sa zone cliquable ni ses voisines.
 	animation.tween_property(visuel, "position:y", -4.0 - niveau_eclat * 2.0 if active else 0.0, 0.24).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+func actualiser_disponibilite(disponible: bool) -> void:
+	var changement := abordable != disponible
+	abordable = disponible
+	# Atténuer surtout l'emballage : nom et prix restent lisibles.
+	papier.modulate = Color.WHITE if disponible else Color(0.45, 0.45, 0.45, 0.75)
+	%Titre.self_modulate = Color.WHITE if disponible else Color("a7aeb3")
+	%Prix.self_modulate = Color.WHITE if disponible else Color("a7aeb3")
+	%Symbole.self_modulate = Color.WHITE if disponible else Color(0.6, 0.6, 0.6)
+	if changement and not Engine.is_editor_hint(): _survol(false)
 
 
 func _cliquer(event: InputEvent) -> void:
