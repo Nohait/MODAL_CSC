@@ -140,25 +140,33 @@ var hordes_salle_actives := false
 
 
 @export_group("Chutes de feu")
+@export_group("Chutes de feu")
 @export var chutes_actives := true
 ## Premier étage / première salle de l'étage où les chutes apparaissent.
 @export_range(1, 10, 1) var etage_min_chutes := 1
 @export_range(1, 5, 1) var salle_min_chutes := 2
-## Nombre de vagues de chutes par salle : de _min (début du jeu) à _max (dernière salle).
+## >1 : la difficulté des chutes monte plus tard dans le parcours.
+@export_range(1.0, 3.0, 0.1) var courbe_difficulte_chutes := 1.5
+## Nombre de vagues de chutes par salle : de _min (début) à _max (fin).
 @export_range(1, 8, 1) var vagues_chutes_min := 1
-@export_range(1, 8, 1) var vagues_chutes_max := 3
-## Taille d'une vague : 3 à 4 au début, 6 à 10 dans la dernière salle.
-@export_range(1, 10, 1) var taille_chutes_min_debut := 3
-@export_range(1, 10, 1) var taille_chutes_max_debut := 4
-@export_range(1, 10, 1) var taille_chutes_min_fin := 6
-@export_range(1, 10, 1) var taille_chutes_max_fin := 10
+@export_range(1, 8, 1) var vagues_chutes_max := 2
+## Taille d'une vague (début -> fin du jeu).
+@export_range(1, 10, 1) var taille_chutes_min_debut := 1
+@export_range(1, 10, 1) var taille_chutes_max_debut := 2
+@export_range(1, 10, 1) var taille_chutes_min_fin := 2
+@export_range(1, 10, 1) var taille_chutes_max_fin := 4
+## Temps d'avertissement avant l'impact (début -> fin du jeu).
+@export_range(0.5, 5.0, 0.1) var delai_chute_debut := 3.0
+@export_range(0.5, 5.0, 0.1) var delai_chute_fin := 1.5
+## Rayon aléatoire de chaque zone.
+@export_range(0.5, 6.0, 0.1) var rayon_chute_min := 1.5
+@export_range(0.5, 6.0, 0.1) var rayon_chute_max := 3.0
 ## Les zones d'une vague tombent à des moments décalés de 0 à cette durée.
 @export_range(0.0, 3.0, 0.1) var etalement_chutes := 1.0
-## Distance minimale à plat entre deux zones d'une même vague.
-@export_range(1.0, 10.0, 0.5) var distance_min_entre_chutes := 4.0
+## Marge libre entre les bords de deux zones d'une même vague.
+@export_range(0.0, 5.0, 0.1) var marge_entre_chutes := 1.0
 ## Probabilité qu'une vague contienne une zone visant le joueur.
-@export_range(0.0, 1.0, 0.05) var part_chute_sur_joueur := 0.3
-
+@export_range(0.0, 1.0, 0.05) var part_chute_sur_joueur := 0.1
 var chutes_planifiees: Array[Dictionary] = []
 
 # Références
@@ -263,14 +271,18 @@ func planifier_chutes(salle: Node3D) -> void:
 	if not chutes_actives: return
 	if salle.etage < etage_min_chutes: return
 	if salle.etage == etage_min_chutes and salle.numero_dans_etage < salle_min_chutes: return
-	var d := difficulte_salle(salle)
+	var d := pow(difficulte_salle(salle), courbe_difficulte_chutes)
 	var nombre_vagues := roundi(lerpf(vagues_chutes_min, vagues_chutes_max, d))
 	var taille_min := roundi(lerpf(taille_chutes_min_debut, taille_chutes_min_fin, d))
 	var taille_max := maxi(taille_min, roundi(lerpf(taille_chutes_max_debut, taille_chutes_max_fin, d)))
+	var delai := lerpf(delai_chute_debut, delai_chute_fin, d)
 	for i in range(nombre_vagues):
-		# Réparties régulièrement, sans tomber au tout début ni à la toute fin du timer.
 		var restant: float = salle.duree_sauvetage * (1.0 - float(i + 1) / (nombre_vagues + 1))
-		chutes_planifiees.append({"nombre": randi_range(taille_min, taille_max), "restant": restant})
+		chutes_planifiees.append({
+			"nombre": randi_range(taille_min, taille_max),
+			"restant": restant,
+			"delai": delai,
+		})
 
 func ennemi_autorise(scene: PackedScene, salle: Node3D) -> bool:
 	if not seuils_apparition.has(scene):
@@ -434,53 +446,58 @@ func _process(delta: float) -> void:
 		var chute: Dictionary = chutes_planifiees.pop_front()
 		# Une salle déjà libérée n'a plus besoin de pression supplémentaire.
 		if not salle_actuelle.liberee:
-			lancer_vague_chutes(salle_actuelle, chute.nombre)	
+			lancer_vague_chutes(salle_actuelle, chute.nombre, chute.delai)
 	
 	for apparition in salle_actuelle.apparitions_planifiees.duplicate():
 		if restant <= apparition.restant:
 			salle_actuelle.apparitions_planifiees.erase(apparition)
 			_terminer_apparition(salle_actuelle, apparition.position)
 
-func lancer_vague_chutes(salle: Node3D, nombre: int) -> void:
+func lancer_vague_chutes(salle: Node3D, nombre: int, delai: float) -> void:
 	var points: Array[Vector3] = salle.points_spawn.duplicate()
 	points.shuffle()
-	var choisis: Array[Vector3] = []  # positions globales
+	var choisis: Array[Dictionary] = []  # {"pos": Vector3 global, "rayon": float}
 
 	# Une zone vise la position actuelle du joueur : il doit bouger pendant l'avertissement.
 	if is_instance_valid(joueur) and randf() < part_chute_sur_joueur:
-		choisis.append(_sol_sous(joueur))
+		choisis.append({"pos": _sol_sous(joueur), "rayon": randf_range(rayon_chute_min, rayon_chute_max)})
 
-	# Première passe : points espacés pour couvrir toute la pièce.
+	# Première passe : zones qui ne se chevauchent pas (rayons + marge).
 	for p in points:
 		if choisis.size() >= nombre: break
 		var g := salle.to_global(p)
+		var r := randf_range(rayon_chute_min, rayon_chute_max)
 		var libre := true
 		for c in choisis:
-			if Vector2(g.x - c.x, g.z - c.z).length() < distance_min_entre_chutes:
+			if Vector2(g.x - c.pos.x, g.z - c.pos.z).length() < c.rayon + r + marge_entre_chutes:
 				libre = false
 				break
-		if libre: choisis.append(g)
+		if libre: choisis.append({"pos": g, "rayon": r})
 
-	# Seconde passe : si la pièce est trop petite pour l'espacement, compléter sans contrainte.
+	# Seconde passe : pièce trop petite, on complète sans contrainte.
 	for p in points:
 		if choisis.size() >= nombre: break
 		var g := salle.to_global(p)
-		if not choisis.has(g): choisis.append(g)
+		var deja := false
+		for c in choisis:
+			if c.pos.is_equal_approx(g): deja = true
+		if not deja:
+			choisis.append({"pos": g, "rayon": randf_range(rayon_chute_min, rayon_chute_max)})
 
-	for position_sol in choisis:
-		_faire_tomber(salle, position_sol, randf() * etalement_chutes)
+	for c in choisis:
+		_faire_tomber(salle, c.pos, c.rayon, delai, randf() * etalement_chutes)
 
-func _faire_tomber(salle: Node3D, position_sol: Vector3, delai: float) -> void:
+func _faire_tomber(salle: Node3D, position_sol: Vector3, rayon: float, delai_avertissement: float, delai: float) -> void:
 	if delai > 0.0:
 		await get_tree().create_timer(delai).timeout
-	# La salle a pu changer ou se terminer pendant l'attente.
 	if not is_instance_valid(salle) or salle != salle_actuelle or transition_en_cours: return
 	var zone := ZONE_FEU.instantiate()
-	# Dans le conteneur de la salle : désactivées avec elle, et nettoyées par liberer_salle_debug.
+	# À régler avant add_child : _ready() de la zone construit ses disques avec ce rayon.
+	zone.rayon = rayon
+	zone.delai_avertissement = delai_avertissement
 	var conteneur: Node = salle.get_node_or_null("FlaquesDeFeu")
 	(conteneur if conteneur != null else salle).add_child(zone)
 	zone.global_position = position_sol + Vector3.UP * 0.2
-	
 
 # Timer
 
