@@ -12,18 +12,6 @@ var attenuation_musique: AudioEffectAmplify
 var fondu_musique: Tween
 @export_range(-40.0, 0.0, 1.0) var volume_succes_db := -24.0
 
-@export_group("Salle libérée")
-@export var son_salle_liberee: AudioStream = preload("res://assets/sounds/interfaces/salle_liberee.mp3")
-@export_range(-40.0, 0.0, 1.0) var volume_salle_liberee_db := -16.0
-
-func celebrer_salle_liberee() -> void:
-	if son_salle_liberee == null:
-		return
-	var son := _creer_lecteur(son_salle_liberee)
-	son.volume_db = volume_salle_liberee_db
-	son.finished.connect(son.queue_free)
-	son.play()
-
 func jouer_succes() -> void:
 	var son := _creer_lecteur(preload("res://assets/sounds/design/menus/maximize_004.ogg"))
 	son.volume_db = volume_succes_db

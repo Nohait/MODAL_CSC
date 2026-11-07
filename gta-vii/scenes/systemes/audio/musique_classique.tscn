@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/systemes/audio/musique_classique.gd" id="script"]
+[ext_resource type="Script" path="res://scenes/modes/zombie/audio/morceau_musical.gd" id="morceau"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/audio/morceaux/assault.tres" id="assault"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/audio/morceaux/unfed.tres" id="unfed"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/audio/morceaux/sin_town.tres" id="sin_town"]
+[ext_resource type="Resource" path="res://scenes/modes/zombie/audio/morceaux/rescue_mission.tres" id="rescue"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/zombie/cipher.mp3" id="boutique"]
+
+[node name="MusiqueClassique" type="Node"]
+script = ExtResource("script")
+morceaux = Array[ExtResource("morceau")]([ExtResource("assault"), ExtResource("unfed"), ExtResource("sin_town"), ExtResource("rescue")])
+
+[node name="Boutique" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("boutique")
+bus = &"Musique"
+volume_db = -60.0

@@ -2,8 +2,6 @@ extends Node
 
 const ZONE_FEU = preload("res://scenes/ennemis/dangers/chute.tscn")
 
-var musique_jouee = null
-
 func _lancer_sur_joueur() -> void:
 	var joueur := get_tree().get_first_node_in_group("player") as Node3D
 	if joueur == null: return
@@ -235,9 +233,6 @@ func demarrer_partie() -> void:
 	await activer_salle(clampi(depart, 0, nombre_salles - 1))
 	partie_prete.emit()
 	
-	#musique
-	musique_jouee = get_parent().get_node("Musique") as AudioStreamPlayer
-	musique_jouee.play()
 
 # Population
 
@@ -748,10 +743,7 @@ func creer_sbire(salle: Node3D, emplacement: Vector3) -> Node3D:
 # Activation d'une salle
 
 func activer_salle(indice: int) -> void:
-	var ancien_etage := etage_pour_salle(indice_salle)
 
-	# Le changement d’étage adapte la musique, sans écran intermédiaire.
-	var changer_etage := is_instance_valid(salle_actuelle) and etage_pour_salle(indice) != ancien_etage
 	transition_en_cours = true
 	joueur.set_physics_process(false)
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_DISABLED
@@ -838,14 +830,6 @@ func activer_salle(indice: int) -> void:
 	Reglages.chargement.terminer()
 	# Révéler la nouvelle piqsazeèce avant la course ; le combat et son timer restent gelés.
 	
-	if changer_etage:
-		#On ajoute des musiques pour le feedback auditif
-		if salle_actuelle.etage-1 == 1:
-			musique_jouee.stream.set_sync_stream_volume(1, -3)
-		else:
-			musique_jouee.stream.set_sync_stream_volume(1, -5)
-			musique_jouee.stream.set_sync_stream_volume(2, 0)
-			musique_jouee.stream.set_sync_stream_volume(3, 2)
 	await transition_etage.reveler_salle()
 	$"../../Escorte".process_mode = Node.PROCESS_MODE_INHERIT
 	salle_actuelle.entree.commencer()
@@ -926,7 +910,6 @@ func actualiser_objectifs() -> void:
 		$SonSalleLiberee.play()
 		liberer_portes(salle_actuelle)
 		afficher_victoire()
-		SonsInterface.celebrer_salle_liberee()
 		room_cleared.emit()
 
 func liberer_portes(salle: Node3D) -> void:
