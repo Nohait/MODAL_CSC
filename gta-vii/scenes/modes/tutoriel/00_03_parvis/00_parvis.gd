@@ -3,7 +3,7 @@ extends "res://scenes/jeu/main.gd"
 const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd")
 const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
 const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
-@export var locomotion: ANIMATIONS_FIGURANT = ANIMATIONS_FIGURANT.new()
+@export var locomotion: ANIMATIONS_FIGURANT
 @export_group("Rencontre")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
 @export_range(0.5, 4.0, 0.01) var vitesse_superieur := 1.67
@@ -25,6 +25,9 @@ var changement := false
 var repere_entree: Node3D
 
 func _ready() -> void:
+	# Une scène exportée peut avoir enregistré une ressource par défaut nulle.
+	if locomotion == null:
+		locomotion = ANIMATIONS_FIGURANT.new()
 	# Garder les composants communs, mais ne pas lancer le générateur du classique dehors.
 	$Salles/RoomManager.process_mode = Node.PROCESS_MODE_DISABLED
 	$Salles/RoomManager/InterfaceSalle.hide()

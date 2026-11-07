@@ -36,7 +36,14 @@
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/dialogues/bulle_dialogue.gd" id="bulle"]
 
 [ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/apercu_sauvetage.gd" id="teasing"]
+[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd" id="locomotion"]
 [ext_resource type="Shader" path="res://assets/shaders/effets/annonce_impact_boss.gdshader" id="repere_shader"]
+
+[sub_resource type="Resource" id="locomotion_superieur"]
+script = ExtResource("locomotion")
+
+[sub_resource type="Resource" id="locomotion_sauvetage"]
+script = ExtResource("locomotion")
 
 [sub_resource type="StandardMaterial3D" id="metal"]
 albedo_color = Color(0.14, 0.17, 0.19, 1)
@@ -327,9 +334,11 @@ size = Vector3(3.8, 3.8, 0.2)
 [node name="Tutoriel" instance=ExtResource("main")]
 script = ExtResource("intro")
 session_tutoriel = true
+locomotion = SubResource("locomotion_superieur")
 [node name="Intervention" type="Node3D" parent="."]
 [node name="TeasingSauvetage" type="Node3D" parent="Intervention"]
 script = ExtResource("teasing")
+locomotion = SubResource("locomotion_sauvetage")
 [node name="Depart" type="Marker3D" parent="Intervention"]
 position = Vector3(0, 1, 7)
 [node name="PositionBriefing" type="Marker3D" parent="Intervention"]

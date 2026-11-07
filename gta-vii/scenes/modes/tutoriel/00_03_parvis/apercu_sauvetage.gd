@@ -23,9 +23,11 @@ var guide_ecarte := false
 var porte: StaticBody3D
 const HABITANT = preload("res://scenes/victimes/victime.tscn")
 const ANIMATIONS = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
-@export var locomotion: ANIMATIONS = ANIMATIONS.new()
+@export var locomotion: ANIMATIONS
 
 func _ready() -> void:
+	if locomotion == null:
+		locomotion = ANIMATIONS.new()
 	set_process(false)
 
 func jouer(joueur: Node3D) -> void:
