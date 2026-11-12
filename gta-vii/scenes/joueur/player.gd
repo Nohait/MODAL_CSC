@@ -25,8 +25,11 @@ var flash_tween: Tween
 @onready var victim_manager: Node3D = $"../VictimManager"
 @onready var Effets: Node3D = $"../Effets"
 @onready var fleche_victime_scene = preload("res://scenes/effets/fleche_victime/fleche.tscn")
+const SHADER_CERCLE_RASSEMBLEMENT = preload("res://scenes/armes/bouche_incendie/disque_eau.gdshader")
 var fleche_victime = null
 var fleche_tween = null
+var apercu_fleche: Node3D
+var stick_rassemblement_actif := false
 var input_victim_control_fait := false
 
 @export_group("Déplacement")
@@ -71,16 +74,6 @@ var hasard_camera := RandomNumberGenerator.new()
 var sauvegarde_position = Vector3()
 var camera_retour := false
 
-func _ready() :
-	var stick_L := InputEventJoypadButton.new()
-	stick_L.button_index = JOY_BUTTON_LEFT_STICK
-	var stick_R := InputEventJoypadButton.new()
-	stick_R.button_index = JOY_BUTTON_RIGHT_STICK
-	InputMap.action_erase_event("victim_control",stick_L)
-	InputMap.action_erase_event("victime_nav_auto",stick_R)
-	InputMap.action_add_event("victime_nav_auto",stick_L)
-	InputMap.action_add_event("victim_control",stick_R)
-
 #Detection du controlleur
 func _input(event: InputEvent) -> void:
 	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf(event.axis_value) > 0.15):
@@ -109,10 +102,15 @@ func updateAim() -> void:
 	var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
 	var stick_actif := stick.length() > STICK_DEADZONE
 
-	if Input.is_action_pressed("victim_control"):
+	var ordre_maintenu := Input.is_action_pressed("victim_control")
+	if ordre_maintenu:
 		visée_longue_active = true
 	if Input.is_action_just_released("victim_control"):
-		bouger_victime(aim_position)  # position de la frame précédente
+		if not usingController or stick_rassemblement_actif:
+			var destination: Vector3 = apercu_fleche.global_position if usingController and is_instance_valid(apercu_fleche) else aim_position
+			bouger_victime(destination)
+		_masquer_apercu_rassemblement()
+		stick_rassemblement_actif = false
 		visée_longue_active = false
 
 	if stick_actif:
@@ -133,6 +131,11 @@ func updateAim() -> void:
 
 	aim_position = global_position + aim_offset
 	aim_position.y = visual.global_position.y
+	if usingController and ordre_maintenu:
+		stick_rassemblement_actif = true
+		_afficher_apercu_rassemblement(aim_position if stick_actif else Vector3(global_position.x, aim_position.y, global_position.z))
+	elif not usingController or not ordre_maintenu:
+		_masquer_apercu_rassemblement()
 
 
 func _stick_to_offset(stick: Vector2) -> Vector3:
@@ -183,9 +186,7 @@ func _physics_process(delta: float) -> void:
 	updateAim()
 	if usingController:
 		# Plus de updateControllerCursor()
-		Input.set_mouse_mode(
-			Input.MOUSE_MODE_VISIBLE if Input.is_action_pressed("victim_control")
-			else Input.MOUSE_MODE_HIDDEN)
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		
@@ -360,6 +361,44 @@ func mourir():
 	# Garder le visuel jusqu’à la fin du fondu ; le changement de scène le libère.
 	died.emit()
 
+func _afficher_apercu_rassemblement(position_cible: Vector3) -> void:
+	if not is_instance_valid(apercu_fleche):
+		apercu_fleche = fleche_victime_scene.instantiate()
+		# L'aperçu ne doit jamais servir d'ancre aux victimes.
+		apercu_fleche.remove_from_group("fleche")
+		Effets.add_child(apercu_fleche)
+		_ajouter_cercle_rassemblement(apercu_fleche)
+	apercu_fleche.global_position = position_cible
+	_placer_cercle_rassemblement(apercu_fleche, position_cible)
+	apercu_fleche.show()
+
+func _ajouter_cercle_rassemblement(fleche: Node3D) -> void:
+	var cercle := MeshInstance3D.new()
+	cercle.name = "CercleRassemblement"
+	var plan := PlaneMesh.new()
+	plan.size = Vector2(1.8, 1.8)
+	cercle.mesh = plan
+	var materiau := ShaderMaterial.new()
+	materiau.shader = SHADER_CERCLE_RASSEMBLEMENT
+	materiau.set_shader_parameter("couleur", Color(0.22, 0.5, 0.16, 0.55))
+	materiau.set_shader_parameter("progression", -1.0)
+	cercle.material_override = materiau
+	cercle.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	cercle.top_level = true
+	fleche.add_child(cercle)
+
+func _placer_cercle_rassemblement(fleche: Node3D, position_cible: Vector3) -> void:
+	var cercle: Node3D = fleche.get_node("CercleRassemblement")
+	var requete := PhysicsRayQueryParameters3D.create(position_cible + Vector3.UP * 3.0, position_cible - Vector3.UP * 5.0, 1)
+	var sol := get_world_3d().direct_space_state.intersect_ray(requete)
+	cercle.global_position = (sol.position if not sol.is_empty() else position_cible) + Vector3.UP * 0.04
+
+func _masquer_apercu_rassemblement() -> void:
+	if is_instance_valid(apercu_fleche):
+		apercu_fleche.hide()
+		apercu_fleche.queue_free()
+	apercu_fleche = null
+
 func animation_fleche(position_fleche):
 	if fleche_tween:
 		fleche_tween.kill()
@@ -387,6 +426,8 @@ func cacher_fleche():
 
 
 func annuler_ordre_victimes() -> void:
+	_masquer_apercu_rassemblement()
+	stick_rassemblement_actif = false
 	# Reconnecter d'abord la file : aucune victime ne doit suivre la flèche supprimée.
 	victim_manager.retour_nav_auto()
 	# Arrêter aussi son animation pour qu'elle ne rappelle pas cacher_fleche plus tard.

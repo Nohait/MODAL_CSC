@@ -65,7 +65,10 @@ var touches_par_defaut_manette = {
 		"move_left": [JOY_AXIS_LEFT_X, -1.0],
 		"move_right": [JOY_AXIS_LEFT_X, 1.0],
 		"primary_attack": JOY_AXIS_TRIGGER_RIGHT,
-		"dash":JOY_AXIS_TRIGGER_LEFT
+		"dash": JOY_BUTTON_LEFT_SHOULDER,
+		"attaque_bouche": JOY_AXIS_TRIGGER_LEFT,
+		"victim_control": JOY_BUTTON_RIGHT_SHOULDER,
+		"victime_nav_auto": JOY_BUTTON_LEFT_STICK
 		}
 """
 		"interact" : KEY_E,

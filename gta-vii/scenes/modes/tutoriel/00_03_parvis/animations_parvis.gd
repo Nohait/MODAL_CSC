@@ -3,13 +3,14 @@ extends Resource
 const BASE = preload("res://scenes/modes/tutoriel/commun/figurants/animations_figurant.gd")
 const POMPIER = preload("res://assets/tutoriel/animations/parvis/pompier.tres")
 const VICTIME = preload("res://assets/tutoriel/animations/parvis/victime_blessee.tres")
+const REFERENCE_MARCHE = preload("res://scenes/victimes/anims/Injured Walking.fbx")
 
 @export var activer_clips_importes := true
 @export_range(20.0, 90.0, 1.0) var seuil_pivot_degres := 45.0
 @export_range(0.05, 0.3, 0.01) var fondu_pivot := 0.12
 @export_range(30.0, 360.0, 10.0) var rotation_douce_degres := 120.0
 @export_range(0.5, 3.0, 0.05) var cadence_pompier := 1.67
-@export_range(0.5, 3.0, 0.05) var cadence_victime := 1.28
+@export_range(0.5, 3.0, 0.05) var cadence_victime := 1.67
 
 func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 	var arbre := BASE.installer(modele, pompier)
@@ -31,7 +32,7 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 		if marche_blessee.has_animation("injured_walk"):
 			var marche := marche_blessee.get_animation("injured_walk").duplicate() as Animation
 			if repos_reference != null:
-				_adapter_bassin(marche, repos_reference)
+				_adapter_marche(marche, repos_reference, modele.get_node("Armature/Skeleton3D"))
 			marche.loop_mode = Animation.LOOP_LINEAR
 			banque.remove_animation("Walk")
 			banque.add_animation("Walk", marche)
@@ -69,31 +70,57 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 
 func decaler_marche(arbre: AnimationTree, temps: float) -> void:
 	if not activer_clips_importes: return
-	# Activer momentanément la branche permet de positionner sa lecture sans bouger le figurant.
-	arbre["parameters/Transition/blend_amount"] = 1.0
-	arbre["parameters/Cadence/scale"] = 1.0
-	arbre["parameters/DecalageMarche/seek_request"] = temps
-	arbre.advance(0.001)
-	arbre["parameters/Transition/blend_amount"] = 0.0
-	arbre["parameters/Cadence/scale"] = 0.0
-	arbre.advance(0.001)
+	# La branche de marche inactive ne conserve pas une demande de déplacement anticipée.
+	arbre.set_meta("decalage_marche_initial", temps)
+	arbre.set_meta("decalage_marche_applique", false)
 
-func _adapter_bassin(marche: Animation, repos: Animation) -> void:
-	# Les deux clips utilisent des axes et des unités différents pour le bassin.
-	var chemin := NodePath("Armature/Skeleton3D:mixamorig2_Hips")
-	var piste_marche := marche.find_track(chemin, Animation.TYPE_POSITION_3D)
-	var piste_repos := repos.find_track(chemin, Animation.TYPE_POSITION_3D)
-	if piste_marche < 0 or piste_repos < 0: return
-	if marche.track_get_key_count(piste_marche) == 0 or repos.track_get_key_count(piste_repos) == 0: return
-	var origine: Vector3 = marche.track_get_key_value(piste_marche, 0)
-	var hauteur_repos: Vector3 = repos.track_get_key_value(piste_repos, 0)
-	for i in marche.track_get_key_count(piste_marche):
-		var ecart: Vector3 = marche.track_get_key_value(piste_marche, i) - origine
-		marche.track_set_key_value(piste_marche, i, hauteur_repos + Vector3(ecart.x, ecart.z, -ecart.y) * 100.0)
+func _adapter_marche(marche: Animation, repos: Animation, cible: Skeleton3D) -> void:
+	var reference = REFERENCE_MARCHE.instantiate()
+	var squelettes := reference.find_children("*", "Skeleton3D", true, false)
+	if squelettes.is_empty():
+		push_warning("Squelette de référence de la marche blessée introuvable.")
+		reference.free()
+		return
+	var source: Skeleton3D = squelettes[0]
+	# Reproduire les rotations du clip relativement aux poses de repos des deux squelettes.
+	for piste in marche.get_track_count():
+		if marche.track_get_type(piste) != Animation.TYPE_ROTATION_3D: continue
+		var nom := str(marche.track_get_path(piste)).get_slice(":", 1)
+		var os_cible := cible.find_bone(nom)
+		var os_source := source.find_bone(nom.replace("mixamorig2_", "mixamorig5_"))
+		if os_cible < 0 or os_source < 0: continue
+		var rotation_cible := cible.get_bone_rest(os_cible).basis.get_rotation_quaternion()
+		var rotation_source := source.get_bone_rest(os_source).basis.get_rotation_quaternion()
+		for cle in marche.track_get_key_count(piste):
+			var pose: Quaternion = marche.track_get_key_value(piste, cle)
+			marche.track_set_key_value(piste, cle, (rotation_cible * rotation_source.inverse() * pose).normalized())
+	var chemin_bassin := NodePath("Armature/Skeleton3D:mixamorig2_Hips")
+	var piste_bassin := marche.find_track(chemin_bassin, Animation.TYPE_POSITION_3D)
+	var bassin_source := source.find_bone("mixamorig5_Hips")
+	var bassin_cible := cible.find_bone("mixamorig2_Hips")
+	if piste_bassin >= 0 and bassin_source >= 0 and bassin_cible >= 0:
+		var origine_source := source.get_bone_rest(bassin_source).origin
+		var origine_cible := cible.get_bone_rest(bassin_cible).origin
+		for cle in marche.track_get_key_count(piste_bassin):
+			var ecart: Vector3 = marche.track_get_key_value(piste_bassin, cle) - origine_source
+			marche.track_set_key_value(piste_bassin, cle, origine_cible + Vector3(ecart.x, ecart.z, -ecart.y) * 100.0)
+	reference.free()
+	# Les pistes absentes doivent aussi partir de la pose de repos, y compris l'armature.
+	for piste in repos.get_track_count():
+		var type := repos.track_get_type(piste)
+		var chemin := repos.track_get_path(piste)
+		if type not in [Animation.TYPE_POSITION_3D, Animation.TYPE_ROTATION_3D, Animation.TYPE_SCALE_3D]: continue
+		if repos.track_get_key_count(piste) == 0 or marche.find_track(chemin, type) >= 0: continue
+		var ajout := marche.add_track(type)
+		marche.track_set_path(ajout, chemin)
+		marche.track_insert_key(ajout, 0.0, repos.track_get_key_value(piste, 0))
 
 func actualiser(arbre: AnimationTree, vitesse: float, delta: float) -> void:
 	BASE.actualiser(arbre, vitesse, delta)
 	if not activer_clips_importes: return
+	if vitesse > 0.03 and arbre.has_meta("decalage_marche_initial") and not bool(arbre.get_meta("decalage_marche_applique", false)):
+		arbre["parameters/DecalageMarche/seek_request"] = float(arbre.get_meta("decalage_marche_initial"))
+		arbre.set_meta("decalage_marche_applique", true)
 	arbre.set_meta("pivot_restant", maxf(0.0, float(arbre.get_meta("pivot_restant")) - delta))
 
 func pivote(arbre: AnimationTree) -> bool:

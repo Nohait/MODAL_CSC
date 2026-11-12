@@ -1,5 +1,7 @@
 extends RefCounted
 
+const ECHELLE_ICONE := 1.6
+
 static func icone(action: StringName, joueur: Node) -> Texture2D:
 	if not is_instance_valid(joueur) or joueur.get("usingController") != true: return null
 	for evenement in InputMap.action_get_events(action):
@@ -62,7 +64,8 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		if ancien: ancien.hide()
 		return
 	var taille := label.get_theme_font_size("font_size")
-	var balise := "[img=%dx%d]%s[/img]" % [taille, taille, image.resource_path]
+	var taille_icone := ceili(taille * ECHELLE_ICONE)
+	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace(commande + " · ", balise + " · ").replace(" · " + commande, " · " + balise).replace("sur " + commande + " pour", "sur " + balise + " pour").replace("le " + commande + " pour", "le " + balise + " pour").replace(" + " + commande, " + " + balise)
 	if ancien == null:
 		ancien = RichTextLabel.new()
@@ -74,6 +77,7 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		ancien.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ancien.add_theme_font_override("normal_font", label.get_theme_font("font"))
 	ancien.add_theme_font_size_override("normal_font_size", taille)
+	ancien.offset_bottom = float(taille_icone - taille)
 	ancien.add_theme_color_override("default_color", label.get_meta("couleur_commande"))
 	ancien.text = contenu
 	label.text = texte
@@ -103,7 +107,8 @@ static func afficher_3d(label: Label3D, texte: String, action: StringName, joueu
 		return
 	var commande := nom(action, joueur)
 	var taille := label.font_size
-	var balise := "[img=%dx%d]%s[/img]" % [taille, taille, image.resource_path]
+	var taille_icone := ceili(taille * ECHELLE_ICONE)
+	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace("[" + commande + "]", balise).replace(commande + " · ", balise + " · ")
 	var vue := label.get_node_or_null("VueCommande") as SubViewport
 	if vue == null:
@@ -119,8 +124,8 @@ static func afficher_3d(label: Label3D, texte: String, action: StringName, joueu
 		vue.add_child(ligne)
 	var police: Font = label.font if label.font else ThemeDB.fallback_font
 	var sans_icone := texte.replace("[" + commande + "]", "").replace(commande + " · ", "")
-	var largeur := ceili(police.get_string_size(sans_icone, HORIZONTAL_ALIGNMENT_LEFT, -1, taille).x + taille + 24.0)
-	vue.size = Vector2i(largeur, ceili(taille * 1.6))
+	var largeur := ceili(police.get_string_size(sans_icone, HORIZONTAL_ALIGNMENT_LEFT, -1, taille).x + taille_icone + 24.0)
+	vue.size = Vector2i(largeur, ceili(taille_icone * 1.6))
 	var ligne: RichTextLabel = vue.get_node("Ligne")
 	ligne.size = vue.size
 	ligne.add_theme_font_size_override("normal_font_size", taille)

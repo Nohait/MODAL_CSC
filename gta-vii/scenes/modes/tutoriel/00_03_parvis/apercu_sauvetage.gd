@@ -7,7 +7,7 @@ extends Node3D
 @export_range(-0.5, 0.5, 0.01) var hauteur_victime := 0.0
 @export_range(-20.0, 20.0, 1.0) var redressement_victime_degres := -6.0
 @export_range(0.0, 2.0, 0.05) var hauteur_pivot_trajet := 1.0
-@export_range(-0.1, 0.2, 0.01) var hauteur_orteils := 0.05
+@export_range(-0.1, 0.2, 0.01) var hauteur_orteils := 0.07
 @export_range(-0.5, 0.5, 0.01) var hauteur_pompier := -0.12
 @export var trajet := PackedVector3Array([
 	# Sortir au-delà des vantaux ouverts avant de contourner la porte à gauche.
@@ -72,7 +72,15 @@ func jouer(joueur: Node3D) -> void:
 	for figurant in figurants: figurant.modele.hide()
 	for figurant in figurants: figurant.modele.position = trajet[0]
 	for figurant in figurants:
-		if not figurant.pompier: _ajuster_pieds(figurant)
+		if not figurant.pompier:
+			# Évaluer l'idle avant la mesure évite de calibrer sur la pose d'import.
+			figurant.arbre.active = false
+			var lecteur: AnimationPlayer = figurant.visuel.get_node("Armature/AnimationPlayer")
+			lecteur.play("Parvis/Idle" if locomotion.activer_clips_importes else "Tutoriel/Idle")
+			lecteur.seek(0.0, true)
+			lecteur.pause()
+			_ajuster_pieds(figurant)
+			figurant.arbre.active = true
 	trace.append(trajet[0])
 	set_process(true)
 
