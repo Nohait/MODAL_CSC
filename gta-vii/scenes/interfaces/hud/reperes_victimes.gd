@@ -56,6 +56,7 @@ func _draw() -> void:
 		return
 	var zone := get_viewport_rect().grow(-marge)
 	var centre := zone.get_center()
+	_dessiner_rassemblement(camera, zone)
 	for repere: Dictionary in reperes.values():
 		var monde: Vector3 = repere.position + Vector3.UP
 		var projection := camera.unproject_position(monde)
@@ -75,6 +76,49 @@ func _draw() -> void:
 		else:
 			position_repere = position_repere.clamp(zone.position, zone.end)
 		_dessiner_repere(position_repere, direction, repere, hors_champ)
+
+func _dessiner_rassemblement(camera: Camera3D, zone: Rect2) -> void:
+	var gestion = joueur.get_node_or_null("../VictimManager")
+	if not is_instance_valid(gestion): return
+	var cible: Node3D = gestion.cible_deplacement
+	if not is_instance_valid(cible) or not cible.is_in_group("fleche"): return
+	var monde: Vector3 = cible.get_meta("position_rassemblement", cible.global_position)
+	monde += Vector3.UP * 1.4
+	var projection := camera.unproject_position(monde)
+	var derriere := camera.is_position_behind(monde)
+	var hors_champ := derriere or not get_viewport_rect().has_point(projection)
+	var direction := Vector2.UP
+	var centre := projection.clamp(zone.position, zone.end)
+	if hors_champ:
+		var vers_bord := projection - zone.get_center()
+		if derriere: vers_bord = -vers_bord
+		if vers_bord.is_zero_approx(): vers_bord = Vector2.DOWN
+		direction = vers_bord.normalized()
+		var facteur := minf(zone.size.x * 0.5 / maxf(absf(direction.x), 0.001), zone.size.y * 0.5 / maxf(absf(direction.y), 0.001))
+		centre = zone.get_center() + direction * facteur
+	# Chaque victime possède son propre compteur ; le premier expiré rappelle l'escorte.
+	var restant := INF
+	var duree := 0.0
+	for victime in gestion.freed_victims:
+		if not is_instance_valid(victime) or victime.est_morte or not victime.decompte_rassemblement_actif: continue
+		if victime.waiting_timer < restant:
+			restant = victime.waiting_timer
+			duree = victime.waiting_cooldown
+	if not is_finite(restant): return
+	var teinte := couleur
+	if restant <= duree * seuil_critique:
+		teinte.a = lerpf(0.45, 1.0, (sin(horloge * TAU / periode_alerte) + 1.0) * 0.5)
+	var fond := Color(0.96, 0.97, 0.98, 0.95)
+	draw_circle(centre, taille * 0.58, fond)
+	# Cadran dessiné avec les primitives du HUD, sans nouvel asset.
+	var rayon := taille * 0.60
+	draw_arc(centre, rayon, 0.0, TAU, 32, teinte, 4.0, true)
+	draw_line(centre, centre + Vector2(0, -rayon * 0.65), teinte, 3.5, true)
+	draw_line(centre, centre + Vector2(rayon * 0.5, 0), teinte, 3.5, true)
+	var barre := Rect2(centre + Vector2(-taille * 0.6, taille * 0.65 + 4.0), Vector2(taille * 1.2, 5.0))
+	draw_rect(barre, Color(0.78, 0.9, 0.83, 1.0))
+	barre.size.x *= clampf(restant / maxf(duree, 0.001), 0.0, 1.0)
+	draw_rect(barre, teinte)
 
 func _dessiner_repere(centre: Vector2, direction: Vector2, repere: Dictionary, hors_champ: bool) -> void:
 	var mort: bool = repere.mort >= 0.0

@@ -138,9 +138,8 @@ func _score_position_victime(salle: Node3D, position: Vector3) -> float:
 
 func demarrer_sauvetage(salle: Node3D) -> void:
 	# Dans la première salle normale, l'explication doit précéder le compte à rebours.
-	var debug_actif: bool = Engine.get_meta("tutoriel_debug_actif", false) \
-		or Engine.has_meta("tutoriel_debug_depart")
-	if indice_salle == 0 and not debug_actif:
+	var acces_debug_direct := Engine.has_meta("tutoriel_debug_depart")
+	if indice_salle == 0 and not acces_debug_direct:
 		sauvetage_retenu = salle
 		return
 	super.demarrer_sauvetage(salle)

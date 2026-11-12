@@ -2,7 +2,7 @@ extends CanvasLayer
 
 # Ce menu appartient au niveau et lit le gestionnaire ; il ne calcule aucun bonus.
 @onready var gestionnaire = get_parent().get_node("VictimManager")
-@onready var raccourci: Button = $Raccourci
+@onready var raccourci: Button = $CoucheRaccourci/Raccourci
 @onready var menu: Control = $Menu
 @onready var panneau: Control = %Panneau
 @onready var fermer: Button = %Fermer

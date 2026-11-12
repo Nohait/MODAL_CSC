@@ -8,15 +8,14 @@ extends CanvasLayer
 @export var vie_max := 100.0
 
 func _ready() -> void:
+	var couche_reperes := CanvasLayer.new()
+	couche_reperes.name = "CoucheReperes"
+	# Au-dessus du HUD et du raccourci du carnet, sous la boutique et les menus.
+	couche_reperes.layer = 15
+	add_child(couche_reperes)
 	var reperes_ennemis := preload("res://scenes/interfaces/hud/reperes_ennemis.tscn").instantiate()
 	reperes_ennemis.joueur = get_parent()
-	add_child(reperes_ennemis)
-	move_child(reperes_ennemis, 0)
-	var couche_reperes := CanvasLayer.new()
-	couche_reperes.name = "CoucheReperesVictimes"
-	# Le carnet utilise la couche 30 et ses cartes survolées la couche 31.
-	couche_reperes.layer = 32
-	add_child(couche_reperes)
+	couche_reperes.add_child(reperes_ennemis)
 	var reperes := preload("res://scenes/interfaces/hud/reperes_victimes.tscn").instantiate()
 	reperes.joueur = get_parent()
 	couche_reperes.add_child(reperes)
