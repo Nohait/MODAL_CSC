@@ -12,6 +12,8 @@ void fragment() {
 	float luminosite = dot(matiere, vec3(0.2126, 0.7152, 0.0722));
 	float relief = clamp(0.72 + luminosite * 3.7, 0.72, 1.45);
 	surface.rgb *= mix(1.0, relief, intensite_plastique);
+	// Le survol assombrit franchement la plaque pour distinguer le bouton actif.
+	surface.rgb = mix(surface.rgb, vec3(0.28, 0.045, 0.04), clamp(survol, 0.0, 1.0) * 0.9);
 	if (grise) {
 		surface.rgb = vec3(dot(surface.rgb, vec3(0.2126, 0.7152, 0.0722)));
 	}
