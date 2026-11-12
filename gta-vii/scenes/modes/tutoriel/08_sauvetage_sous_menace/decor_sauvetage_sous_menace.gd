@@ -27,9 +27,7 @@ func _ready() -> void:
 	var largeur_cloison: float = (12.0 - STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE) * 0.5
 	var centre_cloison: float = STYLE.LARGEUR_EMBRASURE_DOUBLE_PORTE * 0.5 + largeur_cloison * 0.5
 	for cote in [-1, 1]: STYLE.bloc(self, "Cloison" + str(cote), Vector3(cote * centre_cloison, 0.6, -54), Vector3(largeur_cloison, 1.2, 0.3), STYLE.MUR)
-	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/loungeSofa.glb"), Vector3(-5.3, 0, -50), PI * 0.5)
-	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/tableCoffee.glb"), Vector3(-5, 0, -48))
-	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(3.3, 0, -48))
+	STYLE.bloc(self, "CloisonExercice", Vector3(-7, 0.6, -54), Vector3(2, 1.2, 0.3), STYLE.MUR)
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/kitchenSink.glb"), Vector3(13.3, 0, -61.5), -PI * 0.5)
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/kitchenStove.glb"), Vector3(13.3, 0, -63.5), -PI * 0.5)
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/kitchenFridge.glb"), Vector3(12, 0, -65.3))
@@ -62,8 +60,8 @@ func _ready() -> void:
 	var mesh := NavigationMesh.new()
 	# Bords subdivisés : le corridor de porte partage exactement ses arêtes avec les pièces.
 	mesh.vertices = PackedVector3Array([
-		Vector3(-4.7, 0, -46.4), Vector3(2.7, 0, -46.4), Vector3(2.7, 0, -53.3),
-		Vector3(0.85, 0, -53.3), Vector3(-0.85, 0, -53.3), Vector3(-4.7, 0, -53.3),
+		Vector3(-6.7, 0, -46.4), Vector3(2.7, 0, -46.4), Vector3(2.7, 0, -53.3),
+		Vector3(0.85, 0, -53.3), Vector3(-0.85, 0, -53.3), Vector3(-6.7, 0, -53.3),
 		Vector3(-2.7, 0, -54.7), Vector3(-0.85, 0, -54.7), Vector3(0.85, 0, -54.7),
 		Vector3(4.7, 0, -54.7), Vector3(4.7, 0, -60.6), Vector3(4.7, 0, -64.8),
 		Vector3(4.7, 0, -65.3), Vector3(-2.7, 0, -65.3),

@@ -53,6 +53,8 @@ const SHADER = preload("res://scenes/armes/bouche_incendie/disque_eau.gdshader")
 # L'attaque est rangée dans le conteneur SecondaryAttack du joueur.
 @onready var joueur = get_node(chemin_joueur)
 var vise := false
+var vise_manette := false
+var decalage_visee := Vector3.ZERO
 var cycle_visee := 0.0
 var hauteur_sol_visee := 0.0
 var emplacement_valide := false
@@ -102,9 +104,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("attaque_bouche"):
 		print("PRESSÉ phase=", phase, " ctrl=", joueur.usingController)
 	
-	if event.is_action_pressed("attaque_bouche"):
+	if event.is_action_pressed("attaque_bouche") and not vise:
 		print("DEBUG ATTAQUE B")
 		vise = true
+		vise_manette = event is InputEventJoypadButton or event is InputEventJoypadMotion
+		decalage_visee = Vector3.ZERO
 		cycle_visee = 0.0
 	elif event.is_action_released("attaque_bouche") and vise:
 
@@ -130,6 +134,8 @@ func _physics_process(delta: float) -> void:
 				disque.hide()
 			else:
 				# Une onde de prévisualisation ; aucun dégât n'est appliqué ici.
+				if vise_manette:
+					decalage_visee = joueur.deplacer_visee_sol(decalage_visee, delta, cartes_bouche.portee())
 				var plan: PlaneMesh = disque.mesh
 				plan.size = Vector2.ONE * cartes_bouche.rayon() * 2.0
 				cycle_visee = fmod(cycle_visee + delta / duree_cycle_visee, 1.0)
@@ -204,11 +210,8 @@ func _actualiser_cible() -> void:
 	
 	var direction: Vector3 = joueur.aim_position - joueur.global_position
 	direction.y = 0.0
-	# À la manette, le relâchement recentre uniquement la cible de cette attaque.
-	if joueur.usingController:
-		var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
-		if stick.length() <= joueur.STICK_DEADZONE:
-			direction = Vector3.ZERO
+	if vise_manette:
+		direction = decalage_visee
 	
 	cible = joueur.global_position + direction.limit_length(cartes_bouche.portee())
 	cible.y = hauteur_sol

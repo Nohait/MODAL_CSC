@@ -43,6 +43,10 @@ var input_victim_control_fait := false
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_duration: float = 0.1
 @export_range(0.01, 2.0, 0.01, "or_greater") var dash_cooldown: float = 0.3
 
+@export_group("Visée manette")
+## Déplacement maximal du repère au sol, en unités par seconde.
+@export_range(1.0, 40.0, 0.5) var vitesse_visee_sol := 20.0
+
 # Paramètres pour la compatibilité manette
 const STICK_DEADZONE = 0.1
 var visée_longue_active := false
@@ -50,6 +54,7 @@ var usingController := false
 # Visée : uniquement des vecteurs monde (plan XZ)
 var aim_offset := Vector3.ZERO     # décalage depuis le joueur
 var aim_position := Vector3.ZERO   # = global_position + aim_offset
+var decalage_rassemblement := Vector3.ZERO
 
 @onready var anim_tree: AnimationTree = $visual/pompier/visual/Armature/AnimationTree
 const PARAM_BLEND := "parameters/blend_position"
@@ -98,11 +103,13 @@ func get_dash_cooldown() -> float:
 
 
 # Gestion de la visée
-func updateAim() -> void:
+func updateAim(delta: float) -> void:
 	var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
 	var stick_actif := stick.length() > STICK_DEADZONE
 
 	var ordre_maintenu := Input.is_action_pressed("victim_control")
+	if usingController and Input.is_action_just_pressed("victim_control"):
+		decalage_rassemblement = Vector3.ZERO
 	if ordre_maintenu:
 		visée_longue_active = true
 	if Input.is_action_just_released("victim_control"):
@@ -117,7 +124,7 @@ func updateAim() -> void:
 		usingController = true
 
 	if usingController:
-		if stick_actif:
+		if stick_actif and not ordre_maintenu and not $SecondaryAttack/AttaqueBouche.vise:
 			aim_offset = _stick_to_offset(stick)
 		elif aim_offset.length() < 0.1:
 			# Aucune visée encore : viser devant le joueur.
@@ -133,10 +140,20 @@ func updateAim() -> void:
 	aim_position.y = visual.global_position.y
 	if usingController and ordre_maintenu:
 		stick_rassemblement_actif = true
-		_afficher_apercu_rassemblement(aim_position if stick_actif else Vector3(global_position.x, aim_position.y, global_position.z))
+		decalage_rassemblement = deplacer_visee_sol(decalage_rassemblement, delta, $SecondaryAttack/AttaqueBouche.portee * 2.0)
+		var position_rassemblement := global_position + decalage_rassemblement
+		position_rassemblement.y = visual.global_position.y
+		_afficher_apercu_rassemblement(position_rassemblement)
 	elif not usingController or not ordre_maintenu:
 		_masquer_apercu_rassemblement()
 
+
+func deplacer_visee_sol(decalage: Vector3, delta: float, portee_max: float) -> Vector3:
+	var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+	var intensite := clampf((stick.length() - STICK_DEADZONE) / (1.0 - STICK_DEADZONE), 0.0, 1.0)
+	if intensite > 0.0:
+		decalage += _ground_dir(stick.normalized()) * intensite * vitesse_visee_sol * delta
+	return decalage.limit_length(portee_max)
 
 func _stick_to_offset(stick: Vector2) -> Vector3:
 	var max_distance: float = $SecondaryAttack/AttaqueBouche.portee
@@ -183,7 +200,7 @@ func _physics_process(delta: float) -> void:
 	if entree_automatique:
 		_avancer_entree(delta)
 		return
-	updateAim()
+	updateAim(delta)
 	if usingController:
 		# Plus de updateControllerCursor()
 		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)

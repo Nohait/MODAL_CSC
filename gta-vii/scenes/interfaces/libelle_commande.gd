@@ -26,6 +26,8 @@ static func nom(action: StringName, joueur: Node) -> String:
 				JOY_BUTTON_Y: return "Y"
 				JOY_BUTTON_LEFT_SHOULDER: return "LB"
 				JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+				JOY_BUTTON_LEFT_STICK: return "L3"
+				JOY_BUTTON_RIGHT_STICK: return "R3"
 			return "Bouton %d" % evenement.button_index
 		if evenement is InputEventJoypadMotion:
 			match evenement.axis:
@@ -41,6 +43,7 @@ static func nom(action: StringName, joueur: Node) -> String:
 			match evenement.button_index:
 				MOUSE_BUTTON_LEFT: return "Clic gauche"
 				MOUSE_BUTTON_RIGHT: return "Clic droit"
+				MOUSE_BUTTON_MIDDLE: return "Clic molette"
 			return "Clic %d" % evenement.button_index
 	return "Interagir"
 
@@ -58,7 +61,7 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		if ancien: ancien.hide()
 		return
 	var commande := nom(action, joueur)
-	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande)):
+	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande) or texte.contains("Maintiens " + commande + ",") or texte.contains("avec " + commande + ".")):
 		label.add_theme_color_override("font_color", label.get_meta("couleur_commande"))
 		label.text = texte
 		if ancien: ancien.hide()
@@ -67,6 +70,10 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 	var taille_icone := ceili(taille * ECHELLE_ICONE)
 	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace(commande + " · ", balise + " · ").replace(" · " + commande, " · " + balise).replace("sur " + commande + " pour", "sur " + balise + " pour").replace("le " + commande + " pour", "le " + balise + " pour").replace(" + " + commande, " + " + balise)
+	contenu = contenu.replace("Maintiens " + commande + ",", "Maintiens " + balise + ",").replace("relâche " + commande + " pour", "relâche " + balise + " pour").replace("avec " + commande + ".", "avec " + balise + ".")
+	if action == &"victim_control":
+		var stick := "[img=%dx%d]res://assets/textures/controles/r_stick.png[/img]" % [taille_icone, taille_icone]
+		contenu = contenu.replace("joystick droit", "joystick droit " + stick)
 	if ancien == null:
 		ancien = RichTextLabel.new()
 		ancien.name = "TexteAvecCommande"
@@ -85,6 +92,12 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 	ancien.show()
 
 static func afficher_consigne(label: Label, texte: String, joueur: Node) -> void:
+	if texte.contains("Maintiens ") and texte.contains("victime"):
+		afficher(label, texte, &"victim_control", joueur)
+		return
+	if texte.contains("Rappelle maintenant la victime avec "):
+		afficher(label, texte, &"victime_nav_auto", joueur)
+		return
 	if not (texte.contains("clic gauche") or texte.contains("Clic gauche") or texte.contains("Espace") or texte.contains(" · E") or texte.contains("sur E pour")):
 		label.text = texte
 		label.add_theme_color_override("font_color", label.get_meta("couleur_commande", label.get_theme_color("font_color")))
