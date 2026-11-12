@@ -14,6 +14,7 @@ func changer_scene(chemin: String) -> void:
 	if changement_en_cours:
 		return
 	changement_en_cours = true
+	$MusiqueTitre.arreter_en_fondu(duree_depart)
 	$Illustration/Vue3D/Decor.animer_depart(duree_depart)
 	for bouton: BaseButton in $Menu.find_children("*", "BaseButton", true, false):
 		bouton.disabled = true
@@ -29,6 +30,7 @@ func changer_scene(chemin: String) -> void:
 		_restaurer_menu()
 
 func _restaurer_menu() -> void:
+	$MusiqueTitre.reprendre()
 	$Menu.modulate.a = 1.0
 	var decor = $Illustration/Vue3D/Decor
 	decor.depart_en_cours = false
@@ -74,11 +76,18 @@ func _ready() -> void:
 	_actualiser_zombie()
 	%Succes.pressed.connect($MenuSucces.ouvrir)
 	%Options.pressed.connect(Reglages.ouvrir)
-	%Quitter.pressed.connect(get_tree().quit)
+	%Quitter.pressed.connect(_quitter)
 	# Faire apparaître le menu doucement, pendant que le décor 3D vit déjà.
 	$Menu.modulate.a = 0.0
 	var animation := create_tween()
 	animation.tween_property($Menu, "modulate:a", 1.0, 0.45)
+
+func _quitter() -> void:
+	if changement_en_cours: return
+	changement_en_cours = true
+	$MusiqueTitre.arreter_en_fondu(duree_depart)
+	await get_tree().create_timer(duree_depart).timeout
+	get_tree().quit()
 
 func _actualiser_zombie() -> void:
 	var disponible := SauvegardeZombie.disponible()

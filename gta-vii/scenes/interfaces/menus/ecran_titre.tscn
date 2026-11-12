@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://c2jaba7e5anb" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
 [ext_resource type="Theme" uid="uid://8ibipqab5vhs" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 [ext_resource type="Shader" uid="uid://nd3ahv5hag2w" path="res://scenes/interfaces/menus/titre/voile_titre.gdshader" id="voile"]
+[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/musique_titre.gd" id="musique_titre"]
+[ext_resource type="AudioStream" path="res://assets/sounds/musique/guitar_beat_incesante.mp3" id="musique_menu"]
 
 [sub_resource type="Environment" id="Ambiance"]
 background_mode = 1
@@ -54,6 +56,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("script")
+
+[node name="MusiqueTitre" type="Node" parent="."]
+script = ExtResource("musique_titre")
+morceau = ExtResource("musique_menu")
 
 [node name="Fond" type="ColorRect" parent="." unique_id=1266752762]
 layout_mode = 1
