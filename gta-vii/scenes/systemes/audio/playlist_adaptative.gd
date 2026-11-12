@@ -66,6 +66,15 @@ func commencer_introduction() -> void:
 	if courant.is_empty() and not morceaux.is_empty(): _suivant()
 	if not courant.is_empty(): _evaluer_couches()
 
+func jouer_morceau_debug(morceau: MorceauMusicalZombie) -> bool:
+	var indice := ordre.find(morceau)
+	if indice < 0: return false
+	indice_morceau = indice
+	# En dehors d'un combat, les couches de base restent audibles jusqu'au prochain combat.
+	introduction = true
+	_suivant()
+	return true
+
 func _melanger_playlist() -> void:
 	ordre.assign(morceaux)
 	indice_morceau = 0

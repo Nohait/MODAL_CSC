@@ -17,6 +17,8 @@ const CATALOGUE = preload("res://scenes/interfaces/menus/catalogue_ennemis_debug
 @onready var bouton_ennemis: Button = %ChoisirEnnemi
 @onready var retour_ennemis: Label = %RetourEnnemis
 var ennemi_selectionne: Dictionary = {}
+var choix_musique: OptionButton
+var bouton_musique: Button
 
 
 
@@ -34,6 +36,7 @@ func _ready() -> void:
 	menu.hide()
 	_preparer_choix_ennemis()
 	_preparer_recharge_equipements()
+	_preparer_choix_musique()
 	# Un fond doré distingue le survol et les options activées du fond sombre.
 	for bouton in [invincibilite, degats, points_boutique, suivant, %LibererSalle, %Fermer]:
 		_styliser_selection(bouton)
@@ -63,6 +66,51 @@ func _preparer_recharge_equipements() -> void:
 	contenu.add_child(bouton)
 	contenu.move_child(bouton, %Fermer.get_index())
 	bouton.pressed.connect(_recharger_equipements)
+
+func _preparer_choix_musique() -> void:
+	var ligne := HBoxContainer.new()
+	ligne.add_theme_constant_override("separation", 8)
+	choix_musique = OptionButton.new()
+	choix_musique.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	choix_musique.tooltip_text = "Choisir un morceau de combat de la playlist adaptative."
+	ligne.add_child(choix_musique)
+	bouton_musique = Button.new()
+	bouton_musique.text = "Écouter"
+	_styliser_selection(bouton_musique)
+	ligne.add_child(bouton_musique)
+	var contenu := %Fermer.get_parent()
+	contenu.add_child(ligne)
+	contenu.move_child(ligne, %Fermer.get_index())
+	bouton_musique.pressed.connect(_jouer_musique_choisie)
+
+func _playlist_musicale() -> Node:
+	var niveau := get_parent()
+	var playlist := niveau.get_node_or_null("CouchesMusicales")
+	if playlist == null: playlist = niveau.get_node_or_null("MusiqueClassique")
+	return playlist
+
+func _actualiser_choix_musique() -> void:
+	choix_musique.clear()
+	var playlist = _playlist_musicale()
+	if playlist != null and playlist.is_processing():
+		for morceau in playlist.ordre:
+			choix_musique.add_item(morceau.titre)
+			if not playlist.courant.is_empty() and playlist.courant.morceau == morceau:
+				choix_musique.select(choix_musique.item_count - 1)
+	if choix_musique.item_count == 0:
+		choix_musique.add_item("Aucune musique de combat disponible")
+		choix_musique.disabled = true
+		bouton_musique.disabled = true
+	else:
+		choix_musique.disabled = false
+		bouton_musique.disabled = false
+
+func _jouer_musique_choisie() -> void:
+	var playlist = _playlist_musicale()
+	if playlist == null or choix_musique.selected < 0 or choix_musique.selected >= playlist.ordre.size(): return
+	var morceau = playlist.ordre[choix_musique.selected]
+	fermer()
+	playlist.jouer_morceau_debug(morceau)
 
 func _recharger_equipements() -> void:
 	var nombre := 0
@@ -104,6 +152,7 @@ func ouvrir() -> void:
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_actualiser_choix_ennemis()
+	_actualiser_choix_musique()
 	menu.show()
 	get_tree().paused = true
 

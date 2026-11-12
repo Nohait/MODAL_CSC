@@ -47,7 +47,6 @@ func _ready() -> void:
 		salle.add_child(pratique)
 	if debut_ravitaillement:
 		poste = preload("res://scenes/modes/tutoriel/07_ravitaillement/poste_ravitaillement.gd").new()
-		poste.voice_player = $Briefing/VoiceLinePompier
 		salle.add_child(poste)
 		poste.consigne_changee.connect(_actualiser_consigne)
 	var salle_id: StringName = &"menace" if debut_sauvetage_menace else (&"poste" if debut_ravitaillement else (&"pratique" if debut_autonome else &"combat"))

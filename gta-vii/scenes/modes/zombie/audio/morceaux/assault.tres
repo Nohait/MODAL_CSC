@@ -11,21 +11,21 @@
 script = ExtResource("couche")
 titre = "Guitares"
 piste = ExtResource("p0")
-volume_db = -10.0
+volume_db = -7.0
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c1"]
 script = ExtResource("couche")
 titre = "Cordes"
 piste = ExtResource("p1")
-volume_db = -10.0
+volume_db = -7.0
 ennemis_minimum = 4
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c2"]
 script = ExtResource("couche")
 piste = ExtResource("p2")
-volume_db = -10.0
+volume_db = -7.0
 ennemis_minimum = 7
 activer_si_boss = true
 
@@ -33,7 +33,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Synthétiseurs"
 piste = ExtResource("p3")
-volume_db = -10.0
+volume_db = -7.0
 vague_minimum = 8
 activer_si_elite = true
 activer_si_boss = true

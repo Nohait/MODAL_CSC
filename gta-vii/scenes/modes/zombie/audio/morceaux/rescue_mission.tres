@@ -18,35 +18,35 @@
 script = ExtResource("couche")
 titre = "Cordes"
 piste = ExtResource("p0")
-volume_db = -10.0
+volume_db = 0.0
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c1"]
 script = ExtResource("couche")
 titre = "Piano"
 piste = ExtResource("p1")
-volume_db = -10.0
+volume_db = 0.0
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c2"]
 script = ExtResource("couche")
 titre = "Nappes et synthétiseurs"
 piste = ExtResource("p2")
-volume_db = -10.0
+volume_db = 0.0
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c3"]
 script = ExtResource("couche")
 titre = "Bois"
 piste = ExtResource("p3")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 4
 activer_si_boss = true
 
 [sub_resource type="Resource" id="c4"]
 script = ExtResource("couche")
 piste = ExtResource("p4")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 4
 activer_si_boss = true
 
@@ -54,7 +54,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Percussions mélodiques"
 piste = ExtResource("p5")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 7
 activer_si_boss = true
 
@@ -62,7 +62,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Cuivres"
 piste = ExtResource("p6")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 9
 activer_si_elite = true
 activer_si_boss = true
@@ -71,7 +71,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Orchestre synthétique"
 piste = ExtResource("p7")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 12
 activer_si_elite = true
 activer_si_boss = true
@@ -80,7 +80,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Montées"
 piste = ExtResource("p8")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 12
 activer_si_elite = true
 activer_si_boss = true
@@ -89,7 +89,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Impacts"
 piste = ExtResource("p9")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 15
 activer_si_elite = true
 activer_si_boss = true
@@ -98,7 +98,7 @@ activer_si_boss = true
 script = ExtResource("couche")
 titre = "Effets cinématiques"
 piste = ExtResource("p10")
-volume_db = -10.0
+volume_db = 0.0
 ennemis_minimum = 15
 activer_si_elite = true
 activer_si_boss = true

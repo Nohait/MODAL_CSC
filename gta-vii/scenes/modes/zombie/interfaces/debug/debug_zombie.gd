@@ -26,6 +26,7 @@ func _ready() -> void:
 		etages.add_child(bouton)
 	_preparer_choix_ennemis()
 	_preparer_recharge_equipements()
+	_preparer_choix_musique()
 	_preparer_choix_vagues()
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(menu)
 	preload("res://scenes/interfaces/menus/navigation_manette.gd").installer(choix_ennemis)
@@ -39,6 +40,7 @@ func ouvrir() -> void:
 	situation.text = "Mode zombie · Vague %d · %d ennemis restants" % [salles.vague_actuelle, salles.remaining_enemies]
 	%LibererSalle.disabled = not salles.vague_en_cours
 	_actualiser_choix_ennemis()
+	_actualiser_choix_musique()
 	joueur.extincteur.stop_primary_attack()
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

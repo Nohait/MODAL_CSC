@@ -23,9 +23,11 @@ var sortie
 var sortie_ouverte := false
 var ouverture_sortie_en_cours := false
 const POSITION_POSTE := Vector3(-2, 1, -34)
-var voice_player: AudioStreamPlayer3D
+var voice_player: AudioStreamPlayer
 
 func _ready() -> void:
+	voice_player = AudioStreamPlayer.new()
+	add_child(voice_player)
 	decor = preload("res://scenes/modes/tutoriel/07_ravitaillement/decor_ravitaillement.gd").new()
 	add_child(decor)
 	sortie = decor.sortie
