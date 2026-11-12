@@ -2,13 +2,17 @@ extends Node3D
 
 const POMPIER = preload("res://scenes/joueur/player_pompier.tscn")
 const SBIRE = preload("res://assets/modeles/ennemis/mobiles/sbire/sbire.tscn")
-const SOL = preload("res://assets/materiaux/sol_appartements.tres")
-const MUR = preload("res://assets/materiaux/mur_appartements.tres")
+const SBIRE_JEU = preload("res://scenes/ennemis/mobiles/sbire.tscn")
+const SOL = preload("res://assets/materiaux/sol_etage_1.tres")
+const MUR = preload("res://assets/materiaux/mur_etage_1.tres")
 const FOYER = preload("res://scenes/decors/hall_incendie/foyer_incendie.tscn")
 const FINITIONS = preload("res://scenes/salles/finitions_parcours.tres")
 const PORTE = preload("res://scenes/decors/interieurs/porte_entrouverte.tscn")
+const FENETRE = preload("res://scenes/decors/hall_incendie/fenetre_hall.tscn")
 const APPLIQUE = preload("res://assets/modeles/parking/industrial_wall_lamp_2k.gltf/industrial_wall_lamp_2k.gltf")
 const SAC = preload("res://scenes/decors/interieurs/evacuation_sac.tscn")
+const SALON = preload("res://scenes/decors/appartements/salon_abandonne.tscn")
+const POSITION_FENETRE = Vector3(-0.8, 2.15, -6.08)
 @export_range(0, 150, 1) var nombre_braises := 45
 @export_range(0.0, 0.2, 0.005) var amplitude_camera := 0.045
 @export_range(4.0, 30.0, 1.0) var periode_camera := 18.0
@@ -49,6 +53,7 @@ func _ready() -> void:
 	var direction_pompier := position_pompier - position_sbire
 	sbire.rotation.y = atan2(direction_pompier.x, direction_pompier.z)
 	add_child(sbire)
+	_ajouter_feux_sbire(sbire)
 	var animation_sbire: AnimationPlayer = sbire.get_node("Armature/AnimationPlayer")
 	# Une copie locale permet de boucler la pose sans modifier les animations en jeu.
 	var idle := animation_sbire.get_animation("idle").duplicate() as Animation
@@ -62,8 +67,8 @@ func _ready() -> void:
 	# Atténuer le bain uniforme pour que les éclairages des silhouettes ressortent.
 	$Lumiere.light_energy = 0.65
 	_bloc(Vector3(0, -0.15, -1.0), Vector3(14, 0.3, 16), SOL)
-	_bloc(Vector3(0, 2, -6), Vector3(14, 4, 0.3), MUR)
-	_bloc(Vector3(-4.5, 2, -1), Vector3(0.3, 4, 10), MUR)
+	_creer_mur_fenetre()
+	_bloc(Vector3(-4.5, 3.5, -1), Vector3(0.3, 7, 10), MUR)
 	_finitions_mur(Vector3(1.345, 0, -5.85), 11.31, 0.0)
 	_finitions_mur(Vector3(-4.35, 0, -0.905), 9.81, PI / 2)
 	_creer_details()
@@ -105,7 +110,25 @@ func _eclairer_personnage(nom: String, origine: Vector3, cible: Vector3, couleur
 	add_child(lumiere)
 	lumiere.look_at(to_global(cible), Vector3.UP)
 
+func _ajouter_feux_sbire(sbire: Node3D) -> void:
+	# Copier les attaches de la scène de combat sans activer son IA ni sa physique.
+	var modele_jeu := SBIRE_JEU.instantiate()
+	var squelette_jeu: Skeleton3D = modele_jeu.get_node("sbire/Armature/Skeleton3D")
+	var squelette: Skeleton3D = sbire.get_node("Armature/Skeleton3D")
+	for nom in ["RHand", "LHand"]:
+		var attache := squelette_jeu.get_node(nom).duplicate()
+		squelette.add_child(attache)
+		var feu: Node3D = attache.get_node("vfx_fire")
+		feu.scale *= 0.55
+		var particules: CPUParticles3D = feu.get_node("Flames")
+		particules.color = Color(3.0, 1.3, 0.5, 1.0)
+	modele_jeu.free()
+
 func _creer_details() -> void:
+	var fenetre = FENETRE.instantiate()
+	fenetre.scale = Vector3.ONE * 0.8
+	fenetre.position = POSITION_FENETRE
+	add_child(fenetre)
 	var porte = PORTE.instantiate()
 	porte.position = Vector3(3.6, 0, -5.82)
 	porte.energie_lueur = 0.9
@@ -127,9 +150,28 @@ func _creer_details() -> void:
 	lumiere_applique.omni_range = 4.0
 	add_child(lumiere_applique)
 	var sac = SAC.instantiate()
-	sac.position = Vector3(-3.6, 0, -3.8)
+	sac.position = Vector3(-4.0, 0, -5.2)
 	sac.rotation.y = -0.4
 	add_child(sac)
+	var salon = SALON.instantiate()
+	# Conserver seulement le canapé brûlé et sa table basse, sans collisions de jeu.
+	for chemin in ["Mobilier/Buffet", "CollisionCanape", "CollisionTable", "CollisionBuffet"]:
+		salon.get_node(chemin).free()
+	salon.get_node("Mobilier/Canape").scale *= 1.2
+	salon.get_node("Mobilier/TableBasse").scale *= 1.2
+	salon.position = Vector3(-1.2, 0, -4.2)
+	add_child(salon)
+
+func _creer_mur_fenetre() -> void:
+	# L'ouverture suit le cadre de la fenêtre usée, à l'échelle du décor.
+	var gauche := POSITION_FENETRE.x - 0.565
+	var droite := POSITION_FENETRE.x + 0.565
+	var bas := POSITION_FENETRE.y + 0.69
+	var haut := POSITION_FENETRE.y + 2.12
+	_bloc(Vector3((-7.0 + gauche) / 2.0, 3.5, -6), Vector3(gauche + 7.0, 7, 0.3), MUR)
+	_bloc(Vector3((droite + 7.0) / 2.0, 3.5, -6), Vector3(7.0 - droite, 7, 0.3), MUR)
+	_bloc(Vector3(POSITION_FENETRE.x, bas / 2.0, -6), Vector3(droite - gauche, bas, 0.3), MUR)
+	_bloc(Vector3(POSITION_FENETRE.x, (haut + 7.0) / 2.0, -6), Vector3(droite - gauche, 7.0 - haut, 0.3), MUR)
 
 func _limites_visuelles(modele: Node3D) -> AABB:
 	var limites := AABB()
