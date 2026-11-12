@@ -4,6 +4,11 @@ extends Node3D
 @export_range(0.5, 4.0, 0.01) var vitesse := 1.67
 @export_range(0.6, 2.5, 0.1) var espacement := 1.3
 @export_range(0.4, 1.0, 0.05) var allure_blessee := 1.0
+@export_range(-0.5, 0.5, 0.01) var hauteur_victime := 0.0
+@export_range(-20.0, 20.0, 1.0) var redressement_victime_degres := -6.0
+@export_range(0.0, 2.0, 0.05) var hauteur_pivot_trajet := 1.0
+@export_range(-0.1, 0.2, 0.01) var hauteur_orteils := 0.07
+@export_range(-0.5, 0.5, 0.01) var hauteur_pompier := -0.12
 @export var trajet := PackedVector3Array([
 	# Sortir au-delà des vantaux ouverts avant de contourner la porte à gauche.
 	Vector3(-0.6, 1, -7.1), Vector3(-0.6, 1, -2.3),
@@ -42,6 +47,7 @@ func jouer(joueur: Node3D) -> void:
 	var porteur := Node3D.new()
 	add_child(porteur)
 	porteur.add_child(pompier)
+	pompier.position.y += hauteur_pompier
 	pompier.get_node("visual/Armature/Skeleton3D/Right_Hand_Holder/extincteur0").hide()
 	var arbre := locomotion.installer(pompier, true)
 	figurants.append({"modele": porteur, "arbre": arbre, "pompier": true})
@@ -57,11 +63,24 @@ func jouer(joueur: Node3D) -> void:
 		add_child(habitant)
 		habitant.add_child(modele)
 		# Conserver l’échelle du modèle partagé, sans mesure AABB du squelette.
-		modele.position.y -= 0.25
+		# Conserver le placement d'origine du modèle, corrigé si nécessaire dans l'Inspector.
+		modele.position.y += hauteur_victime
+		modele.rotation.x += deg_to_rad(redressement_victime_degres)
 		var animation := locomotion.installer(modele, false)
-		figurants.append({"modele": habitant, "arbre": animation, "pompier": false})
+		locomotion.decaler_marche(animation, float(i) / maxf(float(nombre_habitants), 1.0))
+		figurants.append({"modele": habitant, "visuel": modele, "squelette": modele.get_node("Armature/Skeleton3D"), "arbre": animation, "pompier": false})
 	for figurant in figurants: figurant.modele.hide()
 	for figurant in figurants: figurant.modele.position = trajet[0]
+	for figurant in figurants:
+		if not figurant.pompier:
+			# Évaluer l'idle avant la mesure évite de calibrer sur la pose d'import.
+			figurant.arbre.active = false
+			var lecteur: AnimationPlayer = figurant.visuel.get_node("Armature/AnimationPlayer")
+			lecteur.play("Parvis/Idle" if locomotion.activer_clips_importes else "Tutoriel/Idle")
+			lecteur.seek(0.0, true)
+			lecteur.pause()
+			_ajuster_pieds(figurant)
+			figurant.arbre.active = true
 	trace.append(trajet[0])
 	set_process(true)
 
@@ -101,28 +120,47 @@ func _position_dans_trace(recul: float) -> Vector3:
 		recul -= longueur
 	return trace[0]
 
-func _animer(figurant: Dictionary, cible: Vector3, delta: float, allure_max := 1.0) -> void:
+func _animer(figurant: Dictionary, cible: Vector3, delta: float, allure_max := 1.0, ralentir_arrivee := true) -> void:
 	var modele: Node3D = figurant.modele
 	var ancienne := modele.position
-	locomotion.orienter(figurant.arbre, modele, cible - ancienne, delta, not figurant.pompier)
+	locomotion.orienter(figurant.arbre, modele, cible - ancienne, delta, not figurant.pompier, false)
 	# Le guide adopte l'allure du groupe ; les victimes ne courent pas pour le rattraper.
-	var vitesse_cible := minf(vitesse * allure_blessee * allure_max, modele.position.distance_to(cible) * 4.0)
+	var vitesse_cible := vitesse * allure_blessee * allure_max
+	if ralentir_arrivee: vitesse_cible = minf(vitesse_cible, modele.position.distance_to(cible) * 4.0)
 	if locomotion.pivote(figurant.arbre): vitesse_cible = 0.0
 	var vitesse_actuelle := move_toward(float(figurant.get("vitesse", 0.0)), vitesse_cible, delta * 3.0)
 	figurant.vitesse = vitesse_actuelle
 	modele.position = modele.position.move_toward(cible, vitesse_actuelle * delta)
 	if modele.position.distance_to(cible) < 0.005:
 		modele.position = cible
-		figurant.vitesse = 0.0
+		if ralentir_arrivee: figurant.vitesse = 0.0
 	var mouvement := modele.position - ancienne
 	locomotion.actualiser(figurant.arbre, mouvement.length() / maxf(delta, 0.001), delta)
+
+func _ajuster_pieds(figurant: Dictionary) -> void:
+	var squelette: Skeleton3D = figurant.squelette
+	var visuel: Node3D = figurant.visuel
+	var porteur: Node3D = figurant.modele
+	if not is_instance_valid(squelette) or not is_instance_valid(visuel): return
+	squelette.force_update_all_bone_transforms()
+	var bas := INF
+	for nom in ["mixamorig2_LeftToeBase", "mixamorig2_RightToeBase"]:
+		var os := squelette.find_bone(nom)
+		if os >= 0:
+			var pied := squelette.global_transform * squelette.get_bone_global_pose(os).origin
+			bas = minf(bas, pied.y)
+	if not is_finite(bas): return
+	# Le trajet suit le centre du personnage, à un mètre du sol ou de la rampe.
+	var sol := porteur.global_position.y - hauteur_pivot_trajet
+	var correction := sol + hauteur_orteils + hauteur_victime - bas
+	visuel.global_position.y += correction
 
 func _process(delta: float) -> void:
 	var guide: Dictionary = figurants[0]
 	guide.modele.show()
 	if not guide_arrive:
 		var precedent: Vector3 = guide.modele.position
-		_animer(guide, trajet[segment], delta)
+		_animer(guide, trajet[segment], delta, 1.0, segment == trajet.size() - 1)
 		var nouveau: Vector3 = guide.modele.position
 		distance += precedent.distance_to(nouveau)
 		if trace[-1].distance_to(nouveau) > 0.02: trace.append(nouveau)

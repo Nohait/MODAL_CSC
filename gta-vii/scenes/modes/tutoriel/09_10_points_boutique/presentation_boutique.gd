@@ -18,10 +18,12 @@ var suivant: Button
 var precedent: Button
 var cible: Control
 var focus_precedent: Control
+var utilise_manette := false
 
 func _ready() -> void:
 	layer = 85
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	utilise_manette = is_instance_valid(boutique.joueur_sante) and boutique.joueur_sante.get("usingController") == true
 	focus_precedent = get_viewport().gui_get_focus_owner()
 	voile = Control.new()
 	add_child(voile)
@@ -75,7 +77,11 @@ func _afficher(numero: int) -> void:
 			parent.ensure_control_visible(cible)
 	precedent.disabled = indice == 0
 	suivant.text = "Voir les offres" if indice == ETAPES.size() - 1 else "Suivant"
-	suivant.grab_focus()
+	if utilise_manette:
+		suivant.grab_focus()
+	else:
+		suivant.release_focus()
+		precedent.release_focus()
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(boutique) or not boutique.is_visible_in_tree():
@@ -103,6 +109,10 @@ func _dessiner() -> void:
 
 func _input(event: InputEvent) -> void:
 	# La présentation est modale : aucun raccourci ne doit acheter ou fermer derrière.
+	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf(event.axis_value) > 0.15):
+		utilise_manette = true
+	elif event is InputEventKey or event is InputEventMouseButton or event is InputEventMouseMotion:
+		utilise_manette = false
 	if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		if event.is_action_pressed("ui_accept") and not event.is_echo():
 			if get_viewport().gui_get_focus_owner() == precedent and not precedent.disabled:

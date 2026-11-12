@@ -1,5 +1,7 @@
 extends RefCounted
 
+const ECHELLE_ICONE := 1.6
+
 static func icone(action: StringName, joueur: Node) -> Texture2D:
 	if not is_instance_valid(joueur) or joueur.get("usingController") != true: return null
 	for evenement in InputMap.action_get_events(action):
@@ -24,6 +26,8 @@ static func nom(action: StringName, joueur: Node) -> String:
 				JOY_BUTTON_Y: return "Y"
 				JOY_BUTTON_LEFT_SHOULDER: return "LB"
 				JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+				JOY_BUTTON_LEFT_STICK: return "L3"
+				JOY_BUTTON_RIGHT_STICK: return "R3"
 			return "Bouton %d" % evenement.button_index
 		if evenement is InputEventJoypadMotion:
 			match evenement.axis:
@@ -39,6 +43,7 @@ static func nom(action: StringName, joueur: Node) -> String:
 			match evenement.button_index:
 				MOUSE_BUTTON_LEFT: return "Clic gauche"
 				MOUSE_BUTTON_RIGHT: return "Clic droit"
+				MOUSE_BUTTON_MIDDLE: return "Clic molette"
 			return "Clic %d" % evenement.button_index
 	return "Interagir"
 
@@ -56,14 +61,19 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		if ancien: ancien.hide()
 		return
 	var commande := nom(action, joueur)
-	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande)):
+	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande) or texte.contains("Maintiens " + commande + ",") or texte.contains("avec " + commande + ".")):
 		label.add_theme_color_override("font_color", label.get_meta("couleur_commande"))
 		label.text = texte
 		if ancien: ancien.hide()
 		return
 	var taille := label.get_theme_font_size("font_size")
-	var balise := "[img=%dx%d]%s[/img]" % [taille, taille, image.resource_path]
+	var taille_icone := ceili(taille * ECHELLE_ICONE)
+	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace(commande + " · ", balise + " · ").replace(" · " + commande, " · " + balise).replace("sur " + commande + " pour", "sur " + balise + " pour").replace("le " + commande + " pour", "le " + balise + " pour").replace(" + " + commande, " + " + balise)
+	contenu = contenu.replace("Maintiens " + commande + ",", "Maintiens " + balise + ",").replace("relâche " + commande + " pour", "relâche " + balise + " pour").replace("avec " + commande + ".", "avec " + balise + ".")
+	if action == &"victim_control":
+		var stick := "[img=%dx%d]res://assets/textures/controles/r_stick.png[/img]" % [taille_icone, taille_icone]
+		contenu = contenu.replace("joystick droit", "joystick droit " + stick)
 	if ancien == null:
 		ancien = RichTextLabel.new()
 		ancien.name = "TexteAvecCommande"
@@ -74,6 +84,7 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		ancien.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ancien.add_theme_font_override("normal_font", label.get_theme_font("font"))
 	ancien.add_theme_font_size_override("normal_font_size", taille)
+	ancien.offset_bottom = float(taille_icone - taille)
 	ancien.add_theme_color_override("default_color", label.get_meta("couleur_commande"))
 	ancien.text = contenu
 	label.text = texte
@@ -81,6 +92,12 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 	ancien.show()
 
 static func afficher_consigne(label: Label, texte: String, joueur: Node) -> void:
+	if texte.contains("Maintiens ") and texte.contains("victime"):
+		afficher(label, texte, &"victim_control", joueur)
+		return
+	if texte.contains("Rappelle maintenant la victime avec "):
+		afficher(label, texte, &"victime_nav_auto", joueur)
+		return
 	if not (texte.contains("clic gauche") or texte.contains("Clic gauche") or texte.contains("Espace") or texte.contains(" · E") or texte.contains("sur E pour")):
 		label.text = texte
 		label.add_theme_color_override("font_color", label.get_meta("couleur_commande", label.get_theme_color("font_color")))
@@ -103,7 +120,8 @@ static func afficher_3d(label: Label3D, texte: String, action: StringName, joueu
 		return
 	var commande := nom(action, joueur)
 	var taille := label.font_size
-	var balise := "[img=%dx%d]%s[/img]" % [taille, taille, image.resource_path]
+	var taille_icone := ceili(taille * ECHELLE_ICONE)
+	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace("[" + commande + "]", balise).replace(commande + " · ", balise + " · ")
 	var vue := label.get_node_or_null("VueCommande") as SubViewport
 	if vue == null:
@@ -119,8 +137,8 @@ static func afficher_3d(label: Label3D, texte: String, action: StringName, joueu
 		vue.add_child(ligne)
 	var police: Font = label.font if label.font else ThemeDB.fallback_font
 	var sans_icone := texte.replace("[" + commande + "]", "").replace(commande + " · ", "")
-	var largeur := ceili(police.get_string_size(sans_icone, HORIZONTAL_ALIGNMENT_LEFT, -1, taille).x + taille + 24.0)
-	vue.size = Vector2i(largeur, ceili(taille * 1.6))
+	var largeur := ceili(police.get_string_size(sans_icone, HORIZONTAL_ALIGNMENT_LEFT, -1, taille).x + taille_icone + 24.0)
+	vue.size = Vector2i(largeur, ceili(taille_icone * 1.6))
 	var ligne: RichTextLabel = vue.get_node("Ligne")
 	ligne.size = vue.size
 	ligne.add_theme_font_size_override("normal_font_size", taille)
