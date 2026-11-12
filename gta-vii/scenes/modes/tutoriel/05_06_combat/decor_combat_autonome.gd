@@ -43,8 +43,8 @@ func _ready() -> void:
 	add_child(ennemis)
 	# Mobilier sur les côtés, pour conserver une aire de combat ouverte et plus large.
 	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/loungeSofa.glb"), Vector3(-5.5, 0, -23), PI * 0.5)
-	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(5.5, 0, -26))
-	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(-6.5, 0, -22), PI*0.5, Vector3(4,4,4))
+	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(5.5, 0, -26), -PI*0.1, Vector3(3,3,3))
+	STYLE.meuble(self, preload("res://assets/modeles/decors/appartements/cabinetBed.glb"), Vector3(-6.5, 0, -22), PI*0.1, Vector3(4,4,4))
 	var repas = preload("res://scenes/decors/interieurs/compositions/coin_repas.tres").construire()
 	repas.position = Vector3(9, 0, -21.5)
 	add_child(repas)
