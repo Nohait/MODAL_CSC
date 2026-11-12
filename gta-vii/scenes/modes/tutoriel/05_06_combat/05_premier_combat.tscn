@@ -53,3 +53,5 @@ autowrap_mode = 2
 layout_mode = 2
 theme_type_variation = &"NoteIntervention"
 autowrap_mode = 2
+
+[node name="VoiceLinePompier" type="AudioStreamPlayer3D" parent="Briefing" index="1" unique_id=673050947]

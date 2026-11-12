@@ -282,7 +282,7 @@ func choisir_cible():
 		$SbireRepere.reset_section()
 		$SbireRepere.play("PopUp")
 		$SonRepere.play()
-		print(chgt_cible_timer)
+
 
 func animation_enerve():
 	var tween_enerve = create_tween()
@@ -428,10 +428,7 @@ func attaque() -> void:
 
 func _jouer_frappe() -> void:
 	if anim == null or not anim.has_animation(ANIM_FRAPPE):
-		print("SBIRE : animation de frappe introuvable")
 		return
-	print("frappe demandée | anim=",anim," | liste =",anim.get_animation_list())
-	print("anim_speed_sale : ", anim.speed_scale)
 	anim.play(ANIM_FRAPPE)
 	anim.queue(ANIM_DEFAUT)
 

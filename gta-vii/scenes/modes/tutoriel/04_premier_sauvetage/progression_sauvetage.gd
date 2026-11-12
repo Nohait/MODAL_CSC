@@ -15,6 +15,7 @@ var temps_sans_progres := 0.0
 var etat_precedent := ""
 var intensite_precedente := 0.0
 var rappel_precedent := ""
+@onready var voice_player = get_parent().get_node("Briefing/VoiceLinePompier")
 
 func preparer(personnage: CharacterBody3D, habitant: CharacterBody3D, file: Node, obstacle: Node, arrivee: Node3D) -> void:
 	joueur = personnage
@@ -59,6 +60,14 @@ func rappel() -> String:
 func _dans_repere(corps: Node3D) -> bool:
 	var ecart := corps.global_position - repere.global_position
 	return Vector2(ecart.x, ecart.z).length() <= rayon_arrivee
+
+func play_voice():
+	var path = "res://assets/sounds/voice_line/tutoriel/Pompier4.wav"
+	if ResourceLoader.exists(path):
+		if voice_player.is_playing():
+			voice_player.stop()
+		voice_player.stream = load(path)
+		voice_player.play()
 
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(joueur) or termine: return

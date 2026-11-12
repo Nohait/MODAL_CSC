@@ -357,7 +357,6 @@ func prendre_degats(degats: float) -> void:
 	BarreDeVie.value = max(BarreDeVie.value, 0)
 	if BarreDeVie.value < vie_avant:
 		degats_recus.emit(vie_avant - BarreDeVie.value)
-	print( self.name, " Touché : -", degats)
 	
 	if BarreDeVie.value <= 0:
 		if is_instance_valid(ameliorations) and ameliorations.utiliser_secours():

@@ -17,6 +17,7 @@ var temps_conseil := 0.0
 var temps_tir_sans_effet := 0.0
 var vie_precedente := 0.0
 var contact_dangereux := false
+@onready var voice_player = get_parent().get_node("Briefing/VoiceLinePompier")
 
 func preparer(personnage: CharacterBody3D) -> void:
 	joueur = personnage
@@ -53,6 +54,14 @@ func _terminer_rencontre() -> void:
 	preload("res://scenes/modes/tutoriel/commun/interface/validation_objectif.gd").jouer(get_tree())
 	sortie_autorisee.emit()
 	consigne_changee.emit()
+
+func play_voice(indice = "5"):
+	var path = "res://assets/sounds/voice_line/tutoriel/Pompier%s.wav" % [indice]
+	if ResourceLoader.exists(path):
+		if voice_player.is_playing():
+			voice_player.stop()
+		voice_player.stream = load(path)
+		voice_player.play()
 
 func consigne() -> String:
 	if autonome and etat == "observation": return "Avancez à votre rythme. Ouvrez la porte quand vous êtes prêt."

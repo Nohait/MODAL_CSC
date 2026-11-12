@@ -105,7 +105,6 @@ func _input(event: InputEvent) -> void:
 		print("PRESSÉ phase=", phase, " ctrl=", joueur.usingController)
 	
 	if event.is_action_pressed("attaque_bouche") and not vise:
-		print("DEBUG ATTAQUE B")
 		vise = true
 		vise_manette = event is InputEventJoypadButton or event is InputEventJoypadMotion
 		decalage_visee = Vector3.ZERO

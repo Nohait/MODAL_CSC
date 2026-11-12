@@ -1,418 +1,380 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://61ls4xe1xjma"]
 
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
-
-[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
-
-[ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/04_premier_sauvetage.gd" id="salle"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/progression_sauvetage.gd" id="progression"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/04_premier_sauvetage/passage_enflamme.gd" id="passage"]
-[ext_resource type="PackedScene" path="res://scenes/victimes/victime.tscn" id="victime"]
+[ext_resource type="Script" uid="uid://duaqetckadkwc" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
 [ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
-[ext_resource type="Material" path="res://assets/materiaux/sol_appartements.tres" id="sol"]
-[ext_resource type="Material" path="res://assets/materiaux/mur_appartements.tres" id="mur"]
+[ext_resource type="Theme" uid="uid://4yvbquuw1ee3" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+[ext_resource type="PackedScene" uid="uid://dt47l8r7abrjp" path="res://scenes/jeu/main.tscn" id="main"]
+[ext_resource type="Material" uid="uid://nl8atpqkagi7" path="res://assets/materiaux/mur_appartements.tres" id="mur"]
+[ext_resource type="Script" uid="uid://biuaim6j0twnf" path="res://scenes/modes/tutoriel/04_premier_sauvetage/passage_enflamme.gd" id="passage"]
 [ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="porte"]
+[ext_resource type="Script" uid="uid://dr2be5n7mqh0e" path="res://scenes/modes/tutoriel/04_premier_sauvetage/progression_sauvetage.gd" id="progression"]
+[ext_resource type="Script" uid="uid://bgbolrcjq56v8" path="res://scenes/modes/tutoriel/04_premier_sauvetage/04_premier_sauvetage.gd" id="salle"]
+[ext_resource type="Material" uid="uid://ekgktuxra0pc" path="res://assets/materiaux/sol_appartements.tres" id="sol"]
+[ext_resource type="PackedScene" uid="uid://chgr25lo0i0g6" path="res://scenes/victimes/victime.tscn" id="victime"]
 [ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/zone_securite.tscn" id="zone"]
+
+[sub_resource type="BoxShape3D" id="blocage"]
+size = Vector3(3.2, 1.5, 0.45)
 
 [sub_resource type="StandardMaterial3D" id="chaleur"]
 transparency = 1
 shading_mode = 0
 albedo_color = Color(1, 0.25, 0.025, 0.24)
-emission_enabled = true
-emission = Color(1, 0.22, 0.02, 1)
 
 [sub_resource type="BoxMesh" id="rideau"]
-size = Vector3(3.2, 1.5, 0.45)
 material = SubResource("chaleur")
-
-[sub_resource type="BoxShape3D" id="blocage"]
 size = Vector3(3.2, 1.5, 0.45)
-
-[sub_resource type="StandardMaterial3D" id="vert"]
-shading_mode = 0
-albedo_color = Color(0.25, 0.85, 0.5, 1)
-
-[sub_resource type="TorusMesh" id="arrivee"]
-inner_radius = 2.25
-outer_radius = 2.4
-rings = 32
-ring_segments = 8
-material = SubResource("vert")
 
 [sub_resource type="BoxMesh" id="mesh_SolSalle"]
-size = Vector3(8, 0.3, 8)
 material = ExtResource("sol")
+size = Vector3(8, 0.3, 8)
 
 [sub_resource type="BoxShape3D" id="shape_SolSalle"]
 size = Vector3(8, 0.3, 8)
 
 [sub_resource type="BoxMesh" id="mesh_SolCouloir"]
-size = Vector3(3.2, 0.3, 8)
 material = ExtResource("sol")
+size = Vector3(3.2, 0.3, 8)
 
 [sub_resource type="BoxShape3D" id="shape_SolCouloir"]
 size = Vector3(3.2, 0.3, 8)
 
 [sub_resource type="BoxMesh" id="mesh_SolPalier"]
-size = Vector3(8, 0.3, 6)
 material = ExtResource("sol")
+size = Vector3(8, 0.3, 6)
 
 [sub_resource type="BoxShape3D" id="shape_SolPalier"]
 size = Vector3(8, 0.3, 6)
 
 [sub_resource type="BoxMesh" id="mesh_MurEntree"]
-size = Vector3(2.25, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(2.25, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_MurEntree"]
 size = Vector3(2.25, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_MurOuest"]
-size = Vector3(0.3, 1.2, 8)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxShape3D" id="shape_MurOuest"]
 size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxMesh" id="mesh_MurEst"]
-size = Vector3(0.3, 1.2, 8)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxShape3D" id="shape_MurEst"]
 size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxMesh" id="mesh_EpauleOuest"]
-size = Vector3(2.4, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_EpauleOuest"]
 size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_EpauleEst"]
-size = Vector3(2.4, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_EpauleEst"]
 size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_CouloirOuest"]
-size = Vector3(0.3, 1.2, 8)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxShape3D" id="shape_CouloirOuest"]
 size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxMesh" id="mesh_CouloirEst"]
-size = Vector3(0.3, 1.2, 8)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxShape3D" id="shape_CouloirEst"]
 size = Vector3(0.3, 1.2, 8)
 
 [sub_resource type="BoxMesh" id="mesh_PalierOuest"]
-size = Vector3(0.3, 1.2, 6)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 6)
 
 [sub_resource type="BoxShape3D" id="shape_PalierOuest"]
 size = Vector3(0.3, 1.2, 6)
 
 [sub_resource type="BoxMesh" id="mesh_PalierEst"]
-size = Vector3(0.3, 1.2, 6)
 material = ExtResource("mur")
+size = Vector3(0.3, 1.2, 6)
 
 [sub_resource type="BoxShape3D" id="shape_PalierEst"]
 size = Vector3(0.3, 1.2, 6)
 
 [sub_resource type="BoxMesh" id="mesh_PalierFond"]
-size = Vector3(8.6, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(8.6, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_PalierFond"]
 size = Vector3(8.6, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_PalierEpauleOuest"]
-size = Vector3(2.4, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_PalierEpauleOuest"]
 size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxMesh" id="mesh_PalierEpauleEst"]
-size = Vector3(2.4, 1.2, 0.3)
 material = ExtResource("mur")
+size = Vector3(2.4, 1.2, 0.3)
 
 [sub_resource type="BoxShape3D" id="shape_PalierEpauleEst"]
 size = Vector3(2.4, 1.2, 0.3)
 
-[node name="TutorielSauvetage" instance=ExtResource("main")]
+[node name="TutorielSauvetage" unique_id=1570426291 instance=ExtResource("main")]
 script = ExtResource("salle")
+distance_ouverture_sortie = 1.8
 session_tutoriel = true
 
-[node name="SalleFixe" type="Node3D" parent="."]
+[node name="SalleFixe" type="Node3D" parent="." index="15" unique_id=1091920337]
 
-[node name="Navigation" type="NavigationRegion3D" parent="SalleFixe"]
+[node name="Navigation" type="NavigationRegion3D" parent="SalleFixe" index="0" unique_id=743841477]
 
-[node name="Depart" type="Marker3D" parent="SalleFixe"]
-position = Vector3(0, 1, 2.8)
+[node name="Depart" type="Marker3D" parent="SalleFixe" index="1" unique_id=974337886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 2.8)
 
-[node name="Arrivee" type="Marker3D" parent="SalleFixe"]
-position = Vector3(0, 0, -15)
+[node name="Arrivee" type="Marker3D" parent="SalleFixe" index="2" unique_id=92637337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 
-[node name="RepereFinal" parent="SalleFixe" instance=ExtResource("zone")]
-position = Vector3(0, 0, -15)
+[node name="RepereFinal" parent="SalleFixe" index="3" unique_id=102823764 instance=ExtResource("zone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 
-[node name="DoublePorte" parent="SalleFixe" instance=ExtResource("porte")]
-position = Vector3(0, 1.8, 4.15)
-rotation = Vector3(0, 3.1415927, 0)
+[node name="DoublePorte" parent="SalleFixe" index="4" unique_id=449056461 instance=ExtResource("porte")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.8, 4.15)
 
-[node name="Ennemis" type="Node3D" parent="SalleFixe"]
+[node name="Ennemis" type="Node3D" parent="SalleFixe" index="5" unique_id=1240195234]
 
-[node name="Victimes" type="Node3D" parent="SalleFixe"]
+[node name="Victimes" type="Node3D" parent="SalleFixe" index="6" unique_id=1245123286]
 
-[node name="Habitant" parent="SalleFixe/Victimes" instance=ExtResource("victime")]
-position = Vector3(-1.8, 0.75, 0.5)
+[node name="Habitant" parent="SalleFixe/Victimes" index="0" unique_id=368376609 instance=ExtResource("victime")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.75, 0.5)
 distance_ralentissement = 0.5
 
-[node name="Passage" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(0, 0, -6)
-collision_layer = 1
+[node name="Passage" type="StaticBody3D" parent="SalleFixe" index="7" unique_id=1899304025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 collision_mask = 0
 script = ExtResource("passage")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/Passage"]
-position = Vector3(0, 0.75, 0)
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/Passage" index="0" unique_id=1356498081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 shape = SubResource("blocage")
 
-[node name="Rideau" type="MeshInstance3D" parent="SalleFixe/Passage"]
+[node name="Rideau" type="MeshInstance3D" parent="SalleFixe/Passage" index="1" unique_id=711224226]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 visible = false
-position = Vector3(0, 0.75, 0)
-mesh = SubResource("rideau")
 cast_shadow = 0
+mesh = SubResource("rideau")
 
-[node name="Foyers" type="Node3D" parent="SalleFixe/Passage"]
+[node name="Foyers" type="Node3D" parent="SalleFixe/Passage" index="2" unique_id=1328156244]
 
-[node name="Foyer" parent="SalleFixe/Passage/Foyers" instance=ExtResource("foyer")]
-position = Vector3(0, 0, 0)
+[node name="Foyer" parent="SalleFixe/Passage/Foyers" index="0" unique_id=160517344 instance=ExtResource("foyer")]
 taille = 2.0
 densite_fumee = 0.5
 
-[node name="Extinction" parent="SalleFixe/Passage/Foyers/Foyer" index="5"]
-duree_extinction = 3.0
-rayon_contact = 1.65
-
-[node name="SolSalle" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(0, -0.15, 0)
-collision_layer = 1
+[node name="SolSalle" type="StaticBody3D" parent="SalleFixe" index="8" unique_id=562191139]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolSalle"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolSalle" index="0" unique_id=1845414154]
 mesh = SubResource("mesh_SolSalle")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolSalle"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolSalle" index="1" unique_id=1013023759]
 shape = SubResource("shape_SolSalle")
 
-[node name="SolCouloir" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(0, -0.15, -8)
-collision_layer = 1
+[node name="SolCouloir" type="StaticBody3D" parent="SalleFixe" index="9" unique_id=1886192365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, -8)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolCouloir"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolCouloir" index="0" unique_id=805622146]
 mesh = SubResource("mesh_SolCouloir")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolCouloir"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolCouloir" index="1" unique_id=2119449261]
 shape = SubResource("shape_SolCouloir")
 
-[node name="SolPalier" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(0, -0.15, -15)
-collision_layer = 1
+[node name="SolPalier" type="StaticBody3D" parent="SalleFixe" index="10" unique_id=913445718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, -15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolPalier"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/SolPalier" index="0" unique_id=1028061592]
 mesh = SubResource("mesh_SolPalier")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolPalier"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/SolPalier" index="1" unique_id=819304377]
 shape = SubResource("shape_SolPalier")
 
-[node name="MurEntree" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-3.025, 0.6, 4.15)
-collision_layer = 1
+[node name="MurEntree" type="StaticBody3D" parent="SalleFixe" index="11" unique_id=1876931685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.025, 0.6, 4.15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntree"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntree" index="0" unique_id=2025919934]
 mesh = SubResource("mesh_MurEntree")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntree"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntree" index="1" unique_id=1561073251]
 shape = SubResource("shape_MurEntree")
 
-[node name="MurEntreeDroit" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(3.025, 0.6, 4.15)
-collision_layer = 1
+[node name="MurEntreeDroit" type="StaticBody3D" parent="SalleFixe" index="12" unique_id=1754836545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.025, 0.6, 4.15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntreeDroit"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEntreeDroit" index="0" unique_id=684934328]
 mesh = SubResource("mesh_MurEntree")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntreeDroit"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEntreeDroit" index="1" unique_id=1171026894]
 shape = SubResource("shape_MurEntree")
 
-[node name="MurOuest" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-4.15, 0.6, 0)
-collision_layer = 1
+[node name="MurOuest" type="StaticBody3D" parent="SalleFixe" index="13" unique_id=200022363]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 0.6, 0)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurOuest"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurOuest" index="0" unique_id=750279106]
 mesh = SubResource("mesh_MurOuest")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurOuest"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurOuest" index="1" unique_id=237693597]
 shape = SubResource("shape_MurOuest")
 
-[node name="MurEst" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(4.15, 0.6, 0)
-collision_layer = 1
+[node name="MurEst" type="StaticBody3D" parent="SalleFixe" index="14" unique_id=1210842608]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 0.6, 0)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEst"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/MurEst" index="0" unique_id=1005905070]
 mesh = SubResource("mesh_MurEst")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEst"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/MurEst" index="1" unique_id=1995442770]
 shape = SubResource("shape_MurEst")
 
-[node name="EpauleOuest" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-2.8, 0.6, -4)
-collision_layer = 1
+[node name="EpauleOuest" type="StaticBody3D" parent="SalleFixe" index="15" unique_id=83278850]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0.6, -4)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleOuest"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleOuest" index="0" unique_id=94591823]
 mesh = SubResource("mesh_EpauleOuest")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleOuest"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleOuest" index="1" unique_id=63938335]
 shape = SubResource("shape_EpauleOuest")
 
-[node name="EpauleEst" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(2.8, 0.6, -4)
-collision_layer = 1
+[node name="EpauleEst" type="StaticBody3D" parent="SalleFixe" index="16" unique_id=358750992]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0.6, -4)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleEst"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/EpauleEst" index="0" unique_id=1783801930]
 mesh = SubResource("mesh_EpauleEst")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleEst"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/EpauleEst" index="1" unique_id=2107225581]
 shape = SubResource("shape_EpauleEst")
 
-[node name="CouloirOuest" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-1.75, 0.6, -8)
-collision_layer = 1
+[node name="CouloirOuest" type="StaticBody3D" parent="SalleFixe" index="17" unique_id=1633118878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 0.6, -8)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirOuest"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirOuest" index="0" unique_id=642052922]
 mesh = SubResource("mesh_CouloirOuest")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirOuest"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirOuest" index="1" unique_id=2135601807]
 shape = SubResource("shape_CouloirOuest")
 
-[node name="CouloirEst" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(1.75, 0.6, -8)
-collision_layer = 1
+[node name="CouloirEst" type="StaticBody3D" parent="SalleFixe" index="18" unique_id=1286608818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 0.6, -8)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirEst"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/CouloirEst" index="0" unique_id=1374629285]
 mesh = SubResource("mesh_CouloirEst")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirEst"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/CouloirEst" index="1" unique_id=1495993964]
 shape = SubResource("shape_CouloirEst")
 
-[node name="PalierOuest" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-4.15, 0.6, -15)
-collision_layer = 1
+[node name="PalierOuest" type="StaticBody3D" parent="SalleFixe" index="19" unique_id=836002193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 0.6, -15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierOuest"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierOuest" index="0" unique_id=1360317071]
 mesh = SubResource("mesh_PalierOuest")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierOuest"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierOuest" index="1" unique_id=999438032]
 shape = SubResource("shape_PalierOuest")
 
-[node name="PalierEst" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(4.15, 0.6, -15)
-collision_layer = 1
+[node name="PalierEst" type="StaticBody3D" parent="SalleFixe" index="20" unique_id=1889631194]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 0.6, -15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEst"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEst" index="0" unique_id=1901079988]
 mesh = SubResource("mesh_PalierEst")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEst"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEst" index="1" unique_id=584106433]
 shape = SubResource("shape_PalierEst")
 
-[node name="PalierFond" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(0, 0.6, -18.15)
-collision_layer = 1
+[node name="PalierFond" type="StaticBody3D" parent="SalleFixe" index="21" unique_id=1057331002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -18.15)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierFond"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierFond" index="0" unique_id=919559100]
 mesh = SubResource("mesh_PalierFond")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierFond"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierFond" index="1" unique_id=1067550261]
 shape = SubResource("shape_PalierFond")
 
-[node name="PalierEpauleOuest" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(-2.8, 0.6, -12)
-collision_layer = 1
+[node name="PalierEpauleOuest" type="StaticBody3D" parent="SalleFixe" index="22" unique_id=975473610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0.6, -12)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleOuest"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleOuest" index="0" unique_id=964821738]
 mesh = SubResource("mesh_PalierEpauleOuest")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleOuest"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleOuest" index="1" unique_id=2146745274]
 shape = SubResource("shape_PalierEpauleOuest")
 
-[node name="PalierEpauleEst" type="StaticBody3D" parent="SalleFixe"]
-position = Vector3(2.8, 0.6, -12)
-collision_layer = 1
+[node name="PalierEpauleEst" type="StaticBody3D" parent="SalleFixe" index="23" unique_id=266593771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0.6, -12)
 collision_mask = 0
 
-[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleEst"]
+[node name="Visuel" type="MeshInstance3D" parent="SalleFixe/PalierEpauleEst" index="0" unique_id=478922454]
 mesh = SubResource("mesh_PalierEpauleEst")
 
-[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleEst"]
+[node name="Collision" type="CollisionShape3D" parent="SalleFixe/PalierEpauleEst" index="1" unique_id=568024607]
 shape = SubResource("shape_PalierEpauleEst")
 
-[node name="ProgressionSauvetage" type="Node" parent="."]
+[node name="ProgressionSauvetage" type="Node" parent="." index="16" unique_id=840112701]
 script = ExtResource("progression")
 
-[node name="Briefing" type="CanvasLayer" parent="."]
+[node name="Briefing" type="CanvasLayer" parent="." index="17" unique_id=318323680]
 
-[node name="Panneau" type="PanelContainer" parent="Briefing"]
-script = ExtResource("briefing_compact")
+[node name="Panneau" type="PanelContainer" parent="Briefing" index="0" unique_id=405084344]
 offset_left = 400.0
 offset_top = 24.0
 offset_right = 1100.0
 offset_bottom = 130.0
 mouse_filter = 2
 theme = ExtResource("intervention")
+script = ExtResource("briefing_compact")
 
-[node name="Marge" type="MarginContainer" parent="Briefing/Panneau"]
+[node name="Marge" type="MarginContainer" parent="Briefing/Panneau" index="0" unique_id=1590089591]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau/Marge"]
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau/Marge" index="0" unique_id=900825033]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Titre" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+[node name="Titre" type="Label" parent="Briefing/Panneau/Marge/Disposition" index="0" unique_id=866348762]
+layout_mode = 2
 theme_type_variation = &"TitreIntervention"
-layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "04 · PREMIER SAUVETAGE"
-mouse_filter = 2
 
-[node name="Consigne" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+[node name="Consigne" type="Label" parent="Briefing/Panneau/Marge/Disposition" index="1" unique_id=913052754]
 layout_mode = 2
 autowrap_mode = 2
-mouse_filter = 2
 
-[node name="Rappel" type="Label" parent="Briefing/Panneau/Marge/Disposition"]
+[node name="Rappel" type="Label" parent="Briefing/Panneau/Marge/Disposition" index="2" unique_id=1681393960]
+layout_mode = 2
 theme_type_variation = &"NoteIntervention"
-layout_mode = 2
 autowrap_mode = 2
-mouse_filter = 2
+
+[node name="VoiceLinePompier" type="AudioStreamPlayer3D" parent="Briefing" index="1" unique_id=45189815]

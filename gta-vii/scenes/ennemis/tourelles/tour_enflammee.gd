@@ -87,7 +87,6 @@ func _physics_process(delta: float) -> void:
 	# La détection déclenche la visée ; le disque indique ensuite la zone à quitter.
 	# Une victime seule n'affiche pas l'indicateur et n'est jamais prise pour cible.
 	choisir_cible()
-	print("j'ai choisi ma cible:", cible)
 	# La détection acquiert la cible ; la portée d'attaque permet de la conserver
 	# un peu plus loin. Une sortie de portée annule entièrement le chargement.
 	if is_instance_valid(cible):
@@ -191,7 +190,6 @@ func mourir():
 	if afficher_cendres:
 		RETOUR_COMBAT.creer_cendres(self, [$Visuel/Tour, $Visuel/OeilPivot/Oeil, $Visuel/OeilPivot/Pupille], duree_cendres)
 	died.emit()
-	print("Bravo, vous avez tué l'ennemi")
 	queue_free()
 
 func tirer_projectile() -> void:
@@ -220,13 +218,12 @@ func choisir_cible():
 		#les cibles ne peuvent etre que des gentils libérés
 		if body.is_in_group("player") or (body.is_in_group("victime") and body.is_freed):
 			var distance_body = global_position.distance_to(body.global_position)
-			print(body, " dbody: ",distance_body," dmin: ", distance_min)
+			
 			
 			#La cible choisie est la plus proche
 			if distance_body <= distance_min:
 				distance_min = distance_body
 				cible = body
-				print(cible)
 	if cible_avant !=null and cible != cible_avant:
 		chargement_ecoule = duree_chargement
 

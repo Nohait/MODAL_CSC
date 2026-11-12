@@ -47,6 +47,7 @@ func _ready() -> void:
 		salle.add_child(pratique)
 	if debut_ravitaillement:
 		poste = preload("res://scenes/modes/tutoriel/07_ravitaillement/poste_ravitaillement.gd").new()
+		poste.voice_player = $Briefing/VoiceLinePompier
 		salle.add_child(poste)
 		poste.consigne_changee.connect(_actualiser_consigne)
 	var salle_id: StringName = &"menace" if debut_sauvetage_menace else (&"poste" if debut_ravitaillement else (&"pratique" if debut_autonome else &"combat"))
@@ -71,6 +72,7 @@ func _ready() -> void:
 		chef.position = Vector3(-1.8, 1, 6)
 		salle.add_child(chef)
 		chef.installer_modele($player)
+		progression.play_voice()
 		chef.parler("Il y a une créature derrière cette porte. La mousse peut l’arrêter, mais ne la laisse pas t’approcher. Garde assez de réserve pour te défendre. Je couvre tes arrières.", $player, $CameraRig/Camera3D)
 	await get_tree().physics_frame
 	await get_tree().physics_frame

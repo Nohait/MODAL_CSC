@@ -485,7 +485,6 @@ func prendre_degats(degats: float) -> void:
 	actualiser_barre_vie()
 	flash_degats()
 	var douleur_sound = douleur.pick_random()
-	print(douleur_sound,douleur_sound.volume_db)
 	douleur_sound.play()
 	_verifier_appel_secours()
 	if vie <= 0.0:

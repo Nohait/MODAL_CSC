@@ -1,8 +1,9 @@
-extends RefCounted
+extends Node
 
 # L’essai libre ne participe pas à la validation de cette étape.
 var carte: StringName = &""
 var termine := false
+
 
 func acquerir(identifiant: StringName) -> bool:
 	if carte != &"" or identifiant not in [&"pression", &"reserve", &"recharge"]: return false

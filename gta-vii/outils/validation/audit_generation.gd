@@ -124,7 +124,6 @@ func _lancer() -> void:
 		generateur.free()
 		if (i + 1) % 10 == 0 or i == nombre_salles - 1:
 			panneau.text = "Salles contrôlées : %d / %d" % [i + 1, nombre_salles]
-			print(panneau.text)
 		await get_tree().process_frame
 	var echecs := 0
 	var compteurs := {}
@@ -141,8 +140,6 @@ func _lancer() -> void:
 		return
 	fichier.store_string(JSON.stringify(rapport, "\t"))
 	fichier.close()
-	print("AUDIT : %d / %d salles avec problèmes. %s" % [echecs, nombre_salles, str(compteurs)])
-	print("Rapport : ", ProjectSettings.globalize_path(dossier_rapports.path_join("rapport.json")))
 	if autocontrole:
 		var attendus := ["meuble_dans_mur", "meubles_superposes", "spawn_obstrue", "entree_inaccessible"]
 		for attendu in attendus:
@@ -150,7 +147,7 @@ func _lancer() -> void:
 				push_error("Le banc n'a pas détecté le défaut volontaire : " + attendu)
 				get_tree().quit(2)
 				return
-		print("AUTOCONTRÔLE : les quatre défauts volontaires ont bien été détectés.")
+		
 		get_tree().quit(0)
 	else:
 		get_tree().quit(0 if echecs == 0 else 1)
