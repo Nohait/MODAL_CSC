@@ -4,6 +4,7 @@ const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tut
 const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
 const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
 const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
+
 @export var locomotion: ANIMATIONS_FIGURANT
 @export_group("Rencontre")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
@@ -18,6 +19,8 @@ const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 @onready var titre: Label = $Briefing/Objectif/Marge/Disposition/Titre
 @onready var dialogue: PanelContainer = $Briefing/Dialogue
 @onready var invitation: Label = $Briefing/Invitation
+
+
 var modele_superieur: Node3D
 var arbre_superieur: AnimationTree
 var allure_superieur := 0.0
@@ -68,6 +71,8 @@ func _ready() -> void:
 	await preload("res://scenes/modes/tutoriel/debug/menu_tutoriel.gd").installer(self)
 	preload("res://scenes/modes/tutoriel/reprise/reprise_tutoriel.gd").obtenir(get_tree()).installer(self, &"parvis")
 	Reglages.chargement.terminer()
+
+
 
 func debug_contexte() -> Dictionary:
 	var actuelle = progression.etape()

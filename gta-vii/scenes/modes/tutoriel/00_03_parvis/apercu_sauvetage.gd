@@ -168,4 +168,3 @@ func _process(delta: float) -> void:
 			termine = true
 			set_process(false)
 			porte.fermer()
-

@@ -4,3 +4,6 @@
 
 [node name="TutorielSauvetageMenace" unique_id=1934874009 instance=ExtResource("combat")]
 debut_sauvetage_menace = true
+
+[node name="RoomGenerator" parent="Salles" parent_id_path=PackedInt32Array(517503624) index="0" unique_id=601904784]
+roomSizeMax = Vector2i(10, 9)

@@ -18,6 +18,20 @@ var dash_reussi := false
 var foyers: Array[Node] = []
 var joueur: CharacterBody3D
 var repere_dash: Node3D
+@onready var voice_player = get_parent().get_node("Briefing/VoiceLineInstructeur")
+
+
+func play_voice(indice, indice_replique):
+	var path = "res://assets/sounds/voice_line/tutoriel/instructeur%s_%s.wav" % [indice+1,indice_replique+2]
+
+	if ResourceLoader.exists(path):
+		print("je voulais parler ", indice_replique)
+		if voice_player.is_playing():
+			voice_player.stop()
+		voice_player.stream = load(path)
+		#voice_player.position = $Intervention/Superieur/Collision.position
+		voice_player.play()
+	
 
 func preparer(personnage: CharacterBody3D, cibles: Array[Node], arrivee_dash: Node3D) -> void:
 	joueur = personnage
@@ -33,10 +47,13 @@ func etape() -> Resource:
 
 func replique() -> String:
 	var actuelle := etape()
-	if actuelle == null or indice_replique < 0 or dialogue_termine: return ""
+	if actuelle == null or indice_replique < 0 or dialogue_termine:
+		voice_player.stop()
+		return ""
 	return actuelle.repliques[indice_replique]
 
 func parler() -> void:
+	play_voice(indice,indice_replique)
 	var actuelle := etape()
 	if actuelle == null: return
 	if dialogue_termine:
@@ -44,6 +61,7 @@ func parler() -> void:
 		etat_change.emit()
 		return
 	indice_replique += 1
+	
 	if indice_replique >= actuelle.repliques.size():
 		dialogue_termine = true
 	etat_change.emit()

@@ -1,43 +1,26 @@
-[gd_scene format=3]
-
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
-
-[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
-
-[ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/decors/point_regroupement.gd" id="point_medical"]
-[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="double_porte"]
-
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/00_parvis.gd" id="intro"]
-
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/progression_parvis.gd" id="progression"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
-
-[ext_resource type="PackedScene" path="res://scenes/decors/ville/intervention_secours/intervention_secours.tscn" id="secours"]
+[gd_scene format=3 uid="uid://2ki64p6owtmx"]
 
 [ext_resource type="Material" path="res://assets/materiaux/hall_incendie/asphalte_ville.tres" id="asphalte"]
-
-[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/trottoir_ville.tres" id="trottoir"]
-
-[ext_resource type="Material" path="res://assets/materiaux/appartements/white_plaster_02.tres" id="mur"]
-
-
+[ext_resource type="Script" uid="uid://duaqetckadkwc" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
+[ext_resource type="Script" uid="uid://dwfuwym5pltuj" path="res://scenes/modes/tutoriel/commun/dialogues/bulle_dialogue.gd" id="bulle"]
 [ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/00_contact.tres" id="contact"]
-
-[ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/01_mousse.tres" id="mousse"]
-
-[ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/02_reserve.tres" id="reserve"]
-
 [ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/03_dash.tres" id="dash"]
-
+[ext_resource type="PackedScene" path="res://scenes/modes/tutoriel/commun/decors/double_porte.tscn" id="double_porte"]
 [ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/03b_entree.tres" id="entree"]
-
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/dialogues/bulle_dialogue.gd" id="bulle"]
-
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/apercu_sauvetage.gd" id="teasing"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd" id="locomotion"]
-[ext_resource type="Shader" path="res://assets/shaders/effets/annonce_impact_boss.gdshader" id="repere_shader"]
+[ext_resource type="PackedScene" path="res://scenes/decors/hall_incendie/foyer_incendie.tscn" id="foyer"]
+[ext_resource type="Theme" uid="uid://4yvbquuw1ee3" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+[ext_resource type="Script" uid="uid://n2c5my02tjl6" path="res://scenes/modes/tutoriel/00_03_parvis/00_parvis.gd" id="intro"]
+[ext_resource type="Script" uid="uid://b72psuh4mka5r" path="res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd" id="locomotion"]
+[ext_resource type="PackedScene" uid="uid://dt47l8r7abrjp" path="res://scenes/jeu/main.tscn" id="main"]
+[ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/01_mousse.tres" id="mousse"]
+[ext_resource type="Material" path="res://assets/materiaux/appartements/white_plaster_02.tres" id="mur"]
+[ext_resource type="Script" uid="uid://btksooffxvkpb" path="res://scenes/modes/tutoriel/commun/decors/point_regroupement.gd" id="point_medical"]
+[ext_resource type="Script" uid="uid://cycsp7kus24jl" path="res://scenes/modes/tutoriel/00_03_parvis/progression_parvis.gd" id="progression"]
+[ext_resource type="Shader" uid="uid://c3ur8qktqmmco" path="res://assets/shaders/effets/annonce_impact_boss.gdshader" id="repere_shader"]
+[ext_resource type="Resource" path="res://scenes/modes/tutoriel/00_03_parvis/etapes/02_reserve.tres" id="reserve"]
+[ext_resource type="PackedScene" path="res://scenes/decors/ville/intervention_secours/intervention_secours.tscn" id="secours"]
+[ext_resource type="Script" uid="uid://bcyd0tl62r3la" path="res://scenes/modes/tutoriel/00_03_parvis/apercu_sauvetage.gd" id="teasing"]
+[ext_resource type="Material" path="res://assets/materiaux/hall_incendie/trottoir_ville.tres" id="trottoir"]
 
 [sub_resource type="Resource" id="locomotion_superieur"]
 script = ExtResource("locomotion")
@@ -45,39 +28,20 @@ script = ExtResource("locomotion")
 [sub_resource type="Resource" id="locomotion_sauvetage"]
 script = ExtResource("locomotion")
 
-[sub_resource type="StandardMaterial3D" id="metal"]
-albedo_color = Color(0.14, 0.17, 0.19, 1)
-metallic = 0.25
-roughness = 0.85
-[sub_resource type="StandardMaterial3D" id="vitre"]
-albedo_color = Color(0.075, 0.105, 0.12, 1)
-roughness = 0.55
-[sub_resource type="StandardMaterial3D" id="braise"]
-albedo_color = Color(0.6, 0.12, 0.018, 1)
-emission_enabled = true
-emission = Color(1, 0.16, 0.015, 1)
-emission_energy_multiplier = 2.0
 [sub_resource type="ShaderMaterial" id="repere"]
+render_priority = 0
 shader = ExtResource("repere_shader")
 shader_parameter/couleur = Color(1, 0.65, 0.18, 1)
 shader_parameter/charge = 0.12
 shader_parameter/opacite = 0.9
+
 [sub_resource type="PlaneMesh" id="repere_mesh"]
 material = SubResource("repere")
 size = Vector2(4, 4)
+
 [sub_resource type="CapsuleShape3D" id="personne"]
 radius = 0.35
 height = 1.8
-[sub_resource type="StyleBoxFlat" id="plaque"]
-bg_color = Color(0.07, 0.085, 0.095, 0.94)
-border_width_left = 3
-border_color = Color(0.79, 0.55, 0.24, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_left = 7
-corner_radius_bottom_right = 7
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 5
 
 [sub_resource type="BoxMesh" id="mesh_Rue"]
 size = Vector3(34, 0.5, 26)
@@ -108,6 +72,11 @@ size = Vector3(4, 1.4, 0.55)
 
 [sub_resource type="BoxShape3D" id="forme_Linteau"]
 size = Vector3(4, 1.4, 0.55)
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_color = Color(0.14, 0.17, 0.19, 1)
+metallic = 0.25
+roughness = 0.85
 
 [sub_resource type="BoxMesh" id="mesh_FondEntree"]
 size = Vector3(4, 4.4, 0.4)
@@ -160,6 +129,10 @@ size = Vector3(6, 2.4, 2.5)
 [sub_resource type="BoxShape3D" id="forme_PoliceCollision"]
 size = Vector3(2, 1.3, 4.5)
 
+[sub_resource type="StandardMaterial3D" id="vitre"]
+albedo_color = Color(0.075, 0.105, 0.12, 1)
+roughness = 0.55
+
 [sub_resource type="BoxMesh" id="mesh_Fenetre0_0"]
 size = Vector3(2.1, 1.75, 0.12)
 
@@ -177,6 +150,12 @@ size = Vector3(2.4, 0.14, 0.18)
 
 [sub_resource type="BoxMesh" id="mesh_Fenetre0_0Cadre4"]
 size = Vector3(0.08, 1.75, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="braise"]
+albedo_color = Color(0.6, 0.12, 0.018, 1)
+emission_enabled = true
+emission = Color(1, 0.16, 0.015, 1)
+emission_energy_multiplier = 2.0
 
 [sub_resource type="BoxMesh" id="mesh_Fenetre0_0Chaleur"]
 size = Vector3(1.95, 1.55, 0.04)
@@ -324,704 +303,711 @@ size = Vector3(0.8, 0.45, 0.8)
 
 [sub_resource type="BoxShape3D" id="limite_nord"]
 size = Vector3(34, 4, 0.35)
-[sub_resource type="BoxMesh" id="porte_vitre"]
-size = Vector3(1.65, 3.4, 0.12)
-[sub_resource type="BoxMesh" id="poignee"]
-size = Vector3(0.045, 0.5, 0.12)
-[sub_resource type="BoxShape3D" id="porte_collision"]
-size = Vector3(3.8, 3.8, 0.2)
 
-[node name="Tutoriel" instance=ExtResource("main")]
+[node name="Tutoriel" unique_id=293548670 instance=ExtResource("main")]
 script = ExtResource("intro")
-session_tutoriel = true
 locomotion = SubResource("locomotion_superieur")
-[node name="Intervention" type="Node3D" parent="."]
-[node name="TeasingSauvetage" type="Node3D" parent="Intervention"]
+distance_conversation = 3.2
+vitesse_superieur = 1.67
+duree_fondu_interface = 1.0
+lumiere_ambiante = 0.25
+session_tutoriel = true
+
+[node name="RoomGenerator" parent="Salles" parent_id_path=PackedInt32Array(517503624) index="0" unique_id=601904784]
+roomSizeMax = Vector2i(10, 9)
+
+[node name="Intervention" type="Node3D" parent="." index="15" unique_id=1534050008]
+
+[node name="TeasingSauvetage" type="Node3D" parent="Intervention" index="0" unique_id=1186204701]
 script = ExtResource("teasing")
 locomotion = SubResource("locomotion_sauvetage")
-[node name="Depart" type="Marker3D" parent="Intervention"]
-position = Vector3(0, 1, 7)
-[node name="PositionBriefing" type="Marker3D" parent="Intervention"]
-position = Vector3(-1.7, 1, 4.8)
-[node name="Entree" type="Marker3D" parent="Intervention"]
-position = Vector3(0, 1, -5.5)
-[node name="RepereDash" type="Marker3D" parent="Intervention"]
-position = Vector3(0, 0.03, -2.5)
-[node name="ZoneDash" type="MeshInstance3D" parent="Intervention"]
-position = Vector3(0, 0.035, -2.5)
-cast_shadow = 0
-mesh = SubResource("repere_mesh")
+
+[node name="Depart" type="Marker3D" parent="Intervention" index="1" unique_id=1534388219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7)
+
+[node name="PositionBriefing" type="Marker3D" parent="Intervention" index="2" unique_id=1326878547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7, 1, 4.8)
+
+[node name="Entree" type="Marker3D" parent="Intervention" index="3" unique_id=331706253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -5.5)
+
+[node name="RepereDash" type="Marker3D" parent="Intervention" index="4" unique_id=1778347032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -2.5)
+
+[node name="ZoneDash" type="MeshInstance3D" parent="Intervention" index="5" unique_id=1501637211]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, -2.5)
 visible = false
 cast_shadow = 0
-[node name="Superieur" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-5, 1, 6)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/Superieur"]
+mesh = SubResource("repere_mesh")
+
+[node name="Superieur" type="StaticBody3D" parent="Intervention" index="6" unique_id=738252710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, 6)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/Superieur" index="0" unique_id=610972696]
 shape = SubResource("personne")
-[node name="Invite" type="Label3D" parent="Intervention/Superieur"]
-position = Vector3(0, 1.25, 0)
-text = "CHEF D’INTERVENTION"
-font_size = 28
-pixel_size = 0.005
+
+[node name="Invite" type="Label3D" parent="Intervention/Superieur" index="1" unique_id=1466058229]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 billboard = 1
 modulate = Color(1, 0.81, 0.42, 1)
+text = "CHEF D’INTERVENTION"
+font_size = 28
 outline_size = 6
-no_depth_test = false
-[node name="Secours" parent="Intervention" instance=ExtResource("secours")]
-position = Vector3(0, 0.08, -17)
-[node name="Progression" type="Node" parent="."]
+
+[node name="Secours" parent="Intervention" index="7" unique_id=1747359843 instance=ExtResource("secours")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -17)
+
+[node name="Rue" type="StaticBody3D" parent="Intervention" index="8" unique_id=1608356951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 8)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Rue" index="0" unique_id=1397452181]
+material_override = ExtResource("asphalte")
+mesh = SubResource("mesh_Rue")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/Rue" index="1" unique_id=1077365900]
+shape = SubResource("forme_Rue")
+
+[node name="Parvis" type="StaticBody3D" parent="Intervention" index="9" unique_id=1922122084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, -0.5)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Parvis" index="0" unique_id=1400290224]
+material_override = ExtResource("trottoir")
+mesh = SubResource("mesh_Parvis")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/Parvis" index="1" unique_id=1169076145]
+shape = SubResource("forme_Parvis")
+
+[node name="FacadeGauche" type="StaticBody3D" parent="Intervention" index="10" unique_id=2117248559]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4, -6)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/FacadeGauche" index="0" unique_id=921679133]
+material_override = ExtResource("mur")
+mesh = SubResource("mesh_FacadeGauche")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/FacadeGauche" index="1" unique_id=728360555]
+shape = SubResource("forme_FacadeGauche")
+
+[node name="FacadeDroite" type="StaticBody3D" parent="Intervention" index="11" unique_id=1176495145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4, -6)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/FacadeDroite" index="0" unique_id=1504831031]
+material_override = ExtResource("mur")
+mesh = SubResource("mesh_FacadeDroite")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/FacadeDroite" index="1" unique_id=459897697]
+shape = SubResource("forme_FacadeDroite")
+
+[node name="Linteau" type="StaticBody3D" parent="Intervention" index="12" unique_id=957437927]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.8, -6)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Linteau" index="0" unique_id=187945317]
+material_override = ExtResource("mur")
+mesh = SubResource("mesh_Linteau")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/Linteau" index="1" unique_id=1573106730]
+shape = SubResource("forme_Linteau")
+
+[node name="FondEntree" type="StaticBody3D" parent="Intervention" index="13" unique_id=1202935786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -8.2)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/FondEntree" index="0" unique_id=395477775]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_FondEntree")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/FondEntree" index="1" unique_id=1806744385]
+shape = SubResource("forme_FondEntree")
+
+[node name="PilierEntreeG" type="StaticBody3D" parent="Intervention" index="14" unique_id=1683820231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 1.9, -5.72)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/PilierEntreeG" index="0" unique_id=1840896108]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_PilierEntreeG")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/PilierEntreeG" index="1" unique_id=1571048826]
+shape = SubResource("forme_PilierEntreeG")
+
+[node name="PilierEntreeD" type="StaticBody3D" parent="Intervention" index="15" unique_id=1262487832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 1.9, -5.72)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/PilierEntreeD" index="0" unique_id=1596035812]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_PilierEntreeD")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/PilierEntreeD" index="1" unique_id=25096097]
+shape = SubResource("forme_PilierEntreeD")
+
+[node name="TraverseEntree" type="StaticBody3D" parent="Intervention" index="16" unique_id=695141056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.74, -5.72)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/TraverseEntree" index="0" unique_id=502161093]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_TraverseEntree")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/TraverseEntree" index="1" unique_id=1285456321]
+shape = SubResource("forme_TraverseEntree")
+
+[node name="BorneG" type="StaticBody3D" parent="Intervention" index="17" unique_id=1156369319]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0.5, 4.6)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/BorneG" index="0" unique_id=981434310]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_BorneG")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/BorneG" index="1" unique_id=669477458]
+shape = SubResource("forme_BorneG")
+
+[node name="BorneD" type="StaticBody3D" parent="Intervention" index="18" unique_id=633165053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0.5, 4.6)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/BorneD" index="0" unique_id=895014529]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_BorneD")
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/BorneD" index="1" unique_id=501825804]
+shape = SubResource("forme_BorneD")
+
+[node name="LimiteG" type="StaticBody3D" parent="Intervention" index="19" unique_id=1955986295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 1, 4)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteG" index="0" unique_id=1280691532]
+shape = SubResource("forme_LimiteG")
+
+[node name="LimiteD" type="StaticBody3D" parent="Intervention" index="20" unique_id=855621303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1, 4)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteD" index="0" unique_id=1182745980]
+shape = SubResource("forme_LimiteD")
+
+[node name="LimiteRue" type="StaticBody3D" parent="Intervention" index="21" unique_id=1149068544]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteRue" index="0" unique_id=969494015]
+shape = SubResource("forme_LimiteRue")
+
+[node name="CamionCollision" type="StaticBody3D" parent="Intervention" index="22" unique_id=2023447066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, 11)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/CamionCollision" index="0" unique_id=836579089]
+shape = SubResource("forme_CamionCollision")
+
+[node name="PoliceCollision" type="StaticBody3D" parent="Intervention" index="23" unique_id=258190533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.65, 10)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/PoliceCollision" index="0" unique_id=257810753]
+shape = SubResource("forme_PoliceCollision")
+
+[node name="Fenetre0_0" type="Node3D" parent="Intervention" index="24" unique_id=1037711004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0" index="0" unique_id=1631206381]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre0_0")
+
+[node name="Fenetre0_0Cadre0" type="Node3D" parent="Intervention" index="25" unique_id=1297241162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.13, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre0" index="0" unique_id=2016356734]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_0Cadre0")
+
+[node name="Fenetre0_0Cadre1" type="Node3D" parent="Intervention" index="26" unique_id=450984617]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.87, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre1" index="0" unique_id=1350475949]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_0Cadre1")
+
+[node name="Fenetre0_0Cadre2" type="Node3D" parent="Intervention" index="27" unique_id=1679589327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.07, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre2" index="0" unique_id=893270398]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_0Cadre2")
+
+[node name="Fenetre0_0Cadre3" type="Node3D" parent="Intervention" index="28" unique_id=793778186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.93, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre3" index="0" unique_id=845583024]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_0Cadre3")
+
+[node name="Fenetre0_0Cadre4" type="Node3D" parent="Intervention" index="29" unique_id=2140986900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre4" index="0" unique_id=76024458]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_0Cadre4")
+
+[node name="Fenetre0_0Chaleur" type="Node3D" parent="Intervention" index="30" unique_id=1125518771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, -5.53)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Chaleur" index="0" unique_id=742022323]
+material_override = SubResource("braise")
+mesh = SubResource("mesh_Fenetre0_0Chaleur")
+
+[node name="IncendieFenetre0_0" parent="Intervention" index="31" unique_id=1800837637 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.45, -5.38)
+densite_fumee = 0.5
+
+[node name="Fenetre0_1" type="Node3D" parent="Intervention" index="32" unique_id=2116540653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1" index="0" unique_id=274745635]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre0_1")
+
+[node name="Fenetre0_1Cadre0" type="Node3D" parent="Intervention" index="33" unique_id=1238816039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.13, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre0" index="0" unique_id=1470976918]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_1Cadre0")
+
+[node name="Fenetre0_1Cadre1" type="Node3D" parent="Intervention" index="34" unique_id=1457031387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.87, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre1" index="0" unique_id=1493158392]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_1Cadre1")
+
+[node name="Fenetre0_1Cadre2" type="Node3D" parent="Intervention" index="35" unique_id=1653381638]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.07, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre2" index="0" unique_id=1688789672]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_1Cadre2")
+
+[node name="Fenetre0_1Cadre3" type="Node3D" parent="Intervention" index="36" unique_id=536452652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.93, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre3" index="0" unique_id=2146534009]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_1Cadre3")
+
+[node name="Fenetre0_1Cadre4" type="Node3D" parent="Intervention" index="37" unique_id=1010780263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre4" index="0" unique_id=1971855403]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_1Cadre4")
+
+[node name="Fenetre0_2" type="Node3D" parent="Intervention" index="38" unique_id=683879029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2" index="0" unique_id=235760640]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre0_2")
+
+[node name="Fenetre0_2Cadre0" type="Node3D" parent="Intervention" index="39" unique_id=658959011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.87, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre0" index="0" unique_id=47921964]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_2Cadre0")
+
+[node name="Fenetre0_2Cadre1" type="Node3D" parent="Intervention" index="40" unique_id=2045944836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.13, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre1" index="0" unique_id=1172968132]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_2Cadre1")
+
+[node name="Fenetre0_2Cadre2" type="Node3D" parent="Intervention" index="41" unique_id=973725512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.07, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre2" index="0" unique_id=1953269706]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_2Cadre2")
+
+[node name="Fenetre0_2Cadre3" type="Node3D" parent="Intervention" index="42" unique_id=865476360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.93, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre3" index="0" unique_id=561692858]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_2Cadre3")
+
+[node name="Fenetre0_2Cadre4" type="Node3D" parent="Intervention" index="43" unique_id=628581934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre4" index="0" unique_id=957312887]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_2Cadre4")
+
+[node name="Fenetre0_2Chaleur" type="Node3D" parent="Intervention" index="44" unique_id=48355215]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -5.53)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Chaleur" index="0" unique_id=1283031319]
+material_override = SubResource("braise")
+mesh = SubResource("mesh_Fenetre0_2Chaleur")
+
+[node name="IncendieFenetre0_2" parent="Intervention" index="45" unique_id=1810637599 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.45, -5.38)
+densite_fumee = 0.5
+
+[node name="Fenetre0_3" type="Node3D" parent="Intervention" index="46" unique_id=1623470382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3" index="0" unique_id=441767223]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre0_3")
+
+[node name="Fenetre0_3Cadre0" type="Node3D" parent="Intervention" index="47" unique_id=2046626644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.87, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre0" index="0" unique_id=1535835224]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_3Cadre0")
+
+[node name="Fenetre0_3Cadre1" type="Node3D" parent="Intervention" index="48" unique_id=2038306739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.13, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre1" index="0" unique_id=1373622567]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_3Cadre1")
+
+[node name="Fenetre0_3Cadre2" type="Node3D" parent="Intervention" index="49" unique_id=876870573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1.07, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre2" index="0" unique_id=800657383]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_3Cadre2")
+
+[node name="Fenetre0_3Cadre3" type="Node3D" parent="Intervention" index="50" unique_id=369213118]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.93, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre3" index="0" unique_id=1361274882]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_3Cadre3")
+
+[node name="Fenetre0_3Cadre4" type="Node3D" parent="Intervention" index="51" unique_id=1125142800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre4" index="0" unique_id=1288398103]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre0_3Cadre4")
+
+[node name="Fenetre1_0" type="Node3D" parent="Intervention" index="52" unique_id=1381269728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.8, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0" index="0" unique_id=2076690576]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre1_0")
+
+[node name="Fenetre1_0Cadre0" type="Node3D" parent="Intervention" index="53" unique_id=263792007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.13, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre0" index="0" unique_id=1414810684]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_0Cadre0")
+
+[node name="Fenetre1_0Cadre1" type="Node3D" parent="Intervention" index="54" unique_id=1805740836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.87, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre1" index="0" unique_id=1781260662]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_0Cadre1")
+
+[node name="Fenetre1_0Cadre2" type="Node3D" parent="Intervention" index="55" unique_id=1041757863]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 4.87, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre2" index="0" unique_id=700164503]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_0Cadre2")
+
+[node name="Fenetre1_0Cadre3" type="Node3D" parent="Intervention" index="56" unique_id=1090242002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 6.73, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre3" index="0" unique_id=740408220]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_0Cadre3")
+
+[node name="Fenetre1_0Cadre4" type="Node3D" parent="Intervention" index="57" unique_id=2036972817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre4" index="0" unique_id=1573145299]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_0Cadre4")
+
+[node name="Fenetre1_1" type="Node3D" parent="Intervention" index="58" unique_id=856931401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.8, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1" index="0" unique_id=864525740]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre1_1")
+
+[node name="Fenetre1_1Cadre0" type="Node3D" parent="Intervention" index="59" unique_id=280139474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.13, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre0" index="0" unique_id=49196485]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_1Cadre0")
+
+[node name="Fenetre1_1Cadre1" type="Node3D" parent="Intervention" index="60" unique_id=1541171789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.87, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre1" index="0" unique_id=972917454]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_1Cadre1")
+
+[node name="Fenetre1_1Cadre2" type="Node3D" parent="Intervention" index="61" unique_id=730017702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.87, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre2" index="0" unique_id=1199072289]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_1Cadre2")
+
+[node name="Fenetre1_1Cadre3" type="Node3D" parent="Intervention" index="62" unique_id=724643770]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.73, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre3" index="0" unique_id=79493033]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_1Cadre3")
+
+[node name="Fenetre1_1Cadre4" type="Node3D" parent="Intervention" index="63" unique_id=1312218435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre4" index="0" unique_id=581582299]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_1Cadre4")
+
+[node name="Fenetre1_1Chaleur" type="Node3D" parent="Intervention" index="64" unique_id=1291540017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.8, -5.53)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Chaleur" index="0" unique_id=1496075893]
+material_override = SubResource("braise")
+mesh = SubResource("mesh_Fenetre1_1Chaleur")
+
+[node name="IncendieFenetre1_1" parent="Intervention" index="65" unique_id=347132520 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.25, -5.38)
+densite_fumee = 0.5
+
+[node name="Fenetre1_2" type="Node3D" parent="Intervention" index="66" unique_id=864095973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.8, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2" index="0" unique_id=1148683453]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre1_2")
+
+[node name="Fenetre1_2Cadre0" type="Node3D" parent="Intervention" index="67" unique_id=92399900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.87, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre0" index="0" unique_id=648710620]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_2Cadre0")
+
+[node name="Fenetre1_2Cadre1" type="Node3D" parent="Intervention" index="68" unique_id=1877109970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.13, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre1" index="0" unique_id=2110170252]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_2Cadre1")
+
+[node name="Fenetre1_2Cadre2" type="Node3D" parent="Intervention" index="69" unique_id=1192382942]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4.87, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre2" index="0" unique_id=1092112683]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_2Cadre2")
+
+[node name="Fenetre1_2Cadre3" type="Node3D" parent="Intervention" index="70" unique_id=404738071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.73, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre3" index="0" unique_id=401658982]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_2Cadre3")
+
+[node name="Fenetre1_2Cadre4" type="Node3D" parent="Intervention" index="71" unique_id=1453387805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre4" index="0" unique_id=105356705]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_2Cadre4")
+
+[node name="Fenetre1_3" type="Node3D" parent="Intervention" index="72" unique_id=51868142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 5.8, -5.65)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3" index="0" unique_id=1593426494]
+material_override = SubResource("vitre")
+mesh = SubResource("mesh_Fenetre1_3")
+
+[node name="Fenetre1_3Cadre0" type="Node3D" parent="Intervention" index="73" unique_id=559324160]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.87, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre0" index="0" unique_id=93256848]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_3Cadre0")
+
+[node name="Fenetre1_3Cadre1" type="Node3D" parent="Intervention" index="74" unique_id=856079277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.13, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre1" index="0" unique_id=1140882892]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_3Cadre1")
+
+[node name="Fenetre1_3Cadre2" type="Node3D" parent="Intervention" index="75" unique_id=1785241868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 4.87, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre2" index="0" unique_id=123778211]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_3Cadre2")
+
+[node name="Fenetre1_3Cadre3" type="Node3D" parent="Intervention" index="76" unique_id=928130899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 6.73, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre3" index="0" unique_id=1689591128]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_3Cadre3")
+
+[node name="Fenetre1_3Cadre4" type="Node3D" parent="Intervention" index="77" unique_id=539999726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 5.8, -5.51)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre4" index="0" unique_id=1708903329]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Fenetre1_3Cadre4")
+
+[node name="Fenetre1_3Chaleur" type="Node3D" parent="Intervention" index="78" unique_id=880158996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 5.8, -5.53)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Chaleur" index="0" unique_id=479543310]
+material_override = SubResource("braise")
+mesh = SubResource("mesh_Fenetre1_3Chaleur")
+
+[node name="IncendieFenetre1_3" parent="Intervention" index="79" unique_id=531815670 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 5.25, -5.38)
+densite_fumee = 0.5
+
+[node name="Bac1" type="Node3D" parent="Intervention" index="80" unique_id=2053368761]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.23, 1)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Bac1" index="0" unique_id=947157143]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Bac1")
+
+[node name="FoyerExercice1" parent="Intervention" index="81" unique_id=1774870961 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.42, 1)
+taille = 0.65
+densite_fumee = 0.35
+
+[node name="Bac2" type="Node3D" parent="Intervention" index="82" unique_id=2103510412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.23, -1)
+
+[node name="Visuel" type="MeshInstance3D" parent="Intervention/Bac2" index="0" unique_id=699945606]
+material_override = SubResource("metal")
+mesh = SubResource("mesh_Bac2")
+
+[node name="FoyerExercice2" parent="Intervention" index="83" unique_id=1113946475 instance=ExtResource("foyer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.42, -1)
+taille = 0.65
+densite_fumee = 0.35
+
+[node name="LimiteNord" type="StaticBody3D" parent="Intervention" index="84" unique_id=36276080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.6)
+
+[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteNord" index="0" unique_id=1761410217]
+shape = SubResource("limite_nord")
+
+[node name="PorteEntree" parent="Intervention" index="85" unique_id=93156161 instance=ExtResource("double_porte")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, -5.7)
+afficher_encadrement = false
+
+[node name="PointRegroupement" type="Node3D" parent="Intervention" index="86" unique_id=966509849]
+script = ExtResource("point_medical")
+
+[node name="Progression" type="Node" parent="." index="16" unique_id=275386014]
 script = ExtResource("progression")
 etapes = Array[Resource]([ExtResource("contact"), ExtResource("mousse"), ExtResource("reserve"), ExtResource("dash"), ExtResource("entree")])
 
-[node name="Rue" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, -0.28, 8)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Rue"]
-mesh = SubResource("mesh_Rue")
-material_override = ExtResource("asphalte")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/Rue"]
-shape = SubResource("forme_Rue")
-
-[node name="Parvis" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, -0.14, -0.5)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Parvis"]
-mesh = SubResource("mesh_Parvis")
-material_override = ExtResource("trottoir")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/Parvis"]
-shape = SubResource("forme_Parvis")
-
-[node name="FacadeGauche" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-8, 4, -6)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/FacadeGauche"]
-mesh = SubResource("mesh_FacadeGauche")
-material_override = ExtResource("mur")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/FacadeGauche"]
-shape = SubResource("forme_FacadeGauche")
-
-[node name="FacadeDroite" type="StaticBody3D" parent="Intervention"]
-position = Vector3(8, 4, -6)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/FacadeDroite"]
-mesh = SubResource("mesh_FacadeDroite")
-material_override = ExtResource("mur")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/FacadeDroite"]
-shape = SubResource("forme_FacadeDroite")
-
-[node name="Linteau" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, 4.8, -6)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Linteau"]
-mesh = SubResource("mesh_Linteau")
-material_override = ExtResource("mur")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/Linteau"]
-shape = SubResource("forme_Linteau")
-
-[node name="FondEntree" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, 2.2, -8.2)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/FondEntree"]
-mesh = SubResource("mesh_FondEntree")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/FondEntree"]
-shape = SubResource("forme_FondEntree")
-
-[node name="PilierEntreeG" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-1.85, 1.9, -5.72)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/PilierEntreeG"]
-mesh = SubResource("mesh_PilierEntreeG")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/PilierEntreeG"]
-shape = SubResource("forme_PilierEntreeG")
-
-[node name="PilierEntreeD" type="StaticBody3D" parent="Intervention"]
-position = Vector3(1.85, 1.9, -5.72)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/PilierEntreeD"]
-mesh = SubResource("mesh_PilierEntreeD")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/PilierEntreeD"]
-shape = SubResource("forme_PilierEntreeD")
-
-[node name="TraverseEntree" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, 3.74, -5.72)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/TraverseEntree"]
-mesh = SubResource("mesh_TraverseEntree")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/TraverseEntree"]
-shape = SubResource("forme_TraverseEntree")
-
-[node name="BorneG" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-2.8, 0.5, 4.6)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/BorneG"]
-mesh = SubResource("mesh_BorneG")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/BorneG"]
-shape = SubResource("forme_BorneG")
-
-[node name="BorneD" type="StaticBody3D" parent="Intervention"]
-position = Vector3(2.8, 0.5, 4.6)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/BorneD"]
-mesh = SubResource("mesh_BorneD")
-material_override = SubResource("metal")
-
-[node name="Collision" type="CollisionShape3D" parent="Intervention/BorneD"]
-shape = SubResource("forme_BorneD")
-
-[node name="LimiteG" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-17, 1, 4)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteG"]
-shape = SubResource("forme_LimiteG")
-
-[node name="LimiteD" type="StaticBody3D" parent="Intervention"]
-position = Vector3(17, 1, 4)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteD"]
-shape = SubResource("forme_LimiteD")
-
-[node name="LimiteRue" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, 1, 18)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteRue"]
-shape = SubResource("forme_LimiteRue")
-
-[node name="CamionCollision" type="StaticBody3D" parent="Intervention"]
-position = Vector3(-7, 1.2, 11)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/CamionCollision"]
-shape = SubResource("forme_CamionCollision")
-
-[node name="PoliceCollision" type="StaticBody3D" parent="Intervention"]
-position = Vector3(5.5, 0.65, 10)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/PoliceCollision"]
-shape = SubResource("forme_PoliceCollision")
-
-[node name="Fenetre0_0" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 2.0, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0"]
-mesh = SubResource("mesh_Fenetre0_0")
-material_override = SubResource("vitre")
-
-[node name="Fenetre0_0Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(-12.129999999999999, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre0"]
-mesh = SubResource("mesh_Fenetre0_0Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_0Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(-9.870000000000001, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre1"]
-mesh = SubResource("mesh_Fenetre0_0Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_0Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 1.0699999999999998, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre2"]
-mesh = SubResource("mesh_Fenetre0_0Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_0Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 2.93, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre3"]
-mesh = SubResource("mesh_Fenetre0_0Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_0Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Cadre4"]
-mesh = SubResource("mesh_Fenetre0_0Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_0Chaleur" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 2.0, -5.53)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_0Chaleur"]
-mesh = SubResource("mesh_Fenetre0_0Chaleur")
-material_override = SubResource("braise")
-
-[node name="IncendieFenetre0_0" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(-11, 1.45, -5.38)
-taille = 1.0
-densite_fumee = 0.5
-[node name="Extinction" parent="Intervention/IncendieFenetre0_0" index="5"]
-extinguible = false
-
-[node name="Fenetre0_1" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 2.0, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1"]
-mesh = SubResource("mesh_Fenetre0_1")
-material_override = SubResource("vitre")
-
-[node name="Fenetre0_1Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(-7.13, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre0"]
-mesh = SubResource("mesh_Fenetre0_1Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_1Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(-4.87, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre1"]
-mesh = SubResource("mesh_Fenetre0_1Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_1Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 1.0699999999999998, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre2"]
-mesh = SubResource("mesh_Fenetre0_1Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_1Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 2.93, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre3"]
-mesh = SubResource("mesh_Fenetre0_1Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_1Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_1Cadre4"]
-mesh = SubResource("mesh_Fenetre0_1Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2" type="Node3D" parent="Intervention"]
-position = Vector3(6, 2.0, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2"]
-mesh = SubResource("mesh_Fenetre0_2")
-material_override = SubResource("vitre")
-
-[node name="Fenetre0_2Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(4.87, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre0"]
-mesh = SubResource("mesh_Fenetre0_2Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(7.13, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre1"]
-mesh = SubResource("mesh_Fenetre0_2Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(6, 1.0699999999999998, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre2"]
-mesh = SubResource("mesh_Fenetre0_2Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(6, 2.93, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre3"]
-mesh = SubResource("mesh_Fenetre0_2Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(6, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Cadre4"]
-mesh = SubResource("mesh_Fenetre0_2Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_2Chaleur" type="Node3D" parent="Intervention"]
-position = Vector3(6, 2.0, -5.53)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_2Chaleur"]
-mesh = SubResource("mesh_Fenetre0_2Chaleur")
-material_override = SubResource("braise")
-
-[node name="IncendieFenetre0_2" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(6, 1.45, -5.38)
-taille = 1.0
-densite_fumee = 0.5
-[node name="Extinction" parent="Intervention/IncendieFenetre0_2" index="5"]
-extinguible = false
-
-[node name="Fenetre0_3" type="Node3D" parent="Intervention"]
-position = Vector3(11, 2.0, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3"]
-mesh = SubResource("mesh_Fenetre0_3")
-material_override = SubResource("vitre")
-
-[node name="Fenetre0_3Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(9.870000000000001, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre0"]
-mesh = SubResource("mesh_Fenetre0_3Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_3Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(12.129999999999999, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre1"]
-mesh = SubResource("mesh_Fenetre0_3Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_3Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(11, 1.0699999999999998, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre2"]
-mesh = SubResource("mesh_Fenetre0_3Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_3Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(11, 2.93, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre3"]
-mesh = SubResource("mesh_Fenetre0_3Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre0_3Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(11, 2.0, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre0_3Cadre4"]
-mesh = SubResource("mesh_Fenetre0_3Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_0" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 5.8, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0"]
-mesh = SubResource("mesh_Fenetre1_0")
-material_override = SubResource("vitre")
-
-[node name="Fenetre1_0Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(-12.129999999999999, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre0"]
-mesh = SubResource("mesh_Fenetre1_0Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_0Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(-9.870000000000001, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre1"]
-mesh = SubResource("mesh_Fenetre1_0Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_0Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 4.87, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre2"]
-mesh = SubResource("mesh_Fenetre1_0Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_0Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 6.7299999999999995, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre3"]
-mesh = SubResource("mesh_Fenetre1_0Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_0Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(-11, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_0Cadre4"]
-mesh = SubResource("mesh_Fenetre1_0Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 5.8, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1"]
-mesh = SubResource("mesh_Fenetre1_1")
-material_override = SubResource("vitre")
-
-[node name="Fenetre1_1Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(-7.13, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre0"]
-mesh = SubResource("mesh_Fenetre1_1Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(-4.87, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre1"]
-mesh = SubResource("mesh_Fenetre1_1Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 4.87, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre2"]
-mesh = SubResource("mesh_Fenetre1_1Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 6.7299999999999995, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre3"]
-mesh = SubResource("mesh_Fenetre1_1Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Cadre4"]
-mesh = SubResource("mesh_Fenetre1_1Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_1Chaleur" type="Node3D" parent="Intervention"]
-position = Vector3(-6, 5.8, -5.53)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_1Chaleur"]
-mesh = SubResource("mesh_Fenetre1_1Chaleur")
-material_override = SubResource("braise")
-
-[node name="IncendieFenetre1_1" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(-6, 5.25, -5.38)
-taille = 1.0
-densite_fumee = 0.5
-[node name="Extinction" parent="Intervention/IncendieFenetre1_1" index="5"]
-extinguible = false
-
-[node name="Fenetre1_2" type="Node3D" parent="Intervention"]
-position = Vector3(6, 5.8, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2"]
-mesh = SubResource("mesh_Fenetre1_2")
-material_override = SubResource("vitre")
-
-[node name="Fenetre1_2Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(4.87, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre0"]
-mesh = SubResource("mesh_Fenetre1_2Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_2Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(7.13, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre1"]
-mesh = SubResource("mesh_Fenetre1_2Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_2Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(6, 4.87, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre2"]
-mesh = SubResource("mesh_Fenetre1_2Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_2Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(6, 6.7299999999999995, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre3"]
-mesh = SubResource("mesh_Fenetre1_2Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_2Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(6, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_2Cadre4"]
-mesh = SubResource("mesh_Fenetre1_2Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3" type="Node3D" parent="Intervention"]
-position = Vector3(11, 5.8, -5.65)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3"]
-mesh = SubResource("mesh_Fenetre1_3")
-material_override = SubResource("vitre")
-
-[node name="Fenetre1_3Cadre0" type="Node3D" parent="Intervention"]
-position = Vector3(9.870000000000001, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre0"]
-mesh = SubResource("mesh_Fenetre1_3Cadre0")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3Cadre1" type="Node3D" parent="Intervention"]
-position = Vector3(12.129999999999999, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre1"]
-mesh = SubResource("mesh_Fenetre1_3Cadre1")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3Cadre2" type="Node3D" parent="Intervention"]
-position = Vector3(11, 4.87, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre2"]
-mesh = SubResource("mesh_Fenetre1_3Cadre2")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3Cadre3" type="Node3D" parent="Intervention"]
-position = Vector3(11, 6.7299999999999995, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre3"]
-mesh = SubResource("mesh_Fenetre1_3Cadre3")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3Cadre4" type="Node3D" parent="Intervention"]
-position = Vector3(11, 5.8, -5.51)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Cadre4"]
-mesh = SubResource("mesh_Fenetre1_3Cadre4")
-material_override = SubResource("metal")
-
-[node name="Fenetre1_3Chaleur" type="Node3D" parent="Intervention"]
-position = Vector3(11, 5.8, -5.53)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Fenetre1_3Chaleur"]
-mesh = SubResource("mesh_Fenetre1_3Chaleur")
-material_override = SubResource("braise")
-
-[node name="IncendieFenetre1_3" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(11, 5.25, -5.38)
-taille = 1.0
-densite_fumee = 0.5
-[node name="Extinction" parent="Intervention/IncendieFenetre1_3" index="5"]
-extinguible = false
-
-[node name="Bac1" type="Node3D" parent="Intervention"]
-position = Vector3(3, 0.23, 1)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Bac1"]
-mesh = SubResource("mesh_Bac1")
-material_override = SubResource("metal")
-
-[node name="FoyerExercice1" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(3, 0.42, 1)
-taille = 0.65
-densite_fumee = 0.35
-[node name="Extinction" parent="Intervention/FoyerExercice1" index="5"]
-duree_extinction = 1.5
-rayon_contact = 0.6
-
-[node name="Bac2" type="Node3D" parent="Intervention"]
-position = Vector3(-4, 0.23, -1)
-
-[node name="Visuel" type="MeshInstance3D" parent="Intervention/Bac2"]
-mesh = SubResource("mesh_Bac2")
-material_override = SubResource("metal")
-
-[node name="FoyerExercice2" parent="Intervention" instance=ExtResource("foyer")]
-position = Vector3(-4, 0.42, -1)
-taille = 0.65
-densite_fumee = 0.35
-[node name="Extinction" parent="Intervention/FoyerExercice2" index="5"]
-duree_extinction = 1.5
-rayon_contact = 0.6
-
-[node name="Briefing" type="CanvasLayer" parent="."]
+[node name="Briefing" type="CanvasLayer" parent="." index="17" unique_id=298578057]
 layer = 3
-[node name="Objectif" type="PanelContainer" parent="Briefing"]
-script = ExtResource("briefing_compact")
+
+[node name="Objectif" type="PanelContainer" parent="Briefing" index="0" unique_id=48178298]
 offset_left = 430.0
 offset_top = 24.0
 offset_right = 1100.0
 offset_bottom = 116.0
 mouse_filter = 2
 theme = ExtResource("intervention")
-[node name="Marge" type="MarginContainer" parent="Briefing/Objectif"]
+script = ExtResource("briefing_compact")
+
+[node name="Marge" type="MarginContainer" parent="Briefing/Objectif" index="0" unique_id=728457210]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_right = 4
 theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 2
-[node name="Disposition" type="VBoxContainer" parent="Briefing/Objectif/Marge"]
+
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Objectif/Marge" index="0" unique_id=1419467134]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 5
-[node name="Titre" type="Label" parent="Briefing/Objectif/Marge/Disposition"]
+
+[node name="Titre" type="Label" parent="Briefing/Objectif/Marge/Disposition" index="0" unique_id=896745780]
+layout_mode = 2
 theme_type_variation = &"TitreIntervention"
-layout_mode = 2
-mouse_filter = 2
 theme_override_font_sizes/font_size = 20
-[node name="Consigne" type="Label" parent="Briefing/Objectif/Marge/Disposition"]
+
+[node name="Consigne" type="Label" parent="Briefing/Objectif/Marge/Disposition" index="1" unique_id=295591286]
 layout_mode = 2
-mouse_filter = 2
 autowrap_mode = 2
-[node name="Dialogue" type="PanelContainer" parent="Briefing"]
+
+[node name="Dialogue" type="PanelContainer" parent="Briefing" index="1" unique_id=1499389797]
+custom_minimum_size = Vector2(500, 0)
 offset_right = 500.0
 offset_bottom = 170.0
-custom_minimum_size = Vector2(500, 0)
 mouse_filter = 2
-script = ExtResource("bulle")
 theme = ExtResource("intervention")
-[node name="Marge" type="MarginContainer" parent="Briefing/Dialogue"]
+script = ExtResource("bulle")
+
+[node name="Marge" type="MarginContainer" parent="Briefing/Dialogue" index="0" unique_id=1192592118]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_right = 4
 theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 2
-[node name="Disposition" type="VBoxContainer" parent="Briefing/Dialogue/Marge"]
+
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Dialogue/Marge" index="0" unique_id=1312278609]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
-[node name="Nom" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
+
+[node name="Nom" type="Label" parent="Briefing/Dialogue/Marge/Disposition" index="0" unique_id=469119221]
+layout_mode = 2
 theme_type_variation = &"TitreIntervention"
-layout_mode = 2
-text = "CHEF D’INTERVENTION"
-mouse_filter = 2
 theme_override_font_sizes/font_size = 20
-[node name="Texte" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
-layout_mode = 2
+text = "CHEF D’INTERVENTION"
+
+[node name="Texte" type="Label" parent="Briefing/Dialogue/Marge/Disposition" index="1" unique_id=1825256942]
 custom_minimum_size = Vector2(450, 0)
-mouse_filter = 2
+layout_mode = 2
 theme_override_font_sizes/font_size = 18
 autowrap_mode = 2
-[node name="Suite" type="Label" parent="Briefing/Dialogue/Marge/Disposition"]
-theme_type_variation = &"NoteIntervention"
+
+[node name="Suite" type="Label" parent="Briefing/Dialogue/Marge/Disposition" index="2" unique_id=330190352]
+visible = false
 layout_mode = 2
-mouse_filter = 2
-horizontal_alignment = 2
+theme_type_variation = &"NoteIntervention"
 theme_override_font_sizes/font_size = 14
 text = "Continuer"
-visible = false
+horizontal_alignment = 2
 
-[node name="Invitation" type="Label" parent="Briefing"]
+[node name="Invitation" type="Label" parent="Briefing" index="2" unique_id=603865489]
+anchors_preset = 7
 anchor_left = 0.5
-anchor_right = 0.5
 anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -340.0
-offset_right = 340.0
 offset_top = -60.0
+offset_right = 340.0
 offset_bottom = -30.0
-mouse_filter = 2
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 17
 theme_override_colors/font_color = Color(1, 0.85, 0.57, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
 
-[node name="LimiteNord" type="StaticBody3D" parent="Intervention"]
-position = Vector3(0, 1, -6.6)
-[node name="Collision" type="CollisionShape3D" parent="Intervention/LimiteNord"]
-shape = SubResource("limite_nord")
-[node name="PorteEntree" parent="Intervention" instance=ExtResource("double_porte")]
-position = Vector3(0, 1.8, -5.7)
-afficher_encadrement = false
-
-[node name="PointRegroupement" type="Node3D" parent="Intervention"]
-script = ExtResource("point_medical")
+[node name="VoiceLineInstructeur" type="AudioStreamPlayer3D" parent="Briefing" index="3" unique_id=1589612910]

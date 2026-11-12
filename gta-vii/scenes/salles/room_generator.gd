@@ -5,7 +5,7 @@ extends Node3D
 # Le générateur construit le décor ; le RoomManager décide du contenu et du parcours.
 @export var generate := false
 @export var apercu_auto := false
-@export var roomSizeMax := Vector2i(10, 9)
+@export var roomSizeMax := Vector2i(9, 8)
 @export var roomSizeMin := Vector2i(6, 6)
 var roomSize := Vector2i(1, 1)
 
