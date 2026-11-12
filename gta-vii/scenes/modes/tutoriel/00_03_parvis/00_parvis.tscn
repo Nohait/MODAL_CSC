@@ -359,9 +359,9 @@ position = Vector3(-5, 1, 6)
 shape = SubResource("personne")
 [node name="Invite" type="Label3D" parent="Intervention/Superieur"]
 position = Vector3(0, 1.25, 0)
-text = "E · CHEF D’INTERVENTION"
+text = "CHEF D’INTERVENTION"
 font_size = 28
-pixel_size = 0.003
+pixel_size = 0.005
 billboard = 1
 modulate = Color(1, 0.81, 0.42, 1)
 outline_size = 6
@@ -995,7 +995,7 @@ layout_mode = 2
 mouse_filter = 2
 horizontal_alignment = 2
 theme_override_font_sizes/font_size = 14
-text = "E · Continuer"
+text = "Continuer"
 visible = false
 
 [node name="Invitation" type="Label" parent="Briefing"]

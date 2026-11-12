@@ -661,49 +661,5 @@ func vecteur_fuite() -> Vector3:
 func update_interaction_label() -> void:
 	# La victime peut être dans une salle ou directement sous Escorte lors d'une reprise.
 	var joueur := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
-	var utiliser_manette: bool = is_instance_valid(joueur) and not joueur.is_queued_for_deletion() and joueur.get("usingController") == true
-	var texte := ""
-	for event in InputMap.action_get_events("interact"):
-		var est_manette := event is InputEventJoypadButton or event is InputEventJoypadMotion
-		if est_manette != utiliser_manette:
-			continue
-		texte = _texte_evenement(event)
-		break
-	if texte == "":
-		interaction_label.text = "Libérer"
-	else:
-		interaction_label.text = "[" + texte + "] Libérer"
-
-
-func _texte_evenement(event: InputEvent) -> String:
-	if event is InputEventKey:
-		return event.as_text_physical_keycode()
-	if event is InputEventMouseButton:
-		return "Clic " + str(event.button_index)
-	if event is InputEventJoypadButton:
-		return _nom_bouton_manette(event.button_index)
-	if event is InputEventJoypadMotion:
-		return _nom_axe_manette(event.axis)
-	return ""
-
-
-func _nom_bouton_manette(index: int) -> String:
-	match index:
-		JOY_BUTTON_A: return "A"
-		JOY_BUTTON_B: return "B"
-		JOY_BUTTON_X: return "X"
-		JOY_BUTTON_Y: return "Y"
-		JOY_BUTTON_LEFT_SHOULDER: return "LB"
-		JOY_BUTTON_RIGHT_SHOULDER: return "RB"
-		JOY_BUTTON_LEFT_STICK: return "L3"
-		JOY_BUTTON_RIGHT_STICK: return "R3"
-		JOY_BUTTON_BACK: return "Retour"
-		JOY_BUTTON_START: return "Start"
-	return "Bouton " + str(index)
-
-
-func _nom_axe_manette(axe: int) -> String:
-	match axe:
-		JOY_AXIS_TRIGGER_LEFT: return "LT"
-		JOY_AXIS_TRIGGER_RIGHT: return "RT"
-	return "Axe " + str(axe)
+	var commande = preload("res://scenes/interfaces/libelle_commande.gd")
+	commande.afficher_3d(interaction_label, "[%s] Libérer" % commande.nom(&"interact", joueur), &"interact", joueur)

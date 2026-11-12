@@ -1,4 +1,5 @@
 extends PanelContainer
+const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 
 @export_range(10.0, 80.0, 1.0) var caracteres_par_seconde := 36.0
 @export_range(0.0, 0.5, 0.01) var pause_virgule := 0.1
@@ -14,10 +15,13 @@ var attente := 0.0
 var phrase := ""
 
 func afficher(replique: String) -> void:
-	if replique == phrase: return
-	phrase = replique
-	texte.text = replique
+	var nouveau := COMMANDE.adapter(replique, get_tree().get_first_node_in_group("player"))
+	if nouveau == phrase: return
+	COMMANDE.afficher_consigne(texte, replique, get_tree().get_first_node_in_group("player"))
+	phrase = texte.text
 	texte.visible_characters = 0
+	var enrichi := texte.get_node_or_null("TexteAvecCommande") as RichTextLabel
+	if enrichi: enrichi.visible_characters = 0
 	attente = 0.0
 	reset_size.call_deferred()
 
@@ -26,17 +30,22 @@ func revelee() -> bool:
 
 func terminer_phrase() -> void:
 	texte.visible_characters = -1
+	var enrichi := texte.get_node_or_null("TexteAvecCommande") as RichTextLabel
+	if enrichi: enrichi.visible_characters = -1
 
 func _process(delta: float) -> void:
 	if not is_visible_in_tree(): return
 	_placer()
 	suite.visible = dialogue_interactif
-	suite.text = "E · Continuer" if revelee() else "E · Tout afficher"
+	var touche := COMMANDE.nom(&"interact", get_tree().get_first_node_in_group("player"))
+	COMMANDE.afficher(suite, "%s · Continuer" % touche if revelee() else "%s · Tout afficher" % touche, &"interact", get_tree().get_first_node_in_group("player"))
 	if revelee(): return
 	attente -= delta
 	while attente <= 0.0 and not revelee():
 		var caractere := phrase.substr(texte.visible_characters, 1)
 		texte.visible_characters += 1
+		var enrichi := texte.get_node_or_null("TexteAvecCommande") as RichTextLabel
+		if enrichi: enrichi.visible_characters = texte.visible_characters
 		attente += 1.0 / caracteres_par_seconde
 		if caractere in [",", ";", ":"]: attente += pause_virgule
 		elif caractere in [".", "!", "?", "…"]: attente += pause_phrase
