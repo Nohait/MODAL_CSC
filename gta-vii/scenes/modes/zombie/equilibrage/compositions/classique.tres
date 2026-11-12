@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://bhadldaxv3gks" path="res://scenes/ennemis/mobiles/chien_magma/chien_magma.tscn" id="chien"]
 [ext_resource type="Script" uid="uid://dtbtqn2qkqugg" path="res://scenes/modes/zombie/equilibrage/composition_vague.gd" id="composition"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/demolisseur.tscn" id="demolisseur"]
-[ext_resource type="PackedScene" path="res://scenes/ennemis/mobiles/demolisseur/kamikaze/kamikaze.tscn" id="kamikaze"]
 [ext_resource type="PackedScene" uid="uid://c2no1g1sp532y" path="res://scenes/ennemis/mobiles/sbire.tscn" id="sbire"]
 [ext_resource type="Script" uid="uid://c27ul18w1nbp2" path="res://scenes/modes/zombie/equilibrage/type_ennemi_vague.gd" id="type"]
 
@@ -43,9 +42,12 @@ poids_tirage = 10.0
 maximum = 3
 groupe_limite = &"tireurs"
 
+[sub_resource type="Resource" id="Resource_x0i7k"]
+metadata/__load_path__ = "res://scenes/ennemis/mobiles/demolisseur/kamikaze/kamikaze.tscn"
+
 [sub_resource type="Resource" id="Type_kamikaze"]
 script = ExtResource("type")
-scene = ExtResource("kamikaze")
+scene = SubResource("Resource_x0i7k")
 hauteur = 1.2
 volant = true
 premiere_vague = 7

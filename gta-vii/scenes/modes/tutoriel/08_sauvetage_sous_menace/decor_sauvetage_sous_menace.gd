@@ -50,6 +50,7 @@ func _ready() -> void:
 	sortie.name = "PorteSortie"
 	sortie.position = Vector3(13.88, 0.1, -63)
 	sortie.rotation.y = -PI * 0.5
+	sortie.angle_ouverture = 100
 	add_child(sortie)
 	sortie.get_node("Voyant").hide()
 	sortie.get_node("BoitierSortie").hide()
