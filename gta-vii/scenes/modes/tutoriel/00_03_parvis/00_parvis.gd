@@ -10,6 +10,8 @@ const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
 @export_range(0.5, 4.0, 0.01) var vitesse_superieur := 1.67
 @export_range(0.2, 2.0, 0.1) var duree_fondu_interface := 1.0
+@export_range(1.0, 1.15, 0.01) var agrandissement_objectif := 1.04
+@export_range(0.3, 2.0, 0.1) var demi_periode_objectif := 0.7
 @export_group("Ambiance")
 @export_range(0.0, 1.0, 0.05) var lumiere_ambiante := 0.25
 
@@ -28,6 +30,8 @@ var arrive := false
 var changement := false
 var repere_entree: Node3D
 var derniere_manette := false
+var objectif_anime := -1
+var animation_objectif: Tween
 
 func _ready() -> void:
 	# Une scène exportée peut avoir enregistré une ressource par défaut nulle.
@@ -164,7 +168,7 @@ func _pres_entree() -> bool:
 func _actualiser_proximite() -> void:
 	var pres := arrive and _pres_superieur()
 	var touche := COMMANDE.nom(&"interact", $player)
-	dialogue.visible = pres and progression.indice_replique >= 0
+	dialogue.visible = pres and not progression.dialogue_termine and progression.indice_replique >= 0
 	if _pres_entree() and progression.dialogue_termine:
 		invitation.text = "Entrer dans le bâtiment"
 	elif pres:
@@ -186,17 +190,35 @@ func _actualiser_briefing() -> void:
 	if progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.FOYERS:
 		objectif.text += "  (%d / %d)" % [progression.foyers_eteints(), progression.foyers.size()]
 	elif progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee:
-		objectif.text = COMMANDE.adapter("Relâchez le clic gauche et laissez la réserve se reconstituer.", $player)
+		objectif.text = COMMANDE.adapter("Relâchez clic gauche et laissez la réserve se reconstituer.", $player)
 	if progression.dialogue_termine:
 		var action: StringName = &"primary_attack" if actuelle.consigne.contains("clic gauche") or actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee else &"dash" if actuelle.consigne.contains("Espace") else &"interact"
 		COMMANDE.afficher(objectif, objectif.text, action, $player)
 	else:
 		COMMANDE.afficher(objectif, objectif.text, &"interact", $player)
 	dialogue.dialogue_interactif = not progression.dialogue_termine
-	dialogue.afficher(actuelle.consigne if progression.dialogue_termine else progression.replique())
+	if progression.dialogue_termine:
+		if progression.indice > 0 and objectif_anime != progression.indice:
+			objectif_anime = progression.indice
+			_animer_objectif()
+	else:
+		dialogue.afficher(progression.replique())
 	if progression.indice == 0 and progression.indice_replique >= 1:
 		$Intervention/TeasingSauvetage.jouer($player)
 	_actualiser_proximite()
+
+func _animer_objectif() -> void:
+	var panneau: Control = $Briefing/Objectif
+	if animation_objectif: animation_objectif.kill()
+	panneau.pivot_offset = panneau.size * 0.5
+	panneau.scale = Vector2.ONE
+	panneau.modulate = Color.WHITE
+	animation_objectif = create_tween().set_loops(3)
+	animation_objectif.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	animation_objectif.tween_property(panneau, "scale", Vector2.ONE * agrandissement_objectif, demi_periode_objectif)
+	animation_objectif.parallel().tween_property(panneau, "modulate", Color(1.0, 1.0, 1.0, 0.8), demi_periode_objectif)
+	animation_objectif.tween_property(panneau, "scale", Vector2.ONE, demi_periode_objectif)
+	animation_objectif.parallel().tween_property(panneau, "modulate", Color.WHITE, demi_periode_objectif)
 
 func _entrer() -> void:
 	if changement: return

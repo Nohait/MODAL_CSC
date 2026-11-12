@@ -48,7 +48,7 @@ func rappel() -> String:
 		"extinction":
 			var arme = joueur.extincteur
 			if arme.charge < arme.max_charge * 0.25 or arme.is_overheated:
-				return "Relâchez le clic gauche pour récupérer de la mousse."
+				return "Relâchez clic gauche pour récupérer de la mousse."
 			return "Approchez du passage et maintenez le jet sur la base des flammes jusqu’à l’extinction."
 		"escorte":
 			if _dans_repere(joueur) and not _dans_repere(victime):
