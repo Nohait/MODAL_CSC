@@ -167,6 +167,7 @@ var timer_derive := 0.0
 var waiting := true
 var waiting_cooldown := 3.0
 var waiting_timer := 3.0
+var decompte_rassemblement_actif := false
 signal waiting_termine
 
 var follow_target: Node3D = null
@@ -324,11 +325,13 @@ func get_nom_affiche() -> String:
 
 # Suivi
 func _suivre_groupe(delta: float) -> void:
+	decompte_rassemblement_actif = false
 	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
 		return
 	var joueur := get_tree().get_first_node_in_group("player") as Node3D
 	if joueur == null: return
-	_maj_groupe(get_tree(), joueur, rayon_joueur, rayon_fleche, rayon_lien)
+	# La séparation empêche la victime d'atteindre exactement le centre de la flèche.
+	_maj_groupe(get_tree(), joueur, rayon_joueur, maxf(rayon_fleche, rayon_separation), rayon_lien)
 
 	var vitesse_max := speed * multiplicateur_vitesse * vitesse_secours() * facteur_vitesse_perso
 	var vitesse_voulue := Vector3.ZERO
@@ -353,10 +356,12 @@ func _suivre_groupe(delta: float) -> void:
 	if _ancre.is_in_group("fleche"):
 		
 		for v in get_tree().get_nodes_in_group("victims"):
+			if not v.is_freed or v.est_morte or v.is_queued_for_deletion(): continue
 			waiting = waiting or v.est_proche_cible
 			waiting = waiting or v.waiting
 		#Si au moins une des cibles attend ou est proche, on active le timer
 		if waiting:
+			decompte_rassemblement_actif = true
 			waiting_timer -= delta
 			if waiting_timer < 0.0:
 				waiting_timer = waiting_cooldown
@@ -545,7 +550,12 @@ static func _maj_groupe(arbre: SceneTree, joueur: Node3D, rayon_joueur: float, r
 	var rayon := rayon_fleche if fleche != null else rayon_joueur
 	var file: Array = []
 	for v in libres:
-		if v.global_position.distance_to(_ancre.global_position) <= rayon:
+		var distance: float = v.global_position.distance_to(_ancre.global_position)
+		if fleche != null:
+			# Le modèle de flèche bouge en hauteur pendant son animation.
+			var point: Vector3 = fleche.get_meta("position_rassemblement", fleche.global_position)
+			distance = Vector2(v.global_position.x - point.x, v.global_position.z - point.z).length()
+		if distance <= rayon:
 			v.est_proche_cible = true
 			file.append(v)
 	while not file.is_empty():

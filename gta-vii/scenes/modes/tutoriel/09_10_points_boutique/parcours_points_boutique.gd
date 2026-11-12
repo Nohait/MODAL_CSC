@@ -36,9 +36,8 @@ func _salle_preparee(_salle: Node3D) -> void:
 func _salle_commencee(salle: Node3D) -> void:
 	_brancher_population(salle)
 	_actualiser_briefing()
-	var debug_actif: bool = Engine.get_meta("tutoriel_debug_actif", false) \
-		or Engine.has_meta("tutoriel_debug_depart")
-	if gestion_salles.indice_salle == 0 and not debug_actif:
+	var acces_debug_direct := Engine.has_meta("tutoriel_debug_depart")
+	if gestion_salles.indice_salle == 0 and not acces_debug_direct:
 		introduction = preload("res://scenes/modes/tutoriel/09_10_points_boutique/introduction_points.gd").new()
 		introduction.name = "IntroductionPoints"
 		add_child(introduction)

@@ -4,6 +4,7 @@ signal consigne_changee
 signal ravitaillement_effectue
 signal carte_acquise
 signal salle_reussie
+const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 @export_range(1.5, 4.0, 0.1) var distance_conversation := 2.5
 @export_range(1.5, 4.0, 0.1) var distance_ouverture_sortie := 2.2
 var progression = preload("res://scenes/modes/tutoriel/07_ravitaillement/progression_ravitaillement.gd").new()
@@ -15,7 +16,8 @@ var carte: StringName:
 var joueur
 var gestion
 var pompier
-var repere_pompier: Node3D
+var repere_pompier: Label3D
+var commande_pompier := ""
 var decor
 var sortie
 var sortie_ouverte := false
@@ -47,10 +49,13 @@ func preparer(personnage, ameliorations, camera: Camera3D) -> void:
 	pompier.position = POSITION_POSTE
 	add_child(pompier)
 	pompier.installer_modele(joueur)
-	repere_pompier = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn").instantiate()
+	repere_pompier = Label3D.new()
 	repere_pompier.name = "InvitationParler"
-	repere_pompier.verbe = "Parler"
-	repere_pompier.position = Vector3(0, -0.8, 1.0)
+	repere_pompier.position = Vector3(0, 1.25, 0)
+	repere_pompier.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	repere_pompier.modulate = Color(1.0, 0.81, 0.42)
+	repere_pompier.font_size = 28
+	repere_pompier.outline_size = 6
 	repere_pompier.hide()
 	pompier.add_child(repere_pompier)
 	play_voice("7_1")
@@ -89,6 +94,13 @@ func _process(_delta: float) -> void:
 	ecart.y = 0
 	var a_portee := ecart.length() < distance_conversation
 	repere_pompier.visible = a_portee and carte == &""
+	if repere_pompier.visible:
+		var touche := COMMANDE.nom(&"interact", joueur)
+		var affichage := "%s · POMPIER" % touche
+		var cle := affichage + str(joueur.usingController)
+		if commande_pompier != cle:
+			commande_pompier = cle
+			COMMANDE.afficher_3d(repere_pompier, affichage, &"interact", joueur)
 	if a_portee and Input.is_action_just_pressed("interact"): interagir()
 	var ecart_sortie: Vector3 = joueur.global_position - sortie.global_position
 	ecart_sortie.y = 0.0

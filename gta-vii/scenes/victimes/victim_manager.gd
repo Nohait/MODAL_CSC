@@ -30,6 +30,9 @@ func surveiller_victime(victim: CharacterBody3D) -> void:
 
 func diriger_victime(fleche) -> void:
 	cible_deplacement = fleche
+	for victime in freed_victims:
+		if is_instance_valid(victime):
+			victime.waiting = false
 	reorganiser_file()
 
 func retour_nav_auto() -> void:

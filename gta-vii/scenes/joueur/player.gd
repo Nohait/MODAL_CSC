@@ -424,6 +424,8 @@ func animation_fleche(position_fleche):
 	fleche_victime = fleche_victime_scene.instantiate()
 	Effets.add_child(fleche_victime)
 	fleche_victime.position = position_fleche
+	# L'animation déplace ensuite la flèche : garder le point de rendez-vous fixe pour le HUD.
+	fleche_victime.set_meta("position_rassemblement", fleche_victime.global_position)
 	fleche_victime.visible = true
 	fleche_tween = create_tween()
 	fleche_tween.tween_property(fleche_victime, "position", position_fleche + Vector3(0,-2,0),0.2)

@@ -61,7 +61,7 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 		if ancien: ancien.hide()
 		return
 	var commande := nom(action, joueur)
-	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande) or texte.contains("Maintiens " + commande + ",") or texte.contains("avec " + commande + ".")):
+	if not (texte.begins_with(commande + " · ") or texte.ends_with(" · " + commande) or texte.contains("sur " + commande + " pour") or texte.contains("le " + commande + " pour") or texte.contains(" + " + commande) or texte.contains("Maintiens " + commande + ",") or texte.contains("avec " + commande + ".") or texte.contains("maintenez " + commande) or texte.contains("relâchez " + commande) or texte.contains("Relâchez " + commande)):
 		label.add_theme_color_override("font_color", label.get_meta("couleur_commande"))
 		label.text = texte
 		if ancien: ancien.hide()
@@ -71,6 +71,7 @@ static func afficher(label: Label, texte: String, action: StringName, joueur: No
 	var balise := "[img=%dx%d]%s[/img]" % [taille_icone, taille_icone, image.resource_path]
 	var contenu := texte.replace(commande + " · ", balise + " · ").replace(" · " + commande, " · " + balise).replace("sur " + commande + " pour", "sur " + balise + " pour").replace("le " + commande + " pour", "le " + balise + " pour").replace(" + " + commande, " + " + balise)
 	contenu = contenu.replace("Maintiens " + commande + ",", "Maintiens " + balise + ",").replace("relâche " + commande + " pour", "relâche " + balise + " pour").replace("avec " + commande + ".", "avec " + balise + ".")
+	contenu = contenu.replace("maintenez " + commande, "maintenez " + balise).replace("relâchez " + commande, "relâchez " + balise).replace("Relâchez " + commande, "Relâchez " + balise)
 	if action == &"victim_control":
 		var stick := "[img=%dx%d]res://assets/textures/controles/r_stick.png[/img]" % [taille_icone, taille_icone]
 		contenu = contenu.replace("joystick droit", "joystick droit " + stick)

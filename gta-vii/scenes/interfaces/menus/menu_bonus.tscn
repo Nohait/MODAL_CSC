@@ -60,7 +60,10 @@ process_mode = 3
 layer = 30
 script = ExtResource("1")
 
-[node name="Raccourci" type="Button" parent="."]
+[node name="CoucheRaccourci" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Raccourci" type="Button" parent="CoucheRaccourci"]
 editor_description = "Accès au carnet : B ou un clic ouvre le menu."
 anchors_preset = 1
 anchor_left = 1.0
@@ -76,7 +79,7 @@ theme_override_styles/hover = SubResource("RaccourciVide")
 theme_override_styles/pressed = SubResource("RaccourciVide")
 theme_override_styles/focus = SubResource("RaccourciVide")
 
-[node name="Fond" type="TextureRect" parent="Raccourci"]
+[node name="Fond" type="TextureRect" parent="CoucheRaccourci/Raccourci"]
 material = SubResource("PochetteBonus")
 layout_mode = 1
 anchors_preset = 15
@@ -86,7 +89,7 @@ mouse_filter = 2
 texture = ExtResource("3")
 expand_mode = 1
 
-[node name="Icone" type="TextureRect" parent="Raccourci"]
+[node name="Icone" type="TextureRect" parent="CoucheRaccourci/Raccourci"]
 offset_left = 13.0
 offset_top = 17.0
 offset_right = 38.0
@@ -95,7 +98,7 @@ mouse_filter = 2
 texture = ExtResource("6_icone")
 expand_mode = 1
 
-[node name="Titre" type="Label" parent="Raccourci"]
+[node name="Titre" type="Label" parent="CoucheRaccourci/Raccourci"]
 offset_left = 53.0
 offset_top = 5.0
 offset_right = 190.0
@@ -106,7 +109,7 @@ theme_override_fonts/font = ExtResource("7_oswald")
 theme_override_font_sizes/font_size = 17
 text = "CARNET"
 
-[node name="Nombre" type="Label" parent="Raccourci"]
+[node name="Nombre" type="Label" parent="CoucheRaccourci/Raccourci"]
 offset_left = 53.0
 offset_top = 31.0
 offset_right = 195.0
@@ -117,7 +120,7 @@ theme_override_fonts/font = ExtResource("7_oswald")
 theme_override_font_sizes/font_size = 12
 text = "0 amélioration"
 
-[node name="Touche" type="Label" parent="Raccourci"]
+[node name="Touche" type="Label" parent="CoucheRaccourci/Raccourci"]
 offset_left = 175.0
 offset_top = 5.0
 offset_right = 245.0
@@ -129,7 +132,7 @@ theme_override_font_sizes/font_size = 13
 text = "[B]"
 horizontal_alignment = 2
 
-[node name="IconeCommande" type="TextureRect" parent="Raccourci"]
+[node name="IconeCommande" type="TextureRect" parent="CoucheRaccourci/Raccourci"]
 visible = false
 offset_left = 216.0
 offset_top = 13.0

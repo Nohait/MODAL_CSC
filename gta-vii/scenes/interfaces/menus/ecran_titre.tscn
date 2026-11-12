@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bciys0ip6dqw2"]
 
+[ext_resource type="FontFile" uid="uid://bakravhue45e3" path="res://assets/fonts/Oswald-SemiBold.ttf" id="7_gp83s"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
 [ext_resource type="Script" uid="uid://baiuejiyyy2ni" path="res://scenes/interfaces/menus/titre/decoration_titre.gd" id="decor"]
 [ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="flames"]
@@ -40,6 +41,9 @@ shader_parameter/couleur_flame = Color(1, 0.36, 0.045, 1)
 shader_parameter/couleur_bord = Color(0.65, 0.065, 0.015, 1)
 shader_parameter/vitesse = 0.55
 shader_parameter/opacite = 0.8
+
+[sub_resource type="FontVariation" id="PoliceSousTitre"]
+base_font = ExtResource("7_gp83s")
 
 [node name="EcranTitre" type="Control" unique_id=1441843544]
 layout_mode = 3
@@ -144,6 +148,22 @@ horizontal_alignment = 1
 [node name="Espace" type="Control" parent="Menu/Colonne" unique_id=2013009356]
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
+
+[node name="Sous-titre" type="RichTextLabel" parent="Menu/Colonne/Espace" unique_id=227494497]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -35.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.78, 0.78, 0.76, 1)
+theme_override_fonts/normal_font = SubResource("PoliceSousTitre")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center][color=#b33429]G[/color]roupe [color=#b33429]T[/color]actique d’[color=#b33429]A[/color]ction contre [color=#b33429]V[/color]iolents [color=#b33429]I[/color]ncendies d'[color=#b33429]I[/color]ntérieur[/center]"
+scroll_active = false
 
 [node name="Classique" type="VBoxContainer" parent="Menu/Colonne" unique_id=460658195]
 layout_mode = 2
