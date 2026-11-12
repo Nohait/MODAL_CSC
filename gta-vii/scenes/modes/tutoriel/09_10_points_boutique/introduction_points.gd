@@ -33,7 +33,7 @@ func _ready() -> void:
 	titre.add_theme_font_size_override("font_size", 25)
 	contenu.add_child(titre)
 	var texte := Label.new()
-	texte.text = "Chaque victime encore avec vous au passage compte pour le ravitaillement : une victime vivante rapporte un point.\nLes victimes encore en vie continueront avec vous dans la salle suivante. Le compte à rebours indique le temps restant avant que le feu n’épuise les victimes encore captives."
+	texte.text = "	Chaque victime encore avec vous au passage compte pour le ravitaillement : une victime vivante rapporte un point.\n\n 	Les victimes encore en vie continueront avec vous dans la salle suivante. Le compte à rebours indique le temps restant avant que le feu n’épuise les victimes encore captives."
 	texte.custom_minimum_size = Vector2(630, 105)
 	texte.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	texte.add_theme_font_size_override("font_size", 20)

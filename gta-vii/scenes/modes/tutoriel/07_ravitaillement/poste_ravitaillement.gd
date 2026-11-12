@@ -23,12 +23,21 @@ var sortie
 var sortie_ouverte := false
 var ouverture_sortie_en_cours := false
 const POSITION_POSTE := Vector3(-2, 1, -34)
+var voice_player: AudioStreamPlayer3D
 
 func _ready() -> void:
 	decor = preload("res://scenes/modes/tutoriel/07_ravitaillement/decor_ravitaillement.gd").new()
 	add_child(decor)
 	sortie = decor.sortie
 	sortie.ouverture_terminee.connect(func(): sortie_ouverte = true)
+
+func play_voice(indice = "5"):
+	var path = "res://assets/sounds/voice_line/tutoriel/Pompier%s.wav" % [indice]
+	if ResourceLoader.exists(path):
+		if voice_player.is_playing():
+			voice_player.stop()
+		voice_player.stream = load(path)
+		voice_player.play()
 
 func preparer(personnage, ameliorations, camera: Camera3D) -> void:
 	if actif: return
@@ -49,6 +58,7 @@ func preparer(personnage, ameliorations, camera: Camera3D) -> void:
 	repere_pompier.outline_size = 6
 	repere_pompier.hide()
 	pompier.add_child(repere_pompier)
+	play_voice("7_1")
 	pompier.parler("Viens me parler, j’ai de quoi renforcer ton extincteur. Tu pourras choisir une amélioration avant de repartir.", joueur, camera)
 	consigne_changee.emit()
 
@@ -60,7 +70,8 @@ func interagir() -> void:
 	joueur.extincteur.charge = joueur.extincteur.max_charge
 	joueur.extincteur.is_overheated = false
 	ravitaillement_effectue.emit()
-	pompier.parler("Voilà, tu es prêt à repartir. Tu peux essayer ton amélioration sur le mannequin avant de reprendre l'intervention si tu veux !", joueur, get_viewport().get_camera_3d())
+	play_voice("7_2")
+	pompier.parler("Voilà, tu es prêt à repartir. Choisis ton renfort. Tu peux l’essayer sur le mannequin avant de reprendre la recherche.", joueur, get_viewport().get_camera_3d())
 	if carte == &"": gestion.ouvrir_booster_formation()
 	consigne_changee.emit()
 

@@ -68,6 +68,5 @@ func _exporter() -> void:
 			erreur = get_viewport().get_texture().get_image().save_png(dossier.path_join("gta-vii-%d.png" % (i + 1)))
 			if erreur != OK: break
 	aide.text = "Captures : " + ProjectSettings.globalize_path(dossier) if erreur == OK else "Échec de capture : " + error_string(erreur)
-	print(aide.text)
 	aide.show()
 	capture_en_cours = false

@@ -102,6 +102,7 @@ func _prendre_relais() -> void:
 	$Briefing/Panneau/Marge/Disposition/Consigne.text = "Le pompier accueille l’habitant dans la zone sécurisée."
 
 func _confirmer_relais() -> void:
+	progression.play_voice()
 	releve.parler("Je m’occupe de la victime. Continue, il reste du monde à l’intérieur.", $player, $CameraRig/Camera3D)
 	$Briefing/Panneau/Marge/Disposition/Consigne.text = "L’habitant est pris en charge. Continuez la recherche."
 	$Briefing/Panneau/Marge/Disposition/Rappel.text = "Ouvrez la porte au fond du palier."

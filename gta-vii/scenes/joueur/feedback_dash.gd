@@ -21,7 +21,6 @@ var taille_camera := 0.0
 var recul := 0.0
 
 func _ready() -> void:
-	print(joueur)
 	joueur.dash_commence.connect(_commencer)
 	lecteur = AudioStreamPlayer.new()
 	lecteur.bus = "Effets"

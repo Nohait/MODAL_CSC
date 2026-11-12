@@ -108,11 +108,9 @@ func mourir():
 	queue_free()
 
 func attaque() -> void:
-	print("ATTAQUE DE ", name)
 	if is_instance_valid(cible):
 		var multiplier = randf_range(0.9,1.1)
 		cible.prendre_degats(round(multiplier * degats_flaque *100.0)/100.0)
-		print(degats_flaque)
 		
 	attaque_timer = attaque_cooldown
 
