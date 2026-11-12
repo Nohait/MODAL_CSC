@@ -20,7 +20,8 @@ func _ready() -> void:
 	gestion_salles.partie_prete.connect(_partie_prete)
 	$VictimManager.escort_changed.connect(_actualiser_briefing)
 	super._ready()
-	$Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle/Objectifs.hide()
+	# Le briefing du tutoriel remplace les indications habituelles de salle.
+	$Salles/RoomManager/InterfaceSalle/HUD/InformationsSalle.hide()
 	$InterfaceTest.hide()
 	$MenuDebug.process_mode = Node.PROCESS_MODE_DISABLED
 	$player/SecondaryAttack.process_mode = Node.PROCESS_MODE_DISABLED
