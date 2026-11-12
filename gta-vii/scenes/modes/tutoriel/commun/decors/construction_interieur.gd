@@ -29,10 +29,16 @@ static func bloc(parent: Node3D, nom: String, emplacement: Vector3, taille: Vect
 		_finitions(corps, taille)
 	return corps
 
-static func meuble(parent: Node3D, scene: PackedScene, emplacement: Vector3, angle := 0.0) -> Node3D:
+static func meuble(parent: Node3D, scene: PackedScene, emplacement: Vector3, angle := 0.0, taille := Vector3(1.0,1.0,1.0)) -> Node3D:
 	var objet: Node3D = scene.instantiate()
 	objet.position = emplacement
 	objet.rotation.y = angle
+
+	var proprietes = objet.get_children()[0].get_property_list()
+	for propriete in proprietes:
+		if propriete["name"] == "scale":
+			objet.get_children()[0].scale = taille
+		
 	parent.add_child(objet)
 	return objet
 

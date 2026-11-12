@@ -363,7 +363,7 @@ func createDoor(cellule: Vector2i, direction: Vector2i) -> void:
 	porte.position = centre + normale * decalage_cadre + Vector3.UP * 0.1
 
 	# La porte a été retournée : inverser aussi l'angle pour ouvrir vers la salle.
-	porte.angle_ouverture = -175.0
+	porte.angle_ouverture = 91.0
 	salle_en_creation.get_node("Portes").add_child(porte)
 
 	# La porte fait 2,5 unités avec son cadre ; fermer le reste du bord de 5 unités.

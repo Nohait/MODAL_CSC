@@ -1,53 +1,55 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dvcx5d7pofqt5"]
 
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
+[ext_resource type="Script" uid="uid://duaqetckadkwc" path="res://scenes/modes/tutoriel/commun/briefing_compact.gd" id="briefing_compact"]
+[ext_resource type="Script" uid="uid://clv3ovwvjkov2" path="res://scenes/modes/tutoriel/05_06_combat/decor_premier_combat.gd" id="decor"]
+[ext_resource type="Theme" uid="uid://4yvbquuw1ee3" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
+[ext_resource type="PackedScene" uid="uid://dt47l8r7abrjp" path="res://scenes/jeu/main.tscn" id="main"]
+[ext_resource type="Script" uid="uid://bu8unoubkgkmo" path="res://scenes/modes/tutoriel/05_06_combat/progression_combat.gd" id="progression"]
+[ext_resource type="Script" uid="uid://0vh8lxerv23w" path="res://scenes/modes/tutoriel/05_06_combat/salle_combat.gd" id="salle"]
 
-[ext_resource type="Theme" path="res://scenes/interfaces/theme_intervention/theme.tres" id="intervention"]
-
-[ext_resource type="PackedScene" path="res://scenes/jeu/main.tscn" id="main"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/05_06_combat/salle_combat.gd" id="salle"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/05_06_combat/decor_premier_combat.gd" id="decor"]
-[ext_resource type="Script" path="res://scenes/modes/tutoriel/05_06_combat/progression_combat.gd" id="progression"]
-
-[node name="TutorielCombat" instance=ExtResource("main")]
+[node name="TutorielCombat" unique_id=1305232045 instance=ExtResource("main")]
 script = ExtResource("salle")
+debut_autonome = false
+debut_ravitaillement = false
+debut_sauvetage_menace = false
+vie_creature = 65.0
+vitesse_creature = 2.4
+degats_creature = 8.0
+distance_ouverture_sortie = 2.2
 session_tutoriel = true
 
-[node name="SalleFixe" type="Node3D" parent="."]
+[node name="SalleFixe" type="Node3D" parent="." index="15" unique_id=465461066]
 script = ExtResource("decor")
 
-[node name="ProgressionCombat" type="Node" parent="."]
+[node name="ProgressionCombat" type="Node" parent="." index="16" unique_id=75132368]
 script = ExtResource("progression")
 
-[node name="Briefing" type="CanvasLayer" parent="."]
+[node name="Briefing" type="CanvasLayer" parent="." index="17" unique_id=1283588980]
 
-[node name="Panneau" type="PanelContainer" parent="Briefing"]
-script = ExtResource("briefing_compact")
+[node name="Panneau" type="PanelContainer" parent="Briefing" index="0" unique_id=1545688153]
 offset_left = 400.0
 offset_top = 24.0
 offset_right = 1100.0
 offset_bottom = 150.0
 mouse_filter = 2
 theme = ExtResource("intervention")
+script = ExtResource("briefing_compact")
 
-[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau"]
+[node name="Disposition" type="VBoxContainer" parent="Briefing/Panneau" index="0" unique_id=1531051803]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Titre" type="Label" parent="Briefing/Panneau/Disposition"]
+[node name="Titre" type="Label" parent="Briefing/Panneau/Disposition" index="0" unique_id=3484006]
+layout_mode = 2
 theme_type_variation = &"TitreIntervention"
-layout_mode = 2
-text = "05 · PREMIÈRE CRÉATURE"
 theme_override_font_sizes/font_size = 20
-mouse_filter = 2
+text = "05 · PREMIÈRE CRÉATURE"
 
-[node name="Consigne" type="Label" parent="Briefing/Panneau/Disposition"]
+[node name="Consigne" type="Label" parent="Briefing/Panneau/Disposition" index="1" unique_id=498469904]
 layout_mode = 2
 autowrap_mode = 2
-mouse_filter = 2
 
-[node name="Rappel" type="Label" parent="Briefing/Panneau/Disposition"]
+[node name="Rappel" type="Label" parent="Briefing/Panneau/Disposition" index="2" unique_id=2064004199]
+layout_mode = 2
 theme_type_variation = &"NoteIntervention"
-layout_mode = 2
 autowrap_mode = 2
-mouse_filter = 2

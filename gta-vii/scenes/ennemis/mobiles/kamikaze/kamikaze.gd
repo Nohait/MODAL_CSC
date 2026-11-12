@@ -1,5 +1,5 @@
 extends "res://scenes/ennemis/mobiles/sbire.gd"
-
+#1
 # Réutiliser les dégâts reçus et le gel ; le crâne vole sans suivre le navmesh.
 @export_group("Kamikaze — poursuite")
 @export var portee_detection := 12.0
