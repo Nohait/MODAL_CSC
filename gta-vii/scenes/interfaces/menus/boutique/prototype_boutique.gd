@@ -21,6 +21,7 @@ const POLICE = preload("res://assets/fonts/rubik/accent.tres")
 @export_range(0, 300, 10) var puissance_epique := 200.0
 @export var points_demo := 3
 @export var mode_demonstration := true
+@export var mode_formation := false
 # Fourni par l’UpgradeManager avant l’ajout à l’arbre, dans la vraie boutique.
 var catalogue: Array[Dictionary] = []
 var cadeau: Control
@@ -172,14 +173,24 @@ func _ready() -> void:
 	retour.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	contenu.add_child(retour)
 	if not mode_demonstration:
-		var continuer = Button.new()
-		continuer.add_theme_font_size_override("font_size", 24)
-		continuer.custom_minimum_size = Vector2(420, 64)
+		var continuer = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
+		continuer.taille_police = 24
+		continuer.taille_minimale = Vector2(420, 64)
 		continuer.text = "Continuer vers la prochaine salle"
 		continuer.focus_mode = Control.FOCUS_NONE
 		continuer.pressed.connect(func(): continuer_demande.emit())
 		contenu.add_child(continuer)
 	_actualiser_budget()
+	if mode_formation:
+		# Le premier renfort utilise la boutique normale, avec son seul cadeau accessible.
+		reperes_formation["boosters"].get_parent().hide()
+		reperes_formation["intervention"].get_parent().hide()
+		panneau_defis.hide()
+		cadeau.show()
+		booster_gratuit.focus_mode = Control.FOCUS_ALL
+		retour.text = "Ouvrez votre booster offert, puis choisissez votre première amélioration."
+		for enfant in contenu.get_children():
+			if enfant is Button: enfant.hide()
 
 func configurer_tutoriel_points(actif: bool, points: int) -> void:
 	mode_points_tutoriel = actif

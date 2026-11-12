@@ -3,6 +3,7 @@ extends "res://scenes/jeu/main.gd"
 const ETAPE = preload("res://scenes/modes/tutoriel/00_03_parvis/etapes/etape_tutoriel.gd")
 const ANIMATIONS_FIGURANT = preload("res://scenes/modes/tutoriel/00_03_parvis/animations_parvis.gd")
 const REPERE_PASSAGE = preload("res://scenes/modes/tutoriel/commun/decors/repere_passage.tscn")
+const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 @export var locomotion: ANIMATIONS_FIGURANT
 @export_group("Rencontre")
 @export_range(1.0, 5.0, 0.1) var distance_conversation := 3.2
@@ -23,6 +24,7 @@ var allure_superieur := 0.0
 var arrive := false
 var changement := false
 var repere_entree: Node3D
+var derniere_manette := false
 
 func _ready() -> void:
 	# Une scène exportée peut avoir enregistré une ressource par défaut nulle.
@@ -110,6 +112,9 @@ func _creer_superieur() -> void:
 	modele_superieur.get_node("visual/Armature/Skeleton3D/Right_Hand_Holder/extincteur0").hide()
 
 func _process(delta: float) -> void:
+	if derniere_manette != $player.usingController:
+		derniere_manette = $player.usingController
+		_actualiser_briefing()
 	var destination: Vector3 = $Intervention/PositionBriefing.global_position
 	if not arrive:
 		var direction := destination - superieur.global_position
@@ -153,27 +158,35 @@ func _pres_entree() -> bool:
 
 func _actualiser_proximite() -> void:
 	var pres := arrive and _pres_superieur()
+	var touche := COMMANDE.nom(&"interact", $player)
 	dialogue.visible = pres and progression.indice_replique >= 0
 	if _pres_entree() and progression.dialogue_termine:
-		invitation.text = "E · Entrer dans le bâtiment"
+		invitation.text = "Entrer dans le bâtiment"
 	elif pres:
-		invitation.text = "E · " + ("Écouter la suite" if dialogue.visible and not dialogue.revelee() else ("Continuer la conversation" if not progression.replique().is_empty() else "Parler au chef"))
+		invitation.text = "Écouter la suite" if dialogue.visible and not dialogue.revelee() else ("Continuer la conversation" if not progression.replique().is_empty() else "Parler au chef")
 	else:
 		invitation.text = "Approchez-vous du chef pour lui parler" if not progression.dialogue_termine else ""
 	invitation.visible = not (dialogue.visible and not progression.dialogue_termine)
 	$Intervention/Superieur/Invite.visible = pres and not dialogue.visible
+	COMMANDE.afficher_3d($Intervention/Superieur/Invite, "%s · CHEF D’INTERVENTION" % touche, &"interact", $player)
 
 func _actualiser_briefing() -> void:
 	var actuelle = progression.etape()
 	if actuelle == null: return
 	titre.text = actuelle.titre
-	objectif.text = actuelle.consigne if progression.dialogue_termine else "Parlez au chef d’intervention · E"
+	var touche := COMMANDE.nom(&"interact", $player)
+	objectif.text = COMMANDE.adapter(actuelle.consigne, $player) if progression.dialogue_termine else "Parlez au chef d’intervention · " + touche
 	if progression.indice == 0 and not progression.dialogue_termine:
-		objectif.text = "Déplacez-vous avec ZQSD / WASD, puis parlez au chef · E"
+		objectif.text = ("Déplacez-vous avec le stick gauche" if $player.usingController else "Déplacez-vous avec ZQSD / WASD") + ", puis parlez au chef · " + touche
 	if progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.FOYERS:
 		objectif.text += "  (%d / %d)" % [progression.foyers_eteints(), progression.foyers.size()]
 	elif progression.dialogue_termine and actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee:
-		objectif.text = "Relâchez le clic gauche et laissez la réserve se reconstituer."
+		objectif.text = COMMANDE.adapter("Relâchez le clic gauche et laissez la réserve se reconstituer.", $player)
+	if progression.dialogue_termine:
+		var action: StringName = &"primary_attack" if actuelle.consigne.contains("clic gauche") or actuelle.objectif == ETAPE.Objectif.RESERVE and progression.reserve_sollicitee else &"dash" if actuelle.consigne.contains("Espace") else &"interact"
+		COMMANDE.afficher(objectif, objectif.text, action, $player)
+	else:
+		COMMANDE.afficher(objectif, objectif.text, &"interact", $player)
 	dialogue.dialogue_interactif = not progression.dialogue_termine
 	dialogue.afficher(actuelle.consigne if progression.dialogue_termine else progression.replique())
 	if progression.indice == 0 and progression.indice_replique >= 1:

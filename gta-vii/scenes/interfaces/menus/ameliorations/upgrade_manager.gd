@@ -451,24 +451,21 @@ func ouvrir_booster_formation() -> void:
 	souris_avant = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = true
-	# Réutiliser la pochette et sa déchirure avec un habillage neutre, sans annoncer de rareté.
-	var centre := CenterContainer.new()
-	add_child(centre)
-	centre.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var booster = preload("res://scenes/interfaces/menus/boutique/booster_apercu.tscn").instantiate()
-	booster.titre = "Formation"
-	booster.contenu = "Trois propositions · une seule carte conservée"
-	booster.symbole = "?"
-	booster.couleur = Color(0.741176, 0.741176, 0.741176)
-	centre.add_child(booster)
-	booster.get_node("%Prix").text = "OFFERT"
-	var ouverture = preload("res://scenes/interfaces/menus/ouverture_booster.tscn").instantiate()
-	add_child(ouverture)
+	# Une vraie boutique limitée au cadeau, sans achat ni dépense de points.
+	var boutique_formation = BOUTIQUE.instantiate()
+	boutique_formation.mode_demonstration = false
+	boutique_formation.mode_formation = true
+	boutique_formation.joueur_sante = joueur
+	boutique_formation.escorte_sante = escorte
+	add_child(boutique_formation)
 	await get_tree().process_frame
-	booster.hide()
-	await ouverture.ouvrir(booster)
-	centre.queue_free()
-	ouverture.queue_free()
+	var booster: Control = boutique_formation.booster_gratuit
+	booster.grab_focus()
+	await booster.selectionne
+	booster.release_focus()
+	await boutique_formation.animer_ouverture(&"rare_gratuit")
+	boutique_formation.hide()
+	boutique_formation.queue_free()
 	_afficher_cartes(propositions, true)
 	$Menu/Defilement/Centre/Marge/Contenu/Note.text = "Choisissez votre première amélioration. Elle vous accompagne jusqu’à la fin de la partie."
 

@@ -67,7 +67,7 @@ func _draw() -> void:
 
 
 func _survol(active: bool) -> void:
-	active = (active or has_focus()) and abordable
+	active = active or has_focus()
 	# Arrêter le Tween conserve la valeur actuelle : même si la souris entre et
 	# ressort vite, le reflet repart de sa position présente, sans se téléporter.
 	if animation:
@@ -90,7 +90,8 @@ func actualiser_disponibilite(disponible: bool) -> void:
 	%Titre.self_modulate = Color.WHITE if disponible else Color("969696")
 	%Prix.self_modulate = Color.WHITE if disponible else Color("969696")
 	%Symbole.self_modulate = Color.WHITE if disponible else Color(0.6, 0.6, 0.6)
-	if changement and not Engine.is_editor_hint(): _survol(false)
+	if changement and not Engine.is_editor_hint():
+		_survol(is_visible_in_tree() and Rect2(Vector2.ZERO, size).has_point(get_local_mouse_position()))
 
 
 func _cliquer(event: InputEvent) -> void:

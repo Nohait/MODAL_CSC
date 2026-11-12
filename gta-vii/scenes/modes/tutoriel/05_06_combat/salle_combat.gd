@@ -163,6 +163,9 @@ func _entrer() -> void:
 	progression.commencer()
 
 func _process(_delta: float) -> void:
+	if get_meta("manette_consigne", false) != $player.usingController:
+		set_meta("manette_consigne", $player.usingController)
+		_actualiser_consigne()
 	if is_instance_valid(menace): return
 	if is_instance_valid(poste) and poste.actif: return
 	if is_instance_valid(observation) and not observation.is_physics_processing():
@@ -196,15 +199,15 @@ func _quitter_par_porte(progression_cible: Node, decor: Node3D) -> void:
 
 func _actualiser_consigne() -> void:
 	if is_instance_valid(menace):
-		$Briefing/Panneau/Disposition/Consigne.text = menace.rappel if not menace.rappel.is_empty() else menace.progression.consigne()
+		preload("res://scenes/interfaces/libelle_commande.gd").afficher_consigne($Briefing/Panneau/Disposition/Consigne, menace.rappel if not menace.rappel.is_empty() else menace.progression.consigne(), $player)
 		$Briefing/Panneau/Disposition/Rappel.hide()
 		return
 	if is_instance_valid(poste) and poste.actif:
-		$Briefing/Panneau/Disposition/Consigne.text = poste.consigne()
+		preload("res://scenes/interfaces/libelle_commande.gd").afficher_consigne($Briefing/Panneau/Disposition/Consigne, poste.consigne(), $player)
 		$Briefing/Panneau/Disposition/Rappel.hide()
 		return
 	var actuelle = progression_pratique if is_instance_valid(progression_pratique) else progression
-	$Briefing/Panneau/Disposition/Consigne.text = actuelle.consigne()
+	preload("res://scenes/interfaces/libelle_commande.gd").afficher_consigne($Briefing/Panneau/Disposition/Consigne, actuelle.consigne(), $player)
 	$Briefing/Panneau/Disposition/Rappel.text = actuelle.rappel
 	$Briefing/Panneau/Disposition/Rappel.visible = not actuelle.rappel.is_empty()
 
