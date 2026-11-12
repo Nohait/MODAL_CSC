@@ -40,7 +40,6 @@ func _ready() -> void:
 	# Seulement les modèles visuels : ni IA, ni attaque, ni interface du joueur.
 	var pompier = POMPIER.instantiate()
 	pompier.scale *= 0.125
-	# Comme dans player.tscn, l'origine du modèle est au centre du personnage.
 	pompier.position = position_pompier
 	pompier.rotation.y += 0.65 + PI
 	add_child(pompier)
@@ -154,6 +153,8 @@ func _creer_details() -> void:
 	sac.rotation.y = -0.4
 	add_child(sac)
 	var salon = SALON.instantiate()
+	salon.brulure = 0.95
+	salon.intensite_braises = 3.0
 	# Conserver seulement le canapé brûlé et sa table basse, sans collisions de jeu.
 	for chemin in ["Mobilier/Buffet", "CollisionCanape", "CollisionTable", "CollisionBuffet"]:
 		salon.get_node(chemin).free()
@@ -161,6 +162,14 @@ func _creer_details() -> void:
 	salon.get_node("Mobilier/TableBasse").scale *= 1.2
 	salon.position = Vector3(-1.2, 0, -4.2)
 	add_child(salon)
+	var feu_canape = FOYER.instantiate()
+	feu_canape.position = salon.position_foyer()
+	feu_canape.taille = 0.9
+	feu_canape.energie = 1.1
+	feu_canape.densite_fumee = 0.35
+	feu_canape.get_node("Extinction").extinguible = false
+	feu_canape.get_node("Crepitement").volume_db = -80.0
+	salon.add_child(feu_canape)
 
 func _creer_mur_fenetre() -> void:
 	# L'ouverture suit le cadre de la fenêtre usée, à l'échelle du décor.
