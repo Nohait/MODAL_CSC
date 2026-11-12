@@ -17,6 +17,20 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 	arbre.active = false
 	var lecteur: AnimationPlayer = modele.get_node(("visual/Armature/" if pompier else "Armature/") + "AnimationPlayer")
 	var banque: AnimationLibrary = POMPIER if pompier else VICTIME
+	if not pompier:
+		banque = VICTIME.duplicate() as AnimationLibrary
+		if lecteur.has_animation("idle"):
+			var repos := lecteur.get_animation("idle").duplicate() as Animation
+			repos.loop_mode = Animation.LOOP_LINEAR
+			banque.remove_animation("Idle")
+			banque.add_animation("Idle", repos)
+	if not pompier and lecteur.has_animation_library("injured_walk"):
+		var marche_blessee := lecteur.get_animation_library("injured_walk")
+		if marche_blessee.has_animation("injured_walk"):
+			var marche := marche_blessee.get_animation("injured_walk").duplicate() as Animation
+			marche.loop_mode = Animation.LOOP_LINEAR
+			banque.remove_animation("Walk")
+			banque.add_animation("Walk", marche)
 	lecteur.add_animation_library("Parvis", banque)
 	var melange := arbre.tree_root as AnimationNodeBlendTree
 	for nom in ["Idle", "Walk"]:

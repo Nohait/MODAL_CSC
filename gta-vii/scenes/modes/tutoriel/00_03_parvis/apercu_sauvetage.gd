@@ -4,6 +4,7 @@ extends Node3D
 @export_range(0.5, 4.0, 0.01) var vitesse := 1.67
 @export_range(0.6, 2.5, 0.1) var espacement := 1.3
 @export_range(0.4, 1.0, 0.05) var allure_blessee := 1.0
+@export_range(-0.5, 0.5, 0.01) var hauteur_victime := 0.0
 @export var trajet := PackedVector3Array([
 	# Sortir au-delà des vantaux ouverts avant de contourner la porte à gauche.
 	Vector3(-0.6, 1, -7.1), Vector3(-0.6, 1, -2.3),
@@ -57,7 +58,8 @@ func jouer(joueur: Node3D) -> void:
 		add_child(habitant)
 		habitant.add_child(modele)
 		# Conserver l’échelle du modèle partagé, sans mesure AABB du squelette.
-		modele.position.y -= 0.25
+		# Le modèle extrait porte déjà un décalage vertical de la scène jouable.
+		modele.position.y = hauteur_victime
 		var animation := locomotion.installer(modele, false)
 		figurants.append({"modele": habitant, "arbre": animation, "pompier": false})
 	for figurant in figurants: figurant.modele.hide()

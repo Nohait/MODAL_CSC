@@ -119,6 +119,9 @@ var placement_mobiles: Resource
 # Durée tirée pour chaque salle ; la dernière vague apparaît à la fin.
 @export_range(15.0, 30.0, 1.0) var duree_min_vagues := 15.0
 @export_range(15.0, 30.0, 1.0) var duree_max_vagues := 30.0
+## Accélère les apparitions quand la salle contient peu de mobiles.
+@export_range(0, 20, 1) var seuil_mobiles_vagues_rapides := 4
+@export_range(1.0, 15.0, 0.5) var secondes_par_vague_rapide := 4.0
 
 # Durée de l'annonce visuelle avant apparition.
 @export_range(0.2, 3.0, 0.1) var duree_annonce := 1.0
@@ -545,9 +548,12 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 		var taille := mini(a_planifier, randi_range(minimum, maximum))
 		tailles.append(taille)
 		a_planifier -= taille
+	var duree_apparitions: float = salle.duree_sauvetage
+	if vagues_classiques_actives and salle.mobiles_a_creer.size() <= seuil_mobiles_vagues_rapides:
+		duree_apparitions = minf(duree_apparitions, tailles.size() * maxf(secondes_par_vague_rapide, 1.0))
 	for i in range(tailles.size()):
-		# Échéances espacées régulièrement ; la dernière vaut exactement zéro seconde restante.
-		var restant: float = salle.duree_sauvetage * (1.0 - float(i + 1) / tailles.size())
+		# La durée de sauvetage reste indépendante de celle des apparitions.
+		var restant: float = salle.duree_sauvetage - duree_apparitions * float(i + 1) / tailles.size()
 		salle.vagues_planifiees.append({"nombre": tailles[i], "restant": restant})
 	
 	planifier_chutes(salle)
