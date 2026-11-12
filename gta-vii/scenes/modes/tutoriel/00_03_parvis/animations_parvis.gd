@@ -17,10 +17,12 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 	arbre.active = false
 	var lecteur: AnimationPlayer = modele.get_node(("visual/Armature/" if pompier else "Armature/") + "AnimationPlayer")
 	var banque: AnimationLibrary = POMPIER if pompier else VICTIME
+	var repos_reference: Animation
 	if not pompier:
 		banque = VICTIME.duplicate() as AnimationLibrary
 		if lecteur.has_animation("idle"):
 			var repos := lecteur.get_animation("idle").duplicate() as Animation
+			repos_reference = repos
 			repos.loop_mode = Animation.LOOP_LINEAR
 			banque.remove_animation("Idle")
 			banque.add_animation("Idle", repos)
@@ -28,11 +30,17 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 		var marche_blessee := lecteur.get_animation_library("injured_walk")
 		if marche_blessee.has_animation("injured_walk"):
 			var marche := marche_blessee.get_animation("injured_walk").duplicate() as Animation
+			if repos_reference != null:
+				_adapter_bassin(marche, repos_reference)
 			marche.loop_mode = Animation.LOOP_LINEAR
 			banque.remove_animation("Walk")
 			banque.add_animation("Walk", marche)
 	lecteur.add_animation_library("Parvis", banque)
 	var melange := arbre.tree_root as AnimationNodeBlendTree
+	melange.add_node("DecalageMarche", AnimationNodeTimeSeek.new())
+	melange.disconnect_node("Cadence", 0)
+	melange.connect_node("DecalageMarche", 0, "Walk")
+	melange.connect_node("Cadence", 0, "DecalageMarche")
 	for nom in ["Idle", "Walk"]:
 		(melange.get_node(nom) as AnimationNodeAnimation).animation = "Parvis/" + nom
 	for nom in ["TurnLeft", "TurnRight"]:
@@ -54,9 +62,34 @@ func installer(modele: Node3D, pompier: bool) -> AnimationTree:
 	arbre.set_meta("duree_droite", banque.get_animation("TurnRight").length)
 	arbre.set_meta("vitesse_marche_reference", cadence_pompier if pompier else cadence_victime)
 	arbre.set_meta("pivot_restant", 0.0)
+	arbre.set_meta("figurant_pompier", pompier)
 	arbre.active = true
 	arbre.advance(0)
 	return arbre
+
+func decaler_marche(arbre: AnimationTree, temps: float) -> void:
+	if not activer_clips_importes: return
+	# Activer momentanément la branche permet de positionner sa lecture sans bouger le figurant.
+	arbre["parameters/Transition/blend_amount"] = 1.0
+	arbre["parameters/Cadence/scale"] = 1.0
+	arbre["parameters/DecalageMarche/seek_request"] = temps
+	arbre.advance(0.001)
+	arbre["parameters/Transition/blend_amount"] = 0.0
+	arbre["parameters/Cadence/scale"] = 0.0
+	arbre.advance(0.001)
+
+func _adapter_bassin(marche: Animation, repos: Animation) -> void:
+	# Les deux clips utilisent des axes et des unités différents pour le bassin.
+	var chemin := NodePath("Armature/Skeleton3D:mixamorig2_Hips")
+	var piste_marche := marche.find_track(chemin, Animation.TYPE_POSITION_3D)
+	var piste_repos := repos.find_track(chemin, Animation.TYPE_POSITION_3D)
+	if piste_marche < 0 or piste_repos < 0: return
+	if marche.track_get_key_count(piste_marche) == 0 or repos.track_get_key_count(piste_repos) == 0: return
+	var origine: Vector3 = marche.track_get_key_value(piste_marche, 0)
+	var hauteur_repos: Vector3 = repos.track_get_key_value(piste_repos, 0)
+	for i in marche.track_get_key_count(piste_marche):
+		var ecart: Vector3 = marche.track_get_key_value(piste_marche, i) - origine
+		marche.track_set_key_value(piste_marche, i, hauteur_repos + Vector3(ecart.x, ecart.z, -ecart.y) * 100.0)
 
 func actualiser(arbre: AnimationTree, vitesse: float, delta: float) -> void:
 	BASE.actualiser(arbre, vitesse, delta)
@@ -66,7 +99,7 @@ func actualiser(arbre: AnimationTree, vitesse: float, delta: float) -> void:
 func pivote(arbre: AnimationTree) -> bool:
 	return float(arbre.get_meta("pivot_restant", 0.0)) > 0.0
 
-func orienter(arbre: AnimationTree, modele: Node3D, direction: Vector3, delta: float, face_positive := false) -> void:
+func orienter(arbre: AnimationTree, modele: Node3D, direction: Vector3, delta: float, face_positive := false, pivot_sur_place := true) -> void:
 	if not activer_clips_importes:
 		BASE.orienter(modele, direction, delta, face_positive)
 		return
@@ -78,6 +111,9 @@ func orienter(arbre: AnimationTree, modele: Node3D, direction: Vector3, delta: f
 		arbre.set_meta("orientation_initialisee", true)
 		return
 	var ecart := angle_difference(modele.rotation.y, cible)
+	if not pivot_sur_place or not bool(arbre.get_meta("figurant_pompier", true)):
+		modele.rotation.y = rotate_toward(modele.rotation.y, cible, deg_to_rad(rotation_douce_degres) * delta)
+		return
 	if not pivote(arbre) and absf(ecart) >= deg_to_rad(seuil_pivot_degres):
 		var gauche := ecart > 0.0
 		var duree: float = arbre.get_meta("duree_gauche" if gauche else "duree_droite")

@@ -204,6 +204,11 @@ func _actualiser_cible() -> void:
 	
 	var direction: Vector3 = joueur.aim_position - joueur.global_position
 	direction.y = 0.0
+	# À la manette, le relâchement recentre uniquement la cible de cette attaque.
+	if joueur.usingController:
+		var stick := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+		if stick.length() <= joueur.STICK_DEADZONE:
+			direction = Vector3.ZERO
 	
 	cible = joueur.global_position + direction.limit_length(cartes_bouche.portee())
 	cible.y = hauteur_sol
