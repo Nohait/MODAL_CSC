@@ -29,7 +29,7 @@ func preparer(personnage, gestion_escorte, ameliorations) -> void:
 	decor = preload("res://scenes/modes/tutoriel/08_sauvetage_sous_menace/decor_sauvetage_sous_menace.gd").new()
 	add_child(decor)
 	instructeur = preload("res://scenes/modes/tutoriel/commun/figurants/figurant_pompier.gd").new()
-	instructeur.position = Vector3(3, 1, -51)
+	instructeur.position = Vector3(2.3, 1, -53)
 	add_child(instructeur)
 	instructeur.installer_modele(joueur)
 	victime = preload("res://scenes/victimes/victime.tscn").instantiate()
