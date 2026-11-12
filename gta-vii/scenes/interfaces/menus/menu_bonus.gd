@@ -7,6 +7,9 @@ extends CanvasLayer
 @onready var panneau: Control = %Panneau
 @onready var fermer: Button = %Fermer
 const CARTE = preload("res://scenes/interfaces/menus/ameliorations/carte_amelioration.tscn")
+const LIBELLE_COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
+var derniere_manette: Variant = null
+var commandes_carnet := ""
 
 @onready var upgrades = get_parent().get_node("UpgradeManager")
 @onready var cartes_permanents: HFlowContainer = %CartesPermanents
@@ -68,6 +71,13 @@ func _actualiser_taille_papier() -> void:
 
 
 func _process(delta: float) -> void:
+	var joueur = gestionnaire.player
+	var commandes := ""
+	for evenement in InputMap.action_get_events("menu_bonus"):
+		commandes += evenement.as_text() + "|"
+	if is_instance_valid(joueur) and (derniere_manette != joueur.usingController or commandes_carnet != commandes):
+		commandes_carnet = commandes
+		_actualiser_raccourci_commande(joueur)
 	temps_booster += delta
 	for onglet in boutons_carnet:
 		var fond_onglet: TextureRect = onglet.get_node("Papier")
@@ -171,14 +181,8 @@ func actualiser_affichage() -> void:
 	var nombre := 0
 	for niveau in upgrades.niveaux.values():
 		nombre += int(niveau)
-	var touches := InputMap.action_get_events("menu_bonus")
-	var touche := touches[0].as_text() if not touches.is_empty() else "B"
-	if not touches.is_empty() and touches[0] is InputEventKey:
-		var evenement: InputEventKey = touches[0]
-		touche = OS.get_keycode_string(evenement.physical_keycode if evenement.physical_keycode else evenement.keycode)
-	raccourci.get_node("Touche").text = "[%s]" % touche
+	_actualiser_raccourci_commande(joueur)
 	raccourci.get_node("Nombre").text = "%d amélioration%s" % [nombre, "s" if nombre > 1 else ""]
-	raccourci.tooltip_text = "Ouvrir le carnet (%s)" % touche
 
 	_vider_cartes(cartes_permanents)
 	_vider_cartes(cartes_temporaires)
@@ -209,6 +213,18 @@ func actualiser_affichage() -> void:
 	vide_permanents.visible = cartes_permanents.get_child_count() == 0
 	vide_temporaires.visible = cartes_temporaires.get_child_count() == 0
 
+
+func _actualiser_raccourci_commande(joueur: Node) -> void:
+	derniere_manette = joueur.usingController
+	var touche: String = LIBELLE_COMMANDE.nom(&"menu_bonus", joueur)
+	var icone: Texture2D = LIBELLE_COMMANDE.icone(&"menu_bonus", joueur)
+	var image_commande: TextureRect = raccourci.get_node("IconeCommande")
+	image_commande.texture = icone
+	image_commande.visible = icone != null
+	var texte_commande: Label = raccourci.get_node("Touche")
+	texte_commande.visible = icone == null
+	texte_commande.text = "[%s]" % touche
+	raccourci.tooltip_text = "Ouvrir le carnet (%s)" % touche
 
 func _vider_cartes(conteneur: Container) -> void:
 	# Retirer immédiatement évite de compter les cartes en attente de queue_free().

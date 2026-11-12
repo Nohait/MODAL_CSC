@@ -129,6 +129,16 @@ theme_override_font_sizes/font_size = 13
 text = "[B]"
 horizontal_alignment = 2
 
+[node name="IconeCommande" type="TextureRect" parent="Raccourci"]
+visible = false
+offset_left = 216.0
+offset_top = 13.0
+offset_right = 244.0
+offset_bottom = 41.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Menu" type="Control" parent="."]
 visible = false
 layout_mode = 1

@@ -363,7 +363,6 @@ func mourir():
 	if afficher_cendres and is_instance_valid(modele):
 		RETOUR_COMBAT.creer_cendres(self, [modele], duree_cendres, direction_mort_mousse * derive_mort_mousse)
 	died.emit()
-	print("Bravo, vous avez tué le sbire")
 	queue_free()
 
 func _reagir_au_jet(pompier: Node3D) -> void:
