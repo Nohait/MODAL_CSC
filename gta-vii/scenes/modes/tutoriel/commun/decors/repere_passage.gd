@@ -1,4 +1,5 @@
 extends Node3D
+const COMMANDE = preload("res://scenes/interfaces/libelle_commande.gd")
 
 @export var action: StringName = &"interact"
 @export var verbe := "Ouvrir"
@@ -16,20 +17,8 @@ func _process(delta: float) -> void:
 	_actualiser_texte()
 
 func _actualiser_texte() -> void:
-	$Indication.text = "%s - [%s]" % [verbe, _nom_commande()]
+	COMMANDE.afficher_3d($Indication, "%s - [%s]" % [verbe, _nom_commande()], action, get_tree().get_first_node_in_group("player"))
 
 func _nom_commande() -> String:
-	for evenement in InputMap.action_get_events(action):
-		if evenement is InputEventKey:
-			var code: int = evenement.keycode
-			if code == 0:
-				code = evenement.physical_keycode if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(evenement.physical_keycode)
-			var nom := OS.get_keycode_string(code)
-			if not nom.is_empty(): return nom
-		if evenement is InputEventMouseButton:
-			return String({
-				MOUSE_BUTTON_LEFT: "Clic gauche",
-				MOUSE_BUTTON_RIGHT: "Clic droit",
-				MOUSE_BUTTON_MIDDLE: "Clic milieu",
-			}.get(evenement.button_index, evenement.as_text()))
-	return "Interagir"
+	var joueur := get_tree().get_first_node_in_group("player")
+	return COMMANDE.nom(action, joueur)

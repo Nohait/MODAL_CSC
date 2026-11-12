@@ -93,7 +93,7 @@ func _preparer_navigation() -> void:
 	$SalleFixe/Navigation.navigation_mesh = navigation
 
 func _actualiser_consigne() -> void:
-	$Briefing/Panneau/Marge/Disposition/Consigne.text = progression.consigne()
+	preload("res://scenes/interfaces/libelle_commande.gd").afficher_consigne($Briefing/Panneau/Marge/Disposition/Consigne, progression.consigne(), $player)
 	$Briefing/Panneau/Marge/Disposition/Rappel.text = progression.rappel()
 	$Briefing/Panneau/Marge/Disposition/Rappel.visible = not progression.rappel().is_empty()
 
@@ -140,6 +140,9 @@ func _preparer_porte_suivante() -> void:
 	salle.add_child(repere_sortie)
 
 func _process(_delta: float) -> void:
+	if get_meta("manette_consigne", false) != $player.usingController:
+		set_meta("manette_consigne", $player.usingController)
+		_actualiser_consigne()
 	if not is_instance_valid(releve) or not releve.terminee or passage_salle_suivante: return
 	if $player.global_position.distance_to(Vector3(0, 1, -17)) < distance_ouverture_sortie and Input.is_action_just_pressed("interact"):
 		passage_salle_suivante = true

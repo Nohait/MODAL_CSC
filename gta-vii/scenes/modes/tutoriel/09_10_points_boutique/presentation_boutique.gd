@@ -49,11 +49,15 @@ func _ready() -> void:
 	var boutons := HBoxContainer.new()
 	boutons.alignment = BoxContainer.ALIGNMENT_END
 	colonne.add_child(boutons)
-	precedent = Button.new()
+	precedent = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
+	precedent.set("taille_minimale", Vector2(160, 48))
+	precedent.set("taille_police", 20)
 	precedent.text = "Précédent"
 	precedent.pressed.connect(func(): _afficher(indice - 1))
 	boutons.add_child(precedent)
-	suivant = Button.new()
+	suivant = preload("res://scenes/interfaces/menus/titre/bouton_menu.tscn").instantiate()
+	suivant.set("taille_minimale", Vector2(180, 48))
+	suivant.set("taille_police", 20)
 	suivant.pressed.connect(_suivant)
 	boutons.add_child(suivant)
 	_afficher(0)
@@ -100,8 +104,15 @@ func _dessiner() -> void:
 func _input(event: InputEvent) -> void:
 	# La présentation est modale : aucun raccourci ne doit acheter ou fermer derrière.
 	if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
-		if event.is_action_pressed("ui_accept") and not event.is_echo(): _suivant()
-		elif event.is_action_pressed("ui_left") and not event.is_echo(): _afficher(indice - 1)
+		if event.is_action_pressed("ui_accept") and not event.is_echo():
+			if get_viewport().gui_get_focus_owner() == precedent and not precedent.disabled:
+				_afficher(indice - 1)
+			else:
+				_suivant()
+		elif event.is_action_pressed("ui_left") and not event.is_echo() and not precedent.disabled:
+			precedent.grab_focus()
+		elif event.is_action_pressed("ui_right") and not event.is_echo():
+			suivant.grab_focus()
 		get_viewport().set_input_as_handled()
 
 func _suivant() -> void:

@@ -7,7 +7,7 @@ script = ExtResource("1_script")
 
 [node name="Indication" type="Label3D" parent="."]
 position = Vector3(0, 1.45, 0)
-text = "Ouvrir - [E]"
+text = "Ouvrir"
 font_size = 54
 pixel_size = 0.006
 modulate = Color(0.62, 1, 0.76, 1)
