@@ -536,7 +536,10 @@ func demarrer_sauvetage(salle: Node3D) -> void:
 	if point != null: point.commencer_salle(self)
 	planifier_types_mobiles(salle, point.graine_combat if point != null else randi())
 	hordes_salle_actives = hordes != null and hordes.est_active(salle.remaining_enemies)
-	salle.duree_sauvetage = randf_range(clampf(duree_min_vagues, 15.0, 30.0), clampf(maxf(duree_min_vagues, duree_max_vagues), 15.0, 30.0))
+	
+	#On etalonne la durée des vagues en fonction de l'étage
+	var duree_max_sauvetage_etage = duree_max_vagues*(1 + (salle.etage-2)/3) 
+	salle.duree_sauvetage = randf_range(duree_min_vagues, duree_max_sauvetage_etage)
 	salle.temps_sauvetage_restant = salle.duree_sauvetage
 	var tailles: Array[int] = []
 	var a_planifier: int = salle.mobiles_a_creer.size()
