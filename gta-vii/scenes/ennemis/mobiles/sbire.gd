@@ -13,6 +13,8 @@ var prochaine_reaction := 0
 var tween_contact: Tween
 var taille_avant_contact := Vector3.ONE
 var direction_mort_mousse := Vector3.ZERO
+var active = true
+
 
 @export_group("Apparition")
 # Seuil dans le parcours : une salle plus tardive reste autorisée aux étages suivants.
@@ -102,7 +104,7 @@ var chgt_cible_timer = 0.0 #temps initialisé à 0
 func _ready() -> void:
 	_preparer_feux_mains()
 	cible_idle.name = "Cible " + self.name
-	get_parent().add_child(cible_idle)
+	get_parent().add_child.call_deferred(cible_idle)
 
 	# Les PV restent ceux de l’Inspecteur ; seuls les dégâts progressent par étage.
 	var paliers := maxi(etage - 1, 0)
@@ -157,7 +159,7 @@ func _physics_process(delta):
 		choisir_cible()
 		chgt_cible_timer = chgt_cible_cooldown
 
-	if cible == null or en_idle:
+	if active && (cible == null or en_idle):
 		idle_timer -= delta
 		if idle_timer <0 :
 			cible_idle.position =  choisir_destination_idle()
@@ -174,7 +176,7 @@ func _physics_process(delta):
 		velocity = Vector3.ZERO
 		return
 
-	if cible != null :	#Une fois que le joueur est pris pour cible
+	if active && cible != null :	#Une fois que le joueur est pris pour cible
 		var distance = global_position.distance_to(cible.global_position)
 
 		#On tourne le sbire et sa hitbox vers la cible
@@ -216,18 +218,19 @@ func _on_surface_detection_body_entered(body: Node3D) -> void:
 		$SonRepere.play()
 
 func choisir_destination_idle():
-	var destination = Vector3.ZERO
-	var map_rid := navigation_agent.get_navigation_map()
-	for i in range(10):
-		var rand_x = randf_range(-rayon_idle, rayon_idle)
-		var rand_z = randf_range(-rayon_idle, rayon_idle)
-		destination = Vector3(rand_x,0.0,rand_z) + global_position
-		var position_nav := NavigationServer3D.map_get_closest_point(map_rid,destination)
-		position_nav.y = 0.0
-		destination.y = 0.0
-		if destination.distance_to(position_nav) < 0.1:
-			return destination
-	return global_position
+	if active :
+		var destination = Vector3.ZERO
+		var map_rid := navigation_agent.get_navigation_map()
+		for i in range(10):
+			var rand_x = randf_range(-rayon_idle, rayon_idle)
+			var rand_z = randf_range(-rayon_idle, rayon_idle)
+			destination = Vector3(rand_x,0.0,rand_z) + global_position
+			var position_nav := NavigationServer3D.map_get_closest_point(map_rid,destination)
+			position_nav.y = 0.0
+			destination.y = 0.0
+			if destination.distance_to(position_nav) < 0.1:
+				return destination
+		return global_position
 
 func suivre_cible_navigation() -> void:
 	# Arrêt par défaut si la carte n'est pas prête ou si aucun chemin n'est trouvé.

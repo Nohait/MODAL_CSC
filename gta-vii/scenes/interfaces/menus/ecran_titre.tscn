@@ -1,27 +1,46 @@
 [gd_scene format=3 uid="uid://bciys0ip6dqw2"]
 
+[ext_resource type="PackedScene" uid="uid://dm52j5at3fy4l" path="res://scenes/decors/load.tscn" id="5_0t3hb"]
+[ext_resource type="Texture2D" uid="uid://yr556gja750y" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_diff_2k.jpg" id="6_fgd48"]
 [ext_resource type="FontFile" uid="uid://bakravhue45e3" path="res://assets/fonts/Oswald-SemiBold.ttf" id="7_gp83s"]
+[ext_resource type="Texture2D" uid="uid://cf4wcd11w0nrm" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_nor_gl_2k.png" id="7_o435c"]
+[ext_resource type="Texture2D" uid="uid://yq4e20tebbyj" path="res://assets/textures/decors/appartements/wood_floor/textures/wood_floor_rough_2k.png" id="8_g4ir6"]
+[ext_resource type="Texture2D" uid="uid://dscf4fta5ta82" path="res://assets/textures/decors/appartements/white_plaster_02/textures/white_plaster_02_diff_2k.jpg" id="9_058ii"]
+[ext_resource type="Texture2D" uid="uid://sshhe33k6jux" path="res://assets/textures/decors/appartements/white_plaster_02/textures/white_plaster_02_nor_gl_2k.png" id="10_gt31q"]
+[ext_resource type="Texture2D" uid="uid://e5ob3kbf56d7" path="res://assets/textures/decors/appartements/white_plaster_02/textures/white_plaster_02_rough_2k.jpg" id="11_mef5a"]
 [ext_resource type="PackedScene" path="res://scenes/interfaces/menus/titre/bouton_menu.tscn" id="button"]
-[ext_resource type="Script" uid="uid://baiuejiyyy2ni" path="res://scenes/interfaces/menus/titre/decoration_titre.gd" id="decor"]
 [ext_resource type="Shader" uid="uid://dc2uwivgjh4ev" path="res://scenes/interfaces/menus/titre/flammes_titre.gdshader" id="flames"]
 [ext_resource type="FontFile" uid="uid://2hts34tt7p50" path="res://assets/fonts/Almendra-Bold.ttf" id="logo"]
+[ext_resource type="AudioStream" uid="uid://bydln2tiq8x6i" path="res://assets/sounds/musique/guitar_beat_incesante.mp3" id="musique_menu"]
+[ext_resource type="Script" uid="uid://mmulu4601u45" path="res://scenes/interfaces/menus/titre/musique_titre.gd" id="musique_titre"]
 [ext_resource type="Script" uid="uid://cpqa6nlacutk5" path="res://scenes/interfaces/menus/titre/ecran_titre.gd" id="script"]
 [ext_resource type="PackedScene" uid="uid://c2jaba7e5anb" path="res://scenes/interfaces/succes/menu_succes.tscn" id="success"]
 [ext_resource type="Theme" uid="uid://8ibipqab5vhs" path="res://scenes/interfaces/menus/titre/theme_menu.tres" id="theme"]
 [ext_resource type="Shader" uid="uid://nd3ahv5hag2w" path="res://scenes/interfaces/menus/titre/voile_titre.gdshader" id="voile"]
-[ext_resource type="Script" path="res://scenes/interfaces/menus/titre/musique_titre.gd" id="musique_titre"]
-[ext_resource type="AudioStream" path="res://assets/sounds/musique/guitar_beat_incesante.mp3" id="musique_menu"]
 
-[sub_resource type="Environment" id="Ambiance"]
-background_mode = 1
-background_color = Color(0.045, 0.025, 0.02, 1)
-ambient_light_source = 3
-ambient_light_color = Color(0.72, 0.76, 0.88, 1)
-ambient_light_energy = 0.55
-tonemap_mode = 2
-glow_enabled = true
-glow_intensity = 0.7
-glow_bloom = 0.12
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lsw7v"]
+albedo_color = Color(0.079507, 0.103823, 0.14060798, 1)
+albedo_texture = ExtResource("6_fgd48")
+metallic_specular = 0.05
+roughness_texture = ExtResource("8_g4ir6")
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = ExtResource("7_o435c")
+uv1_scale = Vector3(0.59, 0.59, 0.59)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vk677"]
+albedo_color = Color(0.27462497, 0.31443202, 0.373248, 1)
+albedo_texture = ExtResource("9_058ii")
+roughness = 0.85
+roughness_texture = ExtResource("11_mef5a")
+normal_enabled = true
+normal_scale = 0.1
+normal_texture = ExtResource("10_gt31q")
+uv1_scale = Vector3(0.2, 0.2, 0.2)
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="ShaderMaterial" id="Voile"]
 shader = ExtResource("voile")
@@ -57,7 +76,7 @@ grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("script")
 
-[node name="MusiqueTitre" type="Node" parent="."]
+[node name="MusiqueTitre" type="Node" parent="." unique_id=1090960844]
 script = ExtResource("musique_titre")
 morceau = ExtResource("musique_menu")
 
@@ -87,22 +106,86 @@ msaa_3d = 1
 size = Vector2i(1056, 900)
 render_target_update_mode = 4
 
-[node name="Decor" type="Node3D" parent="Illustration/Vue3D" unique_id=1379178597]
-script = ExtResource("decor")
+[node name="Decor" parent="Illustration/Vue3D" unique_id=1332390677 instance=ExtResource("5_0t3hb")]
 
-[node name="Ambiance" type="WorldEnvironment" parent="Illustration/Vue3D/Decor" unique_id=2126671966]
-environment = SubResource("Ambiance")
+[node name="SolEntree" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_lsw7v")
 
-[node name="Camera" type="Camera3D" parent="Illustration/Vue3D/Decor" unique_id=1373147839]
-transform = Transform3D(0.8869949, -0.0667236, 0.4569332, 0, 0.9895059, 0.14449243, -0.46177918, -0.12816405, 0.8776867, 4.2, 2.5, 6.8)
-current = true
-fov = 42.0
+[node name="SolFond" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_lsw7v")
 
-[node name="Lumiere" type="DirectionalLight3D" parent="Illustration/Vue3D/Decor" unique_id=1996917962]
-transform = Transform3D(0.8253356, 0.36375266, -0.4318624, 0, 0.7648422, 0.64421767, 0.5646425, -0.5316958, 0.6312515, 0, 0, 0)
-light_color = Color(0.88, 0.91, 1, 1)
-light_energy = 1.5
-shadow_enabled = true
+[node name="Mur1" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vk677")
+
+[node name="Mur2" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vk677")
+
+[node name="Mur3" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="4"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vk677")
+
+[node name="Mur4" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="5"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vk677")
+
+[node name="Mur5" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="6"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vk677")
+
+[node name="Foyer0" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="9"]
+energie = 0.36700160000000004
+
+[node name="Foyer1" parent="Illustration/Vue3D/Decor/AtelierEnL" parent_id_path=PackedInt32Array(1332390677, 399200615) index="10"]
+energie = 0.36700160000000004
+
+[node name="Skeleton3D" parent="Illustration/Vue3D/Decor/player/visual/Armature" parent_id_path=PackedInt32Array(1332390677, 245445476, 1710248061) index="0" unique_id=234326854]
+bones/0/position = Vector3(0.049784947, 93.17445, -1.3114823)
+bones/0/rotation = Quaternion(0.021938672, -0.55321527, 0.08663183, 0.828231)
+bones/2/rotation = Quaternion(0.0225194, 0.023245677, -0.009988664, 0.9994262)
+bones/3/rotation = Quaternion(0.022378184, 0.023255978, -0.01028282, 0.9994261)
+bones/4/rotation = Quaternion(0.05195495, 0.057494897, 0.0008514725, 0.9969926)
+bones/5/rotation = Quaternion(-0.11613532, 0.29379117, -0.09090265, 0.9444237)
+bones/7/rotation = Quaternion(0.5546129, 0.445438, -0.6152681, 0.33975697)
+bones/8/rotation = Quaternion(0.1635715, 0.25577736, -0.31343648, 0.89976656)
+bones/9/rotation = Quaternion(0.020534482, 0.00039658166, 0.5543801, 0.83201015)
+bones/10/rotation = Quaternion(0.16871434, 0.3956434, -0.18433061, 0.88375574)
+bones/11/rotation = Quaternion(0.110144526, 0.025650911, 0.09874014, 0.9886661)
+bones/12/rotation = Quaternion(0.042657055, -0.011998704, -0.0026215527, 0.9990144)
+bones/13/rotation = Quaternion(-0.023316251, -0.030487753, -0.017158896, 0.9991158)
+bones/15/rotation = Quaternion(0.12791544, -0.0007060265, 0.037665665, 0.9910694)
+bones/16/rotation = Quaternion(0.13936147, -0.0006005459, -0.01217583, 0.99016654)
+bones/17/rotation = Quaternion(0.09979366, -0.00070049503, -0.0038791888, 0.99500036)
+bones/19/rotation = Quaternion(0.22952583, 0.004527379, 0.006445071, 0.97327065)
+bones/20/rotation = Quaternion(0.27485886, -0.0016361597, -0.020068102, 0.96127385)
+bones/21/rotation = Quaternion(0.16620736, -0.00038216804, -0.011040033, 0.9860289)
+bones/23/rotation = Quaternion(0.33259004, 0.021237066, -0.037460007, 0.9420879)
+bones/24/rotation = Quaternion(0.3267902, 0.0036903701, -0.01628417, 0.94494945)
+bones/25/rotation = Quaternion(0.25754938, 0.0018225096, -0.006151731, 0.9662439)
+bones/27/rotation = Quaternion(0.39111495, 0.03524539, -0.08413256, 0.91581035)
+bones/28/rotation = Quaternion(0.45567766, -0.00058367103, -0.019798668, 0.88992447)
+bones/29/rotation = Quaternion(0.22866102, -0.0009434655, -0.009849176, 0.97345585)
+bones/36/rotation = Quaternion(0.0020444088, 0.039347257, 0.07102068, 0.9966964)
+bones/37/rotation = Quaternion(0.009834238, -0.0035974823, -0.051649965, 0.99861044)
+bones/39/rotation = Quaternion(0.21775363, -0.018096475, -0.039632138, 0.97503096)
+bones/40/rotation = Quaternion(0.12684746, 8.670006e-06, 0.01200216, 0.99184966)
+bones/41/rotation = Quaternion(0.21466528, 0.00020425156, 0.024955366, 0.97636884)
+bones/43/rotation = Quaternion(0.16256458, -0.010131722, -0.066981286, 0.98436964)
+bones/44/rotation = Quaternion(0.18953407, -8.305613e-05, 0.016221596, 0.9817402)
+bones/45/rotation = Quaternion(0.30392763, 0.01568375, 0.039945405, 0.9517281)
+bones/47/rotation = Quaternion(0.22599366, -0.014330377, -0.05162643, 0.9726542)
+bones/48/rotation = Quaternion(0.14593671, -0.00018506749, 0.0148432, 0.98918265)
+bones/49/rotation = Quaternion(0.21021187, 0.097036175, 0.04352293, 0.9718543)
+bones/51/rotation = Quaternion(0.18275684, -0.011301404, -0.053074326, 0.98165953)
+bones/52/rotation = Quaternion(0.17910144, -9.0423266e-05, 0.019670818, 0.98363394)
+bones/53/rotation = Quaternion(0.24106878, 0.00020875061, 0.026745617, 0.97013944)
+bones/55/rotation = Quaternion(-0.020169964, 0.3171897, 0.9452073, 0.07461413)
+bones/56/rotation = Quaternion(-0.30173787, 0.0022967549, 0.054037176, 0.9518556)
+bones/57/rotation = Quaternion(0.5762505, -0.078393996, 0.0014235114, 0.81350344)
+bones/58/rotation = Quaternion(0.33450037, -0.104748614, 0.028932678, 0.93610907)
+bones/60/rotation = Quaternion(-0.07655536, -0.10469241, 0.9895176, -0.06351177)
+bones/61/rotation = Quaternion(-0.38354966, 0.059908375, -0.08528813, 0.9176201)
+bones/62/rotation = Quaternion(0.2836153, 0.1858876, 0.044474047, 0.93969697)
+bones/63/rotation = Quaternion(0.38029185, 0.1218695, -0.025822379, 0.91643834)
+
+[node name="Right_Hand_Holder" parent="Illustration/Vue3D/Decor/player/visual/Armature/Skeleton3D" index="11" unique_id=1516828660]
+transform = Transform3D(-0.5384273, -0.3065119, -0.784949, 0.02329794, 0.92573017, -0.3774655, 0.84234875, -0.22152582, -0.49129772, 601.645, 2557.1924, 644.66223)
 
 [node name="Voile" type="ColorRect" parent="." unique_id=109263559]
 material = SubResource("Voile")
@@ -270,3 +353,9 @@ text = "GTA VII  /  PROTOTYPE"
 
 [node name="MenuSucces" parent="." unique_id=1377465611 instance=ExtResource("success")]
 layout_mode = 1
+
+[editable path="Illustration/Vue3D/Decor"]
+[editable path="Illustration/Vue3D/Decor/AtelierEnL"]
+[editable path="Illustration/Vue3D/Decor/Sbire"]
+[editable path="Illustration/Vue3D/Decor/Sbire/sbire"]
+[editable path="Illustration/Vue3D/Decor/player"]

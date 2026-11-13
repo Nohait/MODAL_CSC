@@ -35,66 +35,10 @@ var prochain_clignotement := 5.0
 var depart_en_cours := false
 
 func _ready() -> void:
-	camera = get_node("Camera")
-	position_camera = camera.position
-	# Seulement les modèles visuels : ni IA, ni attaque, ni interface du joueur.
-	var pompier = POMPIER.instantiate()
-	pompier.scale *= 0.125
-	pompier.position = position_pompier
-	pompier.rotation.y += 0.65 + PI
-	add_child(pompier)
-	pompier.get_node("visual/Armature/AnimationTree").active = false
-	pompier.get_node("visual/Armature/AnimationPlayer").play("Idle/Idle")
-	var sbire = SBIRE.instantiate()
-	# Reprendre l'échelle du sbire en jeu : sa boîte de mesh ne couvre pas la pose du squelette.
-	sbire.scale = Vector3.ONE * 0.295
-	sbire.position = position_sbire
-	var direction_pompier := position_pompier - position_sbire
-	sbire.rotation.y = atan2(direction_pompier.x, direction_pompier.z)
-	add_child(sbire)
-	_ajouter_feux_sbire(sbire)
-	var animation_sbire: AnimationPlayer = sbire.get_node("Armature/AnimationPlayer")
-	# Une copie locale permet de boucler la pose sans modifier les animations en jeu.
-	var idle := animation_sbire.get_animation("idle").duplicate() as Animation
-	idle.loop_mode = Animation.LOOP_LINEAR
-	var bibliotheque := AnimationLibrary.new()
-	bibliotheque.add_animation("idle", idle)
-	animation_sbire.add_animation_library("titre", bibliotheque)
-	animation_sbire.play("titre/idle")
-	_eclairer_personnage("EclairagePompier", Vector3(1.8, 3.7, 3.4), position_pompier, Color("b5d9ff"), energie_pompier)
-	_eclairer_personnage("ContourSbire", Vector3(1.9, 3.0, -4.7), position_sbire + Vector3.UP * 0.65, Color("ff6e24"), energie_contour_sbire)
-	# Atténuer le bain uniforme pour que les éclairages des silhouettes ressortent.
-	$Lumiere.light_energy = 0.65
-	_bloc(Vector3(0, -0.15, -1.0), Vector3(14, 0.3, 16), SOL)
-	_creer_mur_fenetre()
-	_bloc(Vector3(-4.5, 3.5, -1), Vector3(0.3, 7, 10), MUR)
-	_finitions_mur(Vector3(1.345, 0, -5.85), 11.31, 0.0)
-	_finitions_mur(Vector3(-4.35, 0, -0.905), 9.81, PI / 2)
-	_creer_details()
-	_creer_braises()
-	_creer_fumee()
-	lumiere_bleue = _lumiere_exterieure("GyrophareBleu", Vector3(3.5, 1.5, 3), Color("407dff"))
-	lumiere_rouge = _lumiere_exterieure("GyrophareRouge", Vector3(-2.5, 1.5, 3), Color("ff4930"))
-	lumiere_feu = OmniLight3D.new()
-	lumiere_feu.position = Vector3(2.2, 1.5, -3.4)
-	lumiere_feu.light_color = Color("ff852f")
-	lumiere_feu.omni_range = 5.0
-	add_child(lumiere_feu)
+	pass
 
 func _process(delta: float) -> void:
-	temps += delta
-	if temps >= prochain_clignotement:
-		prochain_clignotement = temps + randf_range(4.0, 7.0)
-		_clignoter_applique()
-	# Deux fréquences donnent une lumière de feu moins mécanique qu'un seul sinus.
-	lumiere_feu.light_energy = 1.0 + sin(temps * 5.0) * 0.1 + sin(temps * 8.7) * 0.06
-	var cycle := temps * TAU / periode_camera
-	# Le déplacement reste centré sur le cadrage initial, sans dérive au fil du temps.
-	if not depart_en_cours:
-		camera.position = position_camera + Vector3(sin(cycle), sin(cycle * 0.7) * 0.45, 0) * amplitude_camera
-	# Des passages lumineux doux évoquent les véhicules stationnés hors champ.
-	lumiere_bleue.light_energy = pow(maxf(0.0, sin(temps * 2.4)), 6.0) * intensite_gyrophares
-	lumiere_rouge.light_energy = pow(maxf(0.0, sin(temps * 2.4 + PI)), 6.0) * intensite_gyrophares
+	pass
 
 func _eclairer_personnage(nom: String, origine: Vector3, cible: Vector3, couleur: Color, energie: float) -> void:
 	var lumiere := SpotLight3D.new()
